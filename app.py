@@ -7,12 +7,7 @@ from app.models import *
 
 app = create_app()
 
-@app.route('/uploads/<path:filename>')
-def uploaded_file(filename):
-    """Serve uploaded files."""
-    # استخدام مجلد uploads المباشر
-    upload_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'uploads')
-    return send_from_directory(upload_path, filename)
+
 
 @app.route('/logo.png')
 def logo_file():

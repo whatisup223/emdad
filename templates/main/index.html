@@ -230,7 +230,7 @@
                         <!-- Category Image -->
                         <div class="category-image-wrapper position-relative overflow-hidden">
                             {% if category.image_path %}
-                            <img src="{{ url_for('uploaded_file', filename='categories/' + category.image_path) }}"
+                            <img src="{{ url_for('main.uploaded_file', filename='categories/' + category.image_path) }}"
                                  class="card-img-top category-image" alt="{{ category.get_name() }}" style="height: 250px; object-fit: cover;">
                             {% else %}
                             <div class="card-img-top bg-gradient-primary d-flex align-items-center justify-content-center" style="height: 250px;">
@@ -348,7 +348,7 @@
                         <div class="product-image-wrapper position-relative overflow-hidden">
                             {% set main_image = product.get_main_image() %}
                             {% if main_image %}
-                            <img src="{{ url_for('static', filename='uploads/products/' + main_image.filename) }}"
+                            <img src="{{ url_for('main.uploaded_file', filename='products/' + main_image.filename) }}"
                                  class="card-img-top product-image" alt="{{ product.get_name(current_language) }}" style="height: 250px; object-fit: cover;">
                             {% else %}
                             <div class="card-img-top bg-gradient-primary d-flex align-items-center justify-content-center" style="height: 250px;">
@@ -784,8 +784,8 @@
                         <!-- News Image -->
                         <div class="news-image-wrapper position-relative overflow-hidden">
                             {% if article.cover_image %}
-                            <img src="{{ url_for('static', filename='uploads/news/' + article.cover_image) }}"
-                                 class="card-img-top news-image" alt="{{ article.get_title() }}" style="height: 250px; object-fit: cover;">
+                            <img src="{{ url_for('main.uploaded_file', filename='news/' + article.cover_image) }}"
+                                 class="card-img-top news-image" alt="{{ article.get_title(current_language) }}" style="height: 250px; object-fit: cover;">
                             {% else %}
                             <div class="card-img-top bg-gradient-primary d-flex align-items-center justify-content-center" style="height: 250px;">
                                 <i class="fas fa-newspaper fa-4x text-white opacity-75"></i>
@@ -814,10 +814,18 @@
                                 {% endif %}
                             </div>
 
-                            <h5 class="card-heading english-heading mb-3">{{ article.get_title() }}</h5>
+                            <h5 class="card-heading english-heading mb-3">{{ article.get_title(current_language) }}</h5>
                             <p class="card-text text-muted mb-4">
-                                {{ article.get_excerpt() | truncate(120) if article.get_excerpt() else 'Stay updated with the latest news and developments from Emdad Global.' }}
+                                {{ article.get_excerpt(current_language) | truncate(120) if article.get_excerpt(current_language) else _('Stay updated with the latest news and developments from Emdad Global.') }}
                             </p>
+
+                            {% if article.tags %}
+                            <div class="mb-3">
+                                {% for tag in article.get_tags_list()[:3] %}
+                                    <span class="badge bg-light text-primary me-1">#{{ tag }}</span>
+                                {% endfor %}
+                            </div>
+                            {% endif %}
 
                             <!-- Article Footer -->
                             <div class="d-flex justify-content-between align-items-center mt-auto">

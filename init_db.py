@@ -308,10 +308,20 @@ def create_sample_news():
             'title_ar': 'إمداد جلوبال توسع إلى أسواق جديدة في 2024',
             'slug': 'emdad-global-expands-new-markets-2024',
             'excerpt_en': 'We are excited to announce our expansion into new international markets, bringing Egyptian agricultural excellence to more customers worldwide.',
-            'content_en': '''<p>Emdad Global is proud to announce our strategic expansion into new international markets in 2024. 
+            'excerpt_ar': 'نحن متحمسون للإعلان عن توسعنا في أسواق دولية جديدة، لجلب التميز الزراعي المصري لمزيد من العملاء حول العالم.',
+            'content_en': '''<p>Emdad Global is proud to announce our strategic expansion into new international markets in 2024.
             This expansion represents our commitment to bringing the finest Egyptian agricultural products to customers worldwide.</p>
-            <p>Our new market initiatives include partnerships in Southeast Asia, Eastern Europe, and South America, 
+            <p>Our new market initiatives include partnerships in Southeast Asia, Eastern Europe, and South America,
             where demand for premium Egyptian produce continues to grow.</p>''',
+            'content_ar': '''<p>تفخر إمداد جلوبال بالإعلان عن توسعها الاستراتيجي في أسواق دولية جديدة في عام 2024.
+            يمثل هذا التوسع التزامنا بجلب أجود المنتجات الزراعية المصرية للعملاء حول العالم.</p>
+            <p>تشمل مبادراتنا الجديدة في السوق شراكات في جنوب شرق آسيا وأوروبا الشرقية وأمريكا الجنوبية،
+            حيث يستمر الطلب على المنتجات المصرية الممتازة في النمو.</p>''',
+            'tags': 'expansion,markets,international,2024',
+            'seo_title_en': 'Emdad Global Expands to New Markets in 2024 - Egyptian Agricultural Exports',
+            'seo_title_ar': 'إمداد جلوبال توسع إلى أسواق جديدة في 2024 - الصادرات الزراعية المصرية',
+            'seo_description_en': 'Emdad Global announces strategic expansion into new international markets in 2024, bringing premium Egyptian agricultural products worldwide.',
+            'seo_description_ar': 'إمداد جلوبال تعلن عن التوسع الاستراتيجي في أسواق دولية جديدة في 2024، لجلب المنتجات الزراعية المصرية الممتازة عالمياً.',
             'status': 'published',
             'featured': True,
             'publish_at': datetime.utcnow() - timedelta(days=5)
@@ -321,9 +331,22 @@ def create_sample_news():
             'title_ar': 'ممارسات الزراعة المستدامة في إمداد جلوبال',
             'slug': 'sustainable-farming-practices-emdad-global',
             'excerpt_en': 'Learn about our commitment to sustainable agriculture and environmental responsibility in our farming operations.',
-            'content_en': '''<p>At Emdad Global, sustainability is at the heart of everything we do. Our farming partners 
-            implement environmentally responsible practices that protect the land while producing the highest quality crops.</p>''',
+            'excerpt_ar': 'تعرف على التزامنا بالزراعة المستدامة والمسؤولية البيئية في عملياتنا الزراعية.',
+            'content_en': '''<p>At Emdad Global, sustainability is at the heart of everything we do. Our farming partners
+            implement environmentally responsible practices that protect the land while producing the highest quality crops.</p>
+            <p>We work closely with local farmers to implement water conservation techniques, organic pest control methods,
+            and soil health management practices that ensure long-term agricultural productivity.</p>''',
+            'content_ar': '''<p>في إمداد جلوبال، الاستدامة هي جوهر كل ما نقوم به. شركاؤنا المزارعون
+            ينفذون ممارسات مسؤولة بيئياً تحمي الأرض بينما تنتج أعلى جودة من المحاصيل.</p>
+            <p>نعمل بشكل وثيق مع المزارعين المحليين لتنفيذ تقنيات الحفاظ على المياه وطرق مكافحة الآفات العضوية
+            وممارسات إدارة صحة التربة التي تضمن الإنتاجية الزراعية طويلة المدى.</p>''',
+            'tags': 'sustainability,farming,environment,organic',
+            'seo_title_en': 'Sustainable Farming Practices at Emdad Global - Environmental Responsibility',
+            'seo_title_ar': 'ممارسات الزراعة المستدامة في إمداد جلوبال - المسؤولية البيئية',
+            'seo_description_en': 'Discover Emdad Global\'s commitment to sustainable agriculture and environmental responsibility in farming operations.',
+            'seo_description_ar': 'اكتشف التزام إمداد جلوبال بالزراعة المستدامة والمسؤولية البيئية في العمليات الزراعية.',
             'status': 'published',
+            'featured': False,
             'publish_at': datetime.utcnow() - timedelta(days=15)
         }
     ]

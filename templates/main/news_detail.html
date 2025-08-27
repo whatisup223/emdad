@@ -1,14 +1,30 @@
 {% extends "base.html" %}
 
-{% block title %}{{ article.get_title() }} - News - {{ SITE_NAME }}{% endblock %}
+{% block title %}
+{% if current_language == 'ar' and article.seo_title_ar %}
+{{ article.seo_title_ar }}
+{% elif article.seo_title_en %}
+{{ article.seo_title_en }}
+{% else %}
+{{ article.get_title(current_language) }} - {{ _('News') }} - {{ SITE_NAME }}
+{% endif %}
+{% endblock %}
 
-{% block meta_description %}{{ article.get_excerpt() | truncate(160) }}{% endblock %}
+{% block meta_description %}
+{% if current_language == 'ar' and article.seo_description_ar %}
+{{ article.seo_description_ar }}
+{% elif article.seo_description_en %}
+{{ article.seo_description_en }}
+{% else %}
+{{ article.get_excerpt(current_language) | truncate(160) }}
+{% endif %}
+{% endblock %}
 
-{% block og_title %}{{ article.get_title() }}{% endblock %}
-{% block og_description %}{{ article.get_excerpt() | truncate(160) }}{% endblock %}
+{% block og_title %}{{ article.get_title(current_language) }}{% endblock %}
+{% block og_description %}{{ article.get_excerpt(current_language) | truncate(160) }}{% endblock %}
 {% block og_image %}
 {% if article.cover_image %}
-{{ url_for('static', filename='uploads/news/' + article.cover_image, _external=True) }}
+{{ url_for('main.uploaded_file', filename='news/' + article.cover_image, _external=True) }}
 {% else %}
 {{ super() }}
 {% endif %}
@@ -35,11 +51,28 @@
                     {% endif %}
                 </div>
                 
-                <h1 class="display-6 fw-bold mb-4">{{ article.get_title() }}</h1>
-                
-                {% if article.get_excerpt() %}
-                <p class="lead text-muted mb-4">{{ article.get_excerpt() }}</p>
+                <h1 class="display-6 fw-bold mb-4">{{ article.get_title(current_language) }}</h1>
+
+                {% if article.get_excerpt(current_language) %}
+                <p class="lead text-muted mb-4">{{ article.get_excerpt(current_language) }}</p>
                 {% endif %}
+
+                <!-- Article Tags -->
+                {% if article.tags %}
+                <div class="mb-3">
+                    {% for tag in article.get_tags_list() %}
+                        <span class="badge bg-light text-primary me-1">#{{ tag }}</span>
+                    {% endfor %}
+                </div>
+                {% endif %}
+
+                <!-- Reading Time -->
+                <div class="mb-4">
+                    <small class="text-muted">
+                        <i class="fas fa-clock me-1"></i>
+                        {{ _('Reading time') }}: {{ article.get_reading_time(current_language) }} {{ _('minutes') }}
+                    </small>
+                </div>
                 
                 <!-- Social Share Buttons -->
                 <div class="d-flex gap-2 mb-4">
@@ -69,16 +102,16 @@
                 <!-- Cover Image -->
                 {% if article.cover_image %}
                 <div class="mb-5">
-                    <img src="{{ url_for('static', filename='uploads/news/' + article.cover_image) }}" 
-                         alt="{{ article.get_title() }}" 
+                    <img src="{{ url_for('main.uploaded_file', filename='news/' + article.cover_image) }}"
+                         alt="{{ article.get_title(current_language) }}"
                          class="img-fluid rounded shadow">
                 </div>
                 {% endif %}
                 
                 <!-- Article Body -->
                 <div class="article-content">
-                    {% if article.get_content() %}
-                        {{ article.get_content() | safe }}
+                    {% if article.get_content(current_language) %}
+                        {{ article.get_content(current_language) | safe }}
                     {% else %}
                         <p>{{ article.get_excerpt() }}</p>
                         <p>This is a sample news article for Emdad Global. In a real implementation, this would contain the full article content from the database.</p>
@@ -151,7 +184,7 @@
             <div class="col-lg-4 mb-4">
                 <div class="card h-100 border-0 shadow-sm news-card">
                     {% if related.cover_image %}
-                    <img src="{{ url_for('static', filename='uploads/news/' + related.cover_image) }}" 
+                    <img src="{{ url_for('main.uploaded_file', filename='news/' + related.cover_image) }}"
                          class="card-img-top" alt="{{ related.get_title() }}" style="height: 200px; object-fit: cover;">
                     {% else %}
                     <div class="card-img-top bg-primary d-flex align-items-center justify-content-center" style="height: 200px;">

@@ -1,9 +1,10 @@
 from flask_wtf import FlaskForm
 from flask_wtf.file import FileField, FileAllowed
-from wtforms import StringField, TextAreaField, SelectField, BooleanField, PasswordField, IntegerField, DateTimeField
-from wtforms.validators import DataRequired, Email, Length, Optional, ValidationError
+from wtforms import StringField, TextAreaField, SelectField, BooleanField, PasswordField, IntegerField, DateTimeField, SubmitField
+from wtforms.validators import DataRequired, Email, Length, Optional, ValidationError, NumberRange
 from wtforms.widgets import TextArea
 from app.models import User, Category
+from flask_babel import lazy_gettext as _l
 
 class RFQForm(FlaskForm):
     """Request for Quote form."""
@@ -161,34 +162,90 @@ class ServiceForm(FlaskForm):
     ])
 
 class NewsForm(FlaskForm):
-    """News/Blog management form."""
-    title_en = StringField('Title (English)', validators=[DataRequired(), Length(max=200)])
-    title_ar = StringField('Title (Arabic)', validators=[Optional(), Length(max=200)])
-    slug = StringField('URL Slug', validators=[DataRequired(), Length(max=200)])
-    excerpt_en = TextAreaField('Excerpt (English)', validators=[Optional(), Length(max=500)])
-    excerpt_ar = TextAreaField('Excerpt (Arabic)', validators=[Optional(), Length(max=500)])
-    content_en = TextAreaField('Content (English)', validators=[Optional()], widget=TextArea())
-    content_ar = TextAreaField('Content (Arabic)', validators=[Optional()], widget=TextArea())
-    tags = StringField('Tags', validators=[Optional(), Length(max=500)], 
+    """Enhanced News/Blog management form with advanced SEO features."""
+
+    # Basic Information
+    title_en = StringField(_l('Title (English)'), validators=[DataRequired(), Length(max=200)])
+    title_ar = StringField(_l('Title (Arabic)'), validators=[Optional(), Length(max=200)])
+    slug = StringField(_l('URL Slug'), validators=[DataRequired(), Length(max=200)])
+    excerpt_en = TextAreaField(_l('Excerpt (English)'), validators=[Optional(), Length(max=500)])
+    excerpt_ar = TextAreaField(_l('Excerpt (Arabic)'), validators=[Optional(), Length(max=500)])
+    content_en = TextAreaField(_l('Content (English)'), validators=[Optional()], widget=TextArea())
+    content_ar = TextAreaField(_l('Content (Arabic)'), validators=[Optional()], widget=TextArea())
+
+    # Enhanced Tags and Keywords
+    tags = StringField(_l('Tags'), validators=[Optional(), Length(max=500)],
                       render_kw={"placeholder": "Separate tags with commas"})
-    
-    # SEO fields
-    seo_title_en = StringField('SEO Title (English)', validators=[Optional(), Length(max=200)])
-    seo_title_ar = StringField('SEO Title (Arabic)', validators=[Optional(), Length(max=200)])
-    seo_description_en = TextAreaField('SEO Description (English)', validators=[Optional(), Length(max=300)])
-    seo_description_ar = TextAreaField('SEO Description (Arabic)', validators=[Optional(), Length(max=300)])
-    
-    status = SelectField('Status', validators=[DataRequired()], choices=[
-        ('draft', 'Draft'),
-        ('published', 'Published'),
-        ('archived', 'Archived')
+    focus_keyword_en = StringField(_l('Focus Keyword (English)'), validators=[Optional(), Length(max=100)],
+                                  render_kw={"placeholder": "Primary keyword for SEO"})
+    focus_keyword_ar = StringField(_l('Focus Keyword (Arabic)'), validators=[Optional(), Length(max=100)],
+                                  render_kw={"placeholder": "الكلمة المفتاحية الأساسية"})
+
+    # Enhanced SEO fields
+    seo_title_en = StringField('SEO Title (English)', validators=[Optional(), Length(max=70)])
+    seo_title_ar = StringField('SEO Title (Arabic)', validators=[Optional(), Length(max=70)])
+    seo_description_en = TextAreaField('SEO Description (English)', validators=[Optional(), Length(max=160)])
+    seo_description_ar = TextAreaField('SEO Description (Arabic)', validators=[Optional(), Length(max=160)])
+
+    # Open Graph and Social Media
+    og_title_en = StringField('Open Graph Title (English)', validators=[Optional(), Length(max=95)])
+    og_title_ar = StringField('Open Graph Title (Arabic)', validators=[Optional(), Length(max=95)])
+    og_description_en = TextAreaField('Open Graph Description (English)', validators=[Optional(), Length(max=200)])
+    og_description_ar = TextAreaField('Open Graph Description (Arabic)', validators=[Optional(), Length(max=200)])
+
+    # Twitter Card
+    twitter_title_en = StringField('Twitter Title (English)', validators=[Optional(), Length(max=70)])
+    twitter_title_ar = StringField('Twitter Title (Arabic)', validators=[Optional(), Length(max=70)])
+    twitter_description_en = TextAreaField('Twitter Description (English)', validators=[Optional(), Length(max=200)])
+    twitter_description_ar = TextAreaField('Twitter Description (Arabic)', validators=[Optional(), Length(max=200)])
+
+    # Schema.org structured data
+    article_type = SelectField('Article Type', choices=[
+        ('Article', 'Article'),
+        ('NewsArticle', 'News Article'),
+        ('BlogPosting', 'Blog Post'),
+        ('TechArticle', 'Technical Article'),
+        ('Report', 'Report')
+    ], default='Article')
+
+    # Publishing options
+    status = SelectField(_l('Status'), validators=[DataRequired()], choices=[])
+    featured = BooleanField(_l('Featured Article'))
+    publish_at = DateTimeField(_l('Publish Date'), validators=[Optional()], format='%Y-%m-%d %H:%M:%S')
+
+    # Enhanced file uploads
+    cover_image = FileField(_l('Cover Image'), validators=[
+        FileAllowed(['jpg', 'jpeg', 'png', 'gif', 'webp'], 'Images only!')
     ])
-    featured = BooleanField('Featured Article')
-    publish_at = DateTimeField('Publish Date', validators=[Optional()], format='%Y-%m-%d %H:%M')
-    
-    cover_image = FileField('Cover Image', validators=[
-        FileAllowed(['jpg', 'jpeg', 'png', 'gif'], 'Only image files allowed!')
+    og_image = FileField(_l('Open Graph Image'), validators=[
+        FileAllowed(['jpg', 'jpeg', 'png', 'gif', 'webp'], 'Images only!')
     ])
+
+    # Reading time and difficulty
+    estimated_reading_time = IntegerField(_l('Estimated Reading Time (minutes)'),
+                                        validators=[Optional(), NumberRange(min=1, max=120)])
+    content_difficulty = SelectField(_l('Content Difficulty'), choices=[], default='intermediate')
+
+    submit = SubmitField(_l('Save Article'))
+
+    def __init__(self, *args, **kwargs):
+        super(NewsForm, self).__init__(*args, **kwargs)
+
+        # Set dynamic choices for status field
+        self.status.choices = [
+            ('draft', _l('Draft')),
+            ('published', _l('Published')),
+            ('scheduled', _l('Scheduled')),
+            ('archived', _l('Archived'))
+        ]
+
+        # Set dynamic choices for content difficulty
+        self.content_difficulty.choices = [
+            ('beginner', _l('Beginner')),
+            ('intermediate', _l('Intermediate')),
+            ('advanced', _l('Advanced')),
+            ('expert', _l('Expert'))
+        ]
 
 class GalleryForm(FlaskForm):
     """Gallery management form."""

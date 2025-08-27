@@ -245,7 +245,7 @@ class Service(db.Model):
         return f'<Service {self.title_en}>'
 
 class News(db.Model):
-    """News/Blog model."""
+    """Enhanced News/Blog model with advanced SEO features."""
     id = db.Column(db.Integer, primary_key=True)
     title_en = db.Column(db.String(200), nullable=False)
     title_ar = db.Column(db.String(200))
@@ -257,16 +257,40 @@ class News(db.Model):
     cover_image = db.Column(db.String(255))
     tags = db.Column(db.String(500))  # Comma-separated tags
 
-    # SEO
-    seo_title_en = db.Column(db.String(200))
-    seo_title_ar = db.Column(db.String(200))
-    seo_description_en = db.Column(db.String(300))
-    seo_description_ar = db.Column(db.String(300))
+    # Enhanced Keywords
+    focus_keyword_en = db.Column(db.String(100))
+    focus_keyword_ar = db.Column(db.String(100))
+
+    # Enhanced SEO
+    seo_title_en = db.Column(db.String(70))
+    seo_title_ar = db.Column(db.String(70))
+    seo_description_en = db.Column(db.String(160))
+    seo_description_ar = db.Column(db.String(160))
+
+    # Open Graph
+    og_title_en = db.Column(db.String(95))
+    og_title_ar = db.Column(db.String(95))
+    og_description_en = db.Column(db.String(200))
+    og_description_ar = db.Column(db.String(200))
+    og_image = db.Column(db.String(255))
+
+    # Twitter Card
+    twitter_title_en = db.Column(db.String(70))
+    twitter_title_ar = db.Column(db.String(70))
+    twitter_description_en = db.Column(db.String(200))
+    twitter_description_ar = db.Column(db.String(200))
+
+    # Schema.org
+    article_type = db.Column(db.String(50), default='Article')
 
     # Publishing
-    status = db.Column(db.String(20), default='draft')  # draft, published, archived
+    status = db.Column(db.String(20), default='draft')  # draft, published, scheduled, archived
     featured = db.Column(db.Boolean, default=False)
     publish_at = db.Column(db.DateTime)
+
+    # Content metadata
+    estimated_reading_time = db.Column(db.Integer)  # in minutes
+    content_difficulty = db.Column(db.String(20), default='intermediate')
 
     # Timestamps
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
@@ -287,6 +311,31 @@ class News(db.Model):
     def get_tags_list(self):
         """Get tags as a list."""
         return [tag.strip() for tag in self.tags.split(',')] if self.tags else []
+
+    def get_seo_title(self, language='en'):
+        """Get SEO title in specified language."""
+        seo_title = getattr(self, f'seo_title_{language}', None)
+        return seo_title if seo_title else self.get_title(language)
+
+    def get_seo_description(self, language='en'):
+        """Get SEO description in specified language."""
+        seo_desc = getattr(self, f'seo_description_{language}', None)
+        return seo_desc if seo_desc else self.get_excerpt(language)
+
+    def get_reading_time(self, language='en'):
+        """Estimate reading time in minutes."""
+        content = self.get_content(language)
+        if not content:
+            return 1
+
+        # Remove HTML tags for word count
+        import re
+        text = re.sub(r'<[^>]+>', '', content)
+        word_count = len(text.split())
+
+        # Average reading speed: 200 words per minute
+        reading_time = max(1, round(word_count / 200))
+        return reading_time
 
     def is_published(self):
         """Check if news article is published."""

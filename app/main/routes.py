@@ -1,4 +1,4 @@
-from flask import render_template, request, redirect, url_for, flash, current_app, session, jsonify
+from flask import render_template, request, redirect, url_for, flash, current_app, session, jsonify, send_from_directory
 from flask_mail import Message
 from werkzeug.utils import secure_filename
 from app.main import bp
@@ -183,6 +183,7 @@ def news_detail(slug):
                          article=article,
                          related_articles=related_articles)
 
+
 @bp.route('/contact', methods=['GET', 'POST'])
 def contact():
     """Contact page with RFQ form."""
@@ -276,6 +277,12 @@ Emdad Global Team
         return redirect(url_for('main.contact'))
     
     return render_template('main/contact.html', form=form)
+
+@bp.route('/uploads/<path:filename>')
+def uploaded_file(filename):
+    """Serve uploaded files."""
+    upload_path = os.path.join(current_app.instance_path, current_app.config.get('UPLOAD_FOLDER', 'uploads'))
+    return send_from_directory(upload_path, filename)
 
 @bp.route('/set-language/<language>')
 def set_language(language):

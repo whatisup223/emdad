@@ -255,7 +255,7 @@
                             {% if product and product.image_path %}
                                 <div class="mt-2">
                                     <small class="text-muted">الصورة الحالية:</small><br>
-                                    <img src="{{ url_for('uploaded_file', filename='products/' + product.image_path) }}" 
+                                    <img src="{{ url_for('main.uploaded_file', filename='products/' + product.image_path) }}"
                                          alt="{{ product.name_en }}" class="img-thumbnail" style="max-width: 200px;">
                                 </div>
                             {% endif %}

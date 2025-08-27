@@ -3,7 +3,6 @@
 # This file is distributed under the same license as the PROJECT project.
 # FIRST AUTHOR <EMAIL@ADDRESS>, 2025.
 #
-#, fuzzy
 msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
@@ -159,4 +158,186 @@ msgstr "System Settings"
 
 msgid "Reports & Analytics"
 msgstr "Reports & Analytics"
+
+# News Management Translations
+msgid "Add New Article"
+msgstr "Add New Article"
+
+msgid "Edit Article"
+msgstr "Edit Article"
+
+msgid "Add Article"
+msgstr "Add Article"
+
+msgid "Article Details"
+msgstr "Article Details"
+
+msgid "Create and manage news articles"
+msgstr "Create and manage news articles"
+
+msgid "Back to News"
+msgstr "Back to News"
+
+msgid "English Content"
+msgstr "English Content"
+
+msgid "Arabic Content"
+msgstr "Arabic Content"
+
+msgid "All Status"
+msgstr "All Status"
+
+msgid "Draft"
+msgstr "Draft"
+
+msgid "Published"
+msgstr "Published"
+
+msgid "Archived"
+msgstr "Archived"
+
+msgid "Search articles..."
+msgstr "Search articles..."
+
+msgid "Title"
+msgstr "Title"
+
+msgid "Featured"
+msgstr "Featured"
+
+msgid "Author"
+msgstr "Author"
+
+msgid "Created At"
+msgstr "Created At"
+
+msgid "No Image"
+msgstr "No Image"
+
+msgid "View"
+msgstr "View"
+
+msgid "Save Draft"
+msgstr "Save Draft"
+
+msgid "Publish"
+msgstr "Publish"
+
+msgid "Auto-save: Enabled"
+msgstr "Auto-save: Enabled"
+
+msgid "Upload cover image (JPG, PNG, WebP - Max 5MB)"
+msgstr "Upload cover image (JPG, PNG, WebP - Max 5MB)"
+
+msgid "Please enter an English title"
+msgstr "Please enter an English title"
+
+msgid "Please enter article content (minimum 50 characters)"
+msgstr "Please enter article content (minimum 50 characters)"
+
+msgid "Enter article title"
+msgstr "Enter article title"
+
+msgid "English"
+msgstr "English"
+
+msgid "Arabic"
+msgstr "Arabic"
+
+msgid "URL Slug"
+msgstr "URL Slug"
+
+msgid "article-url-slug"
+msgstr "article-url-slug"
+
+msgid "Brief description"
+msgstr "Brief description"
+
+msgid "Excerpt"
+msgstr "Excerpt"
+
+msgid "Content"
+msgstr "Content"
+
+msgid "Tags"
+msgstr "Tags"
+
+msgid "Cover Image"
+msgstr "Cover Image"
+
+msgid "Publish Date"
+msgstr "Publish Date"
+
+msgid "Select date"
+msgstr "Select date"
+
+msgid "tag1, tag2, tag3"
+msgstr "tag1, tag2, tag3"
+
+msgid "Are you sure you want to delete this article?"
+msgstr "Are you sure you want to delete this article?"
+
+msgid "No articles found"
+msgstr "No articles found"
+
+msgid "Previous"
+msgstr "Previous"
+
+msgid "Next"
+msgstr "Next"
+
+# Form Labels
+msgid "Title (English)"
+msgstr "Title (English)"
+
+msgid "Title (Arabic)"
+msgstr "Title (Arabic)"
+
+msgid "Excerpt (English)"
+msgstr "Excerpt (English)"
+
+msgid "Excerpt (Arabic)"
+msgstr "Excerpt (Arabic)"
+
+msgid "Content (English)"
+msgstr "Content (English)"
+
+msgid "Content (Arabic)"
+msgstr "Content (Arabic)"
+
+msgid "Focus Keyword (English)"
+msgstr "Focus Keyword (English)"
+
+msgid "Focus Keyword (Arabic)"
+msgstr "Focus Keyword (Arabic)"
+
+msgid "Featured Article"
+msgstr "Featured Article"
+
+msgid "Estimated Reading Time (minutes)"
+msgstr "Estimated Reading Time (minutes)"
+
+msgid "Content Difficulty"
+msgstr "Content Difficulty"
+
+msgid "Beginner"
+msgstr "Beginner"
+
+msgid "Intermediate"
+msgstr "Intermediate"
+
+msgid "Advanced"
+msgstr "Advanced"
+
+msgid "Expert"
+msgstr "Expert"
+
+msgid "Save Article"
+msgstr "Save Article"
+
+msgid "Open Graph Image"
+msgstr "Open Graph Image"
+
+msgid "Scheduled"
+msgstr "Scheduled"
 

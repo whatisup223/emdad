@@ -416,83 +416,24 @@ html {
     border-color: var(--gray-200);
 }
 
-/* Hero Section - reduced overlay for better background visibility */
+/* Hero Section */
 .hero-section {
     position: relative;
     overflow: hidden;
-    background:
-        linear-gradient(135deg, rgba(104, 155, 138, 0.2), rgba(90, 133, 117, 0.25)),
-        url('/uploads/bg.webp') center/cover;
-    background-attachment: scroll;
-    background-repeat: no-repeat;
+    background-image: url('/static/images/hero-bg.webp');
     background-size: cover;
     background-position: center center;
+    background-repeat: no-repeat;
+    background-attachment: scroll;
     min-height: 100vh;
     display: flex;
     align-items: center;
     padding: 2rem 0;
-    transition: all 0.3s ease;
 }
 
-/* Light overlay option for rollback */
-.hero-section.light-overlay {
-    background:
-        linear-gradient(135deg, rgba(104, 155, 138, 0.2), rgba(90, 133, 117, 0.25)),
-        url('/uploads/bg.webp') center/cover;
-}
 
-/* Heavy overlay option for strong contrast */
-.hero-section.heavy-overlay {
-    background:
-        linear-gradient(135deg, rgba(104, 155, 138, 0.5), rgba(90, 133, 117, 0.6)),
-        url('/uploads/bg.webp') center/cover;
-}
-
-/* Fallback for older browsers or if webp fails */
-.hero-section.fallback {
-    background:
-        linear-gradient(135deg, rgba(104, 155, 138, 0.4), rgba(90, 133, 117, 0.5)),
-        url('../images/hero-bg.jpg') center/cover;
-}
-
-/* Enhanced background properties for new image */
-.hero-section {
-    background-blend-mode: multiply;
-    image-rendering: -webkit-optimize-contrast;
-    image-rendering: crisp-edges;
-}
-
-/* Loading states for hero background */
-.hero-section.loading-bg {
-    background:
-        linear-gradient(135deg, rgba(104, 155, 138, 0.6), rgba(90, 133, 117, 0.7)),
-        linear-gradient(45deg, #f0f0f0 25%, transparent 25%),
-        linear-gradient(-45deg, #f0f0f0 25%, transparent 25%),
-        linear-gradient(45deg, transparent 75%, #f0f0f0 75%),
-        linear-gradient(-45deg, transparent 75%, #f0f0f0 75%);
-    background-size: 20px 20px, 20px 20px, 20px 20px, 20px 20px, 20px 20px;
-    background-position: 0 0, 0 0, 10px 10px, 10px 10px, 0 0;
-    animation: loading-bg 2s linear infinite;
-}
-
-@keyframes loading-bg {
-    0% { background-position: 0 0, 0 0, 10px 10px, 10px 10px, 0 0; }
-    100% { background-position: 20px 20px, 20px 20px, 30px 30px, 30px 30px, 20px 20px; }
-}
-
-.hero-section.bg-loaded {
-    animation: fadeInBg 1s ease-in-out;
-}
-
-@keyframes fadeInBg {
-    from { opacity: 0.7; }
-    to { opacity: 1; }
-}
 
 /* Ensure proper loading and display */
-.hero-section::before {
-    background: rgba(0, 0, 0, 0.1);
-}
 
 /* Responsive background attachment */
 @media (max-width: 768px) {
@@ -503,7 +444,7 @@ html {
     }
 }
 
-/* Hero overlay - reduced for better background visibility */
+/* Hero overlay */
 .hero-section::before {
     content: '';
     position: absolute;
@@ -511,23 +452,12 @@ html {
     left: 0;
     right: 0;
     bottom: 0;
-    background: linear-gradient(135deg,
-        rgba(104, 155, 138, 0.15) 0%,
-        rgba(125, 176, 159, 0.1) 30%,
-        rgba(249, 203, 153, 0.1) 70%,
-        rgba(251, 215, 176, 0.05) 100%);
+    background: linear-gradient(135deg, rgba(104, 155, 138, 0.3), rgba(90, 133, 117, 0.4));
     z-index: 1;
-    transition: opacity 0.3s ease;
+}
 }
 
-/* Fallback overlay - original values for rollback */
-.hero-section.original-overlay::before {
-    background: linear-gradient(135deg,
-        rgba(104, 155, 138, 0.3) 0%,
-        rgba(125, 176, 159, 0.2) 30%,
-        rgba(249, 203, 153, 0.2) 70%,
-        rgba(251, 215, 176, 0.1) 100%);
-}
+
 
 /* Secondary overlay - reduced for better background visibility */
 .hero-section::after {
@@ -4126,4 +4056,351 @@ footer h6 {
     .rtl .navbar-nav {
         align-items: flex-end;
     }
+}
+
+/* Enhanced Footer Styles */
+.footer-section {
+    background: linear-gradient(135deg, #2e7d32 0%, #1b5e20 100%);
+    position: relative;
+    overflow: hidden;
+}
+
+/* Footer Wave Animation */
+.footer-wave-top {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 60px;
+    color: #f8f9fa;
+    z-index: 1;
+}
+
+.footer-wave-top svg {
+    width: 100%;
+    height: 100%;
+    display: block;
+}
+
+/* Enhanced Footer Brand */
+.footer-brand {
+    position: relative;
+}
+
+.footer-logo {
+    filter: brightness(1.1);
+    transition: transform 0.3s ease;
+}
+
+.footer-logo:hover {
+    transform: scale(1.05);
+}
+
+.footer-title {
+    color: #f9cb99;
+    font-weight: 700;
+    margin-bottom: 1rem;
+}
+
+.footer-description {
+    color: rgba(255, 255, 255, 0.8);
+    line-height: 1.6;
+}
+
+/* Enhanced Social Links */
+.social-links {
+    display: flex;
+    gap: 0.75rem;
+}
+
+.social-link {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 40px;
+    height: 40px;
+    background: rgba(255, 255, 255, 0.1);
+    color: #fff;
+    border-radius: 50%;
+    text-decoration: none;
+    transition: all 0.3s ease;
+    backdrop-filter: blur(10px);
+}
+
+.social-link:hover {
+    background: #f9cb99;
+    color: #2e7d32;
+    transform: translateY(-3px);
+    box-shadow: 0 5px 15px rgba(249, 203, 153, 0.3);
+}
+
+/* News Section */
+.footer-news .news-item {
+    transition: transform 0.3s ease;
+}
+
+.footer-news .news-item:hover {
+    transform: translateX(5px);
+}
+
+.news-date {
+    font-size: 0.75rem;
+    font-weight: 600;
+}
+
+.news-title a {
+    font-size: 0.875rem;
+    font-weight: 600;
+    line-height: 1.4;
+    transition: color 0.3s ease;
+}
+
+.hover-text-warning:hover {
+    color: #f9cb99 !important;
+}
+
+/* Enhanced Contact Info */
+.contact-item {
+    transition: transform 0.3s ease;
+}
+
+.contact-item:hover {
+    transform: translateX(5px);
+}
+
+.contact-icon {
+    width: 20px;
+    text-align: center;
+}
+
+.contact-text {
+    flex: 1;
+    color: rgba(255, 255, 255, 0.9);
+}
+
+/* Newsletter */
+.newsletter-signup .form-control {
+    background: rgba(255, 255, 255, 0.1) !important;
+    border: 1px solid rgba(255, 255, 255, 0.2) !important;
+    color: #fff !important;
+}
+
+.newsletter-signup .form-control::placeholder {
+    color: rgba(255, 255, 255, 0.6);
+}
+
+.newsletter-signup .form-control:focus {
+    background: rgba(255, 255, 255, 0.15) !important;
+    border-color: #f9cb99 !important;
+    box-shadow: 0 0 0 0.2rem rgba(249, 203, 153, 0.25);
+}
+
+.newsletter-signup .btn-warning {
+    background: #f9cb99;
+    border-color: #f9cb99;
+    color: #2e7d32;
+    font-weight: 600;
+}
+
+.newsletter-signup .btn-warning:hover {
+    background: #fbd7b0;
+    border-color: #fbd7b0;
+    transform: translateY(-1px);
+}
+
+/* Enhanced Footer Bottom */
+.footer-bottom {
+    background: rgba(0, 0, 0, 0.2);
+    backdrop-filter: blur(10px);
+}
+
+.hover-text-light:hover {
+    color: #f8f9fa !important;
+}
+
+/* Updated Footer Styles */
+.text-light-gray {
+    color: rgba(255, 255, 255, 0.8) !important;
+}
+
+.footer-link {
+    color: rgba(255, 255, 255, 0.8) !important;
+    text-decoration: none !important;
+    transition: all 0.3s ease;
+    display: inline-block;
+}
+
+.footer-link:hover {
+    color: #f9cb99 !important;
+    transform: translateX(5px);
+}
+
+/* Override existing footer styles for better icon display */
+footer .contact-info i {
+    color: #f9cb99 !important;
+    margin-right: 0.75rem;
+    width: 20px;
+    text-align: center;
+    font-size: 1rem;
+}
+
+/* Social link improvements */
+.social-link i {
+    font-size: 1rem;
+}
+
+/* Footer brand improvements */
+.footer-brand h5 {
+    color: #fff !important;
+    margin-bottom: 0.5rem;
+}
+
+/* Footer headings */
+footer h6 {
+    color: #fff !important;
+    font-weight: 600;
+    margin-bottom: 1rem;
+}
+
+/* Icon Fallbacks with Unicode */
+.social-link i, .contact-info i {
+    font-family: "Font Awesome 6 Free", "Font Awesome 6 Brands", Arial, sans-serif !important;
+    font-style: normal;
+    font-variant: normal;
+    text-rendering: auto;
+    line-height: 1;
+}
+
+/* Social Media Icons with Unicode Fallbacks */
+.fa-facebook-f:before {
+    content: "\f39e";
+}
+.fa-facebook-f:empty:before {
+    content: "📘";
+    font-family: Arial, sans-serif;
+}
+
+.fa-twitter:before {
+    content: "\f099";
+}
+.fa-twitter:empty:before {
+    content: "🐦";
+    font-family: Arial, sans-serif;
+}
+
+.fa-instagram:before {
+    content: "\f16d";
+}
+.fa-instagram:empty:before {
+    content: "📷";
+    font-family: Arial, sans-serif;
+}
+
+.fa-linkedin-in:before {
+    content: "\f0e1";
+}
+.fa-linkedin-in:empty:before {
+    content: "💼";
+    font-family: Arial, sans-serif;
+}
+
+.fa-whatsapp:before {
+    content: "\f232";
+}
+.fa-whatsapp:empty:before {
+    content: "💬";
+    font-family: Arial, sans-serif;
+}
+
+/* Contact Icons with Unicode Fallbacks */
+.fa-envelope:before {
+    content: "\f0e0";
+}
+.fa-envelope:empty:before {
+    content: "✉️";
+    font-family: Arial, sans-serif;
+}
+
+.fa-phone:before {
+    content: "\f095";
+}
+.fa-phone:empty:before {
+    content: "📞";
+    font-family: Arial, sans-serif;
+}
+
+.fa-map-marker-alt:before {
+    content: "\f3c5";
+}
+.fa-map-marker-alt:empty:before {
+    content: "📍";
+    font-family: Arial, sans-serif;
+}
+
+.fa-clock:before {
+    content: "\f017";
+}
+.fa-clock:empty:before {
+    content: "🕐";
+    font-family: Arial, sans-serif;
+}
+
+/* Footer bottom spacing */
+.footer-bottom .col-md-6:last-child a {
+    margin-left: 1rem;
+}
+
+.footer-bottom .col-md-6:last-child a:first-child {
+    margin-left: 0;
+}
+
+/* Icon Display Rules */
+.social-link i,
+.contact-info i {
+    display: inline-block !important;
+    width: auto !important;
+    height: auto !important;
+    font-size: 1rem !important;
+    line-height: 1 !important;
+    position: relative;
+}
+
+/* Hide emoji text when Font Awesome loads */
+.social-link i:before,
+.contact-info i:before {
+    position: absolute;
+    left: 0;
+    top: 0;
+    z-index: 2;
+}
+
+/* Show emoji text when Font Awesome fails */
+.social-link i,
+.contact-info i {
+    color: transparent;
+    text-shadow: 0 0 0 #f9cb99;
+}
+
+/* When Font Awesome loads, hide the emoji text */
+.fa-facebook-f:before,
+.fa-linkedin-in:before,
+.fa-twitter:before,
+.fa-instagram:before,
+.fa-whatsapp:before,
+.fa-envelope:before,
+.fa-phone:before,
+.fa-map-marker-alt:before,
+.fa-clock:before {
+    color: #f9cb99;
+    text-shadow: none;
+}
+
+/* RTL spacing fixes */
+.rtl .footer-bottom .col-md-6:last-child a {
+    margin-right: 1rem;
+    margin-left: 0;
+}
+
+.rtl .footer-bottom .col-md-6:last-child a:first-child {
+    margin-right: 0;
 }

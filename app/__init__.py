@@ -91,6 +91,17 @@ def create_app(config_name=None):
         def _(text):
             return translate(text, current_language)
 
+        def get_latest_news(limit=2):
+            """Get latest published news for footer"""
+            try:
+                from app.models import News
+                from datetime import datetime
+                return News.query.filter_by(status='published').filter(
+                    News.publish_at <= datetime.utcnow()
+                ).order_by(News.publish_at.desc()).limit(limit).all()
+            except:
+                return []
+
         return {
             'COMPANY_NAME': app.config['COMPANY_NAME'],
             'COMPANY_EMAIL': app.config['COMPANY_EMAIL'],
@@ -100,8 +111,10 @@ def create_app(config_name=None):
             'SITE_NAME': app.config['SITE_NAME'],
             'LANGUAGES': app.config['LANGUAGES'],
             'current_language': current_language,
+            'get_locale': lambda: current_language,
             'is_rtl': current_language == 'ar',
-            '_': _
+            '_': _,
+            'get_latest_news': get_latest_news
         }
 
     # Error handlers

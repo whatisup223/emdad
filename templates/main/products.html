@@ -97,8 +97,8 @@ Browse our complete range of premium Egyptian agricultural products including ci
                     <!-- Product Image -->
                     {% set main_image = product.get_main_image() %}
                     {% if main_image %}
-                    <img src="{{ url_for('static', filename='uploads/products/' + main_image.filename) }}" 
-                         class="card-img-top" alt="{{ product.get_name() }}" 
+                    <img src="{{ url_for('main.uploaded_file', filename='products/' + main_image.filename) }}"
+                         class="card-img-top" alt="{{ product.get_name() }}"
                          style="height: 250px; object-fit: cover;">
                     {% else %}
                     <div class="card-img-top bg-light d-flex align-items-center justify-content-center" 

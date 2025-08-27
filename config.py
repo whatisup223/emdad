@@ -33,13 +33,12 @@ class Config:
     RECAPTCHA_PRIVATE_KEY = os.environ.get('RECAPTCHA_PRIVATE_KEY')
 
     # Internationalization
-    LANGUAGES = ['en', 'ar']
+    LANGUAGES = {
+        'en': 'English',
+        'ar': 'العربية'
+    }
     BABEL_DEFAULT_LOCALE = 'en'
     BABEL_DEFAULT_TIMEZONE = 'UTC'
-    
-    # Internationalization
-    LANGUAGES = ['en', 'ar']
-    DEFAULT_LANGUAGE = 'en'
     
     # Company Information
     COMPANY_NAME = os.environ.get('COMPANY_NAME') or 'Emdad Global'

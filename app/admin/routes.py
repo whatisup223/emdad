@@ -591,6 +591,24 @@ def news_new():
     form = NewsForm()
 
     if form.validate_on_submit():
+        # Handle action buttons (save_draft or publish)
+        action = request.form.get('action', 'save')
+
+        # Set status based on action
+        if action == 'save_draft':
+            status = 'draft'
+            publish_at = form.publish_at.data
+        elif action == 'publish':
+            status = 'published'
+            # Set publish date if not set
+            if not form.publish_at.data:
+                publish_at = datetime.utcnow()
+            else:
+                publish_at = form.publish_at.data
+        else:
+            status = form.status.data
+            publish_at = form.publish_at.data
+
         news_item = News(
             title_en=form.title_en.data,
             title_ar=form.title_ar.data,
@@ -599,14 +617,44 @@ def news_new():
             content_ar=form.content_ar.data,
             excerpt_en=form.excerpt_en.data,
             excerpt_ar=form.excerpt_ar.data,
-            status=form.status.data,
+            tags=form.tags.data,
+
+            # Enhanced Keywords
+            focus_keyword_en=form.focus_keyword_en.data,
+            focus_keyword_ar=form.focus_keyword_ar.data,
+
+            # Enhanced SEO
+            seo_title_en=form.seo_title_en.data,
+            seo_title_ar=form.seo_title_ar.data,
+            seo_description_en=form.seo_description_en.data,
+            seo_description_ar=form.seo_description_ar.data,
+
+            # Open Graph
+            og_title_en=form.og_title_en.data,
+            og_title_ar=form.og_title_ar.data,
+            og_description_en=form.og_description_en.data,
+            og_description_ar=form.og_description_ar.data,
+
+            # Twitter Card
+            twitter_title_en=form.twitter_title_en.data,
+            twitter_title_ar=form.twitter_title_ar.data,
+            twitter_description_en=form.twitter_description_en.data,
+            twitter_description_ar=form.twitter_description_ar.data,
+
+            # Schema.org and Content Metadata
+            article_type=form.article_type.data,
+            estimated_reading_time=form.estimated_reading_time.data,
+            content_difficulty=form.content_difficulty.data,
+
+            # Publishing
+            status=status,
             featured=form.featured.data,
-            author_id=current_user.id
+            publish_at=publish_at
         )
 
-        # Handle image upload
-        if form.image.data:
-            filename = secure_filename(form.image.data.filename)
+        # Handle cover image upload
+        if form.cover_image.data and hasattr(form.cover_image.data, 'filename') and form.cover_image.data.filename:
+            filename = secure_filename(form.cover_image.data.filename)
             timestamp = datetime.now().strftime('%Y%m%d_%H%M%S_')
             filename = timestamp + filename
 
@@ -614,8 +662,8 @@ def news_new():
                                      current_app.config['UPLOAD_FOLDER'],
                                      'news', filename)
             os.makedirs(os.path.dirname(upload_path), exist_ok=True)
-            form.image.data.save(upload_path)
-            news_item.image_path = filename
+            form.cover_image.data.save(upload_path)
+            news_item.cover_image = filename
 
         db.session.add(news_item)
         db.session.commit()
@@ -633,6 +681,7 @@ def news_edit(id):
     form = NewsForm(obj=news_item)
 
     if form.validate_on_submit():
+        # Basic Information
         news_item.title_en = form.title_en.data
         news_item.title_ar = form.title_ar.data
         news_item.slug = form.slug.data
@@ -640,13 +689,44 @@ def news_edit(id):
         news_item.content_ar = form.content_ar.data
         news_item.excerpt_en = form.excerpt_en.data
         news_item.excerpt_ar = form.excerpt_ar.data
+        news_item.tags = form.tags.data
+
+        # Enhanced Keywords
+        news_item.focus_keyword_en = form.focus_keyword_en.data
+        news_item.focus_keyword_ar = form.focus_keyword_ar.data
+
+        # Enhanced SEO
+        news_item.seo_title_en = form.seo_title_en.data
+        news_item.seo_title_ar = form.seo_title_ar.data
+        news_item.seo_description_en = form.seo_description_en.data
+        news_item.seo_description_ar = form.seo_description_ar.data
+
+        # Open Graph
+        news_item.og_title_en = form.og_title_en.data
+        news_item.og_title_ar = form.og_title_ar.data
+        news_item.og_description_en = form.og_description_en.data
+        news_item.og_description_ar = form.og_description_ar.data
+
+        # Twitter Card
+        news_item.twitter_title_en = form.twitter_title_en.data
+        news_item.twitter_title_ar = form.twitter_title_ar.data
+        news_item.twitter_description_en = form.twitter_description_en.data
+        news_item.twitter_description_ar = form.twitter_description_ar.data
+
+        # Schema.org and Content Metadata
+        news_item.article_type = form.article_type.data
+        news_item.estimated_reading_time = form.estimated_reading_time.data
+        news_item.content_difficulty = form.content_difficulty.data
+
+        # Publishing
         news_item.status = form.status.data
         news_item.featured = form.featured.data
+        news_item.publish_at = form.publish_at.data
         news_item.updated_at = datetime.utcnow()
 
-        # Handle image upload
-        if form.image.data:
-            filename = secure_filename(form.image.data.filename)
+        # Handle cover image upload
+        if form.cover_image.data and hasattr(form.cover_image.data, 'filename') and form.cover_image.data.filename:
+            filename = secure_filename(form.cover_image.data.filename)
             timestamp = datetime.now().strftime('%Y%m%d_%H%M%S_')
             filename = timestamp + filename
 
@@ -654,8 +734,8 @@ def news_edit(id):
                                      current_app.config['UPLOAD_FOLDER'],
                                      'news', filename)
             os.makedirs(os.path.dirname(upload_path), exist_ok=True)
-            form.image.data.save(upload_path)
-            news_item.image_path = filename
+            form.cover_image.data.save(upload_path)
+            news_item.cover_image = filename
 
         db.session.commit()
         flash('News article updated successfully.', 'success')

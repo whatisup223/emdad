@@ -46,7 +46,7 @@
             <div class="col-lg-4 mb-4">
                 <div class="card h-100 border-0 shadow-sm news-card featured-news">
                     {% if article.cover_image %}
-                    <img src="{{ url_for('static', filename='uploads/news/' + article.cover_image) }}" 
+                    <img src="{{ url_for('main.uploaded_file', filename='news/' + article.cover_image) }}"
                          class="card-img-top" alt="{{ article.get_title() }}" style="height: 200px; object-fit: cover;">
                     {% else %}
                     <div class="card-img-top bg-primary d-flex align-items-center justify-content-center" style="height: 200px;">
@@ -60,8 +60,15 @@
                             <small class="text-muted ms-2">{{ article.publish_at.strftime('%B %d, %Y') }}</small>
                         </div>
                         
-                        <h5 class="card-title">{{ article.get_title() }}</h5>
-                        <p class="card-text text-muted flex-grow-1">{{ article.get_excerpt() | truncate(120) }}</p>
+                        <h5 class="card-title">{{ article.get_title(current_language) }}</h5>
+                        <p class="card-text text-muted flex-grow-1">{{ article.get_excerpt(current_language) | truncate(120) }}</p>
+                        {% if article.tags %}
+                        <div class="mb-2">
+                            {% for tag in article.tags.split(',') %}
+                                <span class="badge bg-light text-dark me-1">#{{ tag.strip() }}</span>
+                            {% endfor %}
+                        </div>
+                        {% endif %}
                         
                         <div class="mt-auto">
                             <a href="{{ url_for('main.news_detail', slug=article.slug) }}" class="btn btn-outline-primary">
@@ -89,7 +96,7 @@
                         <div class="row g-0">
                             <div class="col-md-4">
                                 {% if article.cover_image %}
-                                <img src="{{ url_for('static', filename='uploads/news/' + article.cover_image) }}" 
+                                <img src="{{ url_for('main.uploaded_file', filename='news/' + article.cover_image) }}"
                                      class="img-fluid rounded-start h-100" alt="{{ article.get_title() }}" style="object-fit: cover;">
                                 {% else %}
                                 <div class="bg-light d-flex align-items-center justify-content-center h-100 rounded-start">
@@ -108,11 +115,11 @@
                                     
                                     <h5 class="card-title">
                                         <a href="{{ url_for('main.news_detail', slug=article.slug) }}" class="text-decoration-none text-dark">
-                                            {{ article.get_title() }}
+                                            {{ article.get_title(current_language) }}
                                         </a>
                                     </h5>
                                     
-                                    <p class="card-text text-muted flex-grow-1">{{ article.get_excerpt() | truncate(150) }}</p>
+                                    <p class="card-text text-muted flex-grow-1">{{ article.get_excerpt(current_language) | truncate(150) }}</p>
                                     
                                     {% if article.get_tags_list() %}
                                     <div class="mb-3">

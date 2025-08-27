@@ -9,7 +9,7 @@
 {% block og_image %}
 {% set main_image = product.get_main_image() %}
 {% if main_image %}
-{{ url_for('static', filename='uploads/products/' + main_image.filename, _external=True) }}
+{{ url_for('main.uploaded_file', filename='products/' + main_image.filename, _external=True) }}
 {% else %}
 {{ super() }}
 {% endif %}
@@ -41,9 +41,9 @@
                     <div class="main-image mb-3">
                         {% set main_image = product.get_main_image() %}
                         {% if main_image %}
-                        <img id="mainProductImage" 
-                             src="{{ url_for('static', filename='uploads/products/' + main_image.filename) }}" 
-                             alt="{{ product.get_name() }}" 
+                        <img id="mainProductImage"
+                             src="{{ url_for('main.uploaded_file', filename='products/' + main_image.filename) }}"
+                             alt="{{ product.get_name() }}"
                              class="img-fluid rounded shadow"
                              style="width: 100%; height: 400px; object-fit: cover; cursor: pointer;"
                              onclick="openImageModal(this.src, '{{ product.get_name() }}')">
@@ -60,8 +60,8 @@
                         <div class="row g-2">
                             {% for image in product.images %}
                             <div class="col-3">
-                                <img src="{{ url_for('static', filename='uploads/products/' + image.filename) }}" 
-                                     alt="{{ image.get_alt_text() }}" 
+                                <img src="{{ url_for('main.uploaded_file', filename='products/' + image.filename) }}"
+                                     alt="{{ image.get_alt_text() }}"
                                      class="img-fluid rounded thumbnail-image"
                                      style="height: 80px; object-fit: cover; cursor: pointer;"
                                      onclick="changeMainImage(this.src)">
@@ -348,7 +348,7 @@
                                         <div class="col-md-6 mb-4">
                                             <div class="certification-item d-flex align-items-start">
                                                 {% if cert.logo_path %}
-                                                <img src="{{ url_for('static', filename='uploads/certifications/' + cert.logo_path) }}" 
+                                                <img src="{{ url_for('main.uploaded_file', filename='certifications/' + cert.logo_path) }}"
                                                      alt="{{ cert.get_name() }}" class="me-3" style="width: 50px; height: 50px; object-fit: contain;">
                                                 {% else %}
                                                 <div class="cert-icon bg-primary text-white rounded d-flex align-items-center justify-content-center me-3" style="width: 50px; height: 50px;">
@@ -397,7 +397,7 @@
                 <div class="card h-100 border-0 shadow-sm product-card">
                     {% set related_image = related.get_main_image() %}
                     {% if related_image %}
-                    <img src="{{ url_for('static', filename='uploads/products/' + related_image.filename) }}" 
+                    <img src="{{ url_for('main.uploaded_file', filename='products/' + related_image.filename) }}"
                          class="card-img-top" alt="{{ related.get_name() }}" style="height: 200px; object-fit: cover;">
                     {% else %}
                     <div class="card-img-top bg-light d-flex align-items-center justify-content-center" style="height: 200px;">
