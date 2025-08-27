@@ -1,0 +1,504 @@
+{% extends "base.html" %}
+
+{% block title %}{{ product.get_name() }} - {{ product.category.get_name() }} - {{ SITE_NAME }}{% endblock %}
+
+{% block meta_description %}{{ product.get_short_description() or product.get_description() | truncate(160) }}{% endblock %}
+
+{% block og_title %}{{ product.get_name() }} - Premium Egyptian {{ product.category.get_name() }}{% endblock %}
+{% block og_description %}{{ product.get_short_description() or product.get_description() | truncate(160) }}{% endblock %}
+{% block og_image %}
+{% set main_image = product.get_main_image() %}
+{% if main_image %}
+{{ url_for('static', filename='uploads/products/' + main_image.filename, _external=True) }}
+{% else %}
+{{ super() }}
+{% endif %}
+{% endblock %}
+
+{% block content %}
+<!-- Product Header -->
+<section class="py-5 bg-light">
+    <div class="container">
+        <nav aria-label="breadcrumb">
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item"><a href="{{ url_for('main.index') }}">Home</a></li>
+                <li class="breadcrumb-item"><a href="{{ url_for('main.products') }}">Products</a></li>
+                <li class="breadcrumb-item"><a href="{{ url_for('main.products', cat=product.category.key) }}">{{ product.category.get_name() }}</a></li>
+                <li class="breadcrumb-item active">{{ product.get_name() }}</li>
+            </ol>
+        </nav>
+    </div>
+</section>
+
+<!-- Product Details -->
+<section class="py-5">
+    <div class="container">
+        <div class="row">
+            <!-- Product Images -->
+            <div class="col-lg-6 mb-4">
+                <div class="product-images">
+                    <!-- Main Image -->
+                    <div class="main-image mb-3">
+                        {% set main_image = product.get_main_image() %}
+                        {% if main_image %}
+                        <img id="mainProductImage" 
+                             src="{{ url_for('static', filename='uploads/products/' + main_image.filename) }}" 
+                             alt="{{ product.get_name() }}" 
+                             class="img-fluid rounded shadow"
+                             style="width: 100%; height: 400px; object-fit: cover; cursor: pointer;"
+                             onclick="openImageModal(this.src, '{{ product.get_name() }}')">
+                        {% else %}
+                        <div class="bg-light d-flex align-items-center justify-content-center rounded shadow" style="height: 400px;">
+                            <i class="fas fa-image fa-4x text-muted"></i>
+                        </div>
+                        {% endif %}
+                    </div>
+                    
+                    <!-- Thumbnail Gallery -->
+                    {% if product.images.count() > 1 %}
+                    <div class="thumbnail-gallery">
+                        <div class="row g-2">
+                            {% for image in product.images %}
+                            <div class="col-3">
+                                <img src="{{ url_for('static', filename='uploads/products/' + image.filename) }}" 
+                                     alt="{{ image.get_alt_text() }}" 
+                                     class="img-fluid rounded thumbnail-image"
+                                     style="height: 80px; object-fit: cover; cursor: pointer;"
+                                     onclick="changeMainImage(this.src)">
+                            </div>
+                            {% endfor %}
+                        </div>
+                    </div>
+                    {% endif %}
+                </div>
+            </div>
+            
+            <!-- Product Information -->
+            <div class="col-lg-6">
+                <div class="product-info">
+                    <!-- Category Badge -->
+                    <div class="mb-3">
+                        <span class="badge bg-primary fs-6">{{ product.category.get_name() }}</span>
+                        {% if product.featured %}
+                        <span class="badge bg-warning text-dark ms-2">Featured</span>
+                        {% endif %}
+                    </div>
+                    
+                    <!-- Product Name -->
+                    <h1 class="display-6 fw-bold mb-3">{{ product.get_name() }}</h1>
+                    
+                    <!-- Short Description -->
+                    {% if product.get_short_description() %}
+                    <p class="lead text-muted mb-4">{{ product.get_short_description() }}</p>
+                    {% endif %}
+                    
+                    <!-- Key Features -->
+                    {% set specs = product.get_specifications() %}
+                    {% if specs %}
+                    <div class="key-features mb-4">
+                        <h5 class="mb-3">Key Features</h5>
+                        <div class="row">
+                            {% if specs.get('sizes') %}
+                            <div class="col-md-6 mb-2">
+                                <div class="d-flex align-items-center">
+                                    <i class="fas fa-ruler text-primary me-2"></i>
+                                    <span class="small">Multiple Sizes Available</span>
+                                </div>
+                            </div>
+                            {% endif %}
+                            {% if specs.get('brix') %}
+                            <div class="col-md-6 mb-2">
+                                <div class="d-flex align-items-center">
+                                    <i class="fas fa-tint text-success me-2"></i>
+                                    <span class="small">{{ specs.brix }} Brix</span>
+                                </div>
+                            </div>
+                            {% endif %}
+                            {% if specs.get('acidity') %}
+                            <div class="col-md-6 mb-2">
+                                <div class="d-flex align-items-center">
+                                    <i class="fas fa-flask text-info me-2"></i>
+                                    <span class="small">{{ specs.acidity }} Acidity</span>
+                                </div>
+                            </div>
+                            {% endif %}
+                            <div class="col-md-6 mb-2">
+                                <div class="d-flex align-items-center">
+                                    <i class="fas fa-certificate text-warning me-2"></i>
+                                    <span class="small">Certified Quality</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    {% endif %}
+                    
+                    <!-- Action Buttons -->
+                    <div class="action-buttons mb-4">
+                        <a href="{{ url_for('main.contact') }}?product={{ product.slug }}" class="btn btn-primary btn-lg me-3">
+                            <i class="fas fa-envelope me-2"></i>Request Quote
+                        </a>
+                        <button class="btn btn-outline-secondary" onclick="shareProduct()">
+                            <i class="fas fa-share-alt me-2"></i>Share
+                        </button>
+                    </div>
+                    
+                    <!-- Quick Info -->
+                    <div class="quick-info">
+                        <div class="row">
+                            <div class="col-6">
+                                <div class="info-item mb-3">
+                                    <h6 class="text-muted mb-1">Category</h6>
+                                    <p class="mb-0">{{ product.category.get_name() }}</p>
+                                </div>
+                            </div>
+                            <div class="col-6">
+                                <div class="info-item mb-3">
+                                    <h6 class="text-muted mb-1">Origin</h6>
+                                    <p class="mb-0">Egypt</p>
+                                </div>
+                            </div>
+                            {% set seasonality = product.get_seasonality() %}
+                            {% if seasonality.get('harvest') %}
+                            <div class="col-6">
+                                <div class="info-item mb-3">
+                                    <h6 class="text-muted mb-1">Harvest Season</h6>
+                                    <p class="mb-0">{{ seasonality.harvest }}</p>
+                                </div>
+                            </div>
+                            {% endif %}
+                            {% if seasonality.get('peak') %}
+                            <div class="col-6">
+                                <div class="info-item mb-3">
+                                    <h6 class="text-muted mb-1">Peak Season</h6>
+                                    <p class="mb-0">{{ seasonality.peak }}</p>
+                                </div>
+                            </div>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Product Details Tabs -->
+<section class="py-5 bg-light">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-10 mx-auto">
+                <!-- Tab Navigation -->
+                <ul class="nav nav-tabs nav-fill mb-4" id="productTabs" role="tablist">
+                    <li class="nav-item" role="presentation">
+                        <button class="nav-link active" id="description-tab" data-bs-toggle="tab" data-bs-target="#description" type="button" role="tab">
+                            <i class="fas fa-info-circle me-2"></i>Description
+                        </button>
+                    </li>
+                    <li class="nav-item" role="presentation">
+                        <button class="nav-link" id="specifications-tab" data-bs-toggle="tab" data-bs-target="#specifications" type="button" role="tab">
+                            <i class="fas fa-list me-2"></i>Specifications
+                        </button>
+                    </li>
+                    <li class="nav-item" role="presentation">
+                        <button class="nav-link" id="packaging-tab" data-bs-toggle="tab" data-bs-target="#packaging" type="button" role="tab">
+                            <i class="fas fa-box me-2"></i>Packaging
+                        </button>
+                    </li>
+                    <li class="nav-item" role="presentation">
+                        <button class="nav-link" id="certifications-tab" data-bs-toggle="tab" data-bs-target="#certifications" type="button" role="tab">
+                            <i class="fas fa-certificate me-2"></i>Certifications
+                        </button>
+                    </li>
+                </ul>
+                
+                <!-- Tab Content -->
+                <div class="tab-content" id="productTabsContent">
+                    <!-- Description Tab -->
+                    <div class="tab-pane fade show active" id="description" role="tabpanel">
+                        <div class="card border-0 shadow-sm">
+                            <div class="card-body p-4">
+                                {% if product.get_description() %}
+                                    {{ product.get_description() | safe }}
+                                {% else %}
+                                    <p>{{ product.get_name() }} represents the finest quality Egyptian agricultural produce. Our products are carefully selected from premium farms and processed using state-of-the-art facilities to ensure optimal freshness and quality.</p>
+                                    
+                                    <h5 class="mt-4 mb-3">Quality Assurance</h5>
+                                    <p>Every batch undergoes rigorous quality control processes including:</p>
+                                    <ul>
+                                        <li>Visual inspection for size, color, and appearance</li>
+                                        <li>Laboratory testing for safety and nutritional content</li>
+                                        <li>Cold chain management throughout processing and storage</li>
+                                        <li>Compliance with international export standards</li>
+                                    </ul>
+                                    
+                                    <h5 class="mt-4 mb-3">Why Choose Our {{ product.get_name() }}?</h5>
+                                    <p>Our commitment to excellence ensures that you receive products that meet the highest international standards while maintaining the authentic taste and nutritional value that Egyptian agriculture is renowned for worldwide.</p>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Specifications Tab -->
+                    <div class="tab-pane fade" id="specifications" role="tabpanel">
+                        <div class="card border-0 shadow-sm">
+                            <div class="card-body p-4">
+                                {% if specs %}
+                                    <div class="row">
+                                        {% for key, value in specs.items() %}
+                                        <div class="col-md-6 mb-3">
+                                            <div class="spec-item">
+                                                <h6 class="text-primary mb-1">{{ key.replace('_', ' ').title() }}</h6>
+                                                {% if value is iterable and value is not string %}
+                                                    <ul class="list-unstyled mb-0">
+                                                        {% for item in value %}
+                                                        <li class="text-muted">• {{ item }}</li>
+                                                        {% endfor %}
+                                                    </ul>
+                                                {% else %}
+                                                    <p class="text-muted mb-0">{{ value }}</p>
+                                                {% endif %}
+                                            </div>
+                                        </div>
+                                        {% endfor %}
+                                    </div>
+                                {% else %}
+                                    <div class="text-center py-4">
+                                        <i class="fas fa-clipboard-list fa-3x text-muted mb-3"></i>
+                                        <h5>Detailed Specifications Available</h5>
+                                        <p class="text-muted">Contact us for complete technical specifications and quality parameters.</p>
+                                        <a href="{{ url_for('main.contact') }}" class="btn btn-primary">
+                                            <i class="fas fa-envelope me-2"></i>Request Specifications
+                                        </a>
+                                    </div>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Packaging Tab -->
+                    <div class="tab-pane fade" id="packaging" role="tabpanel">
+                        <div class="card border-0 shadow-sm">
+                            <div class="card-body p-4">
+                                {% set packaging = product.get_packaging_options() %}
+                                {% if packaging %}
+                                    <div class="row">
+                                        {% for key, value in packaging.items() %}
+                                        <div class="col-md-6 mb-4">
+                                            <div class="packaging-option">
+                                                <h6 class="text-success mb-2">
+                                                    <i class="fas fa-box me-2"></i>{{ key.replace('_', ' ').title() }}
+                                                </h6>
+                                                <p class="text-muted mb-0">{{ value }}</p>
+                                            </div>
+                                        </div>
+                                        {% endfor %}
+                                    </div>
+                                {% else %}
+                                    <div class="row">
+                                        <div class="col-md-6 mb-4">
+                                            <div class="packaging-option">
+                                                <h6 class="text-success mb-2">
+                                                    <i class="fas fa-box me-2"></i>Bulk Packaging
+                                                </h6>
+                                                <p class="text-muted mb-0">15kg cartons, 18kg cartons, or custom bulk sizes</p>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6 mb-4">
+                                            <div class="packaging-option">
+                                                <h6 class="text-success mb-2">
+                                                    <i class="fas fa-shopping-bag me-2"></i>Retail Packaging
+                                                </h6>
+                                                <p class="text-muted mb-0">1kg, 2kg, 5kg consumer-ready packages</p>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6 mb-4">
+                                            <div class="packaging-option">
+                                                <h6 class="text-success mb-2">
+                                                    <i class="fas fa-tags me-2"></i>Private Labeling
+                                                </h6>
+                                                <p class="text-muted mb-0">Custom labels with your brand and specifications</p>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6 mb-4">
+                                            <div class="packaging-option">
+                                                <h6 class="text-success mb-2">
+                                                    <i class="fas fa-thermometer-half me-2"></i>Cold Chain
+                                                </h6>
+                                                <p class="text-muted mb-0">Temperature-controlled packaging for optimal freshness</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                {% endif %}
+                                
+                                <div class="mt-4 p-3 bg-light rounded">
+                                    <h6 class="mb-2">Custom Packaging Available</h6>
+                                    <p class="text-muted mb-0">We offer flexible packaging solutions to meet your specific market requirements. Contact us to discuss custom options.</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Certifications Tab -->
+                    <div class="tab-pane fade" id="certifications" role="tabpanel">
+                        <div class="card border-0 shadow-sm">
+                            <div class="card-body p-4">
+                                {% if product.certifications %}
+                                    <div class="row">
+                                        {% for cert in product.certifications %}
+                                        <div class="col-md-6 mb-4">
+                                            <div class="certification-item d-flex align-items-start">
+                                                {% if cert.logo_path %}
+                                                <img src="{{ url_for('static', filename='uploads/certifications/' + cert.logo_path) }}" 
+                                                     alt="{{ cert.get_name() }}" class="me-3" style="width: 50px; height: 50px; object-fit: contain;">
+                                                {% else %}
+                                                <div class="cert-icon bg-primary text-white rounded d-flex align-items-center justify-content-center me-3" style="width: 50px; height: 50px;">
+                                                    <i class="fas fa-certificate"></i>
+                                                </div>
+                                                {% endif %}
+                                                <div>
+                                                    <h6 class="mb-1">{{ cert.get_name() }}</h6>
+                                                    <p class="text-muted small mb-0">{{ cert.get_description() | truncate(100) }}</p>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        {% endfor %}
+                                    </div>
+                                {% else %}
+                                    <div class="text-center py-4">
+                                        <i class="fas fa-award fa-3x text-muted mb-3"></i>
+                                        <h5>Quality Certified</h5>
+                                        <p class="text-muted">This product meets international quality and safety standards.</p>
+                                        <a href="{{ url_for('main.certifications') }}" class="btn btn-outline-primary">
+                                            <i class="fas fa-certificate me-2"></i>View All Certifications
+                                        </a>
+                                    </div>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Related Products -->
+{% if related_products %}
+<section class="py-5">
+    <div class="container">
+        <div class="text-center mb-5">
+            <h2 class="mb-3">Related Products</h2>
+            <p class="lead text-muted">More products from {{ product.category.get_name() }}</p>
+        </div>
+        
+        <div class="row">
+            {% for related in related_products %}
+            <div class="col-lg-3 col-md-6 mb-4">
+                <div class="card h-100 border-0 shadow-sm product-card">
+                    {% set related_image = related.get_main_image() %}
+                    {% if related_image %}
+                    <img src="{{ url_for('static', filename='uploads/products/' + related_image.filename) }}" 
+                         class="card-img-top" alt="{{ related.get_name() }}" style="height: 200px; object-fit: cover;">
+                    {% else %}
+                    <div class="card-img-top bg-light d-flex align-items-center justify-content-center" style="height: 200px;">
+                        <i class="fas fa-image fa-2x text-muted"></i>
+                    </div>
+                    {% endif %}
+                    
+                    <div class="card-body d-flex flex-column">
+                        <h6 class="card-title">{{ related.get_name() }}</h6>
+                        <p class="card-text text-muted flex-grow-1">{{ related.get_short_description() | truncate(80) }}</p>
+                        
+                        <div class="mt-auto">
+                            <a href="{{ url_for('main.product_detail', slug=related.slug) }}" class="btn btn-outline-primary btn-sm">
+                                View Details
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</section>
+{% endif %}
+
+<!-- Call to Action -->
+<section class="py-5 bg-primary text-white">
+    <div class="container">
+        <div class="row align-items-center">
+            <div class="col-lg-8">
+                <h3 class="mb-2">Interested in {{ product.get_name() }}?</h3>
+                <p class="mb-0">Contact us for pricing, availability, and custom packaging options.</p>
+            </div>
+            <div class="col-lg-4 text-lg-end">
+                <a href="{{ url_for('main.contact') }}?product={{ product.slug }}" class="btn btn-light btn-lg">
+                    <i class="fas fa-envelope me-2"></i>Get Quote
+                </a>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}
+
+{% block extra_scripts %}
+<script>
+// Image gallery functionality
+function changeMainImage(src) {
+    document.getElementById('mainProductImage').src = src;
+}
+
+function openImageModal(src, title) {
+    // Create and show image modal (reuse from gallery)
+    if (typeof showImageModal === 'function') {
+        showImageModal(src, title);
+    }
+}
+
+// Product sharing
+function shareProduct() {
+    if (navigator.share) {
+        navigator.share({
+            title: '{{ product.get_name() }} - {{ SITE_NAME }}',
+            text: '{{ product.get_short_description() | truncate(100) }}',
+            url: window.location.href
+        });
+    } else {
+        // Fallback to copy link
+        navigator.clipboard.writeText(window.location.href).then(() => {
+            alert('Product link copied to clipboard!');
+        });
+    }
+}
+
+document.addEventListener('DOMContentLoaded', function() {
+    // Add hover effects to related product cards
+    const productCards = document.querySelectorAll('.product-card');
+    productCards.forEach(card => {
+        card.addEventListener('mouseenter', function() {
+            this.style.transform = 'translateY(-5px)';
+            this.style.transition = 'transform 0.3s ease';
+        });
+        
+        card.addEventListener('mouseleave', function() {
+            this.style.transform = 'translateY(0)';
+        });
+    });
+    
+    // Thumbnail hover effects
+    const thumbnails = document.querySelectorAll('.thumbnail-image');
+    thumbnails.forEach(thumb => {
+        thumb.addEventListener('mouseenter', function() {
+            this.style.opacity = '0.7';
+            this.style.transform = 'scale(1.05)';
+            this.style.transition = 'all 0.3s ease';
+        });
+        
+        thumb.addEventListener('mouseleave', function() {
+            this.style.opacity = '1';
+            this.style.transform = 'scale(1)';
+        });
+    });
+});
+</script>
+{% endblock %}

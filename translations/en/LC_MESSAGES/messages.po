@@ -1,0 +1,162 @@
+# English translations for PROJECT.
+# Copyright (C) 2025 ORGANIZATION
+# This file is distributed under the same license as the PROJECT project.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2025.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: PROJECT VERSION\n"
+"Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
+"POT-Creation-Date: 2025-08-27 20:22+0300\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language: en\n"
+"Language-Team: en <LL@li.org>\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Generated-By: Babel 2.17.0\n"
+
+msgid "Dashboard"
+msgstr "Dashboard"
+
+msgid "Categories"
+msgstr "Categories"
+
+msgid "Products"
+msgstr "Products"
+
+msgid "RFQs"
+msgstr "RFQs"
+
+msgid "News"
+msgstr "News"
+
+msgid "Gallery"
+msgstr "Gallery"
+
+msgid "Users"
+msgstr "Users"
+
+msgid "Settings"
+msgstr "Settings"
+
+msgid "Logout"
+msgstr "Logout"
+
+msgid "Content"
+msgstr "Content"
+
+msgid "Services"
+msgstr "Services"
+
+msgid "Certifications"
+msgstr "Certifications"
+
+msgid "Reports"
+msgstr "Reports"
+
+msgid "Quick Links"
+msgstr "Quick Links"
+
+msgid "View Website"
+msgstr "View Website"
+
+msgid "Welcome to Admin Panel"
+msgstr "Welcome to Admin Panel"
+
+msgid "Total Products"
+msgstr "Total Products"
+
+msgid "Total Categories"
+msgstr "Total Categories"
+
+msgid "Pending RFQs"
+msgstr "Pending RFQs"
+
+msgid "Total RFQs"
+msgstr "Total RFQs"
+
+msgid "Published News"
+msgstr "Published News"
+
+msgid "Gallery Images"
+msgstr "Gallery Images"
+
+msgid "Recent RFQs"
+msgstr "Recent RFQs"
+
+msgid "Recent Activity"
+msgstr "Recent Activity"
+
+msgid "Add New"
+msgstr "Add New"
+
+msgid "Edit"
+msgstr "Edit"
+
+msgid "Delete"
+msgstr "Delete"
+
+msgid "Save"
+msgstr "Save"
+
+msgid "Cancel"
+msgstr "Cancel"
+
+msgid "Back to List"
+msgstr "Back to List"
+
+msgid "Actions"
+msgstr "Actions"
+
+msgid "Status"
+msgstr "Status"
+
+msgid "Active"
+msgstr "Active"
+
+msgid "Inactive"
+msgstr "Inactive"
+
+msgid "Name"
+msgstr "Name"
+
+msgid "Description"
+msgstr "Description"
+
+msgid "Image"
+msgstr "Image"
+
+msgid "Category Management"
+msgstr "Category Management"
+
+msgid "Product Management"
+msgstr "Product Management"
+
+msgid "RFQ Management"
+msgstr "RFQ Management"
+
+msgid "News Management"
+msgstr "News Management"
+
+msgid "Gallery Management"
+msgstr "Gallery Management"
+
+msgid "Services Management"
+msgstr "Services Management"
+
+msgid "Certifications Management"
+msgstr "Certifications Management"
+
+msgid "Users Management"
+msgstr "Users Management"
+
+msgid "System Settings"
+msgstr "System Settings"
+
+msgid "Reports & Analytics"
+msgstr "Reports & Analytics"
+

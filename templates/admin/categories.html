@@ -1,0 +1,201 @@
+{% extends "admin/base.html" %}
+
+{% block title %}{{ _('Category Management') }}{% endblock %}
+
+{% block content %}
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-header d-flex justify-content-between align-items-center">
+                    <h3 class="card-title">{{ _('Category Management') }}</h3>
+                    <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addCategoryModal">
+                        <i class="fas fa-plus"></i> إضافة فئة جديدة
+                    </button>
+                </div>
+                <div class="card-body">
+                    {% with messages = get_flashed_messages(with_categories=true) %}
+                        {% if messages %}
+                            {% for category, message in messages %}
+                                <div class="alert alert-{{ 'success' if category == 'success' else 'danger' }} alert-dismissible fade show" role="alert">
+                                    {{ message }}
+                                    <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                                </div>
+                            {% endfor %}
+                        {% endif %}
+                    {% endwith %}
+
+                    <div class="table-responsive">
+                        <table class="table table-striped table-hover">
+                            <thead>
+                                <tr>
+                                    <th>ID</th>
+                                    <th>الاسم (عربي)</th>
+                                    <th>الاسم (إنجليزي)</th>
+                                    <th>الوصف</th>
+                                    <th>الصورة</th>
+                                    <th>تاريخ الإنشاء</th>
+                                    <th>الإجراءات</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for category in categories %}
+                                <tr>
+                                    <td>{{ category.id }}</td>
+                                    <td>{{ category.name_ar }}</td>
+                                    <td>{{ category.name_en }}</td>
+                                    <td>{{ category.description_ar[:50] }}...</td>
+                                    <td>
+                                        {% if category.image_path %}
+                                            <img src="{{ url_for('uploaded_file', filename='categories/' + category.image_path) }}"
+                                                 alt="{{ category.name_ar }}" class="img-thumbnail" style="width: 50px; height: 50px;">
+                                        {% else %}
+                                            <span class="text-muted">{{ _('No Image') }}</span>
+                                        {% endif %}
+                                    </td>
+                                    <td>{{ category.created_at.strftime('%Y-%m-%d') }}</td>
+                                    <td>
+                                        <button type="button" class="btn btn-sm btn-warning" 
+                                                onclick="editCategory({{ category.id }}, '{{ category.name_ar }}', '{{ category.name_en }}', '{{ category.description_ar }}', '{{ category.description_en }}')">
+                                            <i class="fas fa-edit"></i>
+                                        </button>
+                                        <form method="POST" action="{{ url_for('admin.category_delete', id=category.id) }}"
+                                              style="display: inline;" onsubmit="return confirm('{{ _('Are you sure you want to delete this category?') }}')">
+                                            <button type="submit" class="btn btn-sm btn-danger">
+                                                <i class="fas fa-trash"></i>
+                                            </button>
+                                        </form>
+                                    </td>
+                                </tr>
+                                {% else %}
+                                <tr>
+                                    <td colspan="7" class="text-center">لا توجد فئات</td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Add Category Modal -->
+<div class="modal fade" id="addCategoryModal" tabindex="-1">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">إضافة فئة جديدة</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <form method="POST" action="{{ url_for('admin.category_new') }}" enctype="multipart/form-data">
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <label for="name_ar" class="form-label">الاسم (عربي)</label>
+                                <input type="text" class="form-control" id="name_ar" name="name_ar" required>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <label for="name_en" class="form-label">الاسم (إنجليزي)</label>
+                                <input type="text" class="form-control" id="name_en" name="name_en" required>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <label for="description_ar" class="form-label">الوصف (عربي)</label>
+                                <textarea class="form-control" id="description_ar" name="description_ar" rows="3"></textarea>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <label for="description_en" class="form-label">الوصف (إنجليزي)</label>
+                                <textarea class="form-control" id="description_en" name="description_en" rows="3"></textarea>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="mb-3">
+                        <label for="image" class="form-label">الصورة</label>
+                        <input type="file" class="form-control" id="image" name="image" accept="image/*">
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">إلغاء</button>
+                    <button type="submit" class="btn btn-primary">إضافة</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<!-- Edit Category Modal -->
+<div class="modal fade" id="editCategoryModal" tabindex="-1">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">تعديل الفئة</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <form method="POST" id="editCategoryForm" enctype="multipart/form-data">
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <label for="edit_name_ar" class="form-label">الاسم (عربي)</label>
+                                <input type="text" class="form-control" id="edit_name_ar" name="name_ar" required>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <label for="edit_name_en" class="form-label">الاسم (إنجليزي)</label>
+                                <input type="text" class="form-control" id="edit_name_en" name="name_en" required>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <label for="edit_description_ar" class="form-label">الوصف (عربي)</label>
+                                <textarea class="form-control" id="edit_description_ar" name="description_ar" rows="3"></textarea>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <label for="edit_description_en" class="form-label">الوصف (إنجليزي)</label>
+                                <textarea class="form-control" id="edit_description_en" name="description_en" rows="3"></textarea>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="mb-3">
+                        <label for="edit_image" class="form-label">الصورة</label>
+                        <input type="file" class="form-control" id="edit_image" name="image" accept="image/*">
+                        <small class="form-text text-muted">اتركه فارغاً للاحتفاظ بالصورة الحالية</small>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">إلغاء</button>
+                    <button type="submit" class="btn btn-primary">حفظ التغييرات</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<script>
+function editCategory(id, nameAr, nameEn, descAr, descEn) {
+    document.getElementById('edit_name_ar').value = nameAr;
+    document.getElementById('edit_name_en').value = nameEn;
+    document.getElementById('edit_description_ar').value = descAr;
+    document.getElementById('edit_description_en').value = descEn;
+    document.getElementById('editCategoryForm').action = '/admin/categories/' + id + '/edit';
+    
+    var editModal = new bootstrap.Modal(document.getElementById('editCategoryModal'));
+    editModal.show();
+}
+</script>
+{% endblock %}

@@ -1,0 +1,293 @@
+{% extends "admin/base.html" %}
+
+{% block title %}{{ title }}{% endblock %}
+
+{% block content %}
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-header d-flex justify-content-between align-items-center">
+                    <h3 class="card-title">{{ title }}</h3>
+                    <a href="{{ url_for('admin.products') }}" class="btn btn-secondary">
+                        <i class="fas fa-arrow-left"></i> العودة للقائمة
+                    </a>
+                </div>
+                <div class="card-body">
+                    {% with messages = get_flashed_messages(with_categories=true) %}
+                        {% if messages %}
+                            {% for category, message in messages %}
+                                <div class="alert alert-{{ 'success' if category == 'success' else 'danger' }} alert-dismissible fade show" role="alert">
+                                    {{ message }}
+                                    <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                                </div>
+                            {% endfor %}
+                        {% endif %}
+                    {% endwith %}
+
+                    <form method="POST" enctype="multipart/form-data">
+                        {{ form.hidden_tag() }}
+                        
+                        <!-- Basic Information -->
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    {{ form.name_en.label(class="form-label") }}
+                                    {{ form.name_en(class="form-control" + (" is-invalid" if form.name_en.errors else "")) }}
+                                    {% if form.name_en.errors %}
+                                        <div class="invalid-feedback">
+                                            {% for error in form.name_en.errors %}{{ error }}{% endfor %}
+                                        </div>
+                                    {% endif %}
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    {{ form.name_ar.label(class="form-label") }}
+                                    {{ form.name_ar(class="form-control" + (" is-invalid" if form.name_ar.errors else ""), dir="rtl") }}
+                                    {% if form.name_ar.errors %}
+                                        <div class="invalid-feedback">
+                                            {% for error in form.name_ar.errors %}{{ error }}{% endfor %}
+                                        </div>
+                                    {% endif %}
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-4">
+                                <div class="mb-3">
+                                    {{ form.slug.label(class="form-label") }}
+                                    {{ form.slug(class="form-control" + (" is-invalid" if form.slug.errors else "")) }}
+                                    {% if form.slug.errors %}
+                                        <div class="invalid-feedback">
+                                            {% for error in form.slug.errors %}{{ error }}{% endfor %}
+                                        </div>
+                                    {% endif %}
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="mb-3">
+                                    {{ form.category_id.label(class="form-label") }}
+                                    {{ form.category_id(class="form-select" + (" is-invalid" if form.category_id.errors else "")) }}
+                                    {% if form.category_id.errors %}
+                                        <div class="invalid-feedback">
+                                            {% for error in form.category_id.errors %}{{ error }}{% endfor %}
+                                        </div>
+                                    {% endif %}
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="mb-3">
+                                    {{ form.status.label(class="form-label") }}
+                                    {{ form.status(class="form-select" + (" is-invalid" if form.status.errors else "")) }}
+                                    {% if form.status.errors %}
+                                        <div class="invalid-feedback">
+                                            {% for error in form.status.errors %}{{ error }}{% endfor %}
+                                        </div>
+                                    {% endif %}
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Descriptions -->
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    {{ form.short_description_en.label(class="form-label") }}
+                                    {{ form.short_description_en(class="form-control" + (" is-invalid" if form.short_description_en.errors else ""), rows="3") }}
+                                    {% if form.short_description_en.errors %}
+                                        <div class="invalid-feedback">
+                                            {% for error in form.short_description_en.errors %}{{ error }}{% endfor %}
+                                        </div>
+                                    {% endif %}
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    {{ form.short_description_ar.label(class="form-label") }}
+                                    {{ form.short_description_ar(class="form-control" + (" is-invalid" if form.short_description_ar.errors else ""), rows="3", dir="rtl") }}
+                                    {% if form.short_description_ar.errors %}
+                                        <div class="invalid-feedback">
+                                            {% for error in form.short_description_ar.errors %}{{ error }}{% endfor %}
+                                        </div>
+                                    {% endif %}
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    {{ form.description_en.label(class="form-label") }}
+                                    {{ form.description_en(class="form-control" + (" is-invalid" if form.description_en.errors else ""), rows="5") }}
+                                    {% if form.description_en.errors %}
+                                        <div class="invalid-feedback">
+                                            {% for error in form.description_en.errors %}{{ error }}{% endfor %}
+                                        </div>
+                                    {% endif %}
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    {{ form.description_ar.label(class="form-label") }}
+                                    {{ form.description_ar(class="form-control" + (" is-invalid" if form.description_ar.errors else ""), rows="5", dir="rtl") }}
+                                    {% if form.description_ar.errors %}
+                                        <div class="invalid-feedback">
+                                            {% for error in form.description_ar.errors %}{{ error }}{% endfor %}
+                                        </div>
+                                    {% endif %}
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    {{ form.specifications_en.label(class="form-label") }}
+                                    {{ form.specifications_en(class="form-control" + (" is-invalid" if form.specifications_en.errors else ""), rows="4") }}
+                                    {% if form.specifications_en.errors %}
+                                        <div class="invalid-feedback">
+                                            {% for error in form.specifications_en.errors %}{{ error }}{% endfor %}
+                                        </div>
+                                    {% endif %}
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    {{ form.specifications_ar.label(class="form-label") }}
+                                    {{ form.specifications_ar(class="form-control" + (" is-invalid" if form.specifications_ar.errors else ""), rows="4", dir="rtl") }}
+                                    {% if form.specifications_ar.errors %}
+                                        <div class="invalid-feedback">
+                                            {% for error in form.specifications_ar.errors %}{{ error }}{% endfor %}
+                                        </div>
+                                    {% endif %}
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- SEO Fields -->
+                        <h5 class="mt-4 mb-3">SEO Settings</h5>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    {{ form.seo_title_en.label(class="form-label") }}
+                                    {{ form.seo_title_en(class="form-control" + (" is-invalid" if form.seo_title_en.errors else "")) }}
+                                    {% if form.seo_title_en.errors %}
+                                        <div class="invalid-feedback">
+                                            {% for error in form.seo_title_en.errors %}{{ error }}{% endfor %}
+                                        </div>
+                                    {% endif %}
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    {{ form.seo_title_ar.label(class="form-label") }}
+                                    {{ form.seo_title_ar(class="form-control" + (" is-invalid" if form.seo_title_ar.errors else ""), dir="rtl") }}
+                                    {% if form.seo_title_ar.errors %}
+                                        <div class="invalid-feedback">
+                                            {% for error in form.seo_title_ar.errors %}{{ error }}{% endfor %}
+                                        </div>
+                                    {% endif %}
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    {{ form.seo_description_en.label(class="form-label") }}
+                                    {{ form.seo_description_en(class="form-control" + (" is-invalid" if form.seo_description_en.errors else ""), rows="3") }}
+                                    {% if form.seo_description_en.errors %}
+                                        <div class="invalid-feedback">
+                                            {% for error in form.seo_description_en.errors %}{{ error }}{% endfor %}
+                                        </div>
+                                    {% endif %}
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    {{ form.seo_description_ar.label(class="form-label") }}
+                                    {{ form.seo_description_ar(class="form-control" + (" is-invalid" if form.seo_description_ar.errors else ""), rows="3", dir="rtl") }}
+                                    {% if form.seo_description_ar.errors %}
+                                        <div class="invalid-feedback">
+                                            {% for error in form.seo_description_ar.errors %}{{ error }}{% endfor %}
+                                        </div>
+                                    {% endif %}
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Settings -->
+                        <h5 class="mt-4 mb-3">Settings</h5>
+                        <div class="row">
+                            <div class="col-md-4">
+                                <div class="mb-3">
+                                    {{ form.sort_order.label(class="form-label") }}
+                                    {{ form.sort_order(class="form-control" + (" is-invalid" if form.sort_order.errors else "")) }}
+                                    {% if form.sort_order.errors %}
+                                        <div class="invalid-feedback">
+                                            {% for error in form.sort_order.errors %}{{ error }}{% endfor %}
+                                        </div>
+                                    {% endif %}
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="mb-3">
+                                    <label class="form-label">&nbsp;</label>
+                                    <div class="form-check">
+                                        {{ form.featured(class="form-check-input") }}
+                                        {{ form.featured.label(class="form-check-label") }}
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Image Upload -->
+                        <div class="mb-3">
+                            {{ form.image.label(class="form-label") }}
+                            {{ form.image(class="form-control" + (" is-invalid" if form.image.errors else "")) }}
+                            {% if form.image.errors %}
+                                <div class="invalid-feedback">
+                                    {% for error in form.image.errors %}{{ error }}{% endfor %}
+                                </div>
+                            {% endif %}
+                            {% if product and product.image_path %}
+                                <div class="mt-2">
+                                    <small class="text-muted">الصورة الحالية:</small><br>
+                                    <img src="{{ url_for('uploaded_file', filename='products/' + product.image_path) }}" 
+                                         alt="{{ product.name_en }}" class="img-thumbnail" style="max-width: 200px;">
+                                </div>
+                            {% endif %}
+                        </div>
+
+                        <div class="d-flex justify-content-between">
+                            <a href="{{ url_for('admin.products') }}" class="btn btn-secondary">إلغاء</a>
+                            <button type="submit" class="btn btn-primary">
+                                {% if product %}
+                                    <i class="fas fa-save"></i> حفظ التغييرات
+                                {% else %}
+                                    <i class="fas fa-plus"></i> إضافة المنتج
+                                {% endif %}
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+// Auto-generate slug from English name
+document.getElementById('name_en').addEventListener('input', function() {
+    const nameEn = this.value;
+    const slug = nameEn.toLowerCase()
+        .replace(/[^a-z0-9\s-]/g, '')
+        .replace(/\s+/g, '-')
+        .replace(/-+/g, '-')
+        .trim('-');
+    document.getElementById('slug').value = slug;
+});
+</script>
+{% endblock %}

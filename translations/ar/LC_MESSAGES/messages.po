@@ -1,0 +1,349 @@
+# Arabic translations for PROJECT.
+# Copyright (C) 2025 ORGANIZATION
+# This file is distributed under the same license as the PROJECT project.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2025.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: PROJECT VERSION\n"
+"Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
+"POT-Creation-Date: 2025-08-27 20:22+0300\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language: ar\n"
+"Language-Team: ar <LL@li.org>\n"
+"Plural-Forms: nplurals=6; plural=(n==0 ? 0 : n==1 ? 1 : n==2 ? 2 : "
+"n%100>=3 && n%100<=10 ? 3 : n%100>=0 && n%100<=2 ? 4 : 5);\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Generated-By: Babel 2.17.0\n"
+
+msgid "Dashboard"
+msgstr "لوحة التحكم"
+
+msgid "Categories"
+msgstr "الفئات"
+
+msgid "Products"
+msgstr "المنتجات"
+
+msgid "RFQs"
+msgstr "طلبات الأسعار"
+
+msgid "News"
+msgstr "الأخبار"
+
+msgid "Gallery"
+msgstr "المعرض"
+
+msgid "Users"
+msgstr "المستخدمين"
+
+msgid "Settings"
+msgstr "الإعدادات"
+
+msgid "Logout"
+msgstr "تسجيل الخروج"
+
+msgid "Content"
+msgstr "المحتوى"
+
+msgid "Services"
+msgstr "الخدمات"
+
+msgid "Certifications"
+msgstr "الشهادات"
+
+msgid "Reports"
+msgstr "التقارير"
+
+msgid "Quick Links"
+msgstr "روابط سريعة"
+
+msgid "View Website"
+msgstr "عرض الموقع"
+
+msgid "Welcome to Admin Panel"
+msgstr "مرحباً بك في لوحة التحكم"
+
+msgid "Total Products"
+msgstr "إجمالي المنتجات"
+
+msgid "Total Categories"
+msgstr "إجمالي الفئات"
+
+msgid "Pending RFQs"
+msgstr "طلبات الأسعار المعلقة"
+
+msgid "Total RFQs"
+msgstr "إجمالي طلبات الأسعار"
+
+msgid "Published News"
+msgstr "الأخبار المنشورة"
+
+msgid "Gallery Images"
+msgstr "صور المعرض"
+
+msgid "Recent RFQs"
+msgstr "طلبات الأسعار الحديثة"
+
+msgid "Recent Activity"
+msgstr "النشاط الحديث"
+
+msgid "Add New"
+msgstr "إضافة جديد"
+
+msgid "Edit"
+msgstr "تعديل"
+
+msgid "Delete"
+msgstr "حذف"
+
+msgid "Save"
+msgstr "حفظ"
+
+msgid "Cancel"
+msgstr "إلغاء"
+
+msgid "Back to List"
+msgstr "العودة للقائمة"
+
+msgid "Actions"
+msgstr "الإجراءات"
+
+msgid "Status"
+msgstr "الحالة"
+
+msgid "Active"
+msgstr "نشط"
+
+msgid "Inactive"
+msgstr "غير نشط"
+
+msgid "Name"
+msgstr "الاسم"
+
+msgid "Description"
+msgstr "الوصف"
+
+msgid "Image"
+msgstr "الصورة"
+
+msgid "Category Management"
+msgstr "إدارة الفئات"
+
+msgid "Product Management"
+msgstr "إدارة المنتجات"
+
+msgid "RFQ Management"
+msgstr "إدارة طلبات الأسعار"
+
+msgid "News Management"
+msgstr "إدارة الأخبار"
+
+msgid "Gallery Management"
+msgstr "إدارة المعرض"
+
+msgid "Services Management"
+msgstr "إدارة الخدمات"
+
+msgid "Certifications Management"
+msgstr "إدارة الشهادات"
+
+msgid "Users Management"
+msgstr "إدارة المستخدمين"
+
+msgid "System Settings"
+msgstr "إعدادات النظام"
+
+msgid "Reports & Analytics"
+msgstr "التقارير والتحليلات"
+
+msgid "GlobalG.A.P"
+msgstr "الممارسات الزراعية الجيدة"
+
+msgid "GlobalG.A.P. Certified"
+msgstr "معتمد الممارسات الزراعية الجيدة"
+
+msgid "Good Agricultural Practices"
+msgstr "الممارسات الزراعية الجيدة"
+
+msgid "GlobalG.A.P. Standards"
+msgstr "معايير الممارسات الزراعية الجيدة"
+
+msgid "Certified"
+msgstr "معتمد"
+
+msgid "Featured"
+msgstr "مميز"
+
+msgid "Quick View"
+msgstr "عرض سريع"
+
+msgid "Get Quote"
+msgstr "احصل على عرض سعر"
+
+msgid "Premium"
+msgstr "ممتاز"
+
+msgid "Details"
+msgstr "التفاصيل"
+
+msgid "Egyptian Oranges"
+msgstr "البرتقال المصري"
+
+msgid "Fresh Grapes"
+msgstr "العنب الطازج"
+
+msgid "Egyptian Garlic"
+msgstr "الثوم المصري"
+
+msgid "IQF Strawberries"
+msgstr "الفراولة المجمدة سريعاً"
+
+msgid "Premium quality Egyptian oranges with exceptional sweetness and juice content."
+msgstr "برتقال مصري عالي الجودة بحلاوة استثنائية ومحتوى عصير ممتاز."
+
+msgid "High-quality table grapes in various varieties for global markets."
+msgstr "عنب مائدة عالي الجودة بأصناف متنوعة للأسواق العالمية."
+
+msgid "Premium white garlic with strong flavor and excellent storage capabilities."
+msgstr "ثوم أبيض ممتاز بنكهة قوية وقدرات تخزين ممتازة."
+
+msgid "Individually Quick Frozen strawberries maintaining fresh taste and nutrition."
+msgstr "فراولة مجمدة سريعاً بشكل فردي تحافظ على الطعم الطازج والتغذية."
+
+msgid "Vegetables"
+msgstr "الخضروات"
+
+msgid "Frozen Products"
+msgstr "المنتجات المجمدة"
+
+msgid "Fresh"
+msgstr "طازج"
+
+msgid "Explore All Products"
+msgstr "استكشف جميع المنتجات"
+
+msgid "Our Achievements"
+msgstr "إنجازاتنا"
+
+msgid "Over two decades of excellence in Egyptian agricultural exports,"
+msgstr "أكثر من عقدين من التميز في الصادرات الزراعية المصرية،"
+
+msgid "serving customers across 50+ countries with unwavering quality and reliability."
+msgstr "نخدم العملاء في أكثر من 50 دولة بجودة وموثوقية لا تتزعزع."
+
+msgid "Rigorous quality control processes and international certifications ensure"
+msgstr "عمليات مراقبة الجودة الصارمة والشهادات الدولية تضمن"
+
+msgid "every product meets the highest global standards."
+msgstr "أن كل منتج يلبي أعلى المعايير العالمية."
+
+msgid "Advanced cold chain management ensures your products"
+msgstr "إدارة السلسلة الباردة المتقدمة تضمن أن منتجاتك"
+
+msgid "arrive fresh and on time, anywhere in the world."
+msgstr "تصل طازجة وفي الوقت المحدد، في أي مكان في العالم."
+
+msgid "Global Reach"
+msgstr "الوصول العالمي"
+
+msgid "Serving 50+ countries worldwide with trusted partnerships"
+msgstr "نخدم أكثر من 50 دولة حول العالم بشراكات موثوقة"
+
+msgid "and comprehensive market knowledge."
+msgstr "ومعرفة شاملة بالسوق."
+
+msgid "50+ Countries"
+msgstr "أكثر من 50 دولة"
+
+msgid "Trusted Partners"
+msgstr "شركاء موثوقون"
+
+msgid "Trusted Partnership"
+msgstr "شراكة موثوقة"
+
+msgid "Over 25 years of experience building lasting relationships"
+msgstr "أكثر من 25 عاماً من الخبرة في بناء علاقات دائمة"
+
+msgid "with clients through integrity and excellence."
+msgstr "مع العملاء من خلال النزاهة والتميز."
+
+msgid "25+ Years Experience"
+msgstr "أكثر من 25 عاماً من الخبرة"
+
+msgid "500+ Clients"
+msgstr "أكثر من 500 عميل"
+
+msgid "Latest Updates"
+msgstr "آخر التحديثات"
+
+msgid "News & Industry Insights"
+msgstr "الأخبار ورؤى الصناعة"
+
+msgid "Stay informed about our latest developments, industry trends, and insights"
+msgstr "ابق على اطلاع على أحدث التطورات واتجاهات الصناعة والرؤى"
+
+msgid "from the world of Egyptian agricultural exports."
+msgstr "من عالم الصادرات الزراعية المصرية."
+
+msgid "News"
+msgstr "الأخبار"
+
+msgid "Read More"
+msgstr "اقرأ المزيد"
+
+msgid "Expanding Global Reach"
+msgstr "توسيع النطاق العالمي"
+
+msgid "Emdad Global announces new partnerships in European and Asian markets, strengthening our international presence."
+msgstr "إمداد جلوبال تعلن عن شراكات جديدة في الأسواق الأوروبية والآسيوية، مما يعزز حضورنا الدولي."
+
+msgid "Quality Certification Update"
+msgstr "تحديث شهادات الجودة"
+
+msgid "Successfully renewed ISO 22000 and Good Agricultural Practices certifications, reinforcing our commitment to quality standards."
+msgstr "تم تجديد شهادات ISO 22000 والممارسات الزراعية الجيدة بنجاح، مما يعزز التزامنا بمعايير الجودة."
+
+msgid "Sustainable Agriculture Initiative"
+msgstr "مبادرة الزراعة المستدامة"
+
+msgid "Launching new sustainable farming practices to support environmental conservation and premium product quality."
+msgstr "إطلاق ممارسات زراعية مستدامة جديدة لدعم الحفاظ على البيئة وجودة المنتجات الممتازة."
+
+msgid "View All News"
+msgstr "عرض جميع الأخبار"
+
+msgid "Partnership Opportunity"
+msgstr "فرصة شراكة"
+
+msgid "Ready to Start Your"
+msgstr "هل أنت مستعد لبدء"
+
+msgid "Agricultural Order?"
+msgstr "طلبك الزراعي؟"
+
+msgid "Join hundreds of satisfied clients worldwide who trust Emdad Global for their"
+msgstr "انضم إلى مئات العملاء الراضين حول العالم الذين يثقون في إمداد جلوبال لتلبية"
+
+msgid "agricultural sourcing needs. Get a personalized quote today and experience the difference."
+msgstr "احتياجاتهم من المصادر الزراعية. احصل على عرض سعر مخصص اليوم واختبر الفرق."
+
+msgid "Quick Response"
+msgstr "استجابة سريعة"
+
+msgid "24-hour quote turnaround"
+msgstr "تسليم عرض الأسعار خلال 24 ساعة"
+
+msgid "Quality Guaranteed"
+msgstr "جودة مضمونة"
+
+msgid "International certifications"
+msgstr "شهادات دولية"
+
+msgid "Browse Products"
+msgstr "تصفح المنتجات"
+

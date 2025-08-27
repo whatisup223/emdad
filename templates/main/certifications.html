@@ -1,0 +1,362 @@
+{% extends "base.html" %}
+
+{% block title %}Certifications & Quality - {{ SITE_NAME }}{% endblock %}
+
+{% block meta_description %}Emdad Global maintains the highest quality standards with international certifications including GlobalG.A.P., HACCP, ISO 22000, Halal, and Kosher.{% endblock %}
+
+{% block content %}
+<!-- Page Header -->
+<section class="py-5 bg-primary text-white">
+    <div class="container">
+        <div class="row align-items-center">
+            <div class="col-lg-8">
+                <nav aria-label="breadcrumb">
+                    <ol class="breadcrumb text-white-50">
+                        <li class="breadcrumb-item"><a href="{{ url_for('main.index') }}" class="text-white-50">Home</a></li>
+                        <li class="breadcrumb-item active text-white">Certifications & Quality</li>
+                    </ol>
+                </nav>
+                
+                <h1 class="display-5 fw-bold mb-3">Certifications & Quality</h1>
+                <p class="lead">International standards ensuring the highest quality and safety</p>
+            </div>
+            <div class="col-lg-4 text-lg-end">
+                <div class="quality-badge bg-white text-primary rounded-circle d-inline-flex align-items-center justify-content-center" style="width: 120px; height: 120px;">
+                    <div class="text-center">
+                        <i class="fas fa-certificate fa-2x mb-2"></i>
+                        <div class="small fw-bold">CERTIFIED<br>QUALITY</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Quality Commitment -->
+<section class="py-5">
+    <div class="container">
+        <div class="row align-items-center">
+            <div class="col-lg-6 mb-4">
+                <h2 class="mb-4">Our Quality Commitment</h2>
+                <p class="lead text-primary mb-3">Excellence in Every Step</p>
+                <p>At Emdad Global, quality is not just a goal—it's our foundation. We maintain rigorous quality control processes throughout our entire supply chain, from farm to final delivery.</p>
+                <p>Our comprehensive certification portfolio demonstrates our commitment to international standards and provides our customers with the confidence they need when sourcing Egyptian agricultural products.</p>
+                <p>Every product that bears the Emdad Global name has been carefully inspected, tested, and verified to meet or exceed the highest international quality and safety standards.</p>
+                
+                <div class="row mt-4">
+                    <div class="col-6">
+                        <div class="d-flex align-items-center mb-3">
+                            <i class="fas fa-check-circle text-success me-3 fa-lg"></i>
+                            <span>Farm-to-Fork Traceability</span>
+                        </div>
+                        <div class="d-flex align-items-center mb-3">
+                            <i class="fas fa-check-circle text-success me-3 fa-lg"></i>
+                            <span>Regular Quality Audits</span>
+                        </div>
+                    </div>
+                    <div class="col-6">
+                        <div class="d-flex align-items-center mb-3">
+                            <i class="fas fa-check-circle text-success me-3 fa-lg"></i>
+                            <span>Laboratory Testing</span>
+                        </div>
+                        <div class="d-flex align-items-center mb-3">
+                            <i class="fas fa-check-circle text-success me-3 fa-lg"></i>
+                            <span>Cold Chain Management</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-6">
+                <img src="{{ url_for('static', filename='images/quality-control.jpg') }}" 
+                     alt="Quality Control Process" class="img-fluid rounded shadow">
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Certifications Grid -->
+<section class="py-5 bg-light">
+    <div class="container">
+        <div class="text-center mb-5">
+            <h2 class="mb-3">Our Certifications</h2>
+            <p class="lead text-muted">Internationally recognized standards for quality and safety</p>
+        </div>
+        
+        <div class="row">
+            {% if certifications %}
+                {% for certification in certifications %}
+                <div class="col-lg-4 col-md-6 mb-4">
+                    <div class="card h-100 border-0 shadow-sm certification-card">
+                        <div class="card-body text-center p-4">
+                            {% if certification.logo_path %}
+                            <img src="{{ url_for('static', filename='uploads/certifications/' + certification.logo_path) }}" 
+                                 alt="{{ certification.get_name() }}" class="certification-logo mb-3" style="max-height: 80px;">
+                            {% else %}
+                            <div class="certification-icon bg-primary text-white rounded-circle d-inline-flex align-items-center justify-content-center mb-3" style="width: 80px; height: 80px;">
+                                <i class="fas fa-certificate fa-2x"></i>
+                            </div>
+                            {% endif %}
+                            
+                            <h5 class="card-title">{{ certification.get_name() }}</h5>
+                            <p class="card-text text-muted">{{ certification.get_description() }}</p>
+                            
+                            {% if certification.website_url %}
+                            <a href="{{ certification.website_url }}" target="_blank" class="btn btn-outline-primary btn-sm">
+                                <i class="fas fa-external-link-alt me-1"></i>Learn More
+                            </a>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+            {% else %}
+                <!-- Default certifications if none in database -->
+                <div class="col-lg-4 col-md-6 mb-4">
+                    <div class="card h-100 border-0 shadow-sm certification-card">
+                        <div class="card-body text-center p-4">
+                            <div class="certification-icon bg-success text-white rounded-circle d-inline-flex align-items-center justify-content-center mb-3" style="width: 80px; height: 80px;">
+                                <i class="fas fa-globe fa-2x"></i>
+                            </div>
+                            <h5 class="card-title">GlobalG.A.P.</h5>
+                            <p class="card-text text-muted">Good Agricultural Practices certification ensuring food safety and sustainability throughout the production process.</p>
+                            <a href="https://www.globalgap.org" target="_blank" class="btn btn-outline-primary btn-sm">
+                                <i class="fas fa-external-link-alt me-1"></i>Learn More
+                            </a>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="col-lg-4 col-md-6 mb-4">
+                    <div class="card h-100 border-0 shadow-sm certification-card">
+                        <div class="card-body text-center p-4">
+                            <div class="certification-icon bg-danger text-white rounded-circle d-inline-flex align-items-center justify-content-center mb-3" style="width: 80px; height: 80px;">
+                                <i class="fas fa-shield-alt fa-2x"></i>
+                            </div>
+                            <h5 class="card-title">HACCP</h5>
+                            <p class="card-text text-muted">Hazard Analysis and Critical Control Points system for identifying and preventing food safety hazards.</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="col-lg-4 col-md-6 mb-4">
+                    <div class="card h-100 border-0 shadow-sm certification-card">
+                        <div class="card-body text-center p-4">
+                            <div class="certification-icon bg-info text-white rounded-circle d-inline-flex align-items-center justify-content-center mb-3" style="width: 80px; height: 80px;">
+                                <i class="fas fa-award fa-2x"></i>
+                            </div>
+                            <h5 class="card-title">ISO 22000</h5>
+                            <p class="card-text text-muted">Food Safety Management System certification ensuring systematic approach to food safety.</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="col-lg-4 col-md-6 mb-4">
+                    <div class="card h-100 border-0 shadow-sm certification-card">
+                        <div class="card-body text-center p-4">
+                            <div class="certification-icon bg-success text-white rounded-circle d-inline-flex align-items-center justify-content-center mb-3" style="width: 80px; height: 80px;">
+                                <i class="fas fa-moon fa-2x"></i>
+                            </div>
+                            <h5 class="card-title">Halal Certification</h5>
+                            <p class="card-text text-muted">Islamic dietary law compliance certification for Muslim markets worldwide.</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="col-lg-4 col-md-6 mb-4">
+                    <div class="card h-100 border-0 shadow-sm certification-card">
+                        <div class="card-body text-center p-4">
+                            <div class="certification-icon bg-primary text-white rounded-circle d-inline-flex align-items-center justify-content-center mb-3" style="width: 80px; height: 80px;">
+                                <i class="fas fa-star fa-2x"></i>
+                            </div>
+                            <h5 class="card-title">Kosher Certification</h5>
+                            <p class="card-text text-muted">Jewish dietary law compliance certification ensuring products meet kosher requirements.</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="col-lg-4 col-md-6 mb-4">
+                    <div class="card h-100 border-0 shadow-sm certification-card">
+                        <div class="card-body text-center p-4">
+                            <div class="certification-icon bg-warning text-white rounded-circle d-inline-flex align-items-center justify-content-center mb-3" style="width: 80px; height: 80px;">
+                                <i class="fas fa-leaf fa-2x"></i>
+                            </div>
+                            <h5 class="card-title">Organic Certification</h5>
+                            <p class="card-text text-muted">Organic farming standards certification for environmentally sustainable agricultural practices.</p>
+                        </div>
+                    </div>
+                </div>
+            {% endif %}
+        </div>
+    </div>
+</section>
+
+<!-- Quality Process -->
+<section class="py-5">
+    <div class="container">
+        <div class="text-center mb-5">
+            <h2 class="mb-3">Our Quality Process</h2>
+            <p class="lead text-muted">From farm to your table - ensuring excellence at every step</p>
+        </div>
+        
+        <div class="row">
+            <div class="col-lg-3 col-md-6 mb-4">
+                <div class="process-step text-center">
+                    <div class="step-number bg-primary text-white rounded-circle d-inline-flex align-items-center justify-content-center mb-3" style="width: 60px; height: 60px;">
+                        <span class="fw-bold">1</span>
+                    </div>
+                    <h5>Farm Selection</h5>
+                    <p class="text-muted">Carefully selected partner farms meeting our strict quality criteria</p>
+                </div>
+            </div>
+            
+            <div class="col-lg-3 col-md-6 mb-4">
+                <div class="process-step text-center">
+                    <div class="step-number bg-success text-white rounded-circle d-inline-flex align-items-center justify-content-center mb-3" style="width: 60px; height: 60px;">
+                        <span class="fw-bold">2</span>
+                    </div>
+                    <h5>Harvest Control</h5>
+                    <p class="text-muted">Optimal timing and methods to ensure peak quality and freshness</p>
+                </div>
+            </div>
+            
+            <div class="col-lg-3 col-md-6 mb-4">
+                <div class="process-step text-center">
+                    <div class="step-number bg-info text-white rounded-circle d-inline-flex align-items-center justify-content-center mb-3" style="width: 60px; height: 60px;">
+                        <span class="fw-bold">3</span>
+                    </div>
+                    <h5>Processing & Packing</h5>
+                    <p class="text-muted">State-of-the-art facilities with rigorous hygiene and quality standards</p>
+                </div>
+            </div>
+            
+            <div class="col-lg-3 col-md-6 mb-4">
+                <div class="process-step text-center">
+                    <div class="step-number bg-warning text-white rounded-circle d-inline-flex align-items-center justify-content-center mb-3" style="width: 60px; height: 60px;">
+                        <span class="fw-bold">4</span>
+                    </div>
+                    <h5>Cold Chain Delivery</h5>
+                    <p class="text-muted">Temperature-controlled logistics maintaining product integrity</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Testing & Laboratory -->
+<section class="py-5 bg-light">
+    <div class="container">
+        <div class="row align-items-center">
+            <div class="col-lg-6">
+                <img src="{{ url_for('static', filename='images/laboratory-testing.jpg') }}" 
+                     alt="Laboratory Testing" class="img-fluid rounded shadow">
+            </div>
+            <div class="col-lg-6">
+                <h2 class="mb-4">Advanced Testing & Analysis</h2>
+                <p class="lead text-primary mb-3">Scientific Precision</p>
+                <p>Our state-of-the-art laboratory facilities conduct comprehensive testing to ensure every product meets international standards for safety, quality, and nutritional value.</p>
+                
+                <div class="row">
+                    <div class="col-md-6 mb-3">
+                        <div class="d-flex align-items-center">
+                            <i class="fas fa-microscope text-primary me-3"></i>
+                            <div>
+                                <h6 class="mb-1">Microbiological Testing</h6>
+                                <small class="text-muted">Pathogen detection and safety verification</small>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        <div class="d-flex align-items-center">
+                            <i class="fas fa-flask text-success me-3"></i>
+                            <div>
+                                <h6 class="mb-1">Chemical Analysis</h6>
+                                <small class="text-muted">Pesticide residue and contamination testing</small>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        <div class="d-flex align-items-center">
+                            <i class="fas fa-chart-line text-info me-3"></i>
+                            <div>
+                                <h6 class="mb-1">Nutritional Analysis</h6>
+                                <small class="text-muted">Vitamin, mineral, and nutrient content</small>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        <div class="d-flex align-items-center">
+                            <i class="fas fa-eye text-warning me-3"></i>
+                            <div>
+                                <h6 class="mb-1">Sensory Evaluation</h6>
+                                <small class="text-muted">Taste, texture, and appearance assessment</small>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Call to Action -->
+<section class="py-5 bg-primary text-white">
+    <div class="container">
+        <div class="row align-items-center">
+            <div class="col-lg-8">
+                <h3 class="mb-2">Quality You Can Trust</h3>
+                <p class="mb-0">Experience the difference that certified quality makes in your agricultural sourcing.</p>
+            </div>
+            <div class="col-lg-4 text-lg-end">
+                <a href="{{ url_for('main.contact') }}" class="btn btn-light btn-lg">
+                    <i class="fas fa-envelope me-2"></i>Request Information
+                </a>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}
+
+{% block extra_scripts %}
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Add hover effects to certification cards
+    const certCards = document.querySelectorAll('.certification-card');
+    certCards.forEach(card => {
+        card.addEventListener('mouseenter', function() {
+            this.style.transform = 'translateY(-10px)';
+            this.style.transition = 'transform 0.3s ease';
+        });
+        
+        card.addEventListener('mouseleave', function() {
+            this.style.transform = 'translateY(0)';
+        });
+    });
+    
+    // Animate process steps on scroll
+    const processSteps = document.querySelectorAll('.process-step');
+    
+    const animateSteps = (entries, observer) => {
+        entries.forEach((entry, index) => {
+            if (entry.isIntersecting) {
+                setTimeout(() => {
+                    entry.target.style.opacity = '1';
+                    entry.target.style.transform = 'translateY(0)';
+                }, index * 200);
+                observer.unobserve(entry.target);
+            }
+        });
+    };
+    
+    const observer = new IntersectionObserver(animateSteps, {
+        threshold: 0.3
+    });
+    
+    processSteps.forEach(step => {
+        step.style.opacity = '0';
+        step.style.transform = 'translateY(30px)';
+        step.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
+        observer.observe(step);
+    });
+});
+</script>
+{% endblock %}

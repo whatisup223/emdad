@@ -1,0 +1,1255 @@
+{% extends "base.html" %}
+
+{% block title %}{{ SITE_NAME }} - {{ _('Premium Egyptian') }} {{ _('Agricultural') }} {{ _('Exports') }}{% endblock %}
+
+{% block content %}
+<!-- Hero Section -->
+<section class="hero-section position-relative overflow-hidden min-vh-100 d-flex align-items-center">
+    <!-- Agricultural Pattern Overlay -->
+    <div class="agricultural-pattern"></div>
+
+    <!-- Simple Agricultural Icons -->
+    <div class="floating-agricultural-icons">
+        <i class="fas fa-leaf simple-agri-icon icon-leaf-1"></i>
+        <i class="fas fa-seedling simple-agri-icon icon-seedling-1"></i>
+        <i class="fas fa-apple-alt simple-agri-icon icon-fruit-1"></i>
+        <i class="fas fa-wheat simple-agri-icon icon-wheat-1"></i>
+        <i class="fas fa-carrot simple-agri-icon icon-veg-1"></i>
+        <i class="fas fa-lemon simple-agri-icon icon-citrus-1"></i>
+    </div>
+
+
+
+    <div class="container position-relative z-index-2">
+        <div class="row align-items-center min-vh-75">
+            <div class="col-lg-6" data-aos="fade-right" data-aos-duration="1200">
+                <div class="hero-content">
+                    <div class="badge px-4 py-2 rounded-pill mb-4 fs-6 fw-semibold">
+                        <i class="fas fa-star me-2"></i>{{ _('Premium Quality Since 1999') }}
+                    </div>
+
+                    <h1 class="hero-title mb-4">
+                        {{ _('Premium Egyptian') }}
+                        <span style="color: #f9cb99; text-shadow: 2px 2px 8px rgba(0, 0, 0, 0.5);">{{ _('Agricultural') }}</span>
+                        {{ _('Exports') }}
+                    </h1>
+
+                    <p class="lead english-text mb-5">
+                        {{ _('Supplying the world with the finest Egyptian citrus fruits, fresh produce, and frozen products.') }}
+                        {{ _('Quality assured with international certifications and reliable global logistics.') }}
+                    </p>
+
+                    <div class="hero-buttons d-flex flex-wrap gap-3 mb-5">
+                        <a href="{{ url_for('main.contact') }}" class="btn btn-lg px-5 py-3 hover-lift" style="background: linear-gradient(135deg, #f9cb99, #fbd7b0); color: #689b8a; font-weight: 700; border: none; box-shadow: 0 4px 15px rgba(249, 203, 153, 0.4);">
+                            <i class="fas fa-envelope me-2"></i>{{ _('Request a Quote') }}
+                        </a>
+                        <a href="{{ url_for('main.products') }}" class="btn btn-outline-light btn-lg px-5 py-3 hover-lift" style="border: 2px solid white; color: white; font-weight: 600; backdrop-filter: blur(10px); background: rgba(255, 255, 255, 0.1);">
+                            <i class="fas fa-leaf me-2"></i>{{ _('View Products') }}
+                        </a>
+                    </div>
+
+
+                </div>
+            </div>
+
+            <div class="col-lg-6" data-aos="fade-left" data-aos-duration="1200" data-aos-delay="200">
+                <div class="hero-visual position-relative">
+                    <!-- Main Stats Card -->
+                    <div class="hero-stats card border-0 shadow-xl p-4 mb-4" style="background: rgba(255, 255, 255, 0.15); backdrop-filter: blur(10px); border: 1px solid rgba(255, 255, 255, 0.2);">
+                        <div class="row text-center g-4">
+                            <div class="col-4">
+                                <div class="stat-item">
+                                    <div class="stat-number fw-bold display-6 mb-2" data-count="50" style="color: #f9cb99 !important;">0</div>
+                                    <div class="stat-label fw-semibold" style="color: rgba(255, 255, 255, 0.9);">{{ _('Countries Served') }}</div>
+                                </div>
+                            </div>
+                            <div class="col-4">
+                                <div class="stat-item">
+                                    <div class="stat-number fw-bold display-6 mb-2" data-count="100" style="color: #f9cb99 !important;">0</div>
+                                    <div class="stat-label fw-semibold" style="color: rgba(255, 255, 255, 0.9);">{{ _('Premium Products') }}</div>
+                                </div>
+                            </div>
+                            <div class="col-4">
+                                <div class="stat-item">
+                                    <div class="stat-number fw-bold display-6 mb-2" data-count="25" style="color: #f9cb99 !important;">0</div>
+                                    <div class="stat-label fw-semibold" style="color: rgba(255, 255, 255, 0.9);">{{ _('Years Experience') }}</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Achievement Cards Row -->
+                    <div class="row g-3 mb-4">
+                        <div class="col-6">
+                            <div class="achievement-card card border-0 shadow-lg p-3" style="background: rgba(255, 255, 255, 0.95); backdrop-filter: blur(10px);">
+                                <div class="d-flex align-items-center">
+                                    <div class="icon-wrapper rounded-circle p-2 me-3" style="width: 45px; height: 45px; background: linear-gradient(135deg, #689b8a, #5a8575); color: white;">
+                                        <i class="fas fa-award fs-6"></i>
+                                    </div>
+                                    <div>
+                                        <div class="fw-bold small text-dark">
+                                            {% if session.get('language') == 'ar' %}
+                                                الممارسات الزراعية الجيدة
+                                            {% else %}
+                                                GlobalG.A.P
+                                            {% endif %}
+                                        </div>
+                                        <small class="text-muted">{{ _('Certified') }}</small>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-6">
+                            <div class="achievement-card card border-0 shadow-lg p-3" style="background: rgba(255, 255, 255, 0.95); backdrop-filter: blur(10px);">
+                                <div class="d-flex align-items-center">
+                                    <div class="icon-wrapper rounded-circle p-2 me-3" style="width: 45px; height: 45px; background: linear-gradient(135deg, #f9cb99, #fbd7b0); color: #689b8a;">
+                                        <i class="fas fa-shipping-fast fs-6"></i>
+                                    </div>
+                                    <div>
+                                        <div class="fw-bold small text-dark">{{ _('Cold Chain') }}</div>
+                                        <small class="text-muted">{{ _('Logistics') }}</small>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+
+                </div>
+            </div>
+        </div>
+
+        <!-- Scroll Indicator -->
+        <div class="scroll-indicator position-absolute bottom-0 start-50 translate-middle-x mb-4">
+            <div class="scroll-arrow bounce">
+                <i class="fas fa-chevron-down text-white fs-4"></i>
+            </div>
+        </div>
+    </div>
+
+
+</section>
+
+<!-- About Intro Section -->
+{% if about_intro %}
+<section class="about-section py-5">
+    <div class="container">
+        <div class="row align-items-center g-5">
+            <!-- Content Column -->
+            <div class="col-lg-6" data-aos="fade-right" data-aos-duration="1000">
+                <div class="about-content-wrapper">
+                    <div class="about-intro-badge">{{ _('Our Introduction') }}</div>
+                    <h2 class="about-main-title">{{ about_intro.get_title(current_language) }}</h2>
+
+                    <div class="about-description">
+                        {{ about_intro.get_content(current_language) | safe }}
+                    </div>
+
+                    <!-- Features Grid -->
+                    <div class="about-features">
+                        <div class="feature-item">
+                            <div class="feature-icon">
+                                <i class="fas fa-user-tie"></i>
+                            </div>
+                            <div class="feature-content">
+                                <h6>{{ _('Professional Farmers') }}</h6>
+                            </div>
+                        </div>
+
+                        <div class="feature-item">
+                            <div class="feature-icon">
+                                <i class="fas fa-leaf"></i>
+                            </div>
+                            <div class="feature-content">
+                                <h6>{{ _('Organic & Eco Solutions') }}</h6>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Action Button -->
+                    <div class="about-action">
+                        <a href="{{ url_for('main.about') }}" class="discover-more-btn">
+                            <span>{{ _('Discover More') }}</span>
+                            <i class="fas fa-arrow-right"></i>
+                        </a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Images Column -->
+            <div class="col-lg-6" data-aos="fade-left" data-aos-duration="1000" data-aos-delay="200">
+                <div class="about-single-image">
+                    <!-- Main Image -->
+                    <div class="single-image-wrapper">
+                        {% if about_intro.image_path %}
+                        <img src="{{ url_for('static', filename='uploads/' + about_intro.image_path) }}"
+                             alt="{{ about_intro.get_title(current_language) }}" class="single-about-image">
+                        {% else %}
+                        <img src="{{ url_for('static', filename='images/about-intro.jpg') }}"
+                             alt="About Emdad Global" class="single-about-image">
+                        {% endif %}
+                    </div>
+
+                    <!-- Stats Card -->
+                    <div class="about-stats-overlay">
+                        <div class="stats-number">8,700</div>
+                        <div class="stats-label">{{ _('Trusted by') }}</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+{% endif %}
+
+<!-- Featured Categories Section -->
+<section class="py-5 bg-gradient-light position-relative overflow-hidden">
+    <!-- Background Pattern -->
+    <div class="position-absolute top-0 start-0 w-100 h-100 opacity-50">
+        <div class="pattern-dots"></div>
+    </div>
+
+    <div class="container position-relative">
+        <div class="text-center mb-5" data-aos="fade-up">
+            <div class="section-badge badge bg-gradient-primary text-white px-4 py-2 rounded-pill mb-3 fs-6 fw-semibold">
+                <i class="fas fa-seedling me-2"></i>{{ _('Product Categories') }}
+            </div>
+            <h2 class="section-heading english-heading">{{ _('Our Premium Product Range') }}</h2>
+            <p class="lead english-text text-muted col-lg-8 mx-auto">
+                {{ _('Discover our carefully curated selection of Egyptian agricultural products,') }}
+                {{ _('each category representing the finest quality and authentic taste.') }}
+            </p>
+        </div>
+
+        <div class="row g-4 stagger-animation">
+            {% if featured_categories %}
+                {% for category in featured_categories %}
+                <div class="col-lg-3 col-md-6" data-aos="fade-up" data-aos-delay="{{ loop.index0 * 100 }}">
+                    <div class="category-card card h-100 border-0 shadow-lg hover-lift position-relative overflow-hidden">
+                        <!-- Category Image -->
+                        <div class="category-image-wrapper position-relative overflow-hidden">
+                            {% if category.image_path %}
+                            <img src="{{ url_for('uploaded_file', filename='categories/' + category.image_path) }}"
+                                 class="card-img-top category-image" alt="{{ category.get_name() }}" style="height: 250px; object-fit: cover;">
+                            {% else %}
+                            <div class="card-img-top bg-gradient-primary d-flex align-items-center justify-content-center" style="height: 250px;">
+                                <i class="fas fa-leaf fa-4x text-white opacity-75"></i>
+                            </div>
+                            {% endif %}
+
+                            <!-- Overlay -->
+                            <div class="category-overlay position-absolute top-0 start-0 w-100 h-100 d-flex align-items-center justify-content-center">
+                                <div class="overlay-content text-center text-white">
+                                    <i class="fas fa-eye fs-2 mb-3"></i>
+                                    <p class="fw-semibold">{{ _('Explore Products') }}</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Category Content -->
+                        <div class="card-body text-center p-4">
+                            <div class="category-icon bg-gradient-secondary text-white rounded-circle d-inline-flex align-items-center justify-content-center mb-3" style="width: 60px; height: 60px;">
+                                <i class="fas fa-leaf fs-4"></i>
+                            </div>
+
+                            <h5 class="card-heading {{ 'arabic-heading' if current_language == 'ar' else 'english-heading' }} mb-3">{{ category.get_name(current_language) }}</h5>
+                            <p class="card-text {{ 'arabic-text' if current_language == 'ar' else 'english-text' }} text-muted mb-4">
+                                {{ category.get_description(current_language) | truncate(100) if category.get_description(current_language) else _('Premium quality products from Egypt\'s finest agricultural regions.') }}
+                            </p>
+
+                            <a href="{{ url_for('main.products', cat=category.key) }}" class="btn btn-outline-primary btn-sm btn-text english-heading px-4 hover-lift">
+                                <i class="fas fa-arrow-right me-2"></i>{{ _('View Products') }}
+                            </a>
+                        </div>
+
+                        <!-- Decorative Element -->
+                        <div class="category-decoration position-absolute top-0 end-0 p-3">
+                            <div class="decoration-circle bg-gradient-secondary opacity-25 rounded-circle" style="width: 80px; height: 80px; transform: translate(50%, -50%);"></div>
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+            {% else %}
+                <!-- Default Categories -->
+                {% set default_categories = [
+                    {'name': _('Citrus Fruits'), 'icon': 'fas fa-lemon', 'description': _('Premium Egyptian oranges, lemons, and mandarins with exceptional sweetness and quality.')},
+                    {'name': _('Fresh Fruits'), 'icon': 'fas fa-apple-alt', 'description': _('Seasonal fresh fruits including grapes, mangoes, and pomegranates from Egyptian farms.')},
+                    {'name': _('Fresh Vegetables'), 'icon': 'fas fa-carrot', 'description': _('High-quality vegetables including garlic, onions, and potatoes for global markets.')},
+                    {'name': _('Frozen Products'), 'icon': 'fas fa-snowflake', 'description': _('IQF frozen fruits and vegetables maintaining freshness and nutritional value.')}
+                ] %}
+
+                {% for category in default_categories %}
+                <div class="col-lg-3 col-md-6" data-aos="fade-up" data-aos-delay="{{ loop.index0 * 100 }}">
+                    <div class="category-card card h-100 border-0 shadow-lg hover-lift position-relative overflow-hidden">
+                        <div class="card-img-top bg-gradient-primary d-flex align-items-center justify-content-center" style="height: 250px;">
+                            <i class="{{ category.icon }} fa-4x text-white opacity-75"></i>
+                        </div>
+
+                        <div class="card-body text-center p-4">
+                            <div class="category-icon bg-gradient-secondary text-white rounded-circle d-inline-flex align-items-center justify-content-center mb-3" style="width: 60px; height: 60px;">
+                                <i class="{{ category.icon }} fs-4"></i>
+                            </div>
+
+                            <h5 class="card-title fw-bold mb-3">{{ category.name }}</h5>
+                            <p class="card-text text-muted mb-4">{{ category.description }}</p>
+
+                            <a href="{{ url_for('main.products') }}" class="btn btn-outline-primary btn-sm px-4 hover-lift">
+                                <i class="fas fa-arrow-right me-2"></i>{{ _('View Products') }}
+                            </a>
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+            {% endif %}
+        </div>
+
+        <!-- View All Categories Button -->
+        <div class="text-center mt-5" data-aos="fade-up" data-aos-delay="400">
+            <a href="{{ url_for('main.products') }}" class="btn btn-primary btn-lg px-5 py-3 hover-lift">
+                <i class="fas fa-th-large me-2"></i>{{ _('View All Categories') }}
+            </a>
+        </div>
+    </div>
+</section>
+
+<!-- Featured Products Section -->
+<section class="py-5 position-relative overflow-hidden">
+    <!-- Background Elements -->
+    <div class="position-absolute top-0 start-0 w-100 h-100">
+        <div class="bg-gradient-primary opacity-25" style="clip-path: polygon(0 0, 100% 0, 100% 80%, 0 100%);"></div>
+    </div>
+
+    <div class="container position-relative">
+        <div class="text-center mb-5" data-aos="fade-up">
+            <div class="section-badge badge bg-gradient-secondary text-dark px-4 py-2 rounded-pill mb-3 fs-6 fw-semibold">
+                <i class="fas fa-star me-2"></i>{{ _('Featured Products') }}
+            </div>
+            <h2 class="section-heading english-heading gradient-text">{{ _('Premium Quality Selection') }}</h2>
+            <p class="lead english-text text-muted col-lg-8 mx-auto">
+                {{ _('Discover our handpicked selection of the finest Egyptian agricultural products,') }}
+                {{ _('each representing the pinnacle of quality and taste.') }}
+            </p>
+        </div>
+
+        <div class="row g-4 products-grid">
+            {% if featured_products %}
+                {% for product in featured_products %}
+                <div class="col-lg-4 col-md-6 col-sm-12 product-col" data-aos="fade-up" data-aos-delay="{{ loop.index0 * 100 }}">
+                    <div class="product-card card h-100 border-0 shadow-lg hover-lift position-relative overflow-hidden">
+                        <!-- Product Badge -->
+                        <div class="position-absolute top-0 start-0 p-3 z-index-3">
+                            <span class="badge bg-gradient-secondary text-dark fw-semibold">
+                                <i class="fas fa-star me-1"></i>{{ _('Featured') }}
+                            </span>
+                        </div>
+
+                        <!-- Product Image -->
+                        <div class="product-image-wrapper position-relative overflow-hidden">
+                            {% set main_image = product.get_main_image() %}
+                            {% if main_image %}
+                            <img src="{{ url_for('static', filename='uploads/products/' + main_image.filename) }}"
+                                 class="card-img-top product-image" alt="{{ product.get_name(current_language) }}" style="height: 250px; object-fit: cover;">
+                            {% else %}
+                            <div class="card-img-top bg-gradient-primary d-flex align-items-center justify-content-center" style="height: 250px;">
+                                <i class="fas fa-apple-alt fa-4x text-white opacity-75"></i>
+                            </div>
+                            {% endif %}
+
+                            <!-- Quick View Overlay -->
+                            <div class="product-overlay position-absolute top-0 start-0 w-100 h-100 d-flex align-items-center justify-content-center">
+                                <div class="overlay-content text-center text-white">
+                                    <div class="btn-group-vertical">
+                                        <a href="{{ url_for('main.product_detail', slug=product.slug) }}" class="btn btn-light btn-sm mb-2">
+                                            <i class="fas fa-eye me-1"></i>{{ _('Quick View') }}
+                                        </a>
+                                        <a href="{{ url_for('main.contact') }}?product={{ product.slug }}" class="btn btn-primary btn-sm">
+                                            <i class="fas fa-envelope me-1"></i>{{ _('Get Quote') }}
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Product Content -->
+                        <div class="card-body p-4">
+                            <div class="product-category mb-2">
+                                <span class="badge bg-light text-primary-custom fw-semibold">
+                                    {{ product.category.get_name(current_language) if product.category else _('Premium') }}
+                                </span>
+                            </div>
+
+                            <h5 class="card-heading {{ 'arabic-heading' if current_language == 'ar' else 'english-heading' }} mb-3">{{ product.get_name(current_language) }}</h5>
+                            <p class="card-text {{ 'arabic-text' if current_language == 'ar' else 'english-text' }} text-muted mb-4">
+                                {{ product.get_short_description(current_language) | truncate(100) if product.get_short_description(current_language) else _('Premium quality Egyptian agricultural product with exceptional taste and nutritional value.') }}
+                            </p>
+
+                            <!-- Product Features -->
+                            <div class="product-features mb-4">
+                                <div class="row g-2">
+                                    <div class="col-6">
+                                        <div class="feature-item d-flex align-items-center">
+                                            <i class="fas fa-certificate text-success me-2"></i>
+                                            <small class="text-muted english-text">{{ _('Certified') }}</small>
+                                        </div>
+                                    </div>
+                                    <div class="col-6">
+                                        <div class="feature-item d-flex align-items-center">
+                                            <i class="fas fa-leaf text-primary-custom me-2"></i>
+                                            <small class="text-muted english-text">{{ _('Fresh') }}</small>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Action Buttons -->
+                            <div class="d-flex gap-2 mt-auto">
+                                <a href="{{ url_for('main.product_detail', slug=product.slug) }}" class="btn btn-outline-primary btn-text english-heading flex-grow-1 hover-lift">
+                                    <i class="fas fa-info-circle me-1"></i>{{ _('Details') }}
+                                </a>
+                                <a href="{{ url_for('main.contact') }}?product={{ product.slug }}" class="btn btn-primary hover-lift">
+                                    <i class="fas fa-envelope"></i>
+                                </a>
+                            </div>
+                        </div>
+
+                        <!-- Decorative Element -->
+                        <div class="product-decoration position-absolute top-0 end-0 p-3">
+                            <div class="decoration-circle bg-gradient-primary opacity-25 rounded-circle" style="width: 80px; height: 80px; transform: translate(50%, -50%);"></div>
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+            {% else %}
+                <!-- Default Products -->
+                {% set default_products = [
+                    {'name': _('Egyptian Oranges'), 'category': _('Citrus Fruits'), 'icon': 'fas fa-circle', 'description': _('Premium quality Egyptian oranges with exceptional sweetness and juice content.')},
+                    {'name': _('Fresh Grapes'), 'category': _('Fresh Fruits'), 'icon': 'fas fa-grape-cluster', 'description': _('High-quality table grapes in various varieties for global markets.')},
+                    {'name': _('Egyptian Garlic'), 'category': _('Vegetables'), 'icon': 'fas fa-seedling', 'description': _('Premium white garlic with strong flavor and excellent storage capabilities.')},
+                    {'name': _('IQF Strawberries'), 'category': _('Frozen Products'), 'icon': 'fas fa-snowflake', 'description': _('Individually Quick Frozen strawberries maintaining fresh taste and nutrition.')}
+                ] %}
+
+                {% for product in default_products %}
+                <div class="col-lg-4 col-md-6 col-sm-12 product-col" data-aos="fade-up" data-aos-delay="{{ loop.index0 * 100 }}">
+                    <div class="product-card card h-100 border-0 shadow-lg hover-lift position-relative overflow-hidden">
+                        <div class="position-absolute top-0 start-0 p-3 z-index-3">
+                            <span class="badge bg-gradient-secondary text-dark fw-semibold">
+                                <i class="fas fa-star me-1"></i>{{ _('Featured') }}
+                            </span>
+                        </div>
+
+                        <div class="card-img-top bg-gradient-primary d-flex align-items-center justify-content-center" style="height: 250px;">
+                            <i class="{{ product.icon }} fa-4x text-white opacity-75"></i>
+                        </div>
+
+                        <div class="card-body p-4">
+                            <div class="product-category mb-2">
+                                <span class="badge bg-light text-primary-custom fw-semibold">{{ product.category }}</span>
+                            </div>
+
+                            <h5 class="card-title fw-bold mb-3">{{ product.name }}</h5>
+                            <p class="card-text text-muted mb-4">{{ product.description }}</p>
+
+                            <div class="product-features mb-4">
+                                <div class="row g-2">
+                                    <div class="col-6">
+                                        <div class="feature-item d-flex align-items-center">
+                                            <i class="fas fa-certificate text-success me-2"></i>
+                                            <small class="text-muted">{{ _('Certified') }}</small>
+                                        </div>
+                                    </div>
+                                    <div class="col-6">
+                                        <div class="feature-item d-flex align-items-center">
+                                            <i class="fas fa-leaf text-primary-custom me-2"></i>
+                                            <small class="text-muted">{{ _('Fresh') }}</small>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="d-flex gap-2 mt-auto">
+                                <a href="{{ url_for('main.products') }}" class="btn btn-outline-primary flex-grow-1 hover-lift">
+                                    <i class="fas fa-info-circle me-1"></i>{{ _('Details') }}
+                                </a>
+                                <a href="{{ url_for('main.contact') }}" class="btn btn-primary hover-lift">
+                                    <i class="fas fa-envelope"></i>
+                                </a>
+                            </div>
+                        </div>
+
+                        <!-- Decorative Element -->
+                        <div class="product-decoration position-absolute top-0 end-0 p-3">
+                            <div class="decoration-circle bg-gradient-primary opacity-25 rounded-circle" style="width: 80px; height: 80px; transform: translate(50%, -50%);"></div>
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+            {% endif %}
+        </div>
+
+        <!-- View All Products Button -->
+        <div class="text-center mt-5" data-aos="fade-up" data-aos-delay="400">
+            <a href="{{ url_for('main.products') }}" class="btn btn-primary btn-lg px-5 py-3 hover-lift">
+                <i class="fas fa-th-large me-2"></i>{{ _('Explore All Products') }}
+            </a>
+        </div>
+    </div>
+</section>
+
+<!-- Statistics & Achievements Section -->
+<section class="py-5 bg-gradient-primary text-white position-relative overflow-hidden">
+    <!-- Background Pattern -->
+    <div class="position-absolute top-0 start-0 w-100 h-100">
+        <div class="stats-pattern opacity-10"></div>
+    </div>
+
+    <div class="container position-relative">
+        <div class="row align-items-center">
+            <div class="col-lg-6" data-aos="fade-right">
+                <div class="stats-content">
+                    <div class="section-badge badge bg-gradient-secondary text-dark px-4 py-2 rounded-pill mb-3 fs-6 fw-semibold">
+                        <i class="fas fa-chart-line me-2"></i>{{ _('Our Achievements') }}
+                    </div>
+
+                    <h2 class="section-heading english-heading text-shadow">
+                        {{ _('Trusted by') }} {{ _('Customers') }}
+                        <span style="color: #f9cb99;">{{ _('Worldwide') }}</span>
+                    </h2>
+
+                    <p class="lead english-text mb-4 text-shadow-sm">
+                        {{ _('Over two decades of excellence in Egyptian agricultural exports,') }}
+                        {{ _('serving customers across 50+ countries with unwavering quality and reliability.') }}
+                    </p>
+
+                    <div class="achievements-list">
+                        <div class="achievement-item d-flex align-items-center mb-3">
+                            <div class="achievement-icon bg-gradient-secondary text-dark rounded-circle d-flex align-items-center justify-content-center me-3" style="width: 50px; height: 50px;">
+                                <i class="fas fa-award fs-5"></i>
+                            </div>
+                            <div>
+                                <h6 class="mb-1 fw-bold english-heading">{{ _('ISO 22000 Certified') }}</h6>
+                                <small class="opacity-75 english-text">{{ _('Food Safety Management System') }}</small>
+                            </div>
+                        </div>
+
+                        <div class="achievement-item d-flex align-items-center mb-3">
+                            <div class="achievement-icon bg-gradient-secondary text-dark rounded-circle d-flex align-items-center justify-content-center me-3" style="width: 50px; height: 50px;">
+                                <i class="fas fa-globe fs-5"></i>
+                            </div>
+                            <div>
+                                <h6 class="mb-1 fw-bold {{ 'arabic-heading' if session.get('language') == 'ar' else 'english-heading' }}">
+                                    {% if session.get('language') == 'ar' %}
+                                        معتمد الممارسات الزراعية الجيدة
+                                    {% else %}
+                                        GlobalG.A.P. Certified
+                                    {% endif %}
+                                </h6>
+                                <small class="opacity-75 {{ 'arabic-text' if session.get('language') == 'ar' else 'english-text' }}">
+                                    {% if session.get('language') == 'ar' %}
+                                        الممارسات الزراعية الجيدة
+                                    {% else %}
+                                        Good Agricultural Practices
+                                    {% endif %}
+                                </small>
+                            </div>
+                        </div>
+
+                        <div class="achievement-item d-flex align-items-center">
+                            <div class="achievement-icon bg-gradient-secondary text-dark rounded-circle d-flex align-items-center justify-content-center me-3" style="width: 50px; height: 50px;">
+                                <i class="fas fa-shipping-fast fs-5"></i>
+                            </div>
+                            <div>
+                                <h6 class="mb-1 fw-bold english-heading">{{ _('Cold Chain Excellence') }}</h6>
+                                <small class="opacity-75 english-text">{{ _('Temperature-controlled logistics') }}</small>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-lg-6" data-aos="fade-left" data-aos-delay="200">
+                <div class="stats-grid">
+                    <div class="row g-4">
+                        <div class="col-6">
+                            <div class="stat-card card border-0 shadow-lg text-center p-4 glass-effect">
+                                <div class="stat-icon bg-gradient-secondary text-dark rounded-circle d-inline-flex align-items-center justify-content-center mb-3" style="width: 70px; height: 70px;">
+                                    <i class="fas fa-globe-americas fs-3"></i>
+                                </div>
+                                <div class="stat-number display-4 fw-bold text-primary-custom mb-2" data-count="50">0</div>
+                                <div class="stat-label text-muted fw-semibold">{{ _('Countries Served') }}</div>
+                            </div>
+                        </div>
+
+                        <div class="col-6">
+                            <div class="stat-card card border-0 shadow-lg text-center p-4 glass-effect">
+                                <div class="stat-icon bg-gradient-secondary text-dark rounded-circle d-inline-flex align-items-center justify-content-center mb-3" style="width: 70px; height: 70px;">
+                                    <i class="fas fa-leaf fs-3"></i>
+                                </div>
+                                <div class="stat-number display-4 fw-bold text-primary-custom mb-2" data-count="100">0</div>
+                                <div class="stat-label text-muted fw-semibold">{{ _('Premium Products') }}</div>
+                            </div>
+                        </div>
+
+                        <div class="col-6">
+                            <div class="stat-card card border-0 shadow-lg text-center p-4 glass-effect">
+                                <div class="stat-icon bg-gradient-secondary text-dark rounded-circle d-inline-flex align-items-center justify-content-center mb-3" style="width: 70px; height: 70px;">
+                                    <i class="fas fa-calendar-alt fs-3"></i>
+                                </div>
+                                <div class="stat-number display-4 fw-bold text-primary-custom mb-2" data-count="25">0</div>
+                                <div class="stat-label text-muted fw-semibold">{{ _('Years Experience') }}</div>
+                            </div>
+                        </div>
+
+                        <div class="col-6">
+                            <div class="stat-card card border-0 shadow-lg text-center p-4 glass-effect">
+                                <div class="stat-icon bg-gradient-secondary text-dark rounded-circle d-inline-flex align-items-center justify-content-center mb-3" style="width: 70px; height: 70px;">
+                                    <i class="fas fa-users fs-3"></i>
+                                </div>
+                                <div class="stat-number display-4 fw-bold text-primary-custom mb-2" data-count="500">0</div>
+                                <div class="stat-label text-muted fw-semibold">{{ _('Satisfied Clients') }}</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Why Choose Us Section -->
+<section class="py-5 bg-gradient-light position-relative overflow-hidden">
+    <!-- Background Elements -->
+    <div class="position-absolute top-0 start-0 w-100 h-100">
+        <div class="pattern-dots opacity-25"></div>
+    </div>
+
+    <div class="container position-relative">
+        <div class="text-center mb-5" data-aos="fade-up">
+            <div class="section-badge badge bg-gradient-primary text-white px-4 py-2 rounded-pill mb-3 fs-6 fw-semibold">
+                <i class="fas fa-star me-2"></i>{{ _('Why Choose Us') }}
+            </div>
+            <h2 class="section-heading english-heading gradient-text">{{ _('Your Trusted Export Partner') }}</h2>
+            <p class="lead english-text text-muted col-lg-8 mx-auto">
+                {{ _('Experience the difference of working with Egypt\'s premier agricultural export company,') }}
+                {{ _('where quality meets reliability and tradition meets innovation.') }}
+            </p>
+        </div>
+
+        <div class="row g-4">
+            <div class="col-lg-3 col-md-6" data-aos="fade-up" data-aos-delay="100">
+                <div class="feature-card card h-100 border-0 shadow-lg text-center p-4 hover-lift">
+                    <div class="feature-icon-wrapper mb-4">
+                        <div class="feature-icon bg-gradient-primary text-white rounded-circle d-inline-flex align-items-center justify-content-center position-relative" style="width: 100px; height: 100px;">
+                            <i class="fas fa-award fa-3x"></i>
+                            <div class="icon-glow position-absolute top-0 start-0 w-100 h-100 rounded-circle"></div>
+                        </div>
+                    </div>
+
+                    <h5 class="card-heading english-heading mb-3">{{ _('Premium Quality') }}</h5>
+                    <p class="text-muted english-text mb-4">
+                        {{ _('Rigorous quality control processes and international certifications ensure') }}
+                        {{ _('every product meets the highest global standards.') }}
+                    </p>
+
+                    <div class="feature-highlights">
+                        <div class="highlight-item d-flex align-items-center justify-content-center mb-2">
+                            <i class="fas fa-check-circle text-success me-2"></i>
+                            <small class="text-muted">{{ _('ISO 22000 Certified') }}</small>
+                        </div>
+                        <div class="highlight-item d-flex align-items-center justify-content-center">
+                            <i class="fas fa-check-circle text-success me-2"></i>
+                            <small class="text-muted">
+                                {% if session.get('language') == 'ar' %}
+                                    معايير الممارسات الزراعية الجيدة
+                                {% else %}
+                                    GlobalG.A.P. Standards
+                                {% endif %}
+                            </small>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-lg-3 col-md-6" data-aos="fade-up" data-aos-delay="200">
+                <div class="feature-card card h-100 border-0 shadow-lg text-center p-4 hover-lift">
+                    <div class="feature-icon-wrapper mb-4">
+                        <div class="feature-icon bg-gradient-secondary text-white rounded-circle d-inline-flex align-items-center justify-content-center position-relative" style="width: 100px; height: 100px;">
+                            <i class="fas fa-shipping-fast fa-3x"></i>
+                            <div class="icon-glow position-absolute top-0 start-0 w-100 h-100 rounded-circle"></div>
+                        </div>
+                    </div>
+
+                    <h5 class="card-heading english-heading mb-3">{{ _('Reliable Logistics') }}</h5>
+                    <p class="text-muted english-text mb-4">
+                        {{ _('Advanced cold chain management ensures your products') }}
+                        {{ _('arrive fresh and on time, anywhere in the world.') }}
+                    </p>
+
+                    <div class="feature-highlights">
+                        <div class="highlight-item d-flex align-items-center justify-content-center mb-2">
+                            <i class="fas fa-check-circle text-success me-2"></i>
+                            <small class="text-muted english-text">{{ _('Cold Chain Excellence') }}</small>
+                        </div>
+                        <div class="highlight-item d-flex align-items-center justify-content-center">
+                            <i class="fas fa-check-circle text-success me-2"></i>
+                            <small class="text-muted english-text">{{ _('Global Network') }}</small>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-lg-3 col-md-6" data-aos="fade-up" data-aos-delay="300">
+                <div class="feature-card card h-100 border-0 shadow-lg text-center p-4 hover-lift">
+                    <div class="feature-icon-wrapper mb-4">
+                        <div class="feature-icon bg-gradient-primary text-white rounded-circle d-inline-flex align-items-center justify-content-center position-relative" style="width: 100px; height: 100px;">
+                            <i class="fas fa-globe fa-3x"></i>
+                            <div class="icon-glow position-absolute top-0 start-0 w-100 h-100 rounded-circle"></div>
+                        </div>
+                    </div>
+
+                    <h5 class="card-heading english-heading mb-3">{{ _('Global Reach') }}</h5>
+                    <p class="text-muted mb-4">
+                        {{ _('Serving 50+ countries worldwide with trusted partnerships') }}
+                        {{ _('and comprehensive market knowledge.') }}
+                    </p>
+
+                    <div class="feature-highlights">
+                        <div class="highlight-item d-flex align-items-center justify-content-center mb-2">
+                            <i class="fas fa-check-circle text-success me-2"></i>
+                            <small class="text-muted">{{ _('50+ Countries') }}</small>
+                        </div>
+                        <div class="highlight-item d-flex align-items-center justify-content-center">
+                            <i class="fas fa-check-circle text-success me-2"></i>
+                            <small class="text-muted">{{ _('Trusted Partners') }}</small>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-lg-3 col-md-6" data-aos="fade-up" data-aos-delay="400">
+                <div class="feature-card card h-100 border-0 shadow-lg text-center p-4 hover-lift">
+                    <div class="feature-icon-wrapper mb-4">
+                        <div class="feature-icon bg-gradient-secondary text-white rounded-circle d-inline-flex align-items-center justify-content-center position-relative" style="width: 100px; height: 100px;">
+                            <i class="fas fa-handshake fa-3x"></i>
+                            <div class="icon-glow position-absolute top-0 start-0 w-100 h-100 rounded-circle"></div>
+                        </div>
+                    </div>
+
+                    <h5 class="card-heading english-heading mb-3">{{ _('Trusted Partnership') }}</h5>
+                    <p class="text-muted mb-4">
+                        {{ _('Over 25 years of experience building lasting relationships') }}
+                        {{ _('with clients through integrity and excellence.') }}
+                    </p>
+
+                    <div class="feature-highlights">
+                        <div class="highlight-item d-flex align-items-center justify-content-center mb-2">
+                            <i class="fas fa-check-circle text-success me-2"></i>
+                            <small class="text-muted">{{ _('25+ Years Experience') }}</small>
+                        </div>
+                        <div class="highlight-item d-flex align-items-center justify-content-center">
+                            <i class="fas fa-check-circle text-success me-2"></i>
+                            <small class="text-muted">{{ _('500+ Clients') }}</small>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Latest News Section -->
+<section class="py-5 position-relative overflow-hidden">
+    <!-- Background Elements -->
+    <div class="position-absolute top-0 end-0 w-50 h-100">
+        <div class="bg-gradient-secondary opacity-10" style="clip-path: polygon(30% 0, 100% 0, 100% 100%, 0 100%);"></div>
+    </div>
+
+    <div class="container position-relative">
+        <div class="text-center mb-5" data-aos="fade-up">
+            <div class="section-badge badge bg-gradient-secondary text-dark px-4 py-2 rounded-pill mb-3 fs-6 fw-semibold">
+                <i class="fas fa-newspaper me-2"></i>{{ _('Latest Updates') }}
+            </div>
+            <h2 class="section-heading english-heading gradient-text">{{ _('News & Industry Insights') }}</h2>
+            <p class="lead text-muted col-lg-8 mx-auto">
+                {{ _('Stay informed about our latest developments, industry trends, and insights') }}
+                {{ _('from the world of Egyptian agricultural exports.') }}
+            </p>
+        </div>
+
+        <div class="row g-4">
+            {% if latest_news %}
+                {% for article in latest_news %}
+                <div class="col-lg-4" data-aos="fade-up" data-aos-delay="{{ loop.index0 * 100 }}">
+                    <article class="news-card card h-100 border-0 shadow-lg hover-lift position-relative overflow-hidden">
+                        <!-- News Image -->
+                        <div class="news-image-wrapper position-relative overflow-hidden">
+                            {% if article.cover_image %}
+                            <img src="{{ url_for('static', filename='uploads/news/' + article.cover_image) }}"
+                                 class="card-img-top news-image" alt="{{ article.get_title() }}" style="height: 250px; object-fit: cover;">
+                            {% else %}
+                            <div class="card-img-top bg-gradient-primary d-flex align-items-center justify-content-center" style="height: 250px;">
+                                <i class="fas fa-newspaper fa-4x text-white opacity-75"></i>
+                            </div>
+                            {% endif %}
+
+                            <!-- Date Badge -->
+                            <div class="position-absolute top-0 start-0 p-3">
+                                <div class="date-badge bg-white text-dark rounded-pill px-3 py-2 shadow-sm">
+                                    <i class="fas fa-calendar-alt me-2 text-primary-custom"></i>
+                                    <small class="fw-semibold">{{ article.publish_at.strftime('%b %d') }}</small>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- News Content -->
+                        <div class="card-body p-4">
+                            <div class="news-meta mb-3">
+                                <span class="badge bg-light text-primary-custom fw-semibold">
+                                    <i class="fas fa-tag me-1"></i>{{ _('News') }}
+                                </span>
+                                {% if article.featured %}
+                                <span class="badge bg-gradient-secondary text-dark fw-semibold ms-2">
+                                    <i class="fas fa-star me-1"></i>{{ _('Featured') }}
+                                </span>
+                                {% endif %}
+                            </div>
+
+                            <h5 class="card-heading english-heading mb-3">{{ article.get_title() }}</h5>
+                            <p class="card-text text-muted mb-4">
+                                {{ article.get_excerpt() | truncate(120) if article.get_excerpt() else 'Stay updated with the latest news and developments from Emdad Global.' }}
+                            </p>
+
+                            <!-- Article Footer -->
+                            <div class="d-flex justify-content-between align-items-center mt-auto">
+                                <small class="text-muted">
+                                    <i class="fas fa-clock me-1"></i>{{ article.publish_at.strftime('%B %d, %Y') }}
+                                </small>
+                                <a href="{{ url_for('main.news_detail', slug=article.slug) }}" class="btn btn-outline-primary btn-sm hover-lift">
+                                    <i class="fas fa-arrow-right me-1"></i>{{ _('Read More') }}
+                                </a>
+                            </div>
+                        </div>
+                    </article>
+                </div>
+                {% endfor %}
+            {% else %}
+                <!-- Default News Items -->
+                {% set default_news = [
+                    {'title': _('Expanding Global Reach'), 'excerpt': _('Emdad Global announces new partnerships in European and Asian markets, strengthening our international presence.')},
+                    {'title': _('Quality Certification Update'), 'excerpt': _('Successfully renewed ISO 22000 and Good Agricultural Practices certifications, reinforcing our commitment to quality standards.')},
+                    {'title': _('Sustainable Agriculture Initiative'), 'excerpt': _('Launching new sustainable farming practices to support environmental conservation and premium product quality.')}
+                ] %}
+
+                {% for article in default_news %}
+                <div class="col-lg-4" data-aos="fade-up" data-aos-delay="{{ loop.index0 * 100 }}">
+                    <article class="news-card card h-100 border-0 shadow-lg hover-lift position-relative overflow-hidden">
+                        <div class="card-img-top bg-gradient-primary d-flex align-items-center justify-content-center" style="height: 250px;">
+                            <i class="fas fa-newspaper fa-4x text-white opacity-75"></i>
+                        </div>
+
+                        <div class="position-absolute top-0 start-0 p-3">
+                            <div class="date-badge bg-white text-dark rounded-pill px-3 py-2 shadow-sm">
+                                <i class="fas fa-calendar-alt me-2 text-primary-custom"></i>
+                                <small class="fw-semibold">Jan {{ 15 - loop.index0 * 5 }}</small>
+                            </div>
+                        </div>
+
+                        <div class="card-body p-4">
+                            <div class="news-meta mb-3">
+                                <span class="badge bg-light text-primary-custom fw-semibold">
+                                    <i class="fas fa-tag me-1"></i>{{ _('News') }}
+                                </span>
+                            </div>
+
+                            <h5 class="card-title fw-bold mb-3">{{ article.title }}</h5>
+                            <p class="card-text text-muted mb-4">{{ article.excerpt }}</p>
+
+                            <div class="d-flex justify-content-between align-items-center mt-auto">
+                                <small class="text-muted">
+                                    <i class="fas fa-clock me-1"></i>January {{ 15 - loop.index0 * 5 }}, 2024
+                                </small>
+                                <a href="{{ url_for('main.news') }}" class="btn btn-outline-primary btn-sm hover-lift">
+                                    <i class="fas fa-arrow-right me-1"></i>{{ _('Read More') }}
+                                </a>
+                            </div>
+                        </div>
+                    </article>
+                </div>
+                {% endfor %}
+            {% endif %}
+        </div>
+
+        <!-- View All News Button -->
+        <div class="text-center mt-5" data-aos="fade-up" data-aos-delay="400">
+            <a href="{{ url_for('main.news') }}" class="btn btn-primary btn-lg px-5 py-3 hover-lift">
+                <i class="fas fa-newspaper me-2"></i>{{ _('View All News') }}
+            </a>
+        </div>
+    </div>
+</section>
+
+<!-- CTA Section -->
+<section class="py-5 bg-gradient-primary text-white position-relative overflow-hidden">
+    <!-- Background Pattern -->
+    <div class="position-absolute top-0 start-0 w-100 h-100">
+        <div class="cta-pattern opacity-10"></div>
+    </div>
+
+    <!-- Floating Elements -->
+    <div class="floating-shapes">
+        <div class="cta-shape cta-shape-1"></div>
+        <div class="cta-shape cta-shape-2"></div>
+        <div class="cta-shape cta-shape-3"></div>
+    </div>
+
+    <div class="container position-relative">
+        <div class="row align-items-center">
+            <div class="col-lg-8" data-aos="fade-right">
+                <div class="cta-content">
+                    <div class="cta-badge badge bg-gradient-secondary text-dark px-4 py-2 rounded-pill mb-3 fs-6 fw-semibold">
+                        <i class="fas fa-handshake me-2"></i>{{ _('Partnership Opportunity') }}
+                    </div>
+
+                    <h2 class="section-heading english-heading text-shadow">
+                        {{ _('Ready to Start Your') }}
+                        <span style="color: #f9cb99;">{{ _('Premium') }}</span>
+                        {{ _('Agricultural Order?') }}
+                    </h2>
+
+                    <p class="lead mb-4 text-shadow-sm">
+                        {{ _('Join hundreds of satisfied clients worldwide who trust Emdad Global for their') }}
+                        {{ _('agricultural sourcing needs. Get a personalized quote today and experience the difference.') }}
+                    </p>
+
+                    <!-- Trust Indicators -->
+                    <div class="cta-features row g-3 mb-4">
+                        <div class="col-md-6">
+                            <div class="feature-item d-flex align-items-center">
+                                <div class="feature-icon bg-gradient-secondary text-dark rounded-circle d-flex align-items-center justify-content-center me-3" style="width: 50px; height: 50px;">
+                                    <i class="fas fa-clock fs-6"></i>
+                                </div>
+                                <div>
+                                    <h6 class="mb-1 fw-bold">{{ _('Quick Response') }}</h6>
+                                    <small class="opacity-75">{{ _('24-hour quote turnaround') }}</small>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-md-6">
+                            <div class="feature-item d-flex align-items-center">
+                                <div class="feature-icon bg-gradient-secondary text-dark rounded-circle d-flex align-items-center justify-content-center me-3" style="width: 50px; height: 50px;">
+                                    <i class="fas fa-shield-alt fs-6"></i>
+                                </div>
+                                <div>
+                                    <h6 class="mb-1 fw-bold">{{ _('Quality Guaranteed') }}</h6>
+                                    <small class="opacity-75">{{ _('International certifications') }}</small>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-lg-4 text-lg-center" data-aos="fade-left" data-aos-delay="200">
+                <div class="cta-actions">
+                    <!-- Primary CTA -->
+                    <a href="{{ url_for('main.contact') }}" class="btn btn-secondary btn-lg px-5 py-3 mb-3 d-block hover-lift">
+                        <i class="fas fa-envelope me-2"></i>{{ _('Request a Quote') }}
+                    </a>
+
+                    <!-- Secondary CTA -->
+                    <a href="{{ url_for('main.products') }}" class="btn btn-outline-light btn-lg px-5 py-3 d-block hover-lift">
+                        <i class="fas fa-leaf me-2"></i>{{ _('Browse Products') }}
+                    </a>
+
+                    <!-- Contact Info -->
+                    <div class="contact-info mt-4 p-3 glass-effect rounded-3">
+                        <div class="d-flex align-items-center justify-content-center mb-2">
+                            <i class="fas fa-phone me-2" style="color: #f9cb99;"></i>
+                            <span class="fw-semibold">{{ COMPANY_PHONE or '+20-xxx-xxx-xxxx' }}</span>
+                        </div>
+                        <div class="d-flex align-items-center justify-content-center">
+                            <i class="fas fa-envelope me-2" style="color: #f9cb99;"></i>
+                            <span class="fw-semibold">{{ COMPANY_EMAIL or 'info@emdadglobal.com' }}</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}
+
+{% block extra_scripts %}
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Initialize enhanced animations
+    initHomePageAnimations();
+    initCounterAnimations();
+    initScrollAnimations();
+    initFontLoading();
+});
+
+function initFontLoading() {
+    // Add font loading class
+    document.body.classList.add('fonts-loading');
+
+    // Check if fonts are loaded
+    if (document.fonts && document.fonts.ready) {
+        document.fonts.ready.then(function() {
+            document.body.classList.remove('fonts-loading');
+            document.body.classList.add('fonts-loaded');
+        });
+    } else {
+        // Fallback for older browsers
+        setTimeout(function() {
+            document.body.classList.remove('fonts-loading');
+            document.body.classList.add('fonts-loaded');
+        }, 3000);
+    }
+
+    // Preload critical fonts
+    const fontPreloads = [
+        'https://fonts.googleapis.com/css2?family=Nunito:wght@800;900&display=swap',
+        'https://fonts.googleapis.com/css2?family=Amiri:wght@700&display=swap'
+    ];
+
+    fontPreloads.forEach(fontUrl => {
+        const link = document.createElement('link');
+        link.rel = 'preload';
+        link.as = 'style';
+        link.href = fontUrl;
+        document.head.appendChild(link);
+
+        // Convert to stylesheet after loading
+        link.onload = function() {
+            this.rel = 'stylesheet';
+        };
+    });
+}
+
+function initHomePageAnimations() {
+    // Enhanced card hover effects
+    const cards = document.querySelectorAll('.category-card, .product-card, .feature-card, .news-card');
+    cards.forEach((card, index) => {
+        // Stagger initial animation
+        card.style.animationDelay = `${index * 0.1}s`;
+
+        card.addEventListener('mouseenter', function() {
+            this.style.transform = 'translateY(-15px) scale(1.02)';
+            this.style.boxShadow = '0 25px 50px rgba(46, 125, 50, 0.2)';
+            this.style.transition = 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)';
+        });
+
+        card.addEventListener('mouseleave', function() {
+            this.style.transform = 'translateY(0) scale(1)';
+            this.style.boxShadow = '';
+        });
+    });
+
+    // Floating animation for achievement cards
+    const floatingCards = document.querySelectorAll('.achievement-card');
+    floatingCards.forEach((card, index) => {
+        card.style.animationDelay = `${index * 0.5}s`;
+        card.classList.add('float');
+    });
+
+    // Agricultural icons interactive effects
+    const agriculturalIcons = document.querySelectorAll('.agricultural-icon');
+    agriculturalIcons.forEach((icon, index) => {
+        // Add click effect
+        icon.addEventListener('click', function() {
+            this.style.animation = 'none';
+            this.style.transform = 'scale(1.5) rotate(360deg)';
+            this.style.transition = 'all 0.6s cubic-bezier(0.68, -0.55, 0.265, 1.55)';
+
+            setTimeout(() => {
+                this.style.animation = '';
+                this.style.transform = '';
+                this.style.transition = '';
+            }, 600);
+        });
+
+        // Add tooltip effect
+        icon.addEventListener('mouseenter', function() {
+            const tooltip = document.createElement('div');
+            tooltip.className = 'agricultural-tooltip';
+            tooltip.textContent = this.getAttribute('title');
+            tooltip.style.cssText = `
+                position: absolute;
+                background: rgba(0, 0, 0, 0.9);
+                color: white;
+                padding: 0.5rem 1rem;
+                border-radius: 0.5rem;
+                font-size: 0.875rem;
+                font-weight: 600;
+                white-space: nowrap;
+                z-index: 1000;
+                pointer-events: none;
+                transform: translateX(-50%) translateY(-120%);
+                left: 50%;
+                top: 0;
+                opacity: 0;
+                transition: opacity 0.3s ease;
+                box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+            `;
+
+            this.style.position = 'relative';
+            this.appendChild(tooltip);
+
+            setTimeout(() => {
+                tooltip.style.opacity = '1';
+            }, 100);
+        });
+
+        icon.addEventListener('mouseleave', function() {
+            const tooltip = this.querySelector('.agricultural-tooltip');
+            if (tooltip) {
+                tooltip.style.opacity = '0';
+                setTimeout(() => {
+                    if (tooltip.parentNode) {
+                        tooltip.parentNode.removeChild(tooltip);
+                    }
+                }, 300);
+            }
+        });
+    });
+
+    // Quality indicators hover effects
+    const qualityIndicators = document.querySelectorAll('.quality-indicator');
+    qualityIndicators.forEach((indicator, index) => {
+        indicator.addEventListener('mouseenter', function() {
+            this.style.transform = 'translateY(-5px) scale(1.05)';
+            this.style.background = 'rgba(255, 255, 255, 0.25)';
+            this.style.boxShadow = '0 8px 25px rgba(0, 0, 0, 0.2)';
+        });
+
+        indicator.addEventListener('mouseleave', function() {
+            this.style.transform = '';
+            this.style.background = '';
+            this.style.boxShadow = '';
+        });
+    });
+}
+
+function initCounterAnimations() {
+    // Enhanced counter animation
+    const counters = document.querySelectorAll('.stat-number[data-count]');
+
+    const animateCounter = (counter) => {
+        const target = parseInt(counter.dataset.count);
+        const duration = 2500;
+        const start = performance.now();
+
+        const animate = (currentTime) => {
+            const elapsed = currentTime - start;
+            const progress = Math.min(elapsed / duration, 1);
+
+            // Easing function (ease-out-cubic)
+            const easeOutCubic = 1 - Math.pow(1 - progress, 3);
+            const current = Math.floor(target * easeOutCubic);
+
+            counter.textContent = current + '+';
+
+            if (progress < 1) {
+                requestAnimationFrame(animate);
+            } else {
+                counter.textContent = target + '+';
+                // Add completion animation
+                counter.style.transform = 'scale(1.1)';
+                setTimeout(() => {
+                    counter.style.transform = 'scale(1)';
+                }, 200);
+            }
+        };
+
+        requestAnimationFrame(animate);
+    };
+
+    // Intersection Observer for counters
+    const counterObserver = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                animateCounter(entry.target);
+                counterObserver.unobserve(entry.target);
+            }
+        });
+    }, { threshold: 0.5 });
+
+    counters.forEach(counter => counterObserver.observe(counter));
+}
+
+function initScrollAnimations() {
+    // Enhanced scroll-triggered animations
+    const observerOptions = {
+        threshold: 0.1,
+        rootMargin: '0px 0px -50px 0px'
+    };
+
+    const scrollObserver = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                entry.target.classList.add('animate-in');
+
+                // Add specific animations based on element type
+                if (entry.target.classList.contains('feature-card')) {
+                    entry.target.style.animation = 'fadeInUp 0.8s ease-out forwards';
+                }
+
+                if (entry.target.classList.contains('product-card')) {
+                    entry.target.style.animation = 'scaleIn 0.6s ease-out forwards';
+                }
+
+                if (entry.target.classList.contains('news-card')) {
+                    entry.target.style.animation = 'fadeInLeft 0.8s ease-out forwards';
+                }
+
+                scrollObserver.unobserve(entry.target);
+            }
+        });
+    }, observerOptions);
+
+    // Observe elements
+    document.querySelectorAll('.feature-card, .product-card, .news-card, .stat-card').forEach(el => {
+        scrollObserver.observe(el);
+    });
+
+    // Parallax effect for background elements
+    let ticking = false;
+
+    function updateParallax() {
+        const scrolled = window.pageYOffset;
+        const shapes = document.querySelectorAll('.shape, .cta-shape');
+
+        shapes.forEach((shape, index) => {
+            const speed = 0.5 + (index * 0.1);
+            const yPos = -(scrolled * speed);
+            shape.style.transform = `translateY(${yPos}px)`;
+        });
+
+        ticking = false;
+    }
+
+    window.addEventListener('scroll', () => {
+        if (!ticking) {
+            requestAnimationFrame(updateParallax);
+            ticking = true;
+        }
+    });
+}
+
+// Add custom styles for animations
+const style = document.createElement('style');
+style.textContent = `
+    .animate-in {
+        opacity: 1 !important;
+        transform: translateY(0) !important;
+    }
+
+    .float {
+        animation: float 4s ease-in-out infinite;
+    }
+`;
+document.head.appendChild(style);
+</script>
+{% endblock %}

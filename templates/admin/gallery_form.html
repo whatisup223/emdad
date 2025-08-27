@@ -1,0 +1,152 @@
+{% extends "admin/base.html" %}
+
+{% block title %}{{ title }}{% endblock %}
+
+{% block content %}
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-header d-flex justify-content-between align-items-center">
+                    <h3 class="card-title">{{ title }}</h3>
+                    <a href="{{ url_for('admin.gallery') }}" class="btn btn-secondary">
+                        <i class="fas fa-arrow-left"></i> {{ _('Back to Gallery') }}
+                    </a>
+                </div>
+                <div class="card-body">
+                    {% with messages = get_flashed_messages(with_categories=true) %}
+                        {% if messages %}
+                            {% for category, message in messages %}
+                                <div class="alert alert-{{ 'success' if category == 'success' else 'danger' }} alert-dismissible fade show" role="alert">
+                                    {{ message }}
+                                    <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                                </div>
+                            {% endfor %}
+                        {% endif %}
+                    {% endwith %}
+
+                    <form method="POST" enctype="multipart/form-data">
+                        {{ form.hidden_tag() }}
+                        
+                        <!-- Image Upload -->
+                        <div class="mb-4">
+                            {{ form.image.label(class="form-label") }}
+                            {{ form.image(class="form-control" + (" is-invalid" if form.image.errors else "")) }}
+                            {% if form.image.errors %}
+                                <div class="invalid-feedback">
+                                    {% for error in form.image.errors %}{{ error }}{% endfor %}
+                                </div>
+                            {% endif %}
+                            <div class="form-text">{{ _('Supported formats: JPG, JPEG, PNG, GIF. Max size: 5MB') }}</div>
+                        </div>
+
+                        <!-- Titles -->
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    {{ form.title_en.label(class="form-label") }}
+                                    {{ form.title_en(class="form-control" + (" is-invalid" if form.title_en.errors else "")) }}
+                                    {% if form.title_en.errors %}
+                                        <div class="invalid-feedback">
+                                            {% for error in form.title_en.errors %}{{ error }}{% endfor %}
+                                        </div>
+                                    {% endif %}
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    {{ form.title_ar.label(class="form-label") }}
+                                    {{ form.title_ar(class="form-control" + (" is-invalid" if form.title_ar.errors else ""), dir="rtl") }}
+                                    {% if form.title_ar.errors %}
+                                        <div class="invalid-feedback">
+                                            {% for error in form.title_ar.errors %}{{ error }}{% endfor %}
+                                        </div>
+                                    {% endif %}
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Descriptions -->
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    {{ form.description_en.label(class="form-label") }}
+                                    {{ form.description_en(class="form-control" + (" is-invalid" if form.description_en.errors else ""), rows="4") }}
+                                    {% if form.description_en.errors %}
+                                        <div class="invalid-feedback">
+                                            {% for error in form.description_en.errors %}{{ error }}{% endfor %}
+                                        </div>
+                                    {% endif %}
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    {{ form.description_ar.label(class="form-label") }}
+                                    {{ form.description_ar(class="form-control" + (" is-invalid" if form.description_ar.errors else ""), rows="4", dir="rtl") }}
+                                    {% if form.description_ar.errors %}
+                                        <div class="invalid-feedback">
+                                            {% for error in form.description_ar.errors %}{{ error }}{% endfor %}
+                                        </div>
+                                    {% endif %}
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Category -->
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    {{ form.category.label(class="form-label") }}
+                                    {{ form.category(class="form-select" + (" is-invalid" if form.category.errors else "")) }}
+                                    {% if form.category.errors %}
+                                        <div class="invalid-feedback">
+                                            {% for error in form.category.errors %}{{ error }}{% endfor %}
+                                        </div>
+                                    {% endif %}
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="d-flex justify-content-between">
+                            <a href="{{ url_for('admin.gallery') }}" class="btn btn-secondary">{{ _('Cancel') }}</a>
+                            <button type="submit" class="btn btn-primary">
+                                <i class="fas fa-upload"></i> {{ _('Upload Image') }}
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Image Preview Script -->
+<script>
+document.getElementById('image').addEventListener('change', function(e) {
+    const file = e.target.files[0];
+    if (file) {
+        const reader = new FileReader();
+        reader.onload = function(e) {
+            // Create preview if doesn't exist
+            let preview = document.getElementById('image-preview');
+            if (!preview) {
+                preview = document.createElement('div');
+                preview.id = 'image-preview';
+                preview.className = 'mt-3';
+                e.target.parentNode.appendChild(preview);
+            }
+            
+            preview.innerHTML = `
+                <div class="card" style="max-width: 300px;">
+                    <img src="${e.target.result}" class="card-img-top" alt="Preview" style="height: 200px; object-fit: cover;">
+                    <div class="card-body">
+                        <small class="text-muted">{{ _('Preview') }}</small>
+                    </div>
+                </div>
+            `;
+        };
+        reader.readAsDataURL(file);
+    }
+});
+</script>
+{% endblock %}

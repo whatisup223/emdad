@@ -1,0 +1,365 @@
+{% extends "base.html" %}
+
+{% block title %}About Us - {{ SITE_NAME }}{% endblock %}
+
+{% block meta_description %}Learn about Emdad Global, a leading Egyptian agricultural export company with over 25 years of experience in premium fruits and vegetables.{% endblock %}
+
+{% block content %}
+<!-- Page Header -->
+<section class="py-5 bg-primary text-white">
+    <div class="container">
+        <div class="row align-items-center">
+            <div class="col-lg-8">
+                <nav aria-label="breadcrumb">
+                    <ol class="breadcrumb text-white-50">
+                        <li class="breadcrumb-item"><a href="{{ url_for('main.index') }}" class="text-white-50">Home</a></li>
+                        <li class="breadcrumb-item active text-white">About Us</li>
+                    </ol>
+                </nav>
+                
+                <h1 class="display-5 fw-bold mb-3">About Emdad Global</h1>
+                <p class="lead">Leading Egyptian agricultural exports with international quality standards</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Company Profile -->
+<section class="py-5">
+    <div class="container">
+        <div class="row align-items-center">
+            <div class="col-lg-6 mb-4">
+                {% if company_profile %}
+                    <h2 class="mb-4">{{ company_profile.get_title() }}</h2>
+                    <div class="text-muted">
+                        {{ company_profile.get_content() | safe }}
+                    </div>
+                {% else %}
+                    <h2 class="mb-4">Our Story</h2>
+                    <p class="lead text-primary mb-4">Excellence in Egyptian Agricultural Exports</p>
+                    <p>Emdad Global has been at the forefront of Egyptian agricultural exports for over 25 years. We specialize in premium quality citrus fruits, fresh fruits, vegetables, and frozen products that meet the highest international standards.</p>
+                    <p>Our commitment to quality, combined with state-of-the-art facilities and comprehensive certifications, has made us a trusted partner for importers worldwide. We serve over 50 countries across Europe, Asia, Africa, and the Americas.</p>
+                    <p>From our headquarters in Egypt, we coordinate with carefully selected farms and processing facilities to ensure that every product bearing the Emdad Global name meets our exacting standards for quality, freshness, and safety.</p>
+                {% endif %}
+            </div>
+            <div class="col-lg-6">
+                {% if company_profile and company_profile.image_path %}
+                    <img src="{{ url_for('static', filename='uploads/' + company_profile.image_path) }}" 
+                         alt="{{ company_profile.get_title() }}" class="img-fluid rounded shadow">
+                {% else %}
+                    <img src="{{ url_for('static', filename='images/about-company.jpg') }}" 
+                         alt="Emdad Global Facilities" class="img-fluid rounded shadow">
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Mission & Vision -->
+<section class="py-5 bg-light">
+    <div class="container">
+        {% if mission_vision %}
+            <div class="row">
+                <div class="col-lg-8 mx-auto text-center">
+                    <h2 class="mb-4">{{ mission_vision.get_title() }}</h2>
+                    <div class="text-muted">
+                        {{ mission_vision.get_content() | safe }}
+                    </div>
+                </div>
+            </div>
+        {% else %}
+            <div class="row">
+                <div class="col-lg-6 mb-4">
+                    <div class="card border-0 shadow-sm h-100">
+                        <div class="card-body text-center p-5">
+                            <div class="feature-icon bg-primary text-white rounded-circle d-inline-flex align-items-center justify-content-center mb-4" style="width: 80px; height: 80px;">
+                                <i class="fas fa-bullseye fa-2x"></i>
+                            </div>
+                            <h3 class="mb-3">Our Mission</h3>
+                            <p class="text-muted">To be the leading provider of premium Egyptian agricultural products to global markets, ensuring the highest quality standards while supporting local farmers and sustainable agricultural practices.</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="col-lg-6 mb-4">
+                    <div class="card border-0 shadow-sm h-100">
+                        <div class="card-body text-center p-5">
+                            <div class="feature-icon bg-success text-white rounded-circle d-inline-flex align-items-center justify-content-center mb-4" style="width: 80px; height: 80px;">
+                                <i class="fas fa-eye fa-2x"></i>
+                            </div>
+                            <h3 class="mb-3">Our Vision</h3>
+                            <p class="text-muted">To establish Egypt as the premier source of high-quality agricultural products globally, while building long-term partnerships based on trust, reliability, and mutual success.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        {% endif %}
+    </div>
+</section>
+
+<!-- Core Values -->
+<section class="py-5">
+    <div class="container">
+        {% if core_values %}
+            <div class="text-center mb-5">
+                <h2 class="mb-4">{{ core_values.get_title() }}</h2>
+                <div class="text-muted">
+                    {{ core_values.get_content() | safe }}
+                </div>
+            </div>
+        {% else %}
+            <div class="text-center mb-5">
+                <h2 class="mb-3">Our Core Values</h2>
+                <p class="lead text-muted">The principles that guide everything we do</p>
+            </div>
+            
+            <div class="row">
+                <div class="col-lg-3 col-md-6 mb-4">
+                    <div class="text-center">
+                        <div class="feature-icon bg-primary text-white rounded-circle d-inline-flex align-items-center justify-content-center mb-3" style="width: 80px; height: 80px;">
+                            <i class="fas fa-handshake fa-2x"></i>
+                        </div>
+                        <h5>Integrity</h5>
+                        <p class="text-muted">Honest and transparent business practices in all our relationships</p>
+                    </div>
+                </div>
+                
+                <div class="col-lg-3 col-md-6 mb-4">
+                    <div class="text-center">
+                        <div class="feature-icon bg-success text-white rounded-circle d-inline-flex align-items-center justify-content-center mb-3" style="width: 80px; height: 80px;">
+                            <i class="fas fa-award fa-2x"></i>
+                        </div>
+                        <h5>Quality</h5>
+                        <p class="text-muted">Uncompromising commitment to the highest quality standards</p>
+                    </div>
+                </div>
+                
+                <div class="col-lg-3 col-md-6 mb-4">
+                    <div class="text-center">
+                        <div class="feature-icon bg-info text-white rounded-circle d-inline-flex align-items-center justify-content-center mb-3" style="width: 80px; height: 80px;">
+                            <i class="fas fa-shield-alt fa-2x"></i>
+                        </div>
+                        <h5>Trust</h5>
+                        <p class="text-muted">Building reliable partnerships through consistent performance</p>
+                    </div>
+                </div>
+                
+                <div class="col-lg-3 col-md-6 mb-4">
+                    <div class="text-center">
+                        <div class="feature-icon bg-warning text-white rounded-circle d-inline-flex align-items-center justify-content-center mb-3" style="width: 80px; height: 80px;">
+                            <i class="fas fa-users fa-2x"></i>
+                        </div>
+                        <h5>Partnership</h5>
+                        <p class="text-muted">Collaborative approach to achieving mutual success</p>
+                    </div>
+                </div>
+            </div>
+        {% endif %}
+    </div>
+</section>
+
+<!-- Global Reach -->
+<section class="py-5 bg-light">
+    <div class="container">
+        {% if global_reach %}
+            <div class="text-center mb-5">
+                <h2 class="mb-4">{{ global_reach.get_title() }}</h2>
+                <div class="text-muted">
+                    {{ global_reach.get_content() | safe }}
+                </div>
+            </div>
+        {% else %}
+            <div class="text-center mb-5">
+                <h2 class="mb-3">Global Reach</h2>
+                <p class="lead text-muted">Serving customers worldwide with Egyptian agricultural excellence</p>
+            </div>
+            
+            <div class="row">
+                <div class="col-lg-8 mx-auto">
+                    <div class="row text-center">
+                        <div class="col-md-3 mb-4">
+                            <div class="stat-item">
+                                <h3 class="text-primary mb-2">50+</h3>
+                                <p class="text-muted mb-0">Countries Served</p>
+                            </div>
+                        </div>
+                        <div class="col-md-3 mb-4">
+                            <div class="stat-item">
+                                <h3 class="text-success mb-2">25+</h3>
+                                <p class="text-muted mb-0">Years Experience</p>
+                            </div>
+                        </div>
+                        <div class="col-md-3 mb-4">
+                            <div class="stat-item">
+                                <h3 class="text-info mb-2">100+</h3>
+                                <p class="text-muted mb-0">Premium Products</p>
+                            </div>
+                        </div>
+                        <div class="col-md-3 mb-4">
+                            <div class="stat-item">
+                                <h3 class="text-warning mb-2">500+</h3>
+                                <p class="text-muted mb-0">Satisfied Clients</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="row mt-5">
+                <div class="col-lg-10 mx-auto">
+                    <div class="card border-0 shadow-sm">
+                        <div class="card-body p-4">
+                            <h5 class="card-title mb-3">Our Markets</h5>
+                            <div class="row">
+                                <div class="col-md-3 mb-3">
+                                    <h6 class="text-primary">Europe</h6>
+                                    <ul class="list-unstyled text-muted small">
+                                        <li>Germany</li>
+                                        <li>Netherlands</li>
+                                        <li>United Kingdom</li>
+                                        <li>France</li>
+                                        <li>Italy</li>
+                                    </ul>
+                                </div>
+                                <div class="col-md-3 mb-3">
+                                    <h6 class="text-success">Asia</h6>
+                                    <ul class="list-unstyled text-muted small">
+                                        <li>Saudi Arabia</li>
+                                        <li>UAE</li>
+                                        <li>Kuwait</li>
+                                        <li>Malaysia</li>
+                                        <li>Singapore</li>
+                                    </ul>
+                                </div>
+                                <div class="col-md-3 mb-3">
+                                    <h6 class="text-info">Africa</h6>
+                                    <ul class="list-unstyled text-muted small">
+                                        <li>South Africa</li>
+                                        <li>Kenya</li>
+                                        <li>Nigeria</li>
+                                        <li>Morocco</li>
+                                        <li>Libya</li>
+                                    </ul>
+                                </div>
+                                <div class="col-md-3 mb-3">
+                                    <h6 class="text-warning">Americas</h6>
+                                    <ul class="list-unstyled text-muted small">
+                                        <li>United States</li>
+                                        <li>Canada</li>
+                                        <li>Brazil</li>
+                                        <li>Argentina</li>
+                                        <li>Mexico</li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        {% endif %}
+    </div>
+</section>
+
+<!-- Emdad Group -->
+<section class="py-5">
+    <div class="container">
+        <div class="row align-items-center">
+            <div class="col-lg-6">
+                <h2 class="mb-4">Part of Emdad Group</h2>
+                <p class="lead text-primary mb-3">A Legacy of Excellence</p>
+                <p>Emdad Global is a proud member of the Emdad Group, a diversified business conglomerate with interests spanning agriculture, logistics, technology, and international trade.</p>
+                <p>The Group's integrated approach allows us to leverage synergies across different sectors, ensuring optimal efficiency in our supply chain and providing comprehensive solutions to our clients.</p>
+                <p>This affiliation strengthens our capabilities and enhances our ability to serve our customers with the highest levels of professionalism and reliability.</p>
+            </div>
+            <div class="col-lg-6">
+                <div class="card border-0 shadow-sm">
+                    <div class="card-body p-4">
+                        <h5 class="card-title mb-3">Group Companies</h5>
+                        <div class="row">
+                            <div class="col-6 mb-3">
+                                <div class="d-flex align-items-center">
+                                    <i class="fas fa-leaf text-success me-2"></i>
+                                    <span class="small">Emdad Agriculture</span>
+                                </div>
+                            </div>
+                            <div class="col-6 mb-3">
+                                <div class="d-flex align-items-center">
+                                    <i class="fas fa-shipping-fast text-primary me-2"></i>
+                                    <span class="small">Emdad Logistics</span>
+                                </div>
+                            </div>
+                            <div class="col-6 mb-3">
+                                <div class="d-flex align-items-center">
+                                    <i class="fas fa-laptop text-info me-2"></i>
+                                    <span class="small">Emdad Technology</span>
+                                </div>
+                            </div>
+                            <div class="col-6 mb-3">
+                                <div class="d-flex align-items-center">
+                                    <i class="fas fa-globe text-warning me-2"></i>
+                                    <span class="small">Emdad Trading</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Call to Action -->
+<section class="py-5 bg-primary text-white">
+    <div class="container">
+        <div class="row align-items-center">
+            <div class="col-lg-8">
+                <h3 class="mb-2">Ready to Partner with Us?</h3>
+                <p class="mb-0">Discover how Emdad Global can meet your agricultural product needs with quality and reliability.</p>
+            </div>
+            <div class="col-lg-4 text-lg-end">
+                <a href="{{ url_for('main.contact') }}" class="btn btn-light btn-lg">
+                    <i class="fas fa-envelope me-2"></i>Contact Us Today
+                </a>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}
+
+{% block extra_scripts %}
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Animate statistics on scroll
+    const stats = document.querySelectorAll('.stat-item h3');
+    
+    const animateStats = (entries, observer) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                const target = entry.target;
+                const finalValue = parseInt(target.textContent);
+                let currentValue = 0;
+                const increment = finalValue / 50;
+                
+                const timer = setInterval(() => {
+                    currentValue += increment;
+                    if (currentValue >= finalValue) {
+                        target.textContent = finalValue + '+';
+                        clearInterval(timer);
+                    } else {
+                        target.textContent = Math.floor(currentValue) + '+';
+                    }
+                }, 30);
+                
+                observer.unobserve(target);
+            }
+        });
+    };
+    
+    const observer = new IntersectionObserver(animateStats, {
+        threshold: 0.5
+    });
+    
+    stats.forEach(stat => observer.observe(stat));
+});
+</script>
+{% endblock %}

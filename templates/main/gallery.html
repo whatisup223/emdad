@@ -1,0 +1,366 @@
+{% extends "base.html" %}
+
+{% block title %}Gallery - {{ SITE_NAME }}{% endblock %}
+
+{% block meta_description %}Explore our gallery showcasing Egyptian agricultural facilities, farms, packing houses, cold storage, and export operations at Emdad Global.{% endblock %}
+
+{% block content %}
+<!-- Page Header -->
+<section class="py-5 bg-primary text-white">
+    <div class="container">
+        <div class="row align-items-center">
+            <div class="col-lg-8">
+                <nav aria-label="breadcrumb">
+                    <ol class="breadcrumb text-white-50">
+                        <li class="breadcrumb-item"><a href="{{ url_for('main.index') }}" class="text-white-50">Home</a></li>
+                        <li class="breadcrumb-item active text-white">Gallery</li>
+                    </ol>
+                </nav>
+                
+                <h1 class="display-5 fw-bold mb-3">Our Gallery</h1>
+                <p class="lead">Discover our world-class facilities and operations</p>
+            </div>
+            <div class="col-lg-4 text-lg-end">
+                <div class="gallery-badge bg-white text-primary rounded-circle d-inline-flex align-items-center justify-content-center" style="width: 120px; height: 120px;">
+                    <div class="text-center">
+                        <i class="fas fa-images fa-2x mb-2"></i>
+                        <div class="small fw-bold">VISUAL<br>TOUR</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Gallery Filters -->
+<section class="py-4 bg-light border-bottom">
+    <div class="container">
+        <div class="row align-items-center">
+            <div class="col-lg-8">
+                <div class="d-flex flex-wrap gap-2 gallery-filters">
+                    <button class="btn btn-primary gallery-filter active" data-filter="all">
+                        <i class="fas fa-th me-1"></i>All Images
+                    </button>
+                    <button class="btn btn-outline-primary gallery-filter" data-filter="farms">
+                        <i class="fas fa-seedling me-1"></i>Farms
+                    </button>
+                    <button class="btn btn-outline-primary gallery-filter" data-filter="packing">
+                        <i class="fas fa-industry me-1"></i>Packing Houses
+                    </button>
+                    <button class="btn btn-outline-primary gallery-filter" data-filter="storage">
+                        <i class="fas fa-warehouse me-1"></i>Cold Storage
+                    </button>
+                    <button class="btn btn-outline-primary gallery-filter" data-filter="exports">
+                        <i class="fas fa-ship me-1"></i>Exports
+                    </button>
+                </div>
+            </div>
+            
+            <div class="col-lg-4 text-lg-end mt-3 mt-lg-0">
+                <span class="text-muted">
+                    <span id="visible-count">{{ gallery_items|length }}</span> images
+                    {% if selected_category != 'all' %}
+                    in {{ selected_category|title }}
+                    {% endif %}
+                </span>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Gallery Grid -->
+<section class="py-5">
+    <div class="container">
+        {% if gallery_items %}
+        <div class="row gallery-grid" id="gallery-grid">
+            {% for item in gallery_items %}
+            <div class="col-lg-4 col-md-6 mb-4 gallery-item fade-in" data-category="{{ item.category }}">
+                <div class="gallery-card position-relative overflow-hidden rounded shadow-sm">
+                    <img src="{{ url_for('static', filename='uploads/gallery/' + item.image_path) if item.image_path else url_for('static', filename='images/placeholder-gallery.jpg') }}" 
+                         alt="{{ item.get_title() }}" 
+                         class="img-fluid gallery-image"
+                         style="width: 100%; height: 250px; object-fit: cover; cursor: pointer;"
+                         onclick="openLightbox('{{ url_for('static', filename='uploads/gallery/' + item.image_path) if item.image_path else url_for('static', filename='images/placeholder-gallery.jpg') }}', '{{ item.get_title() }}', '{{ item.get_description() }}')">
+                    
+                    <div class="gallery-overlay position-absolute top-0 start-0 w-100 h-100 d-flex align-items-end p-3">
+                        <div class="text-white">
+                            <h6 class="mb-1">{{ item.get_title() }}</h6>
+                            {% if item.get_description() %}
+                            <p class="mb-0 small opacity-75">{{ item.get_description() | truncate(80) }}</p>
+                            {% endif %}
+                            <div class="mt-2">
+                                <span class="badge bg-primary">{{ item.category|title }}</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+        
+        {% else %}
+        <!-- Default gallery items if none in database -->
+        <div class="row gallery-grid" id="gallery-grid">
+            <!-- Farms -->
+            <div class="col-lg-4 col-md-6 mb-4 gallery-item fade-in" data-category="farms">
+                <div class="gallery-card position-relative overflow-hidden rounded shadow-sm">
+                    <img src="{{ url_for('static', filename='images/gallery/farm-1.jpg') }}" 
+                         alt="Orange Grove" 
+                         class="img-fluid gallery-image"
+                         style="width: 100%; height: 250px; object-fit: cover; cursor: pointer;"
+                         onclick="openLightbox('{{ url_for('static', filename='images/gallery/farm-1.jpg') }}', 'Orange Grove', 'Premium orange cultivation in the Nile Delta region')">
+                    
+                    <div class="gallery-overlay position-absolute top-0 start-0 w-100 h-100 d-flex align-items-end p-3">
+                        <div class="text-white">
+                            <h6 class="mb-1">Orange Grove</h6>
+                            <p class="mb-0 small opacity-75">Premium orange cultivation in the Nile Delta region</p>
+                            <div class="mt-2">
+                                <span class="badge bg-success">Farms</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Packing Houses -->
+            <div class="col-lg-4 col-md-6 mb-4 gallery-item fade-in" data-category="packing">
+                <div class="gallery-card position-relative overflow-hidden rounded shadow-sm">
+                    <img src="{{ url_for('static', filename='images/gallery/packing-1.jpg') }}" 
+                         alt="Modern Packing Line" 
+                         class="img-fluid gallery-image"
+                         style="width: 100%; height: 250px; object-fit: cover; cursor: pointer;"
+                         onclick="openLightbox('{{ url_for('static', filename='images/gallery/packing-1.jpg') }}', 'Modern Packing Line', 'State-of-the-art automated packing facility')">
+                    
+                    <div class="gallery-overlay position-absolute top-0 start-0 w-100 h-100 d-flex align-items-end p-3">
+                        <div class="text-white">
+                            <h6 class="mb-1">Modern Packing Line</h6>
+                            <p class="mb-0 small opacity-75">State-of-the-art automated packing facility</p>
+                            <div class="mt-2">
+                                <span class="badge bg-info">Packing</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Cold Storage -->
+            <div class="col-lg-4 col-md-6 mb-4 gallery-item fade-in" data-category="storage">
+                <div class="gallery-card position-relative overflow-hidden rounded shadow-sm">
+                    <img src="{{ url_for('static', filename='images/gallery/storage-1.jpg') }}" 
+                         alt="Cold Storage Facility" 
+                         class="img-fluid gallery-image"
+                         style="width: 100%; height: 250px; object-fit: cover; cursor: pointer;"
+                         onclick="openLightbox('{{ url_for('static', filename='images/gallery/storage-1.jpg') }}', 'Cold Storage Facility', 'Temperature-controlled storage maintaining optimal freshness')">
+                    
+                    <div class="gallery-overlay position-absolute top-0 start-0 w-100 h-100 d-flex align-items-end p-3">
+                        <div class="text-white">
+                            <h6 class="mb-1">Cold Storage Facility</h6>
+                            <p class="mb-0 small opacity-75">Temperature-controlled storage maintaining optimal freshness</p>
+                            <div class="mt-2">
+                                <span class="badge bg-primary">Storage</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Exports -->
+            <div class="col-lg-4 col-md-6 mb-4 gallery-item fade-in" data-category="exports">
+                <div class="gallery-card position-relative overflow-hidden rounded shadow-sm">
+                    <img src="{{ url_for('static', filename='images/gallery/export-1.jpg') }}" 
+                         alt="Container Loading" 
+                         class="img-fluid gallery-image"
+                         style="width: 100%; height: 250px; object-fit: cover; cursor: pointer;"
+                         onclick="openLightbox('{{ url_for('static', filename='images/gallery/export-1.jpg') }}', 'Container Loading', 'Refrigerated containers ready for international shipping')">
+                    
+                    <div class="gallery-overlay position-absolute top-0 start-0 w-100 h-100 d-flex align-items-end p-3">
+                        <div class="text-white">
+                            <h6 class="mb-1">Container Loading</h6>
+                            <p class="mb-0 small opacity-75">Refrigerated containers ready for international shipping</p>
+                            <div class="mt-2">
+                                <span class="badge bg-warning">Exports</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- More sample items -->
+            <div class="col-lg-4 col-md-6 mb-4 gallery-item fade-in" data-category="farms">
+                <div class="gallery-card position-relative overflow-hidden rounded shadow-sm">
+                    <img src="{{ url_for('static', filename='images/gallery/farm-2.jpg') }}" 
+                         alt="Grape Vineyard" 
+                         class="img-fluid gallery-image"
+                         style="width: 100%; height: 250px; object-fit: cover; cursor: pointer;"
+                         onclick="openLightbox('{{ url_for('static', filename='images/gallery/farm-2.jpg') }}', 'Grape Vineyard', 'Premium table grape cultivation')">
+                    
+                    <div class="gallery-overlay position-absolute top-0 start-0 w-100 h-100 d-flex align-items-end p-3">
+                        <div class="text-white">
+                            <h6 class="mb-1">Grape Vineyard</h6>
+                            <p class="mb-0 small opacity-75">Premium table grape cultivation</p>
+                            <div class="mt-2">
+                                <span class="badge bg-success">Farms</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="col-lg-4 col-md-6 mb-4 gallery-item fade-in" data-category="packing">
+                <div class="gallery-card position-relative overflow-hidden rounded shadow-sm">
+                    <img src="{{ url_for('static', filename='images/gallery/packing-2.jpg') }}" 
+                         alt="Quality Control" 
+                         class="img-fluid gallery-image"
+                         style="width: 100%; height: 250px; object-fit: cover; cursor: pointer;"
+                         onclick="openLightbox('{{ url_for('static', filename='images/gallery/packing-2.jpg') }}', 'Quality Control', 'Rigorous quality inspection process')">
+                    
+                    <div class="gallery-overlay position-absolute top-0 start-0 w-100 h-100 d-flex align-items-end p-3">
+                        <div class="text-white">
+                            <h6 class="mb-1">Quality Control</h6>
+                            <p class="mb-0 small opacity-75">Rigorous quality inspection process</p>
+                            <div class="mt-2">
+                                <span class="badge bg-info">Packing</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% endif %}
+        
+        <!-- No Results Message -->
+        <div id="no-results" class="text-center py-5" style="display: none;">
+            <i class="fas fa-search fa-4x text-muted mb-4"></i>
+            <h3 class="mb-3">No Images Found</h3>
+            <p class="text-muted mb-4">No images match the selected category.</p>
+            <button class="btn btn-primary gallery-filter" data-filter="all">
+                <i class="fas fa-th me-1"></i>Show All Images
+            </button>
+        </div>
+    </div>
+</section>
+
+<!-- Lightbox Modal -->
+<div class="modal fade" id="lightboxModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-xl modal-dialog-centered">
+        <div class="modal-content bg-dark">
+            <div class="modal-header border-0">
+                <h5 class="modal-title text-white" id="lightboxTitle"></h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body text-center p-0">
+                <img id="lightboxImage" src="" alt="" class="img-fluid" style="max-height: 80vh;">
+            </div>
+            <div class="modal-footer border-0">
+                <p class="text-white-50 mb-0" id="lightboxDescription"></p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Call to Action -->
+<section class="py-5 bg-primary text-white">
+    <div class="container">
+        <div class="row align-items-center">
+            <div class="col-lg-8">
+                <h3 class="mb-2">Experience Our Facilities</h3>
+                <p class="mb-0">Visit us to see our world-class operations and quality standards firsthand.</p>
+            </div>
+            <div class="col-lg-4 text-lg-end">
+                <a href="{{ url_for('main.contact') }}" class="btn btn-light btn-lg">
+                    <i class="fas fa-calendar me-2"></i>Schedule a Visit
+                </a>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}
+
+{% block extra_scripts %}
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const galleryFilters = document.querySelectorAll('.gallery-filter');
+    const galleryItems = document.querySelectorAll('.gallery-item');
+    const visibleCount = document.getElementById('visible-count');
+    const noResults = document.getElementById('no-results');
+    
+    // Gallery filtering
+    galleryFilters.forEach(filter => {
+        filter.addEventListener('click', function() {
+            const filterValue = this.dataset.filter;
+            
+            // Update active filter
+            galleryFilters.forEach(f => f.classList.remove('active', 'btn-primary'));
+            galleryFilters.forEach(f => f.classList.add('btn-outline-primary'));
+            this.classList.remove('btn-outline-primary');
+            this.classList.add('active', 'btn-primary');
+            
+            // Filter items
+            let visibleItemsCount = 0;
+            galleryItems.forEach(item => {
+                if (filterValue === 'all' || item.dataset.category === filterValue) {
+                    item.style.display = 'block';
+                    item.classList.add('fade-in');
+                    visibleItemsCount++;
+                } else {
+                    item.style.display = 'none';
+                }
+            });
+            
+            // Update count and show/hide no results
+            visibleCount.textContent = visibleItemsCount;
+            if (visibleItemsCount === 0) {
+                noResults.style.display = 'block';
+            } else {
+                noResults.style.display = 'none';
+            }
+        });
+    });
+    
+    // Gallery hover effects
+    const galleryCards = document.querySelectorAll('.gallery-card');
+    galleryCards.forEach(card => {
+        const overlay = card.querySelector('.gallery-overlay');
+        const image = card.querySelector('.gallery-image');
+        
+        card.addEventListener('mouseenter', function() {
+            image.style.transform = 'scale(1.1)';
+            image.style.transition = 'transform 0.3s ease';
+            overlay.style.background = 'linear-gradient(to top, rgba(0,0,0,0.8), rgba(0,0,0,0.2))';
+            overlay.style.transition = 'background 0.3s ease';
+        });
+        
+        card.addEventListener('mouseleave', function() {
+            image.style.transform = 'scale(1)';
+            overlay.style.background = 'linear-gradient(to top, rgba(0,0,0,0.6), transparent)';
+        });
+    });
+    
+    // Initialize overlay styles
+    galleryCards.forEach(card => {
+        const overlay = card.querySelector('.gallery-overlay');
+        overlay.style.background = 'linear-gradient(to top, rgba(0,0,0,0.6), transparent)';
+    });
+});
+
+// Lightbox functionality
+function openLightbox(imageSrc, title, description) {
+    document.getElementById('lightboxImage').src = imageSrc;
+    document.getElementById('lightboxTitle').textContent = title;
+    document.getElementById('lightboxDescription').textContent = description || '';
+    
+    const modal = new bootstrap.Modal(document.getElementById('lightboxModal'));
+    modal.show();
+}
+
+// Keyboard navigation for lightbox
+document.addEventListener('keydown', function(e) {
+    const modal = document.getElementById('lightboxModal');
+    if (modal.classList.contains('show')) {
+        if (e.key === 'Escape') {
+            bootstrap.Modal.getInstance(modal).hide();
+        }
+    }
+});
+</script>
+{% endblock %}

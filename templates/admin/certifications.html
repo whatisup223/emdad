@@ -1,0 +1,43 @@
+{% extends "admin/base.html" %}
+
+{% block title %}{{ _('Certifications Management') }}{% endblock %}
+
+{% block content %}
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-header">
+                    <h3 class="card-title">{{ _('Certifications Management') }}</h3>
+                </div>
+                <div class="card-body">
+                    <div class="table-responsive">
+                        <table class="table table-striped table-hover">
+                            <thead>
+                                <tr>
+                                    <th>ID</th>
+                                    <th>{{ _('Name') }}</th>
+                                    <th>{{ _('Description') }}</th>
+                                    <th>{{ _('Status') }}</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for cert in certifications %}
+                                <tr>
+                                    <td>{{ cert.id }}</td>
+                                    <td>{{ cert.name }}</td>
+                                    <td>{{ cert.description }}</td>
+                                    <td>
+                                        <span class="badge bg-success">{{ _('Active') }}</span>
+                                    </td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,1903 @@
+/* Custom Fonts for Emdad Global */
+
+/* Hacen Tunisia Bold Font - Primary Arabic Font */
+@font-face {
+    font-family: 'Hacen Tunisia Bold';
+    src: url('../fonts/HacenTunisiaBold.woff2') format('woff2'),
+         url('../fonts/HacenTunisiaBold.woff') format('woff'),
+         url('../fonts/HacenTunisiaBold.ttf') format('truetype');
+    font-weight: normal;
+    font-style: normal;
+    font-display: swap;
+}
+
+/* Fallback Arabic Fonts */
+@import url('https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;500;600;700;800;900&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Tajawal:wght@300;400;500;700;800;900&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Noto+Sans+Arabic:wght@300;400;500;600;700;800;900&display=swap');
+
+/* English Font - Effra Heavy Alternative */
+@import url('https://fonts.googleapis.com/css2?family=Nunito:wght@300;400;500;600;700;800;900&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700;800;900&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800;900&display=swap');
+
+/* Font Face Declarations */
+@font-face {
+    font-family: 'Hacen Tunisia';
+    src: local('Amiri Bold'), local('Cairo Black'), local('Tajawal Black');
+    font-weight: 700;
+    font-style: normal;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: 'Effra Heavy';
+    src: local('Nunito Black'), local('Montserrat Black'), local('Poppins Black');
+    font-weight: 800;
+    font-style: normal;
+    font-display: swap;
+}
+
+/* Font Variables */
+:root {
+    --font-arabic-primary: 'Hacen Tunisia Bold', 'Cairo', 'Noto Sans Arabic', 'Tajawal', 'Times New Roman', serif;
+    --font-english-primary: 'Effra Heavy', 'Nunito', 'Montserrat', 'Poppins', 'Inter', sans-serif;
+    --font-body-arabic: 'Hacen Tunisia Bold', 'Cairo', 'Noto Sans Arabic', 'Tajawal', 'Times New Roman', serif;
+    --font-body-english: 'Effra Heavy', 'Nunito', 'Montserrat', 'Poppins', 'Inter', sans-serif;
+    --font-heading-arabic: 'Hacen Tunisia Bold', 'Cairo', 'Noto Sans Arabic', 'Tajawal', serif;
+    --font-heading-english: 'Effra Heavy', 'Nunito', 'Montserrat', 'Poppins', sans-serif;
+}
+
+/* Arabic Typography Classes */
+.arabic-heading {
+    font-family: var(--font-arabic-primary);
+    font-weight: 700;
+    line-height: 1.4;
+    direction: rtl;
+    text-align: right;
+    letter-spacing: 0.02em;
+}
+
+.arabic-text {
+    font-family: var(--font-body-arabic);
+    direction: rtl;
+    text-align: right;
+    line-height: 1.6;
+}
+
+.arabic-bold {
+    font-family: var(--font-arabic-primary);
+    font-weight: 700;
+}
+
+/* English Typography Classes */
+.english-heading {
+    font-family: var(--font-english-primary);
+    font-weight: 800;
+    line-height: 1.3;
+    letter-spacing: -0.02em;
+}
+
+.english-text {
+    font-family: var(--font-body-english);
+    line-height: 1.6;
+}
+
+.english-bold {
+    font-family: var(--font-english-primary);
+    font-weight: 800;
+}
+
+/* Mixed Language Support */
+.bilingual-heading {
+    font-family: var(--font-english-primary);
+    font-weight: 800;
+}
+
+.bilingual-heading .arabic {
+    font-family: var(--font-arabic-primary);
+    font-weight: 700;
+}
+
+/* Hero Section Font Styles */
+.hero-title {
+    font-family: var(--font-english-primary);
+    font-weight: 900;
+    font-size: clamp(2.5rem, 6vw, 4.5rem);
+    line-height: 1.1;
+    letter-spacing: -0.03em;
+    text-shadow: 2px 2px 8px rgba(0, 0, 0, 0.3);
+}
+
+.hero-title .arabic-part {
+    font-family: var(--font-arabic-primary);
+    font-weight: 700;
+    letter-spacing: 0.01em;
+}
+
+/* Section Title Styles */
+.section-heading {
+    font-family: var(--font-english-primary);
+    font-weight: 800;
+    font-size: clamp(1.75rem, 4.5vw, 3rem);
+    line-height: 1.2;
+    margin-bottom: 1.5rem;
+    letter-spacing: -0.02em;
+}
+
+.section-heading.arabic {
+    font-family: var(--font-arabic-primary);
+    font-weight: 700;
+    direction: rtl;
+    text-align: right;
+    letter-spacing: 0.01em;
+}
+
+/* Card Title Styles */
+.card-heading {
+    font-family: var(--font-english-primary);
+    font-weight: 700;
+    font-size: 1.35rem;
+    line-height: 1.3;
+    letter-spacing: -0.01em;
+}
+
+.card-heading.arabic {
+    font-family: var(--font-arabic-primary);
+    direction: rtl;
+    text-align: right;
+    letter-spacing: 0.01em;
+}
+
+/* Button Text Styles */
+.btn-text {
+    font-family: var(--font-english-primary);
+    font-weight: 600;
+    font-size: 0.95rem;
+    letter-spacing: 0.025em;
+}
+
+.btn-text.arabic {
+    font-family: var(--font-arabic-primary);
+    font-weight: 700;
+    font-size: 0.95rem;
+}
+
+/* Navigation Font Styles */
+.nav-text {
+    font-family: var(--font-english-primary);
+    font-weight: 600;
+    font-size: 1rem;
+    letter-spacing: 0.025em;
+}
+
+.nav-text.arabic {
+    font-family: var(--font-arabic-primary);
+    font-weight: 700;
+    font-size: 1rem;
+}
+
+/* Navbar Brand */
+.navbar-brand {
+    font-family: var(--font-english-primary);
+    font-weight: 800;
+    font-size: 1.5rem;
+    letter-spacing: -0.02em;
+}
+
+/* Dropdown Menu Items */
+.dropdown-item {
+    font-family: var(--font-english-primary);
+    font-weight: 500;
+    font-size: 0.95rem;
+}
+
+.dropdown-item.arabic {
+    font-family: var(--font-arabic-primary);
+    font-weight: 600;
+}
+
+/* Footer Font Styles */
+.footer h5 {
+    font-family: var(--font-english-primary);
+    font-weight: 700;
+    font-size: 1.25rem;
+    margin-bottom: 1rem;
+}
+
+.footer h6 {
+    font-family: var(--font-english-primary);
+    font-weight: 600;
+    font-size: 1rem;
+    margin-bottom: 0.75rem;
+}
+
+.footer .english-text {
+    font-family: var(--font-body-english);
+    font-size: 0.9rem;
+    line-height: 1.6;
+}
+
+.footer .arabic-text {
+    font-family: var(--font-body-arabic);
+    font-size: 0.9rem;
+    line-height: 1.6;
+    direction: rtl;
+    text-align: right;
+}
+
+/* Body Text Styles */
+.english-text {
+    font-family: var(--font-body-english);
+    font-size: 1rem;
+    line-height: 1.6;
+    font-weight: 400;
+}
+
+.arabic-text {
+    font-family: var(--font-body-arabic);
+    font-size: 1rem;
+    line-height: 1.7;
+    font-weight: 400;
+    direction: rtl;
+    text-align: right;
+}
+
+/* Lead Text */
+.lead.english-text {
+    font-size: 1.125rem;
+    font-weight: 500;
+}
+
+.lead.arabic-text {
+    font-size: 1.125rem;
+    font-weight: 500;
+}
+
+/* Small Text */
+.small.english-text,
+small.english-text {
+    font-size: 0.875rem;
+    font-weight: 400;
+}
+
+.small.arabic-text,
+small.arabic-text {
+    font-size: 0.875rem;
+    font-weight: 400;
+}
+
+/* Responsive Font Sizes */
+@media (max-width: 1200px) {
+    .hero-title {
+        font-size: clamp(2.2rem, 5vw, 4rem);
+    }
+
+    .section-heading {
+        font-size: clamp(1.6rem, 4vw, 2.5rem);
+    }
+
+    .nav-text {
+        font-size: 0.95rem;
+    }
+}
+
+@media (max-width: 768px) {
+    .hero-title {
+        font-size: clamp(1.8rem, 4.5vw, 3rem);
+    }
+
+    .section-heading {
+        font-size: clamp(1.4rem, 3.5vw, 2rem);
+    }
+
+    .card-heading {
+        font-size: 1.2rem;
+    }
+
+    .nav-text {
+        font-size: 0.9rem;
+    }
+
+    .btn-text {
+        font-size: 0.9rem;
+    }
+}
+
+@media (max-width: 576px) {
+    .hero-title {
+        font-size: clamp(1.5rem, 4vw, 2.5rem);
+    }
+
+    .section-heading {
+        font-size: clamp(1.25rem, 3vw, 1.75rem);
+    }
+
+    .card-heading {
+        font-size: 1.1rem;
+    }
+
+    .nav-text {
+        font-size: 0.85rem;
+    }
+
+    .btn-text {
+        font-size: 0.85rem;
+    }
+
+    .english-text,
+    .arabic-text {
+        font-size: 0.9rem;
+    }
+}
+
+/* Font Loading States */
+.fonts-loading .arabic-heading,
+.fonts-loading .english-heading {
+    visibility: hidden;
+}
+
+.fonts-loaded .arabic-heading,
+.fonts-loaded .english-heading {
+    visibility: visible;
+}
+
+/* Print Styles */
+@media print {
+    .arabic-heading,
+    .english-heading {
+        font-family: serif;
+    }
+}
+
+/* ========================================
+   GLOBAL FONT APPLICATION BY LANGUAGE
+   ======================================== */
+
+/* Arabic Language - Apply Hacen Tunisia Bold to ALL elements */
+html[lang="ar"] *,
+html[dir="rtl"] *,
+.rtl * {
+    font-family: var(--font-body-arabic) !important;
+}
+
+/* Arabic headings get the heading font */
+html[lang="ar"] h1, html[lang="ar"] h2, html[lang="ar"] h3,
+html[lang="ar"] h4, html[lang="ar"] h5, html[lang="ar"] h6,
+html[dir="rtl"] h1, html[dir="rtl"] h2, html[dir="rtl"] h3,
+html[dir="rtl"] h4, html[dir="rtl"] h5, html[dir="rtl"] h6,
+.rtl h1, .rtl h2, .rtl h3, .rtl h4, .rtl h5, .rtl h6 {
+    font-family: var(--font-heading-arabic) !important;
+    font-weight: bold !important;
+}
+
+/* English Language - Apply Effra Heavy to ALL elements */
+html[lang="en"] *,
+html:not([lang="ar"]):not([dir="rtl"]) *,
+html:not(.rtl) * {
+    font-family: var(--font-body-english) !important;
+}
+
+/* English headings get the heading font */
+html[lang="en"] h1, html[lang="en"] h2, html[lang="en"] h3,
+html[lang="en"] h4, html[lang="en"] h5, html[lang="en"] h6,
+html:not([lang="ar"]) h1, html:not([lang="ar"]) h2, html:not([lang="ar"]) h3,
+html:not([lang="ar"]) h4, html:not([lang="ar"]) h5, html:not([lang="ar"]) h6 {
+    font-family: var(--font-heading-english) !important;
+    font-weight: bold !important;
+}
+
+/* Force font application on common elements */
+html[lang="ar"] body, html[lang="ar"] .navbar, html[lang="ar"] .sidebar,
+html[lang="ar"] .card, html[lang="ar"] .btn, html[lang="ar"] .form-control,
+html[lang="ar"] .table, html[lang="ar"] .badge, html[lang="ar"] .alert,
+html[lang="ar"] .nav-link, html[lang="ar"] .dropdown-item,
+.rtl body, .rtl .navbar, .rtl .sidebar, .rtl .card, .rtl .btn,
+.rtl .form-control, .rtl .table, .rtl .badge, .rtl .alert,
+.rtl .nav-link, .rtl .dropdown-item {
+    font-family: var(--font-body-arabic) !important;
+}
+
+html[lang="en"] body, html[lang="en"] .navbar, html[lang="en"] .sidebar,
+html[lang="en"] .card, html[lang="en"] .btn, html[lang="en"] .form-control,
+html[lang="en"] .table, html[lang="en"] .badge, html[lang="en"] .alert,
+html[lang="en"] .nav-link, html[lang="en"] .dropdown-item {
+    font-family: var(--font-body-english) !important;
+}
+
+/* ========================================
+   NAVBAR LOGO STYLES
+   ======================================== */
+
+/* Responsive logo sizing */
+.navbar-logo {
+    height: 40px;
+    width: auto;
+    max-width: 150px;
+    object-fit: contain;
+    transition: all 0.3s ease;
+}
+
+/* Brand text styling */
+.navbar-brand .brand-text {
+    font-size: 1.25rem;
+    font-weight: 600;
+    color: #333;
+    text-decoration: none;
+    transition: all 0.3s ease;
+}
+
+.navbar-brand:hover .brand-text {
+    color: #689b8a;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    .navbar-logo {
+        height: 35px;
+        max-width: 120px;
+    }
+
+    .navbar-brand .brand-text {
+        font-size: 1.1rem;
+    }
+}
+
+@media (max-width: 576px) {
+    .navbar-logo {
+        height: 32px;
+        max-width: 110px;
+    }
+
+    .navbar-brand .brand-text {
+        font-size: 1rem;
+    }
+
+    /* Show brand text on very small screens if logo fails */
+    .navbar-brand .brand-text {
+        display: inline !important;
+    }
+}
+
+/* Ensure logo doesn't break navbar alignment */
+.navbar-brand {
+    display: flex !important;
+    align-items: center !important;
+    padding: 0.5rem 0 !important;
+    margin-right: 1rem !important;
+}
+
+.rtl .navbar-brand {
+    margin-right: 0 !important;
+    margin-left: 1rem !important;
+}
+
+/* Logo hover effects */
+.navbar-brand:hover .navbar-logo {
+    transform: scale(1.05);
+    filter: brightness(1.1);
+}
+
+/* Ensure logo quality on different screens */
+.navbar-logo {
+    image-rendering: -webkit-optimize-contrast;
+    image-rendering: crisp-edges;
+    image-rendering: pixelated;
+    -ms-interpolation-mode: nearest-neighbor;
+}
+
+/* Logo loading state */
+.navbar-logo {
+    background-color: transparent;
+    border-radius: 4px;
+    display: inline-block;
+    vertical-align: middle;
+}
+
+.navbar-logo[src=""] {
+    display: none;
+}
+
+/* Ensure logo loads properly */
+.navbar-logo {
+    opacity: 1;
+    transition: opacity 0.3s ease;
+}
+
+.navbar-logo.loading {
+    opacity: 0.5;
+}
+
+/* Force logo visibility */
+.navbar-brand img {
+    display: inline-block !important;
+    visibility: visible !important;
+}
+
+/* ========================================
+   NAVBAR RESPONSIVE FIXES
+   ======================================== */
+
+/* Fix navbar responsiveness */
+.navbar-nav {
+    flex-wrap: nowrap;
+    align-items: center;
+}
+
+.navbar-nav .nav-link {
+    white-space: nowrap;
+    font-size: 0.95rem;
+    padding: 0.5rem 0.75rem;
+    transition: all 0.3s ease;
+}
+
+.navbar-nav .dropdown-menu {
+    min-width: 200px;
+    border: none;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+}
+
+/* Font fixes for navbar */
+.navbar .english-heading {
+    font-family: var(--font-heading-english) !important;
+    font-weight: 600 !important;
+}
+
+.navbar .arabic-heading {
+    font-family: var(--font-heading-arabic) !important;
+    font-weight: bold !important;
+}
+
+/* Unified navbar behavior for both languages */
+.navbar-nav {
+    direction: inherit;
+    display: flex;
+    align-items: center;
+}
+
+/* Desktop dropdown positioning */
+@media (min-width: 992px) {
+    .navbar-nav .dropdown-menu {
+        left: 0;
+        right: auto;
+    }
+
+    /* RTL specific adjustments for desktop */
+    .rtl .navbar-nav .dropdown-menu,
+    html[dir="rtl"] .navbar-nav .dropdown-menu {
+        left: auto;
+        right: 0;
+    }
+}
+
+.rtl .navbar-toggler,
+html[dir="rtl"] .navbar-toggler {
+    margin-left: 0;
+    margin-right: auto;
+}
+
+/* RTL navbar order fix */
+.rtl .navbar-nav,
+html[dir="rtl"] .navbar-nav {
+    flex-direction: row;
+}
+
+/* Ensure proper spacing between nav items */
+.navbar-nav .nav-item {
+    margin: 0 0.25rem;
+}
+
+/* CRITICAL MOBILE FIX - PERFECT RESPONSIVENESS */
+@media (max-width: 991.98px) {
+    /* Container fixes */
+    .navbar {
+        padding: 0.5rem 1rem !important;
+    }
+
+    .container-fluid {
+        padding: 0 0.5rem !important;
+        max-width: 100% !important;
+        overflow-x: hidden !important;
+    }
+
+    /* Navbar brand positioning */
+    .navbar-brand {
+        max-width: 60% !important;
+        overflow: hidden !important;
+        text-overflow: ellipsis !important;
+        white-space: nowrap !important;
+    }
+
+    /* Navbar toggler positioning */
+    .navbar-toggler {
+        border: none !important;
+        padding: 0.25rem 0.5rem !important;
+        font-size: 1rem !important;
+    }
+
+    .navbar-nav .nav-item {
+        margin: 0.25rem 0 !important;
+        width: 100% !important;
+        max-width: 100% !important;
+        display: block !important;
+        float: none !important;
+        clear: both !important;
+        position: relative !important;
+        overflow: hidden !important;
+    }
+
+    /* Prevent horizontal display in Arabic - CRITICAL */
+    .rtl .navbar-nav .nav-item,
+    html[dir="rtl"] .navbar-nav .nav-item {
+        margin: 0.25rem 0 !important;
+        width: 100% !important;
+        max-width: 100% !important;
+        display: block !important;
+        float: none !important;
+        clear: both !important;
+        position: relative !important;
+        overflow: hidden !important;
+        flex: none !important;
+    }
+
+    /* Force navbar to be vertical - CRITICAL */
+    .navbar-nav {
+        flex-direction: column !important;
+        align-items: stretch !important;
+        width: 100% !important;
+        max-width: 100% !important;
+    }
+
+    .rtl .navbar-nav,
+    html[dir="rtl"] .navbar-nav {
+        flex-direction: column !important;
+        align-items: stretch !important;
+        text-align: center !important;
+        width: 100% !important;
+        max-width: 100% !important;
+        display: flex !important;
+    }
+}
+
+/* Button fixes */
+.navbar .btn {
+    font-size: 0.875rem;
+    padding: 0.375rem 0.75rem;
+    border-radius: 0.375rem;
+    white-space: nowrap;
+}
+
+/* Mobile responsive fixes */
+@media (max-width: 991.98px) {
+    .navbar-nav {
+        flex-direction: column;
+        width: 100%;
+        padding: 1rem 0;
+    }
+
+    .navbar-nav .nav-link {
+        padding: 0.75rem 1rem;
+        border-bottom: 1px solid rgba(0,0,0,0.1);
+        text-align: center;
+    }
+
+    .navbar-nav .dropdown-menu {
+        position: static;
+        float: none;
+        width: 100%;
+        margin-top: 0;
+        background-color: rgba(248,249,250,0.95);
+        border: none;
+        box-shadow: none;
+        text-align: center;
+    }
+
+    .rtl .navbar-nav {
+        text-align: center;
+    }
+
+    .navbar .btn {
+        margin-top: 1rem;
+        align-self: center;
+    }
+}
+
+@media (max-width: 767.98px) {
+    .navbar-nav .nav-link {
+        font-size: 0.9rem;
+        padding: 0.6rem 0.8rem;
+    }
+
+    .navbar .btn {
+        font-size: 0.8rem;
+        padding: 0.3rem 0.6rem;
+    }
+}
+
+/* Language switcher responsive */
+.language-switcher {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+@media (max-width: 991.98px) {
+    .language-switcher {
+        justify-content: center;
+        margin-top: 1rem;
+        padding-top: 1rem;
+        border-top: 1px solid rgba(0,0,0,0.1);
+    }
+}
+
+/* ========================================
+   ICON FIXES FOR ARABIC
+   ======================================== */
+
+/* ========================================
+   UNIVERSAL ICON FIXES
+   ======================================== */
+
+/* Ensure FontAwesome icons display correctly in ALL languages */
+.fas, .far, .fab, .fal, .fad, .fa,
+i[class*="fa-"],
+[class*="fa-"]:before {
+    font-family: "Font Awesome 6 Free", "Font Awesome 6 Pro", "Font Awesome 5 Free", "Font Awesome 5 Pro" !important;
+    font-weight: 900 !important;
+    font-style: normal !important;
+    font-variant: normal !important;
+    text-transform: none !important;
+    line-height: 1 !important;
+    -webkit-font-smoothing: antialiased !important;
+    -moz-osx-font-smoothing: grayscale !important;
+    direction: ltr !important;
+    unicode-bidi: bidi-override !important;
+    display: inline-block !important;
+}
+
+/* Force icon fonts for all contexts */
+html .fas, html .far, html .fab, html .fal, html .fad, html .fa,
+html i[class*="fa-"],
+body .fas, body .far, body .fab, body .fal, body .fad, body .fa,
+body i[class*="fa-"],
+* .fas, * .far, * .fab, * .fal, * .fad, * .fa,
+* i[class*="fa-"] {
+    font-family: "Font Awesome 6 Free", "Font Awesome 6 Pro", "Font Awesome 5 Free", "Font Awesome 5 Pro" !important;
+    font-weight: 900 !important;
+    font-style: normal !important;
+}
+
+/* Specific fixes for Arabic context */
+html[lang="ar"] .fas,
+html[lang="ar"] .far,
+html[lang="ar"] .fab,
+html[lang="ar"] .fal,
+html[lang="ar"] .fad,
+html[lang="ar"] .fa,
+html[lang="ar"] i[class*="fa-"],
+.rtl .fas,
+.rtl .far,
+.rtl .fab,
+.rtl .fal,
+.rtl .fad,
+.rtl .fa,
+.rtl i[class*="fa-"] {
+    font-family: "Font Awesome 6 Free", "Font Awesome 6 Pro", "Font Awesome 5 Free", "Font Awesome 5 Pro" !important;
+    font-weight: 900 !important;
+    direction: ltr !important;
+    unicode-bidi: bidi-override !important;
+}
+
+/* Specific fixes for English context */
+html[lang="en"] .fas,
+html[lang="en"] .far,
+html[lang="en"] .fab,
+html[lang="en"] .fal,
+html[lang="en"] .fad,
+html[lang="en"] .fa,
+html[lang="en"] i[class*="fa-"],
+html:not([lang="ar"]) .fas,
+html:not([lang="ar"]) .far,
+html:not([lang="ar"]) .fab,
+html:not([lang="ar"]) .fal,
+html:not([lang="ar"]) .fad,
+html:not([lang="ar"]) .fa,
+html:not([lang="ar"]) i[class*="fa-"] {
+    font-family: "Font Awesome 6 Free", "Font Awesome 6 Pro", "Font Awesome 5 Free", "Font Awesome 5 Pro" !important;
+    font-weight: 900 !important;
+    direction: ltr !important;
+}
+
+/* Bootstrap icons fix */
+.bi, i[class*="bi-"] {
+    font-family: "bootstrap-icons" !important;
+}
+
+/* Icon spacing fixes */
+.rtl .fas + span,
+.rtl .far + span,
+.rtl .fab + span {
+    margin-right: 0.5rem;
+    margin-left: 0;
+}
+
+.rtl span + .fas,
+.rtl span + .far,
+.rtl span + .fab {
+    margin-left: 0.5rem;
+    margin-right: 0;
+}
+
+/* Navbar icon fixes */
+.navbar .fas,
+.navbar .far,
+.navbar .fab,
+.navbar i[class*="fa-"] {
+    font-family: "Font Awesome 6 Free" !important;
+    font-weight: 900 !important;
+    font-style: normal !important;
+    display: inline-block !important;
+}
+
+/* ========================================
+   ADDITIONAL NAVBAR IMPROVEMENTS
+   ======================================== */
+
+/* Ensure proper font application in navbar */
+.navbar .nav-link.english-heading {
+    font-family: var(--font-heading-english) !important;
+    font-weight: 600 !important;
+}
+
+.navbar .nav-link.arabic-heading {
+    font-family: var(--font-heading-arabic) !important;
+    font-weight: bold !important;
+}
+
+/* Dropdown improvements */
+.navbar .dropdown-menu {
+    border-radius: 0.5rem;
+    padding: 0.5rem 0;
+}
+
+.navbar .dropdown-item {
+    padding: 0.5rem 1rem;
+    transition: all 0.3s ease;
+}
+
+.navbar .dropdown-item:hover {
+    background-color: rgba(104, 155, 138, 0.1);
+    color: #689b8a;
+}
+
+.navbar .dropdown-item.active {
+    background-color: #689b8a;
+    color: white;
+}
+
+/* RESPONSIVE mobile navbar - PERFECT for both languages */
+@media (max-width: 991.98px) {
+    .navbar-collapse {
+        background-color: rgba(255, 255, 255, 0.98);
+        border-radius: 0.5rem;
+        margin: 0.5rem 0;
+        padding: 1rem 0.5rem;
+        box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+        text-align: center;
+        width: 100%;
+        max-width: 100%;
+        overflow-x: hidden;
+        overflow-y: auto;
+        max-height: 80vh;
+        position: relative;
+        left: 0;
+        right: 0;
+    }
+
+    .navbar-nav {
+        width: 100% !important;
+        text-align: center !important;
+        align-items: center !important;
+        justify-content: center !important;
+        flex-direction: column !important;
+        display: flex !important;
+    }
+
+    .navbar-nav .nav-item {
+        width: 100% !important;
+        text-align: center !important;
+        display: block !important;
+        margin: 0.25rem 0 !important;
+    }
+
+    .navbar-nav .nav-link {
+        border-radius: 0.375rem !important;
+        margin: 0.25rem 0 !important;
+        padding: 0.75rem 0.5rem !important;
+        display: block !important;
+        width: 100% !important;
+        max-width: 100% !important;
+        text-align: center !important;
+        transition: all 0.2s ease !important;
+        position: relative !important;
+        border-bottom: 1px solid rgba(0,0,0,0.05) !important;
+        word-wrap: break-word !important;
+        overflow: hidden !important;
+        text-overflow: ellipsis !important;
+        white-space: nowrap !important;
+    }
+
+    .navbar-nav .nav-link:hover {
+        background-color: rgba(104, 155, 138, 0.1) !important;
+        color: #689b8a !important;
+        transform: scale(1.02) !important;
+    }
+
+    /* Force vertical layout for RTL */
+    .rtl .navbar-nav,
+    html[dir="rtl"] .navbar-nav {
+        flex-direction: column !important;
+        width: 100% !important;
+        text-align: center !important;
+    }
+
+    .rtl .navbar-nav .nav-item,
+    html[dir="rtl"] .navbar-nav .nav-item {
+        width: 100% !important;
+        text-align: center !important;
+        display: block !important;
+    }
+
+    .rtl .navbar-nav .nav-link,
+    html[dir="rtl"] .navbar-nav .nav-link {
+        width: 100% !important;
+        text-align: center !important;
+        display: block !important;
+    }
+
+    /* Mobile dropdown fixes - CENTERED */
+    .navbar-nav .dropdown {
+        position: relative;
+        width: 100%;
+        text-align: center;
+    }
+
+    .navbar-nav .dropdown-menu,
+    .navbar-nav .dropdown-menu-center {
+        position: static !important;
+        float: none !important;
+        width: 100% !important;
+        max-width: none !important;
+        margin: 0.5rem 0 !important;
+        background-color: rgba(248, 249, 250, 0.98) !important;
+        border: 1px solid rgba(0,0,0,0.1) !important;
+        box-shadow: 0 4px 6px rgba(0,0,0,0.1) !important;
+        border-radius: 0.5rem !important;
+        padding: 0.5rem 0 !important;
+        transform: none !important;
+        inset: auto !important;
+        left: auto !important;
+        right: auto !important;
+        top: auto !important;
+        text-align: center !important;
+    }
+
+    .navbar-nav .dropdown-menu.show,
+    .navbar-nav .dropdown-menu-center.show {
+        display: block !important;
+        animation: slideDown 0.3s ease !important;
+        transform: none !important;
+        width: 100% !important;
+    }
+
+    /* Enhanced dropdown items for better distinction */
+    .navbar-nav .dropdown-item {
+        width: 100% !important;
+        text-align: center !important;
+        padding: 0.75rem 1.5rem !important;
+        border-bottom: 1px solid rgba(104, 155, 138, 0.1) !important;
+        background: rgba(248, 249, 250, 0.8) !important;
+        color: #5a7c6f !important;
+        font-weight: 500 !important;
+        position: relative !important;
+        transition: all 0.3s ease !important;
+        margin: 0.25rem 0 !important;
+        border-radius: 0.25rem !important;
+    }
+
+    .navbar-nav .dropdown-item:hover {
+        background: linear-gradient(135deg, rgba(104, 155, 138, 0.15), rgba(90, 133, 117, 0.1)) !important;
+        color: #689b8a !important;
+        transform: scale(1.02) !important;
+        box-shadow: 0 2px 8px rgba(104, 155, 138, 0.2) !important;
+        font-weight: 600 !important;
+    }
+
+    @keyframes slideDown {
+        from {
+            opacity: 0;
+            transform: translateY(-10px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    .navbar-nav .dropdown-item {
+        padding: 0.75rem 1.5rem !important;
+        color: #495057 !important;
+        font-size: 0.9rem !important;
+        border-bottom: 1px solid rgba(0,0,0,0.05);
+        transition: all 0.2s ease;
+        text-align: center !important;
+        display: block;
+        width: 100%;
+    }
+
+    .navbar-nav .dropdown-item:last-child {
+        border-bottom: none;
+    }
+
+    .navbar-nav .dropdown-item:hover,
+    .navbar-nav .dropdown-item:focus {
+        background-color: rgba(104, 155, 138, 0.1) !important;
+        color: #689b8a !important;
+        transform: scale(1.02);
+    }
+
+    .navbar-nav .dropdown-toggle {
+        position: relative;
+        padding: 0.75rem 2.5rem !important;
+        cursor: pointer;
+        user-select: none;
+        -webkit-user-select: none;
+        -webkit-tap-highlight-color: transparent;
+        text-align: center !important;
+        justify-content: center;
+        width: 100%;
+    }
+
+    .navbar-nav .dropdown-toggle::after {
+        content: "▼";
+        position: absolute;
+        right: 50%;
+        top: 50%;
+        transform: translate(50%, -50%);
+        transition: transform 0.3s ease;
+        border: none;
+        font-size: 0.8rem;
+        color: #6c757d;
+        margin-left: 0.5rem;
+    }
+
+    .navbar-nav .dropdown.show .dropdown-toggle::after {
+        transform: translate(50%, -50%) rotate(180deg);
+        color: #689b8a;
+    }
+
+    /* Make dropdown toggle more touch-friendly and centered */
+    .navbar-nav .dropdown-toggle {
+        min-height: 44px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    /* Unified behavior for both RTL and LTR - NO DIFFERENCES */
+    .rtl .navbar-nav .dropdown-toggle,
+    html[dir="rtl"] .navbar-nav .dropdown-toggle,
+    .navbar-nav .dropdown-toggle {
+        text-align: center !important;
+        justify-content: center !important;
+    }
+
+    .rtl .navbar-nav .dropdown-toggle::after,
+    html[dir="rtl"] .navbar-nav .dropdown-toggle::after {
+        right: 50%;
+        left: auto;
+        transform: translate(50%, -50%);
+    }
+
+    .rtl .navbar-nav .dropdown-item,
+    html[dir="rtl"] .navbar-nav .dropdown-item,
+    .navbar-nav .dropdown-item {
+        text-align: center !important;
+    }
+
+    .rtl .navbar-nav .dropdown-item:hover,
+    html[dir="rtl"] .navbar-nav .dropdown-item:hover {
+        transform: scale(1.02);
+    }
+
+/* MOBILE LAYOUT FIX - FORCE VERTICAL LAYOUT FOR BOTH LANGUAGES */
+@media (max-width: 991.98px) {
+    /* CRITICAL: Force vertical layout for navbar */
+    .navbar-nav {
+        flex-direction: column !important;
+        width: 100% !important;
+        align-items: stretch !important;
+    }
+
+    /* CRITICAL: Prevent horizontal layout in RTL */
+    .rtl .navbar-nav,
+    html[dir="rtl"] .navbar-nav {
+        flex-direction: column !important;
+        width: 100% !important;
+        align-items: stretch !important;
+        display: flex !important;
+    }
+
+    /* Force each nav item to be full width and stacked - NO HORIZONTAL LAYOUT */
+    .navbar-nav .nav-item {
+        width: 100% !important;
+        max-width: 100% !important;
+        display: block !important;
+        margin: 0.25rem 0 !important;
+        text-align: center !important;
+        float: none !important;
+        clear: both !important;
+        position: relative !important;
+        overflow: hidden !important;
+    }
+
+    .rtl .navbar-nav .nav-item,
+    html[dir="rtl"] .navbar-nav .nav-item {
+        width: 100% !important;
+        max-width: 100% !important;
+        display: block !important;
+        margin: 0.25rem 0 !important;
+        text-align: center !important;
+        float: none !important;
+        clear: both !important;
+        position: relative !important;
+        overflow: hidden !important;
+        flex: none !important;
+    }
+
+    /* Force nav links to be full width blocks */
+    .navbar-nav .nav-link {
+        width: 100% !important;
+        display: block !important;
+        text-align: center !important;
+        padding: 0.75rem 1rem !important;
+        margin: 0 !important;
+        border-bottom: 1px solid rgba(0,0,0,0.05) !important;
+    }
+
+    .rtl .navbar-nav .nav-link,
+    html[dir="rtl"] .navbar-nav .nav-link {
+        width: 100% !important;
+        display: block !important;
+        text-align: center !important;
+        padding: 0.75rem 1rem !important;
+        margin: 0 !important;
+        float: none !important;
+    }
+
+    /* Dropdown specific fixes - NO OVERLAP */
+    .navbar-nav .nav-item.dropdown {
+        width: 100% !important;
+        display: block !important;
+        text-align: center !important;
+        position: relative !important;
+    }
+
+    .navbar-nav .dropdown-toggle {
+        width: 100% !important;
+        text-align: center !important;
+        display: flex !important;
+        align-items: center !important;
+        justify-content: center !important;
+        padding: 0.75rem 2.5rem 0.75rem 1rem !important;
+        position: relative !important;
+    }
+
+    /* Fix arrow positioning - NO OVERLAP */
+    .navbar-nav .dropdown-toggle::after {
+        position: absolute !important;
+        right: 1rem !important;
+        top: 50% !important;
+        transform: translateY(-50%) !important;
+        margin: 0 !important;
+        border-top: 0.3em solid !important;
+        border-right: 0.3em solid transparent !important;
+        border-bottom: 0 !important;
+        border-left: 0.3em solid transparent !important;
+        transition: transform 0.3s ease !important;
+    }
+
+    /* Rotate arrow when dropdown is open */
+    .navbar-nav .dropdown.show .dropdown-toggle::after {
+        transform: translateY(-50%) rotate(180deg) !important;
+    }
+
+    /* RTL arrow positioning */
+    .rtl .navbar-nav .dropdown-toggle::after,
+    html[dir="rtl"] .navbar-nav .dropdown-toggle::after {
+        right: auto !important;
+        left: 1rem !important;
+    }
+
+    /* Enhanced dropdown menu with better visual distinction */
+    .navbar-nav .dropdown-menu {
+        position: static !important;
+        width: 100% !important;
+        margin: 0.5rem 0 !important;
+        text-align: center !important;
+        border: 2px solid rgba(104, 155, 138, 0.2) !important;
+        border-radius: 0.5rem !important;
+        box-shadow: 0 4px 12px rgba(0,0,0,0.15) !important;
+        background: linear-gradient(135deg, rgba(248, 249, 250, 0.95), rgba(240, 245, 242, 0.95)) !important;
+        backdrop-filter: blur(10px) !important;
+        animation: slideDownFade 0.3s ease-out !important;
+    }
+
+    /* Distinctive styling for dropdown items */
+    .navbar-nav .dropdown-item {
+        width: 100% !important;
+        text-align: center !important;
+        padding: 0.75rem 1.5rem !important;
+        margin: 0.25rem 0 !important;
+        border-bottom: 1px solid rgba(104, 155, 138, 0.1) !important;
+        background: transparent !important;
+        color: #5a7c6f !important;
+        font-weight: 500 !important;
+        position: relative !important;
+        transition: all 0.3s ease !important;
+    }
+
+    /* Add subtle icon before dropdown items */
+    .navbar-nav .dropdown-item::before {
+        content: "▸" !important;
+        margin-right: 0.5rem !important;
+        color: rgba(104, 155, 138, 0.6) !important;
+        font-size: 0.8em !important;
+        transition: all 0.3s ease !important;
+    }
+
+    /* RTL icon positioning */
+    .rtl .navbar-nav .dropdown-item::before,
+    html[dir="rtl"] .navbar-nav .dropdown-item::before {
+        margin-right: 0 !important;
+        margin-left: 0.5rem !important;
+        content: "◂" !important;
+    }
+
+    /* Enhanced hover effects for dropdown items */
+    .navbar-nav .dropdown-item:hover {
+        background: linear-gradient(135deg, rgba(104, 155, 138, 0.15), rgba(90, 133, 117, 0.1)) !important;
+        color: #689b8a !important;
+        transform: translateX(5px) !important;
+        border-left: 3px solid #689b8a !important;
+        font-weight: 600 !important;
+    }
+
+    .rtl .navbar-nav .dropdown-item:hover,
+    html[dir="rtl"] .navbar-nav .dropdown-item:hover {
+        transform: translateX(-5px) !important;
+        border-left: none !important;
+        border-right: 3px solid #689b8a !important;
+    }
+
+    /* Hover effect for icon */
+    .navbar-nav .dropdown-item:hover::before {
+        color: #689b8a !important;
+        transform: scale(1.2) !important;
+    }
+
+    /* Remove border from last item */
+    .navbar-nav .dropdown-item:last-child {
+        border-bottom: none !important;
+    }
+
+    /* Dropdown divider styling */
+    .navbar-nav .dropdown-divider {
+        width: 80% !important;
+        margin: 0.5rem auto !important;
+        border-top: 2px solid rgba(104, 155, 138, 0.2) !important;
+        opacity: 0.8 !important;
+    }
+}
+
+/* Dropdown animations */
+@keyframes slideDownFade {
+    0% {
+        opacity: 0;
+        transform: translateY(-10px);
+        max-height: 0;
+    }
+    100% {
+        opacity: 1;
+        transform: translateY(0);
+        max-height: 500px;
+    }
+}
+
+/* Enhanced dropdown toggle styling for mobile */
+@media (max-width: 991.98px) {
+    .navbar-nav .dropdown-toggle {
+        background: rgba(104, 155, 138, 0.05) !important;
+        border: 1px solid rgba(104, 155, 138, 0.2) !important;
+        border-radius: 0.375rem !important;
+        font-weight: 600 !important;
+        color: #5a7c6f !important;
+    }
+
+    .navbar-nav .dropdown-toggle:hover {
+        background: rgba(104, 155, 138, 0.1) !important;
+        border-color: rgba(104, 155, 138, 0.4) !important;
+        color: #689b8a !important;
+    }
+
+    /* Active dropdown toggle styling */
+    .navbar-nav .dropdown.show .dropdown-toggle {
+        background: rgba(104, 155, 138, 0.15) !important;
+        border-color: rgba(104, 155, 138, 0.5) !important;
+        color: #689b8a !important;
+        box-shadow: 0 2px 8px rgba(104, 155, 138, 0.2) !important;
+    }
+}
+
+/* EXTRA SMALL SCREENS - Perfect responsiveness */
+@media (max-width: 576px) {
+    .navbar-collapse {
+        margin: 0.25rem 0 !important;
+        padding: 0.75rem 0.25rem !important;
+        max-height: 70vh !important;
+    }
+
+    .navbar-nav .nav-link {
+        padding: 0.6rem 0.25rem !important;
+        font-size: 0.9rem !important;
+        margin: 0.2rem 0 !important;
+    }
+
+    .navbar-nav .dropdown-toggle {
+        padding: 0.6rem 2rem 0.6rem 0.25rem !important;
+        font-size: 0.9rem !important;
+    }
+
+    .navbar-nav .dropdown-toggle::after {
+        right: 0.5rem !important;
+        border-width: 0.25em !important;
+    }
+
+    .rtl .navbar-nav .dropdown-toggle::after,
+    html[dir="rtl"] .navbar-nav .dropdown-toggle::after {
+        left: 0.5rem !important;
+        right: auto !important;
+    }
+
+    .navbar-nav .dropdown-item {
+        padding: 0.5rem 0.25rem !important;
+        font-size: 0.85rem !important;
+        margin: 0.15rem 0 !important;
+    }
+
+    .navbar-nav .dropdown-item::before {
+        font-size: 0.7em !important;
+        margin-right: 0.25rem !important;
+    }
+
+    .rtl .navbar-nav .dropdown-item::before,
+    html[dir="rtl"] .navbar-nav .dropdown-item::before {
+        margin-left: 0.25rem !important;
+        margin-right: 0 !important;
+    }
+}
+
+/* VERY SMALL SCREENS - Ultra compact */
+@media (max-width: 480px) {
+    .navbar-collapse {
+        padding: 0.5rem 0.15rem !important;
+        max-height: 65vh !important;
+    }
+
+    .navbar-nav .nav-link {
+        padding: 0.5rem 0.15rem !important;
+        font-size: 0.85rem !important;
+        margin: 0.15rem 0 !important;
+    }
+
+    .navbar-nav .dropdown-toggle {
+        padding: 0.5rem 1.5rem 0.5rem 0.15rem !important;
+        font-size: 0.85rem !important;
+    }
+
+    .navbar-nav .dropdown-item {
+        padding: 0.4rem 0.15rem !important;
+        font-size: 0.8rem !important;
+        margin: 0.1rem 0 !important;
+    }
+}
+
+/* TINY SCREENS - Maximum compactness */
+@media (max-width: 360px) {
+    .navbar-collapse {
+        padding: 0.4rem 0.1rem !important;
+        max-height: 60vh !important;
+        margin: 0.2rem 0 !important;
+    }
+
+    .navbar-nav .nav-link {
+        padding: 0.4rem 0.1rem !important;
+        font-size: 0.8rem !important;
+        margin: 0.1rem 0 !important;
+    }
+
+    .navbar-nav .dropdown-toggle {
+        padding: 0.4rem 1.2rem 0.4rem 0.1rem !important;
+        font-size: 0.8rem !important;
+    }
+
+    .navbar-nav .dropdown-toggle::after {
+        right: 0.3rem !important;
+        border-width: 0.2em !important;
+    }
+
+    .rtl .navbar-nav .dropdown-toggle::after,
+    html[dir="rtl"] .navbar-nav .dropdown-toggle::after {
+        left: 0.3rem !important;
+    }
+
+    .navbar-nav .dropdown-item {
+        padding: 0.35rem 0.1rem !important;
+        font-size: 0.75rem !important;
+        margin: 0.05rem 0 !important;
+    }
+
+    .navbar-nav .dropdown-item::before {
+        font-size: 0.6em !important;
+        margin-right: 0.15rem !important;
+    }
+
+    .rtl .navbar-nav .dropdown-item::before,
+    html[dir="rtl"] .navbar-nav .dropdown-item::before {
+        margin-left: 0.15rem !important;
+        margin-right: 0 !important;
+    }
+}
+
+/* FINAL OVERRIDE - Ensure Arabic navbar looks exactly like English */
+@media (max-width: 991.98px) {
+    /* Force all navbar items to stack vertically */
+    .navbar-nav,
+    .rtl .navbar-nav,
+    html[dir="rtl"] .navbar-nav {
+        display: flex !important;
+        flex-direction: column !important;
+        width: 100% !important;
+        align-items: stretch !important;
+        justify-content: flex-start !important;
+    }
+
+    /* Ensure each nav item is a full-width block */
+    .navbar-nav .nav-item,
+    .rtl .navbar-nav .nav-item,
+    html[dir="rtl"] .navbar-nav .nav-item {
+        width: 100% !important;
+        display: block !important;
+        margin: 0 !important;
+        padding: 0 !important;
+        float: none !important;
+        clear: both !important;
+        text-align: center !important;
+    }
+
+    /* Style nav links consistently */
+    .navbar-nav .nav-link,
+    .rtl .navbar-nav .nav-link,
+    html[dir="rtl"] .navbar-nav .nav-link {
+        width: 100% !important;
+        display: block !important;
+        text-align: center !important;
+        padding: 0.75rem 1rem !important;
+        margin: 0 !important;
+        border-bottom: 1px solid rgba(0,0,0,0.05) !important;
+        background: transparent !important;
+        color: inherit !important;
+    }
+
+    /* Hover effects */
+    .navbar-nav .nav-link:hover,
+    .rtl .navbar-nav .nav-link:hover,
+    html[dir="rtl"] .navbar-nav .nav-link:hover {
+        background-color: rgba(104, 155, 138, 0.1) !important;
+        color: #689b8a !important;
+    }
+}
+
+    /* Ensure consistent dropdown behavior for both languages */
+    .navbar-nav .dropdown-menu {
+        min-width: 200px;
+        max-width: 300px;
+        border-radius: 0.5rem;
+        box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        border: 1px solid rgba(0,0,0,0.1);
+    }
+
+    /* Unified dropdown item styling - DESKTOP */
+    .navbar-nav .dropdown-item {
+        padding: 0.75rem 1.5rem;
+        transition: all 0.2s ease;
+        border-bottom: 1px solid rgba(0,0,0,0.05);
+        text-align: center;
+    }
+
+    .navbar-nav .dropdown-item:last-child {
+        border-bottom: none;
+    }
+
+    .navbar-nav .dropdown-item:hover,
+    .navbar-nav .dropdown-item:focus {
+        background-color: rgba(104, 155, 138, 0.1);
+        color: #689b8a;
+    }
+
+    /* Force center alignment for all dropdown content */
+    .navbar-nav .dropdown-menu {
+        text-align: center;
+    }
+
+    .navbar-nav .dropdown-divider {
+        margin: 0.5rem auto;
+        width: 80%;
+    }
+}
+
+/* ========================================
+   ADDITIONAL MOBILE FIXES
+   ======================================== */
+
+/* Ensure dropdowns work on touch devices */
+@media (hover: none) and (pointer: coarse) {
+    .dropdown:hover .dropdown-menu {
+        display: none;
+    }
+
+    .dropdown.show .dropdown-menu {
+        display: block;
+    }
+
+    /* Force dropdown to work on mobile */
+    .navbar-nav .dropdown-toggle {
+        cursor: pointer;
+        -webkit-tap-highlight-color: transparent;
+    }
+
+    .navbar-nav .dropdown-menu {
+        -webkit-overflow-scrolling: touch;
+    }
+}
+
+/* Fix for iOS Safari */
+@supports (-webkit-touch-callout: none) {
+    .navbar-nav .dropdown-menu {
+        -webkit-transform: translate3d(0, 0, 0);
+        transform: translate3d(0, 0, 0);
+    }
+}
+
+/* Ensure proper z-index for mobile dropdowns */
+@media (max-width: 991.98px) {
+    .navbar-nav .dropdown-menu {
+        z-index: 1050;
+    }
+
+    .navbar-collapse {
+        z-index: 1040;
+    }
+}
+
+/* Fix navbar toggler animation */
+.navbar-toggler {
+    transition: all 0.3s ease;
+    border: none !important;
+    padding: 0.375rem 0.5rem;
+    border-radius: 0.375rem;
+}
+
+.navbar-toggler:focus {
+    box-shadow: 0 0 0 0.2rem rgba(104, 155, 138, 0.25) !important;
+    outline: none;
+}
+
+.navbar-toggler:hover {
+    background-color: rgba(104, 155, 138, 0.1);
+}
+
+.navbar-toggler[aria-expanded="true"] {
+    background-color: rgba(104, 155, 138, 0.15);
+}
+
+.navbar-toggler[aria-expanded="true"] .navbar-toggler-icon {
+    transform: rotate(90deg);
+    transition: transform 0.3s ease;
+}
+
+.navbar-toggler-icon {
+    transition: transform 0.3s ease;
+    background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 30 30'%3e%3cpath stroke='rgba%2833, 37, 41, 0.75%29' stroke-linecap='round' stroke-miterlimit='10' stroke-width='2' d='M4 7h22M4 15h22M4 23h22'/%3e%3c/svg%3e") !important;
+}
+
+/* ========================================
+   ULTIMATE RESPONSIVE FIXES - ARABIC & ENGLISH
+   ======================================== */
+
+/* CRITICAL: Prevent horizontal scrolling and ensure perfect responsiveness */
+@media (max-width: 991.98px) {
+    /* Global container fixes */
+    html, body {
+        overflow-x: hidden !important;
+        max-width: 100% !important;
+    }
+
+    .navbar {
+        width: 100% !important;
+        max-width: 100% !important;
+        overflow-x: hidden !important;
+        padding: 0.5rem 0.75rem !important;
+    }
+
+    .container-fluid {
+        padding: 0 0.5rem !important;
+        max-width: 100% !important;
+        overflow-x: hidden !important;
+    }
+
+    /* Navbar brand responsive */
+    .navbar-brand {
+        max-width: 65% !important;
+        overflow: hidden !important;
+        text-overflow: ellipsis !important;
+        white-space: nowrap !important;
+        font-size: 1.1rem !important;
+    }
+
+    /* Navbar toggler responsive */
+    .navbar-toggler {
+        padding: 0.25rem 0.4rem !important;
+        font-size: 0.9rem !important;
+        border: none !important;
+    }
+
+    /* Navbar collapse perfect responsiveness */
+    .navbar-collapse {
+        width: 100% !important;
+        max-width: 100% !important;
+        box-sizing: border-box !important;
+        overflow-x: hidden !important;
+        overflow-y: auto !important;
+        max-height: 80vh !important;
+        margin: 0.5rem 0 !important;
+        padding: 0.75rem 0.5rem !important;
+        background-color: rgba(255, 255, 255, 0.98) !important;
+        border-radius: 0.5rem !important;
+        box-shadow: 0 4px 20px rgba(0,0,0,0.1) !important;
+    }
+
+    /* UNIVERSAL navbar nav fixes for BOTH languages */
+    .navbar-nav,
+    .rtl .navbar-nav,
+    html[dir="rtl"] .navbar-nav,
+    html[lang="ar"] .navbar-nav,
+    html[lang="en"] .navbar-nav {
+        display: flex !important;
+        flex-direction: column !important;
+        width: 100% !important;
+        max-width: 100% !important;
+        align-items: stretch !important;
+        justify-content: flex-start !important;
+        margin: 0 !important;
+        padding: 0 !important;
+        overflow-x: hidden !important;
+    }
+
+    /* UNIVERSAL nav item fixes for BOTH languages */
+    .navbar-nav .nav-item,
+    .rtl .navbar-nav .nav-item,
+    html[dir="rtl"] .navbar-nav .nav-item,
+    html[lang="ar"] .navbar-nav .nav-item,
+    html[lang="en"] .navbar-nav .nav-item {
+        width: 100% !important;
+        max-width: 100% !important;
+        display: block !important;
+        float: none !important;
+        clear: both !important;
+        margin: 0.25rem 0 !important;
+        padding: 0 !important;
+        position: relative !important;
+        overflow: hidden !important;
+        flex: none !important;
+        box-sizing: border-box !important;
+        text-align: center !important;
+    }
+
+    /* UNIVERSAL nav link fixes for BOTH languages */
+    .navbar-nav .nav-link,
+    .rtl .navbar-nav .nav-link,
+    html[dir="rtl"] .navbar-nav .nav-link,
+    html[lang="ar"] .navbar-nav .nav-link,
+    html[lang="en"] .navbar-nav .nav-link {
+        width: 100% !important;
+        max-width: 100% !important;
+        display: block !important;
+        text-align: center !important;
+        padding: 0.75rem 0.5rem !important;
+        margin: 0 !important;
+        border-bottom: 1px solid rgba(0,0,0,0.05) !important;
+        background: transparent !important;
+        color: inherit !important;
+        word-wrap: break-word !important;
+        overflow: hidden !important;
+        text-overflow: ellipsis !important;
+        box-sizing: border-box !important;
+        transition: all 0.2s ease !important;
+    }
+
+    /* Hover effects for both languages */
+    .navbar-nav .nav-link:hover,
+    .rtl .navbar-nav .nav-link:hover,
+    html[dir="rtl"] .navbar-nav .nav-link:hover,
+    html[lang="ar"] .navbar-nav .nav-link:hover,
+    html[lang="en"] .navbar-nav .nav-link:hover {
+        background-color: rgba(104, 155, 138, 0.1) !important;
+        color: #689b8a !important;
+        transform: scale(1.02) !important;
+    }
+}
+
+/* TABLET SCREENS - Enhanced responsiveness */
+@media (max-width: 768px) {
+    .navbar {
+        padding: 0.4rem 0.6rem !important;
+    }
+
+    .navbar-brand {
+        font-size: 1rem !important;
+        max-width: 70% !important;
+    }
+
+    .navbar-collapse {
+        padding: 0.6rem 0.4rem !important;
+        max-height: 75vh !important;
+    }
+
+    .navbar-nav .nav-link {
+        padding: 0.65rem 0.4rem !important;
+        font-size: 0.95rem !important;
+    }
+
+    .navbar-nav .dropdown-toggle {
+        padding: 0.65rem 2rem 0.65rem 0.4rem !important;
+    }
+
+    .rtl .navbar-nav .dropdown-toggle,
+    html[dir="rtl"] .navbar-nav .dropdown-toggle {
+        padding: 0.65rem 0.4rem 0.65rem 2rem !important;
+    }
+
+    .navbar-nav .dropdown-item {
+        padding: 0.6rem 0.4rem !important;
+        font-size: 0.9rem !important;
+    }
+}
+
+/* LARGE PHONE SCREENS */
+@media (max-width: 640px) {
+    .navbar {
+        padding: 0.35rem 0.5rem !important;
+    }
+
+    .navbar-brand {
+        font-size: 0.95rem !important;
+        max-width: 75% !important;
+    }
+
+    .navbar-collapse {
+        padding: 0.5rem 0.3rem !important;
+        max-height: 70vh !important;
+    }
+
+    .navbar-nav .nav-link {
+        padding: 0.6rem 0.3rem !important;
+        font-size: 0.9rem !important;
+    }
+
+    .navbar-nav .dropdown-toggle {
+        padding: 0.6rem 1.8rem 0.6rem 0.3rem !important;
+    }
+
+    .rtl .navbar-nav .dropdown-toggle,
+    html[dir="rtl"] .navbar-nav .dropdown-toggle {
+        padding: 0.6rem 0.3rem 0.6rem 1.8rem !important;
+    }
+
+    .navbar-nav .dropdown-item {
+        padding: 0.55rem 0.3rem !important;
+        font-size: 0.85rem !important;
+    }
+}
+
+/* SMALL PHONE SCREENS */
+@media (max-width: 480px) {
+    .navbar {
+        padding: 0.3rem 0.4rem !important;
+    }
+
+    .navbar-brand {
+        font-size: 0.9rem !important;
+        max-width: 80% !important;
+    }
+
+    .navbar-toggler {
+        padding: 0.2rem 0.3rem !important;
+        font-size: 0.8rem !important;
+    }
+
+    .navbar-collapse {
+        padding: 0.4rem 0.25rem !important;
+        max-height: 65vh !important;
+    }
+
+    .navbar-nav .nav-link {
+        padding: 0.5rem 0.25rem !important;
+        font-size: 0.85rem !important;
+    }
+
+    .navbar-nav .dropdown-toggle {
+        padding: 0.5rem 1.5rem 0.5rem 0.25rem !important;
+    }
+
+    .rtl .navbar-nav .dropdown-toggle,
+    html[dir="rtl"] .navbar-nav .dropdown-toggle {
+        padding: 0.5rem 0.25rem 0.5rem 1.5rem !important;
+    }
+
+    .navbar-nav .dropdown-item {
+        padding: 0.45rem 0.25rem !important;
+        font-size: 0.8rem !important;
+    }
+}
+
+/* VERY SMALL SCREENS */
+@media (max-width: 360px) {
+    .navbar {
+        padding: 0.25rem 0.3rem !important;
+    }
+
+    .navbar-brand {
+        font-size: 0.85rem !important;
+        max-width: 85% !important;
+    }
+
+    .navbar-toggler {
+        padding: 0.15rem 0.25rem !important;
+        font-size: 0.75rem !important;
+    }
+
+    .navbar-collapse {
+        padding: 0.3rem 0.2rem !important;
+        max-height: 60vh !important;
+    }
+
+    .navbar-nav .nav-link {
+        padding: 0.4rem 0.2rem !important;
+        font-size: 0.8rem !important;
+    }
+
+    .navbar-nav .dropdown-toggle {
+        padding: 0.4rem 1.2rem 0.4rem 0.2rem !important;
+    }
+
+    .rtl .navbar-nav .dropdown-toggle,
+    html[dir="rtl"] .navbar-nav .dropdown-toggle {
+        padding: 0.4rem 0.2rem 0.4rem 1.2rem !important;
+    }
+
+    .navbar-nav .dropdown-item {
+        padding: 0.35rem 0.2rem !important;
+        font-size: 0.75rem !important;
+    }
+}

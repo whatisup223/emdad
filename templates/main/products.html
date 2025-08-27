@@ -1,0 +1,284 @@
+{% extends "base.html" %}
+
+{% block title %}
+{% if selected_category %}
+{{ selected_category.get_name() }} - Products - {{ SITE_NAME }}
+{% else %}
+All Products - {{ SITE_NAME }}
+{% endif %}
+{% endblock %}
+
+{% block meta_description %}
+{% if selected_category %}
+Explore our premium {{ selected_category.get_name().lower() }} from Egypt. {{ selected_category.get_description() }}
+{% else %}
+Browse our complete range of premium Egyptian agricultural products including citrus fruits, fresh fruits, vegetables, and frozen products.
+{% endif %}
+{% endblock %}
+
+{% block content %}
+<!-- Page Header -->
+<section class="py-5 bg-primary text-white">
+    <div class="container">
+        <div class="row align-items-center">
+            <div class="col-lg-8">
+                <nav aria-label="breadcrumb">
+                    <ol class="breadcrumb text-white-50">
+                        <li class="breadcrumb-item"><a href="{{ url_for('main.index') }}" class="text-white-50">Home</a></li>
+                        <li class="breadcrumb-item active text-white">Products</li>
+                        {% if selected_category %}
+                        <li class="breadcrumb-item active text-white">{{ selected_category.get_name() }}</li>
+                        {% endif %}
+                    </ol>
+                </nav>
+                
+                <h1 class="display-5 fw-bold mb-3">
+                    {% if selected_category %}
+                    {{ selected_category.get_name() }}
+                    {% else %}
+                    Our Products
+                    {% endif %}
+                </h1>
+                
+                <p class="lead">
+                    {% if selected_category %}
+                    {{ selected_category.get_description() }}
+                    {% else %}
+                    Discover our premium range of Egyptian agricultural products, carefully selected and processed to meet international quality standards.
+                    {% endif %}
+                </p>
+            </div>
+            
+            <div class="col-lg-4 text-lg-end">
+                <a href="{{ url_for('main.contact') }}" class="btn btn-light btn-lg">
+                    <i class="fas fa-envelope me-2"></i>Request Quote
+                </a>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Category Filter -->
+<section class="py-4 bg-light border-bottom">
+    <div class="container">
+        <div class="row align-items-center">
+            <div class="col-lg-8">
+                <div class="d-flex flex-wrap gap-2">
+                    <a href="{{ url_for('main.products') }}" 
+                       class="btn {% if not selected_category %}btn-primary{% else %}btn-outline-primary{% endif %}">
+                        All Products
+                    </a>
+                    {% for category in categories %}
+                    <a href="{{ url_for('main.products', cat=category.key) }}" 
+                       class="btn {% if selected_category and selected_category.id == category.id %}btn-primary{% else %}btn-outline-primary{% endif %}">
+                        {{ category.get_name() }}
+                    </a>
+                    {% endfor %}
+                </div>
+            </div>
+            
+            <div class="col-lg-4 text-lg-end mt-3 mt-lg-0">
+                <span class="text-muted">
+                    Showing {{ (products.items|length) if products.items else 0 }} of {{ products.total if products.total else 0 }} products
+                </span>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Products Grid -->
+<section class="py-5">
+    <div class="container">
+        {% if products and products.items %}
+        <div class="row">
+            {% for product in products.items %}
+            <div class="col-lg-3 col-md-6 mb-4">
+                <div class="card h-100 border-0 shadow-sm product-card">
+                    <!-- Product Image -->
+                    {% set main_image = product.get_main_image() %}
+                    {% if main_image %}
+                    <img src="{{ url_for('static', filename='uploads/products/' + main_image.filename) }}" 
+                         class="card-img-top" alt="{{ product.get_name() }}" 
+                         style="height: 250px; object-fit: cover;">
+                    {% else %}
+                    <div class="card-img-top bg-light d-flex align-items-center justify-content-center" 
+                         style="height: 250px;">
+                        <i class="fas fa-image fa-3x text-muted"></i>
+                    </div>
+                    {% endif %}
+                    
+                    <!-- Product Info -->
+                    <div class="card-body d-flex flex-column">
+                        <div class="mb-2">
+                            <small class="text-primary fw-semibold">{{ product.category.get_name() }}</small>
+                        </div>
+                        
+                        <h5 class="card-title">{{ product.get_name() }}</h5>
+                        
+                        <p class="card-text text-muted flex-grow-1">
+                            {{ product.get_short_description() | truncate(100) }}
+                        </p>
+                        
+                        <!-- Product Features -->
+                        {% set specs = product.get_specifications() %}
+                        {% if specs %}
+                        <div class="mb-3">
+                            {% if specs.get('sizes') %}
+                            <small class="badge bg-light text-dark me-1">Multiple Sizes</small>
+                            {% endif %}
+                            {% if specs.get('brix') %}
+                            <small class="badge bg-light text-dark me-1">{{ specs.brix }} Brix</small>
+                            {% endif %}
+                            {% if product.featured %}
+                            <small class="badge bg-warning text-dark">Featured</small>
+                            {% endif %}
+                        </div>
+                        {% endif %}
+                        
+                        <!-- Action Buttons -->
+                        <div class="d-flex gap-2 mt-auto">
+                            <a href="{{ url_for('main.product_detail', slug=product.slug) }}" 
+                               class="btn btn-outline-primary flex-grow-1">
+                                <i class="fas fa-eye me-1"></i>View Details
+                            </a>
+                            <a href="{{ url_for('main.contact') }}?product={{ product.slug }}" 
+                               class="btn btn-primary">
+                                <i class="fas fa-envelope"></i>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+        
+        <!-- Pagination -->
+        {% if products and products.pages > 1 %}
+        <div class="row mt-5">
+            <div class="col-12">
+                <nav aria-label="Products pagination">
+                    <ul class="pagination justify-content-center">
+                        {% if products.has_prev %}
+                        <li class="page-item">
+                            <a class="page-link" href="{{ url_for('main.products', page=products.prev_num, cat=request.args.get('cat')) }}">
+                                <i class="fas fa-chevron-left"></i> Previous
+                            </a>
+                        </li>
+                        {% endif %}
+                        
+                        {% for page_num in products.iter_pages() if products %}
+                            {% if page_num %}
+                                {% if page_num != products.page %}
+                                <li class="page-item">
+                                    <a class="page-link" href="{{ url_for('main.products', page=page_num, cat=request.args.get('cat')) }}">
+                                        {{ page_num }}
+                                    </a>
+                                </li>
+                                {% else %}
+                                <li class="page-item active">
+                                    <span class="page-link">{{ page_num }}</span>
+                                </li>
+                                {% endif %}
+                            {% else %}
+                            <li class="page-item disabled">
+                                <span class="page-link">...</span>
+                            </li>
+                            {% endif %}
+                        {% endfor %}
+                        
+                        {% if products.has_next %}
+                        <li class="page-item">
+                            <a class="page-link" href="{{ url_for('main.products', page=products.next_num, cat=request.args.get('cat')) }}">
+                                Next <i class="fas fa-chevron-right"></i>
+                            </a>
+                        </li>
+                        {% endif %}
+                    </ul>
+                </nav>
+            </div>
+        </div>
+        {% endif %}
+        
+        {% else %}
+        <!-- No Products Found -->
+        <div class="row">
+            <div class="col-lg-8 mx-auto text-center">
+                <div class="py-5">
+                    <i class="fas fa-search fa-4x text-muted mb-4"></i>
+                    <h3 class="mb-3">No Products Found</h3>
+                    <p class="text-muted mb-4">
+                        {% if selected_category %}
+                        No products are currently available in the {{ selected_category.get_name() }} category.
+                        {% else %}
+                        No products match your current filters.
+                        {% endif %}
+                    </p>
+                    <a href="{{ url_for('main.products') }}" class="btn btn-primary">
+                        View All Products
+                    </a>
+                </div>
+            </div>
+        </div>
+        {% endif %}
+    </div>
+</section>
+
+<!-- Category Information -->
+{% if selected_category and selected_category.get_description() %}
+<section class="py-5 bg-light">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 mx-auto text-center">
+                <h3 class="mb-4">About {{ selected_category.get_name() }}</h3>
+                <div class="text-muted">
+                    {{ selected_category.get_description() }}
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+{% endif %}
+
+<!-- Call to Action -->
+<section class="py-5 bg-primary text-white">
+    <div class="container">
+        <div class="row align-items-center">
+            <div class="col-lg-8">
+                <h3 class="mb-2">Interested in Our Products?</h3>
+                <p class="mb-0">Contact us for detailed specifications, pricing, and availability information.</p>
+            </div>
+            <div class="col-lg-4 text-lg-end">
+                <a href="{{ url_for('main.contact') }}" class="btn btn-light btn-lg">
+                    <i class="fas fa-envelope me-2"></i>Get a Quote
+                </a>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}
+
+{% block extra_scripts %}
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Add hover effects to product cards
+    const productCards = document.querySelectorAll('.product-card');
+    productCards.forEach(card => {
+        card.addEventListener('mouseenter', function() {
+            this.style.transform = 'translateY(-8px)';
+            this.style.transition = 'transform 0.3s ease, box-shadow 0.3s ease';
+            this.style.boxShadow = '0 0.75rem 1.5rem rgba(0, 0, 0, 0.15)';
+        });
+        
+        card.addEventListener('mouseleave', function() {
+            this.style.transform = 'translateY(0)';
+            this.style.boxShadow = '';
+        });
+    });
+    
+    // Smooth scroll to products section when coming from category filter
+    if (window.location.hash === '#products') {
+        document.querySelector('.py-5').scrollIntoView({ behavior: 'smooth' });
+    }
+});
+</script>
+{% endblock %}

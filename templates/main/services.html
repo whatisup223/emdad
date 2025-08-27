@@ -1,0 +1,434 @@
+{% extends "base.html" %}
+
+{% block title %}Export Services - {{ SITE_NAME }}{% endblock %}
+
+{% block meta_description %}Comprehensive export services including FOB & CIF shipping, cold chain logistics, custom packaging, and documentation support for Egyptian agricultural products.{% endblock %}
+
+{% block content %}
+<!-- Page Header -->
+<section class="py-5 bg-primary text-white">
+    <div class="container">
+        <div class="row align-items-center">
+            <div class="col-lg-8">
+                <nav aria-label="breadcrumb">
+                    <ol class="breadcrumb text-white-50">
+                        <li class="breadcrumb-item"><a href="{{ url_for('main.index') }}" class="text-white-50">Home</a></li>
+                        <li class="breadcrumb-item active text-white">Export Services</li>
+                    </ol>
+                </nav>
+                
+                <h1 class="display-5 fw-bold mb-3">Export Services</h1>
+                <p class="lead">Comprehensive solutions for your agricultural import needs</p>
+            </div>
+            <div class="col-lg-4 text-lg-end">
+                <div class="service-badge bg-white text-primary rounded-circle d-inline-flex align-items-center justify-content-center" style="width: 120px; height: 120px;">
+                    <div class="text-center">
+                        <i class="fas fa-shipping-fast fa-2x mb-2"></i>
+                        <div class="small fw-bold">FULL<br>SERVICE</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Services Overview -->
+<section class="py-5">
+    <div class="container">
+        <div class="row align-items-center">
+            <div class="col-lg-6 mb-4">
+                <h2 class="mb-4">Complete Export Solutions</h2>
+                <p class="lead text-primary mb-3">From Farm to Your Destination</p>
+                <p>Emdad Global provides end-to-end export services designed to make your agricultural sourcing experience seamless and efficient. Our comprehensive service portfolio covers every aspect of the export process.</p>
+                <p>With decades of experience in international trade, we understand the complexities of global agricultural commerce and provide tailored solutions to meet your specific requirements.</p>
+                <p>Our integrated approach ensures quality, reliability, and cost-effectiveness throughout the entire supply chain.</p>
+            </div>
+            <div class="col-lg-6">
+                <img src="{{ url_for('static', filename='images/export-services.jpg') }}" 
+                     alt="Export Services" class="img-fluid rounded shadow">
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Main Services -->
+<section class="py-5 bg-light">
+    <div class="container">
+        <div class="text-center mb-5">
+            <h2 class="mb-3">Our Core Services</h2>
+            <p class="lead text-muted">Professional export services tailored to your business needs</p>
+        </div>
+        
+        <div class="row">
+            {% if services %}
+                {% for service in services %}
+                <div class="col-lg-6 mb-4">
+                    <div class="card h-100 border-0 shadow-sm service-card">
+                        <div class="card-body p-4">
+                            <div class="d-flex align-items-start">
+                                <div class="service-icon bg-primary text-white rounded-circle d-flex align-items-center justify-content-center me-4" style="width: 60px; height: 60px; flex-shrink: 0;">
+                                    {% if service.icon %}
+                                    <i class="{{ service.icon }} fa-lg"></i>
+                                    {% else %}
+                                    <i class="fas fa-cog fa-lg"></i>
+                                    {% endif %}
+                                </div>
+                                <div>
+                                    <h5 class="card-title">{{ service.get_title() }}</h5>
+                                    <p class="card-text text-muted">{{ service.get_description() }}</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+            {% else %}
+                <!-- Default services if none in database -->
+                <div class="col-lg-6 mb-4">
+                    <div class="card h-100 border-0 shadow-sm service-card">
+                        <div class="card-body p-4">
+                            <div class="d-flex align-items-start">
+                                <div class="service-icon bg-primary text-white rounded-circle d-flex align-items-center justify-content-center me-4" style="width: 60px; height: 60px; flex-shrink: 0;">
+                                    <i class="fas fa-ship fa-lg"></i>
+                                </div>
+                                <div>
+                                    <h5 class="card-title">FOB & CIF Shipping</h5>
+                                    <p class="card-text text-muted">Flexible shipping terms including Free on Board (FOB) and Cost, Insurance, and Freight (CIF) options to suit your business requirements and budget.</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="col-lg-6 mb-4">
+                    <div class="card h-100 border-0 shadow-sm service-card">
+                        <div class="card-body p-4">
+                            <div class="d-flex align-items-start">
+                                <div class="service-icon bg-success text-white rounded-circle d-flex align-items-center justify-content-center me-4" style="width: 60px; height: 60px; flex-shrink: 0;">
+                                    <i class="fas fa-thermometer-half fa-lg"></i>
+                                </div>
+                                <div>
+                                    <h5 class="card-title">Cold Chain Logistics</h5>
+                                    <p class="card-text text-muted">Temperature-controlled storage and transportation systems to maintain product quality and freshness from harvest to delivery.</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="col-lg-6 mb-4">
+                    <div class="card h-100 border-0 shadow-sm service-card">
+                        <div class="card-body p-4">
+                            <div class="d-flex align-items-start">
+                                <div class="service-icon bg-info text-white rounded-circle d-flex align-items-center justify-content-center me-4" style="width: 60px; height: 60px; flex-shrink: 0;">
+                                    <i class="fas fa-box fa-lg"></i>
+                                </div>
+                                <div>
+                                    <h5 class="card-title">Custom Packaging</h5>
+                                    <p class="card-text text-muted">Tailored packaging solutions including private labeling, custom sizes, and specialized packaging materials to meet your market requirements.</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="col-lg-6 mb-4">
+                    <div class="card h-100 border-0 shadow-sm service-card">
+                        <div class="card-body p-4">
+                            <div class="d-flex align-items-start">
+                                <div class="service-icon bg-warning text-white rounded-circle d-flex align-items-center justify-content-center me-4" style="width: 60px; height: 60px; flex-shrink: 0;">
+                                    <i class="fas fa-file-alt fa-lg"></i>
+                                </div>
+                                <div>
+                                    <h5 class="card-title">Documentation & Compliance</h5>
+                                    <p class="card-text text-muted">Complete documentation support including certificates of origin, phytosanitary certificates, and regulatory compliance assistance.</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            {% endif %}
+        </div>
+    </div>
+</section>
+
+<!-- Shipping Terms -->
+<section class="py-5">
+    <div class="container">
+        <div class="text-center mb-5">
+            <h2 class="mb-3">Shipping Terms & Options</h2>
+            <p class="lead text-muted">Flexible terms to meet your business needs</p>
+        </div>
+        
+        <div class="row">
+            <div class="col-lg-6 mb-4">
+                <div class="card border-0 shadow-sm h-100">
+                    <div class="card-body p-4">
+                        <div class="d-flex align-items-center mb-3">
+                            <div class="shipping-icon bg-primary text-white rounded-circle d-flex align-items-center justify-content-center me-3" style="width: 50px; height: 50px;">
+                                <i class="fas fa-anchor"></i>
+                            </div>
+                            <h4 class="mb-0">FOB (Free on Board)</h4>
+                        </div>
+                        <p class="text-muted mb-3">Goods delivered to the port of shipment. You arrange and pay for international shipping, insurance, and import duties.</p>
+                        
+                        <h6 class="text-primary mb-2">Includes:</h6>
+                        <ul class="list-unstyled">
+                            <li class="mb-1"><i class="fas fa-check text-success me-2"></i>Product cost</li>
+                            <li class="mb-1"><i class="fas fa-check text-success me-2"></i>Local transportation to port</li>
+                            <li class="mb-1"><i class="fas fa-check text-success me-2"></i>Export documentation</li>
+                            <li class="mb-1"><i class="fas fa-check text-success me-2"></i>Loading charges</li>
+                        </ul>
+                        
+                        <div class="mt-3">
+                            <span class="badge bg-primary">Best for experienced importers</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="col-lg-6 mb-4">
+                <div class="card border-0 shadow-sm h-100">
+                    <div class="card-body p-4">
+                        <div class="d-flex align-items-center mb-3">
+                            <div class="shipping-icon bg-success text-white rounded-circle d-flex align-items-center justify-content-center me-3" style="width: 50px; height: 50px;">
+                                <i class="fas fa-globe"></i>
+                            </div>
+                            <h4 class="mb-0">CIF (Cost, Insurance & Freight)</h4>
+                        </div>
+                        <p class="text-muted mb-3">Complete delivery to your destination port including shipping and insurance. You handle import duties and local delivery.</p>
+                        
+                        <h6 class="text-success mb-2">Includes:</h6>
+                        <ul class="list-unstyled">
+                            <li class="mb-1"><i class="fas fa-check text-success me-2"></i>All FOB services</li>
+                            <li class="mb-1"><i class="fas fa-check text-success me-2"></i>International shipping</li>
+                            <li class="mb-1"><i class="fas fa-check text-success me-2"></i>Marine insurance</li>
+                            <li class="mb-1"><i class="fas fa-check text-success me-2"></i>Destination port charges</li>
+                        </ul>
+                        
+                        <div class="mt-3">
+                            <span class="badge bg-success">Recommended for new importers</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Cold Chain Process -->
+<section class="py-5 bg-light">
+    <div class="container">
+        <div class="text-center mb-5">
+            <h2 class="mb-3">Cold Chain Management</h2>
+            <p class="lead text-muted">Maintaining optimal temperature throughout the journey</p>
+        </div>
+        
+        <div class="row">
+            <div class="col-lg-3 col-md-6 mb-4">
+                <div class="cold-chain-step text-center">
+                    <div class="step-icon bg-info text-white rounded-circle d-inline-flex align-items-center justify-content-center mb-3" style="width: 80px; height: 80px;">
+                        <i class="fas fa-thermometer-quarter fa-2x"></i>
+                    </div>
+                    <h5>Pre-cooling</h5>
+                    <p class="text-muted">Rapid cooling immediately after harvest to remove field heat</p>
+                    <div class="temperature-badge bg-info text-white rounded px-2 py-1 small">0-4°C</div>
+                </div>
+            </div>
+            
+            <div class="col-lg-3 col-md-6 mb-4">
+                <div class="cold-chain-step text-center">
+                    <div class="step-icon bg-primary text-white rounded-circle d-inline-flex align-items-center justify-content-center mb-3" style="width: 80px; height: 80px;">
+                        <i class="fas fa-warehouse fa-2x"></i>
+                    </div>
+                    <h5>Cold Storage</h5>
+                    <p class="text-muted">Temperature-controlled storage facilities with humidity control</p>
+                    <div class="temperature-badge bg-primary text-white rounded px-2 py-1 small">2-8°C</div>
+                </div>
+            </div>
+            
+            <div class="col-lg-3 col-md-6 mb-4">
+                <div class="cold-chain-step text-center">
+                    <div class="step-icon bg-success text-white rounded-circle d-inline-flex align-items-center justify-content-center mb-3" style="width: 80px; height: 80px;">
+                        <i class="fas fa-truck fa-2x"></i>
+                    </div>
+                    <h5>Refrigerated Transport</h5>
+                    <p class="text-muted">Insulated vehicles maintaining consistent temperature to port</p>
+                    <div class="temperature-badge bg-success text-white rounded px-2 py-1 small">2-8°C</div>
+                </div>
+            </div>
+            
+            <div class="col-lg-3 col-md-6 mb-4">
+                <div class="cold-chain-step text-center">
+                    <div class="step-icon bg-warning text-white rounded-circle d-inline-flex align-items-center justify-content-center mb-3" style="width: 80px; height: 80px;">
+                        <i class="fas fa-ship fa-2x"></i>
+                    </div>
+                    <h5>Reefer Container</h5>
+                    <p class="text-muted">Refrigerated containers for ocean transport with monitoring</p>
+                    <div class="temperature-badge bg-warning text-white rounded px-2 py-1 small">2-8°C</div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Documentation Services -->
+<section class="py-5">
+    <div class="container">
+        <div class="row align-items-center">
+            <div class="col-lg-6">
+                <h2 class="mb-4">Documentation & Compliance</h2>
+                <p class="lead text-primary mb-3">Seamless Paperwork</p>
+                <p>Our experienced documentation team handles all the complex paperwork required for international agricultural trade, ensuring compliance with both Egyptian export regulations and your country's import requirements.</p>
+                
+                <div class="row">
+                    <div class="col-md-6 mb-3">
+                        <div class="d-flex align-items-center">
+                            <i class="fas fa-certificate text-primary me-3"></i>
+                            <div>
+                                <h6 class="mb-1">Certificate of Origin</h6>
+                                <small class="text-muted">Egyptian Chamber of Commerce certified</small>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        <div class="d-flex align-items-center">
+                            <i class="fas fa-leaf text-success me-3"></i>
+                            <div>
+                                <h6 class="mb-1">Phytosanitary Certificate</h6>
+                                <small class="text-muted">Plant health certification</small>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        <div class="d-flex align-items-center">
+                            <i class="fas fa-file-invoice text-info me-3"></i>
+                            <div>
+                                <h6 class="mb-1">Commercial Invoice</h6>
+                                <small class="text-muted">Detailed product and pricing information</small>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        <div class="d-flex align-items-center">
+                            <i class="fas fa-clipboard-list text-warning me-3"></i>
+                            <div>
+                                <h6 class="mb-1">Packing List</h6>
+                                <small class="text-muted">Detailed shipment contents</small>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-6">
+                <img src="{{ url_for('static', filename='images/documentation.jpg') }}" 
+                     alt="Documentation Services" class="img-fluid rounded shadow">
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Custom Packaging -->
+<section class="py-5 bg-light">
+    <div class="container">
+        <div class="text-center mb-5">
+            <h2 class="mb-3">Custom Packaging Solutions</h2>
+            <p class="lead text-muted">Tailored packaging to meet your market requirements</p>
+        </div>
+        
+        <div class="row">
+            <div class="col-lg-4 mb-4">
+                <div class="card border-0 shadow-sm h-100">
+                    <div class="card-body text-center p-4">
+                        <i class="fas fa-tags fa-3x text-primary mb-3"></i>
+                        <h5>Private Labeling</h5>
+                        <p class="text-muted">Custom labels with your brand, logo, and product information in multiple languages.</p>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="col-lg-4 mb-4">
+                <div class="card border-0 shadow-sm h-100">
+                    <div class="card-body text-center p-4">
+                        <i class="fas fa-ruler-combined fa-3x text-success mb-3"></i>
+                        <h5>Custom Sizes</h5>
+                        <p class="text-muted">Flexible packaging sizes from bulk containers to retail-ready packages.</p>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="col-lg-4 mb-4">
+                <div class="card border-0 shadow-sm h-100">
+                    <div class="card-body text-center p-4">
+                        <i class="fas fa-recycle fa-3x text-info mb-3"></i>
+                        <h5>Eco-Friendly Options</h5>
+                        <p class="text-muted">Sustainable packaging materials including biodegradable and recyclable options.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Call to Action -->
+<section class="py-5 bg-primary text-white">
+    <div class="container">
+        <div class="row align-items-center">
+            <div class="col-lg-8">
+                <h3 class="mb-2">Ready to Streamline Your Imports?</h3>
+                <p class="mb-0">Let our experienced team handle all aspects of your agricultural product sourcing and logistics.</p>
+            </div>
+            <div class="col-lg-4 text-lg-end">
+                <a href="{{ url_for('main.contact') }}" class="btn btn-light btn-lg">
+                    <i class="fas fa-envelope me-2"></i>Get Started Today
+                </a>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}
+
+{% block extra_scripts %}
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Add hover effects to service cards
+    const serviceCards = document.querySelectorAll('.service-card');
+    serviceCards.forEach(card => {
+        card.addEventListener('mouseenter', function() {
+            this.style.transform = 'translateY(-5px)';
+            this.style.transition = 'transform 0.3s ease';
+        });
+        
+        card.addEventListener('mouseleave', function() {
+            this.style.transform = 'translateY(0)';
+        });
+    });
+    
+    // Animate cold chain steps
+    const coldChainSteps = document.querySelectorAll('.cold-chain-step');
+    
+    const animateSteps = (entries, observer) => {
+        entries.forEach((entry, index) => {
+            if (entry.isIntersecting) {
+                setTimeout(() => {
+                    entry.target.style.opacity = '1';
+                    entry.target.style.transform = 'translateY(0)';
+                }, index * 150);
+                observer.unobserve(entry.target);
+            }
+        });
+    };
+    
+    const observer = new IntersectionObserver(animateSteps, {
+        threshold: 0.3
+    });
+    
+    coldChainSteps.forEach(step => {
+        step.style.opacity = '0';
+        step.style.transform = 'translateY(30px)';
+        step.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
+        observer.observe(step);
+    });
+});
+</script>
+{% endblock %}

@@ -1,0 +1,194 @@
+{% extends "admin/base.html" %}
+
+{% block title %}{{ title }}{% endblock %}
+
+{% block content %}
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-header d-flex justify-content-between align-items-center">
+                    <h3 class="card-title">{{ title }}</h3>
+                    <a href="{{ url_for('admin.news') }}" class="btn btn-secondary">
+                        <i class="fas fa-arrow-left"></i> {{ _('Back to List') }}
+                    </a>
+                </div>
+                <div class="card-body">
+                    {% with messages = get_flashed_messages(with_categories=true) %}
+                        {% if messages %}
+                            {% for category, message in messages %}
+                                <div class="alert alert-{{ 'success' if category == 'success' else 'danger' }} alert-dismissible fade show" role="alert">
+                                    {{ message }}
+                                    <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                                </div>
+                            {% endfor %}
+                        {% endif %}
+                    {% endwith %}
+
+                    <form method="POST" enctype="multipart/form-data">
+                        {{ form.hidden_tag() }}
+                        
+                        <!-- Basic Information -->
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    {{ form.title_en.label(class="form-label") }}
+                                    {{ form.title_en(class="form-control" + (" is-invalid" if form.title_en.errors else "")) }}
+                                    {% if form.title_en.errors %}
+                                        <div class="invalid-feedback">
+                                            {% for error in form.title_en.errors %}{{ error }}{% endfor %}
+                                        </div>
+                                    {% endif %}
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    {{ form.title_ar.label(class="form-label") }}
+                                    {{ form.title_ar(class="form-control" + (" is-invalid" if form.title_ar.errors else ""), dir="rtl") }}
+                                    {% if form.title_ar.errors %}
+                                        <div class="invalid-feedback">
+                                            {% for error in form.title_ar.errors %}{{ error }}{% endfor %}
+                                        </div>
+                                    {% endif %}
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    {{ form.slug.label(class="form-label") }}
+                                    {{ form.slug(class="form-control" + (" is-invalid" if form.slug.errors else "")) }}
+                                    {% if form.slug.errors %}
+                                        <div class="invalid-feedback">
+                                            {% for error in form.slug.errors %}{{ error }}{% endfor %}
+                                        </div>
+                                    {% endif %}
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    {{ form.status.label(class="form-label") }}
+                                    {{ form.status(class="form-select" + (" is-invalid" if form.status.errors else "")) }}
+                                    {% if form.status.errors %}
+                                        <div class="invalid-feedback">
+                                            {% for error in form.status.errors %}{{ error }}{% endfor %}
+                                        </div>
+                                    {% endif %}
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Excerpts -->
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    {{ form.excerpt_en.label(class="form-label") }}
+                                    {{ form.excerpt_en(class="form-control" + (" is-invalid" if form.excerpt_en.errors else ""), rows="3") }}
+                                    {% if form.excerpt_en.errors %}
+                                        <div class="invalid-feedback">
+                                            {% for error in form.excerpt_en.errors %}{{ error }}{% endfor %}
+                                        </div>
+                                    {% endif %}
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    {{ form.excerpt_ar.label(class="form-label") }}
+                                    {{ form.excerpt_ar(class="form-control" + (" is-invalid" if form.excerpt_ar.errors else ""), rows="3", dir="rtl") }}
+                                    {% if form.excerpt_ar.errors %}
+                                        <div class="invalid-feedback">
+                                            {% for error in form.excerpt_ar.errors %}{{ error }}{% endfor %}
+                                        </div>
+                                    {% endif %}
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Content -->
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    {{ form.content_en.label(class="form-label") }}
+                                    {{ form.content_en(class="form-control" + (" is-invalid" if form.content_en.errors else ""), rows="8") }}
+                                    {% if form.content_en.errors %}
+                                        <div class="invalid-feedback">
+                                            {% for error in form.content_en.errors %}{{ error }}{% endfor %}
+                                        </div>
+                                    {% endif %}
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    {{ form.content_ar.label(class="form-label") }}
+                                    {{ form.content_ar(class="form-control" + (" is-invalid" if form.content_ar.errors else ""), rows="8", dir="rtl") }}
+                                    {% if form.content_ar.errors %}
+                                        <div class="invalid-feedback">
+                                            {% for error in form.content_ar.errors %}{{ error }}{% endfor %}
+                                        </div>
+                                    {% endif %}
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Settings -->
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <label class="form-label">&nbsp;</label>
+                                    <div class="form-check">
+                                        {{ form.featured(class="form-check-input") }}
+                                        {{ form.featured.label(class="form-check-label") }}
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Image Upload -->
+                        <div class="mb-3">
+                            {{ form.image.label(class="form-label") }}
+                            {{ form.image(class="form-control" + (" is-invalid" if form.image.errors else "")) }}
+                            {% if form.image.errors %}
+                                <div class="invalid-feedback">
+                                    {% for error in form.image.errors %}{{ error }}{% endfor %}
+                                </div>
+                            {% endif %}
+                            {% if news_item and news_item.image_path %}
+                                <div class="mt-2">
+                                    <small class="text-muted">{{ _('Current Image') }}:</small><br>
+                                    <img src="{{ url_for('uploaded_file', filename='news/' + news_item.image_path) }}" 
+                                         alt="{{ news_item.title_en }}" class="img-thumbnail" style="max-width: 200px;">
+                                </div>
+                            {% endif %}
+                        </div>
+
+                        <div class="d-flex justify-content-between">
+                            <a href="{{ url_for('admin.news') }}" class="btn btn-secondary">{{ _('Cancel') }}</a>
+                            <button type="submit" class="btn btn-primary">
+                                {% if news_item %}
+                                    <i class="fas fa-save"></i> {{ _('Save Changes') }}
+                                {% else %}
+                                    <i class="fas fa-plus"></i> {{ _('Create Article') }}
+                                {% endif %}
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+// Auto-generate slug from English title
+document.getElementById('title_en').addEventListener('input', function() {
+    const titleEn = this.value;
+    const slug = titleEn.toLowerCase()
+        .replace(/[^a-z0-9\s-]/g, '')
+        .replace(/\s+/g, '-')
+        .replace(/-+/g, '-')
+        .trim('-');
+    document.getElementById('slug').value = slug;
+});
+</script>
+{% endblock %}

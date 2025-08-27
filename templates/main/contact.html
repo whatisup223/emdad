@@ -1,0 +1,334 @@
+{% extends "base.html" %}
+
+{% block title %}Contact Us - {{ SITE_NAME }}{% endblock %}
+
+{% block meta_description %}Contact Emdad Global for premium Egyptian agricultural exports. Request a quote for citrus fruits, fresh produce, and frozen products.{% endblock %}
+
+{% block content %}
+<!-- Page Header -->
+<section class="py-5 bg-primary text-white">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8">
+                <h1 class="display-5 fw-bold mb-3">Contact Us</h1>
+                <p class="lead">Get in touch with our team for quotes, inquiries, or partnership opportunities.</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Contact Content -->
+<section class="py-5">
+    <div class="container">
+        <div class="row">
+            <!-- Contact Information -->
+            <div class="col-lg-4 mb-5">
+                <div class="card border-0 shadow-sm h-100">
+                    <div class="card-body">
+                        <h4 class="card-title mb-4">Get in Touch</h4>
+                        
+                        <div class="contact-item mb-4">
+                            <div class="d-flex align-items-start">
+                                <div class="contact-icon bg-primary text-white rounded-circle d-flex align-items-center justify-content-center me-3" style="width: 50px; height: 50px;">
+                                    <i class="fas fa-envelope"></i>
+                                </div>
+                                <div>
+                                    <h6 class="mb-1">Email</h6>
+                                    <a href="mailto:{{ COMPANY_EMAIL }}" class="text-muted">{{ COMPANY_EMAIL }}</a>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="contact-item mb-4">
+                            <div class="d-flex align-items-start">
+                                <div class="contact-icon bg-success text-white rounded-circle d-flex align-items-center justify-content-center me-3" style="width: 50px; height: 50px;">
+                                    <i class="fas fa-phone"></i>
+                                </div>
+                                <div>
+                                    <h6 class="mb-1">Phone</h6>
+                                    <a href="tel:{{ COMPANY_PHONE }}" class="text-muted">{{ COMPANY_PHONE }}</a>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="contact-item mb-4">
+                            <div class="d-flex align-items-start">
+                                <div class="contact-icon bg-success text-white rounded-circle d-flex align-items-center justify-content-center me-3" style="width: 50px; height: 50px;">
+                                    <i class="fab fa-whatsapp"></i>
+                                </div>
+                                <div>
+                                    <h6 class="mb-1">WhatsApp</h6>
+                                    <a href="https://wa.me/{{ COMPANY_WHATSAPP.replace('+', '').replace('-', '') }}" 
+                                       target="_blank" class="text-muted">{{ COMPANY_WHATSAPP }}</a>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="contact-item mb-4">
+                            <div class="d-flex align-items-start">
+                                <div class="contact-icon bg-info text-white rounded-circle d-flex align-items-center justify-content-center me-3" style="width: 50px; height: 50px;">
+                                    <i class="fas fa-map-marker-alt"></i>
+                                </div>
+                                <div>
+                                    <h6 class="mb-1">Address</h6>
+                                    <p class="text-muted mb-0">{{ COMPANY_ADDRESS }}</p>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Business Hours -->
+                        <div class="mt-4">
+                            <h6 class="mb-3">Business Hours</h6>
+                            <div class="text-muted small">
+                                <div class="d-flex justify-content-between mb-1">
+                                    <span>Sunday - Thursday:</span>
+                                    <span>9:00 AM - 6:00 PM</span>
+                                </div>
+                                <div class="d-flex justify-content-between mb-1">
+                                    <span>Friday:</span>
+                                    <span>9:00 AM - 2:00 PM</span>
+                                </div>
+                                <div class="d-flex justify-content-between">
+                                    <span>Saturday:</span>
+                                    <span>Closed</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- RFQ Form -->
+            <div class="col-lg-8">
+                <div class="card border-0 shadow-sm">
+                    <div class="card-body">
+                        <h4 class="card-title mb-4">Request a Quote</h4>
+                        <p class="text-muted mb-4">Fill out the form below and we'll get back to you within 24 hours with a detailed quote.</p>
+                        
+                        <form method="POST" enctype="multipart/form-data" class="needs-validation" novalidate>
+                            {{ form.hidden_tag() }}
+                            
+                            <div class="row">
+                                <div class="col-md-6 mb-3">
+                                    {{ form.name.label(class="form-label") }}
+                                    {{ form.name(class="form-control") }}
+                                    {% if form.name.errors %}
+                                        <div class="invalid-feedback d-block">
+                                            {% for error in form.name.errors %}{{ error }}{% endfor %}
+                                        </div>
+                                    {% endif %}
+                                </div>
+                                
+                                <div class="col-md-6 mb-3">
+                                    {{ form.email.label(class="form-label") }}
+                                    {{ form.email(class="form-control") }}
+                                    {% if form.email.errors %}
+                                        <div class="invalid-feedback d-block">
+                                            {% for error in form.email.errors %}{{ error }}{% endfor %}
+                                        </div>
+                                    {% endif %}
+                                </div>
+                            </div>
+                            
+                            <div class="row">
+                                <div class="col-md-6 mb-3">
+                                    {{ form.phone.label(class="form-label") }}
+                                    {{ form.phone(class="form-control") }}
+                                    {% if form.phone.errors %}
+                                        <div class="invalid-feedback d-block">
+                                            {% for error in form.phone.errors %}{{ error }}{% endfor %}
+                                        </div>
+                                    {% endif %}
+                                </div>
+                                
+                                <div class="col-md-6 mb-3">
+                                    {{ form.company.label(class="form-label") }}
+                                    {{ form.company(class="form-control") }}
+                                    {% if form.company.errors %}
+                                        <div class="invalid-feedback d-block">
+                                            {% for error in form.company.errors %}{{ error }}{% endfor %}
+                                        </div>
+                                    {% endif %}
+                                </div>
+                            </div>
+                            
+                            <div class="row">
+                                <div class="col-md-6 mb-3">
+                                    {{ form.country.label(class="form-label") }}
+                                    {{ form.country(class="form-control") }}
+                                    {% if form.country.errors %}
+                                        <div class="invalid-feedback d-block">
+                                            {% for error in form.country.errors %}{{ error }}{% endfor %}
+                                        </div>
+                                    {% endif %}
+                                </div>
+                                
+                                <div class="col-md-6 mb-3">
+                                    {{ form.category_key.label(class="form-label") }}
+                                    {{ form.category_key(class="form-select") }}
+                                    {% if form.category_key.errors %}
+                                        <div class="invalid-feedback d-block">
+                                            {% for error in form.category_key.errors %}{{ error }}{% endfor %}
+                                        </div>
+                                    {% endif %}
+                                </div>
+                            </div>
+                            
+                            <div class="row">
+                                <div class="col-md-6 mb-3">
+                                    {{ form.product_name.label(class="form-label") }}
+                                    {{ form.product_name(class="form-control", placeholder="Select a category first...") }}
+                                    {% if form.product_name.errors %}
+                                        <div class="invalid-feedback d-block">
+                                            {% for error in form.product_name.errors %}{{ error }}{% endfor %}
+                                        </div>
+                                    {% endif %}
+                                </div>
+                                
+                                <div class="col-md-6 mb-3">
+                                    {{ form.quantity.label(class="form-label") }}
+                                    {{ form.quantity(class="form-control", placeholder="e.g., 20 tons, 1000 cartons") }}
+                                    {% if form.quantity.errors %}
+                                        <div class="invalid-feedback d-block">
+                                            {% for error in form.quantity.errors %}{{ error }}{% endfor %}
+                                        </div>
+                                    {% endif %}
+                                </div>
+                            </div>
+                            
+                            <div class="mb-3">
+                                {{ form.packaging_preference.label(class="form-label") }}
+                                {{ form.packaging_preference(class="form-control", placeholder="e.g., 15kg cartons, 1kg retail bags") }}
+                                {% if form.packaging_preference.errors %}
+                                    <div class="invalid-feedback d-block">
+                                        {% for error in form.packaging_preference.errors %}{{ error }}{% endfor %}
+                                    </div>
+                                {% endif %}
+                            </div>
+                            
+                            <div class="mb-3">
+                                {{ form.message.label(class="form-label") }}
+                                {{ form.message(class="form-control", rows="4", placeholder="Please provide details about your requirements, delivery destination, timeline, and any specific quality standards...") }}
+                                {% if form.message.errors %}
+                                    <div class="invalid-feedback d-block">
+                                        {% for error in form.message.errors %}{{ error }}{% endfor %}
+                                    </div>
+                                {% endif %}
+                            </div>
+                            
+                            <div class="mb-4">
+                                {{ form.attachment.label(class="form-label") }}
+                                {{ form.attachment(class="form-control") }}
+                                <div class="form-text">Optional: Upload specifications, requirements, or other relevant documents (PDF, DOC, images)</div>
+                                <div class="file-preview d-none text-muted small mt-2"></div>
+                                {% if form.attachment.errors %}
+                                    <div class="invalid-feedback d-block">
+                                        {% for error in form.attachment.errors %}{{ error }}{% endfor %}
+                                    </div>
+                                {% endif %}
+                            </div>
+                            
+                            <div class="d-grid">
+                                <button type="submit" class="btn btn-primary btn-lg">
+                                    <i class="fas fa-paper-plane me-2"></i>Send Request
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Additional Information -->
+<section class="py-5 bg-light">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 mx-auto text-center">
+                <h3 class="mb-4">Why Request a Quote from Emdad Global?</h3>
+                <div class="row">
+                    <div class="col-md-4 mb-3">
+                        <div class="feature-item">
+                            <i class="fas fa-clock text-primary fa-2x mb-3"></i>
+                            <h6>Quick Response</h6>
+                            <p class="text-muted small">We respond to all inquiries within 24 hours</p>
+                        </div>
+                    </div>
+                    <div class="col-md-4 mb-3">
+                        <div class="feature-item">
+                            <i class="fas fa-calculator text-primary fa-2x mb-3"></i>
+                            <h6>Competitive Pricing</h6>
+                            <p class="text-muted small">Best prices for premium quality products</p>
+                        </div>
+                    </div>
+                    <div class="col-md-4 mb-3">
+                        <div class="feature-item">
+                            <i class="fas fa-handshake text-primary fa-2x mb-3"></i>
+                            <h6>Personalized Service</h6>
+                            <p class="text-muted small">Tailored solutions for your specific needs</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}
+
+{% block extra_scripts %}
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Dynamic product loading based on category selection
+    const categorySelect = document.getElementById('category_key');
+    const productInput = document.getElementById('product_name');
+    
+    if (categorySelect && productInput) {
+        // Initially disable product input
+        productInput.disabled = !categorySelect.value;
+        
+        categorySelect.addEventListener('change', function() {
+            const categoryKey = this.value;
+            
+            if (categoryKey) {
+                productInput.placeholder = 'Loading products...';
+                productInput.disabled = true;
+                
+                fetch(`/api/products/${categoryKey}`)
+                    .then(response => response.json())
+                    .then(products => {
+                        // Create or update datalist
+                        let datalist = document.getElementById('product-list');
+                        if (!datalist) {
+                            datalist = document.createElement('datalist');
+                            datalist.id = 'product-list';
+                            productInput.parentNode.appendChild(datalist);
+                        }
+                        
+                        datalist.innerHTML = '';
+                        products.forEach(product => {
+                            const option = document.createElement('option');
+                            option.value = product.name;
+                            datalist.appendChild(option);
+                        });
+                        
+                        productInput.setAttribute('list', 'product-list');
+                        productInput.placeholder = 'Type or select a product...';
+                        productInput.disabled = false;
+                        productInput.focus();
+                    })
+                    .catch(error => {
+                        console.error('Error loading products:', error);
+                        productInput.placeholder = 'Enter product name...';
+                        productInput.disabled = false;
+                    });
+            } else {
+                productInput.placeholder = 'Select a category first...';
+                productInput.disabled = true;
+                productInput.removeAttribute('list');
+            }
+        });
+    }
+});
+</script>
+{% endblock %}

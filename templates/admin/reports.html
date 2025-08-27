@@ -1,0 +1,163 @@
+{% extends "admin/base.html" %}
+
+{% block title %}{{ _('Reports') }}{% endblock %}
+
+{% block content %}
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-12">
+            <h1 class="h2">{{ _('Reports & Analytics') }}</h1>
+        </div>
+    </div>
+
+    <!-- Statistics Cards -->
+    <div class="row mb-4">
+        <div class="col-xl-3 col-md-6 mb-4">
+            <div class="card border-left-primary shadow h-100 py-2">
+                <div class="card-body">
+                    <div class="row no-gutters align-items-center">
+                        <div class="col mr-2">
+                            <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">
+                                {{ _('Total Products') }}
+                            </div>
+                            <div class="h5 mb-0 font-weight-bold text-gray-800">{{ stats.total_products }}</div>
+                        </div>
+                        <div class="col-auto">
+                            <i class="fas fa-leaf fa-2x text-gray-300"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-xl-3 col-md-6 mb-4">
+            <div class="card border-left-success shadow h-100 py-2">
+                <div class="card-body">
+                    <div class="row no-gutters align-items-center">
+                        <div class="col mr-2">
+                            <div class="text-xs font-weight-bold text-success text-uppercase mb-1">
+                                {{ _('Total Categories') }}
+                            </div>
+                            <div class="h5 mb-0 font-weight-bold text-gray-800">{{ stats.total_categories }}</div>
+                        </div>
+                        <div class="col-auto">
+                            <i class="fas fa-tags fa-2x text-gray-300"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-xl-3 col-md-6 mb-4">
+            <div class="card border-left-info shadow h-100 py-2">
+                <div class="card-body">
+                    <div class="row no-gutters align-items-center">
+                        <div class="col mr-2">
+                            <div class="text-xs font-weight-bold text-info text-uppercase mb-1">
+                                {{ _('Total RFQs') }}
+                            </div>
+                            <div class="h5 mb-0 font-weight-bold text-gray-800">{{ stats.total_rfqs }}</div>
+                        </div>
+                        <div class="col-auto">
+                            <i class="fas fa-envelope fa-2x text-gray-300"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-xl-3 col-md-6 mb-4">
+            <div class="card border-left-warning shadow h-100 py-2">
+                <div class="card-body">
+                    <div class="row no-gutters align-items-center">
+                        <div class="col mr-2">
+                            <div class="text-xs font-weight-bold text-warning text-uppercase mb-1">
+                                {{ _('Pending RFQs') }}
+                            </div>
+                            <div class="h5 mb-0 font-weight-bold text-gray-800">{{ stats.pending_rfqs }}</div>
+                        </div>
+                        <div class="col-auto">
+                            <i class="fas fa-clock fa-2x text-gray-300"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Recent Activity -->
+    <div class="row">
+        <div class="col-lg-6">
+            <div class="card shadow mb-4">
+                <div class="card-header py-3">
+                    <h6 class="m-0 font-weight-bold text-primary">{{ _('Recent RFQs') }}</h6>
+                </div>
+                <div class="card-body">
+                    <div class="table-responsive">
+                        <table class="table table-sm">
+                            <thead>
+                                <tr>
+                                    <th>{{ _('Name') }}</th>
+                                    <th>{{ _('Company') }}</th>
+                                    <th>{{ _('Status') }}</th>
+                                    <th>{{ _('Date') }}</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for rfq in stats.recent_rfqs %}
+                                <tr>
+                                    <td>{{ rfq.name }}</td>
+                                    <td>{{ rfq.company or '-' }}</td>
+                                    <td>
+                                        <span class="badge badge-{{ 'warning' if rfq.status == 'new' else 'info' if rfq.status == 'in_progress' else 'success' }}">
+                                            {{ rfq.status }}
+                                        </span>
+                                    </td>
+                                    <td>{{ rfq.created_at.strftime('%m/%d') }}</td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-lg-6">
+            <div class="card shadow mb-4">
+                <div class="card-header py-3">
+                    <h6 class="m-0 font-weight-bold text-primary">{{ _('Recent Products') }}</h6>
+                </div>
+                <div class="card-body">
+                    <div class="table-responsive">
+                        <table class="table table-sm">
+                            <thead>
+                                <tr>
+                                    <th>{{ _('Name') }}</th>
+                                    <th>{{ _('Category') }}</th>
+                                    <th>{{ _('Status') }}</th>
+                                    <th>{{ _('Date') }}</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for product in stats.recent_products %}
+                                <tr>
+                                    <td>{{ product.name_en }}</td>
+                                    <td>{{ product.category.name_en if product.category else '-' }}</td>
+                                    <td>
+                                        <span class="badge badge-{{ 'success' if product.status == 'active' else 'secondary' }}">
+                                            {{ product.status }}
+                                        </span>
+                                    </td>
+                                    <td>{{ product.created_at.strftime('%m/%d') }}</td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
