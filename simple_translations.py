@@ -5,7 +5,7 @@
 TRANSLATIONS = {
     'ar': {
         "Dashboard": "لوحة التحكم",
-        "Categories": "الفئات", 
+        "Categories": "الفئات",
         "Products": "المنتجات",
         "Product": "المنتج",
         "RFQs": "طلبات الأسعار",
@@ -1186,6 +1186,15 @@ TRANSLATIONS = {
         "Professional Farmers": "مزارعون محترفون",
         "Organic & Eco Solutions": "حلول عضوية وصديقة للبيئة",
         "Discover More": "اكتشف المزيد",
+
+        # Admin login page
+        "Admin Login": "تسجيل دخول المشرف",
+        "Enter your password": "أدخل كلمة المرور",
+        "Back to Website": "العودة إلى الموقع",
+        "Secure admin access only": "وصول آمن للمشرفين فقط",
+        "Name (Arabic)": "الاسم (عربي)",
+        "Name (English)": "الاسم (إنجليزي)",
+
         "Trusted by": "يثق بنا",
 
         # Categories translations

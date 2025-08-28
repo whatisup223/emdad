@@ -44,7 +44,7 @@
                     <div class="card-header login-header text-center py-4">
                         <h4 class="mb-0">
                             <i class="fas fa-shield-alt me-2"></i>
-                            Admin Login
+                            {{ _('Admin Login') }}
                         </h4>
                         <p class="mb-0 mt-2 opacity-75">{{ COMPANY_NAME }}</p>
                     </div>
@@ -66,12 +66,12 @@
                             {{ form.hidden_tag() }}
                             
                             <div class="mb-3">
-                                {{ form.email.label(class="form-label") }}
+                                <label class="form-label" for="email">{{ _('Email') }}</label>
                                 <div class="input-group">
                                     <span class="input-group-text">
                                         <i class="fas fa-envelope"></i>
                                     </span>
-                                    {{ form.email(class="form-control", placeholder="Enter your email") }}
+                                    {{ form.email(class="form-control", placeholder=_('Enter your email'), id='email') }}
                                 </div>
                                 {% if form.email.errors %}
                                     <div class="invalid-feedback d-block">
@@ -81,12 +81,12 @@
                             </div>
                             
                             <div class="mb-3">
-                                {{ form.password.label(class="form-label") }}
+                                <label class="form-label" for="password">{{ _('Password') }}</label>
                                 <div class="input-group">
                                     <span class="input-group-text">
                                         <i class="fas fa-lock"></i>
                                     </span>
-                                    {{ form.password(class="form-control", placeholder="Enter your password") }}
+                                    {{ form.password(class="form-control", placeholder=_('Enter your password'), id='password') }}
                                     <button class="btn btn-outline-secondary" type="button" id="togglePassword">
                                         <i class="fas fa-eye"></i>
                                     </button>
@@ -105,7 +105,7 @@
                             
                             <div class="d-grid">
                                 <button type="submit" class="btn btn-primary btn-lg">
-                                    <i class="fas fa-sign-in-alt me-2"></i>Login
+                                    <i class="fas fa-sign-in-alt me-2"></i>{{ _('Login') }}
                                 </button>
                             </div>
                         </form>
@@ -114,7 +114,7 @@
                     <div class="card-footer text-center py-3 bg-light">
                         <small class="text-muted">
                             <i class="fas fa-home me-1"></i>
-                            <a href="{{ url_for('main.index') }}" class="text-decoration-none">Back to Website</a>
+                            <a href="{{ url_for('main.index') }}" class="text-decoration-none">{{ _('Back to Website') }}</a>
                         </small>
                     </div>
                 </div>
@@ -123,7 +123,7 @@
                 <div class="text-center mt-4">
                     <small class="text-white-50">
                         <i class="fas fa-lock me-1"></i>
-                        Secure admin access only
+                        {{ _('Secure admin access only') }}
                     </small>
                 </div>
             </div>
