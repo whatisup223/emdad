@@ -1,4 +1,4 @@
-# Core Flask dependencies - stable versions
+# Minimal Flask app for Render deployment
 Flask==2.3.3
 Flask-SQLAlchemy==3.0.5
 Flask-Migrate==4.0.5
@@ -6,29 +6,11 @@ Flask-Login==0.6.3
 Flask-WTF==1.1.1
 Flask-Mail==0.9.1
 Flask-Babel==3.1.0
-Flask-Limiter==3.5.0
-
-# Database - use pre-built wheels only
-SQLAlchemy==2.0.21
-Alembic==1.12.0
-
-# Forms and validation
 WTForms==3.0.1
 email-validator==2.0.0
-
-# Security
 Werkzeug==2.3.7
-bcrypt==4.0.1
-
-# Image processing - pre-built wheel
 Pillow==10.0.1
-
-# Utilities
 python-dotenv==1.0.0
-click==8.1.7
-Jinja2==3.1.2
-
-# Production server
 gunicorn==21.2.0
 
 # Development tools (excluded in production)

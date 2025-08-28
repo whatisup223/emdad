@@ -8,10 +8,15 @@ services:
     plan: free
     region: frankfurt
 
+    # Emergency build - skip problematic packages
     buildCommand: |
       pip install --upgrade pip setuptools wheel
-      pip install --only-binary=:all: --no-build-isolation -r requirements.txt || pip install --prefer-binary -r requirements.txt
-    startCommand: gunicorn --workers 3 --threads 2 --timeout 120 -b 0.0.0.0:$PORT app:app
+      pip install Flask==2.3.3 gunicorn==21.2.0 python-dotenv==1.0.0
+      pip install Flask-SQLAlchemy==3.0.5 Flask-Login==0.6.3 Flask-WTF==1.1.1
+      pip install Werkzeug==2.3.7 WTForms==3.0.1 email-validator==2.0.0
+      pip install Flask-Mail==0.9.1 Flask-Babel==3.1.0 Pillow==10.0.1
+      pip install Flask-Migrate==4.0.5
+    startCommand: gunicorn --workers 2 --threads 2 --timeout 120 -b 0.0.0.0:$PORT app:app
 
     # Run DB migrations automatically after each deploy
     postDeployCommand: |
@@ -34,6 +39,8 @@ services:
         value: app.py
       - key: SECRET_KEY
         generateValue: true
+      - key: PYTHON_VERSION
+        value: "3.11"
 
       # Choose ONE database option below:
       # 1) PostgreSQL (recommended for production). If using the database defined
