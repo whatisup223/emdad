@@ -250,6 +250,40 @@
             .footer-v2.footer-v2--webp > .container { position: relative; z-index: 1; }
 
 
+            /* Footer v2: higher text contrast (no overlays). Remove footer-v2--contrast class to revert */
+            .footer-v2.footer-v2--contrast { color: #ffffff; }
+            .footer-v2.footer-v2--contrast .brand-name,
+            .footer-v2.footer-v2--contrast .brand-desc,
+            .footer-v2.footer-v2--contrast .footer-link,
+            .footer-v2.footer-v2--contrast p,
+            .footer-v2.footer-v2--contrast li,
+            .footer-v2.footer-v2--contrast small,
+            .footer-v2.footer-v2--contrast a {
+                color: #ffffff !important;
+                text-shadow: 0 1px 2px rgba(0,0,0,0.7);
+            }
+            .footer-v2.footer-v2--contrast .brand-name { text-shadow: 0 2px 3px rgba(0,0,0,0.85); }
+            .footer-v2.footer-v2--contrast .icon,
+            .footer-v2.footer-v2--contrast i { color: #f9cb99 !important; text-shadow: 0 1px 1px rgba(0,0,0,0.6); }
+            .footer-v2.footer-v2--contrast .social a { background: rgba(0,0,0,0.35); color: #ffffff; }
+            .footer-v2.footer-v2--contrast .social a:hover { background: rgba(0,0,0,0.6); color: #f9cb99; }
+
+            /* Footer v2: on small screens, show left side of image (revert by removing footer-v2--mobile-left) */
+            @media (max-width: 768px) {
+                .footer-v2.footer-v2--webp.footer-v2--mobile-left {
+                    background-position: left center !important;
+                    background-size: cover !important;
+                }
+            }
+            @media (max-width: 576px) {
+                .footer-v2.footer-v2--webp.footer-v2--mobile-left {
+                    background-position: left center !important;
+                    background-size: cover !important;
+                }
+            }
+
+
+
     </style>
 
     <!-- Favicon -->
@@ -419,7 +453,7 @@
     <!-- Placeholder for legacy footer removed to avoid conflicts -->
 
         <!-- Footer v2 -->
-        <footer class="footer-v2 footer-v2--webp py-5 mt-5">
+        <footer class="footer-v2 footer-v2--webp footer-v2--mobile-left footer-v2--contrast py-5 mt-5">
             <div class="container">
                 <div class="row gy-4">
                     <div class="col-lg-3">
