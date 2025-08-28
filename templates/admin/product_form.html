@@ -262,12 +262,12 @@
                         </div>
 
                         <div class="d-flex justify-content-between">
-                            <a href="{{ url_for('admin.products') }}" class="btn btn-secondary">إلغاء</a>
+                            <a href="{{ url_for('admin.products') }}" class="btn btn-secondary">{{ _('Cancel') }}</a>
                             <button type="submit" class="btn btn-primary">
                                 {% if product %}
-                                    <i class="fas fa-save"></i> حفظ التغييرات
+                                    <i class="fas fa-save"></i> {{ _('Save') }}
                                 {% else %}
-                                    <i class="fas fa-plus"></i> إضافة المنتج
+                                    <i class="fas fa-plus"></i> {{ _('Add New Product') }}
                                 {% endif %}
                             </button>
                         </div>

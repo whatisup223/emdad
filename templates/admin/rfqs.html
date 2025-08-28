@@ -43,15 +43,15 @@
                         <table class="table table-striped table-hover">
                             <thead>
                                 <tr>
-                                    <th>ID</th>
-                                    <th>الاسم</th>
-                                    <th>الشركة</th>
-                                    <th>البريد الإلكتروني</th>
-                                    <th>المنتج</th>
-                                    <th>الحالة</th>
-                                    <th>الأولوية</th>
-                                    <th>تاريخ الإنشاء</th>
-                                    <th>الإجراءات</th>
+                                    <th>{{ _('ID') }}</th>
+                                    <th>{{ _('Name') }}</th>
+                                    <th>{{ _('Company') }}</th>
+                                    <th>{{ _('Email') }}</th>
+                                    <th>{{ _('Product') }}</th>
+                                    <th>{{ _('Status') }}</th>
+                                    <th>{{ _('Priority') }}</th>
+                                    <th>{{ _('Created At') }}</th>
+                                    <th>{{ _('Actions') }}</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -64,13 +64,13 @@
                                     <td>{{ rfq.product_name or '-' }}</td>
                                     <td>
                                         {% if rfq.status == 'new' %}
-                                            <span class="badge bg-warning">جديد</span>
+                                            <span class="badge bg-warning">{{ _('New') }}</span>
                                         {% elif rfq.status == 'in_progress' %}
-                                            <span class="badge bg-info">قيد المعالجة</span>
+                                            <span class="badge bg-info">{{ _('In Progress') }}</span>
                                         {% elif rfq.status == 'completed' %}
-                                            <span class="badge bg-success">مكتمل</span>
+                                            <span class="badge bg-success">{{ _('Completed') }}</span>
                                         {% elif rfq.status == 'cancelled' %}
-                                            <span class="badge bg-danger">ملغي</span>
+                                            <span class="badge bg-secondary">{{ _('Cancelled') }}</span>
                                         {% else %}
                                             <span class="badge bg-secondary">{{ rfq.status }}</span>
                                         {% endif %}
@@ -157,7 +157,7 @@
 
 <script>
 function updateStatus(rfqId, newStatus) {
-    if (confirm('هل أنت متأكد من تغيير حالة هذا الطلب؟')) {
+    if (confirm("{{ _('Are you sure?') }}")) {
         fetch(`/admin/rfqs/${rfqId}/status`, {
             method: 'POST',
             headers: {
@@ -171,12 +171,12 @@ function updateStatus(rfqId, newStatus) {
             if (data.success) {
                 location.reload();
             } else {
-                alert('حدث خطأ في تحديث الحالة');
+                alert("{{ _('Error') }}");
             }
         })
         .catch(error => {
             console.error('Error:', error);
-            alert('حدث خطأ في تحديث الحالة');
+            alert("{{ _('Error') }}");
         });
     }
 }
