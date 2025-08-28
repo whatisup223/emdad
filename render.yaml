@@ -8,12 +8,15 @@ services:
     plan: free
     region: frankfurt
 
-    buildCommand: pip install --upgrade pip setuptools wheel && pip install -r requirements.txt
-    startCommand: gunicorn --workers 3 --threads 2 --timeout 120 -b 0.0.0.0:$PORT app:app
+    buildCommand: |
+      python3.11 -m pip install --upgrade pip setuptools wheel
+      python3.11 -m pip install --only-binary=all --prefer-binary -r requirements.txt
+    startCommand: python3.11 -m gunicorn --workers 3 --threads 2 --timeout 120 -b 0.0.0.0:$PORT app:app
 
     # Run DB migrations automatically after each deploy
     postDeployCommand: |
-      flask db upgrade || echo "No migrations to apply"
+      python3.11 -c "import flask; print('Flask available')" || echo "Flask check failed"
+      python3.11 -m flask db upgrade || echo "No migrations to apply"
 
     autoDeploy: true
 
@@ -27,7 +30,7 @@ services:
       # Flask
       - key: FLASK_ENV
         value: production
-      - key: BP_PYTHON_VERSION
+      - key: PYTHON_VERSION
         value: "3.11.9"
       - key: FLASK_APP
         value: app.py
