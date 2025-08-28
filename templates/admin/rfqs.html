@@ -77,11 +77,11 @@
                                     </td>
                                     <td>
                                         {% if rfq.priority == 'high' %}
-                                            <span class="badge bg-danger">عالية</span>
+                                            <span class="badge bg-danger">{{ _('High') }}</span>
                                         {% elif rfq.priority == 'medium' %}
-                                            <span class="badge bg-warning">متوسطة</span>
+                                            <span class="badge bg-warning">{{ _('Medium') }}</span>
                                         {% elif rfq.priority == 'low' %}
-                                            <span class="badge bg-success">منخفضة</span>
+                                            <span class="badge bg-success">{{ _('Low') }}</span>
                                         {% else %}
                                             <span class="badge bg-secondary">{{ rfq.priority }}</span>
                                         {% endif %}
@@ -89,24 +89,24 @@
                                     <td>{{ rfq.created_at.strftime('%Y-%m-%d %H:%M') }}</td>
                                     <td>
                                         <a href="{{ url_for('admin.rfq_detail', id=rfq.id) }}" class="btn btn-sm btn-primary">
-                                            <i class="fas fa-eye"></i> عرض
+                                            <i class="fas fa-eye"></i> {{ _('View') }}
                                         </a>
                                         <div class="btn-group">
                                             <button type="button" class="btn btn-sm btn-outline-secondary dropdown-toggle" data-bs-toggle="dropdown">
-                                                تغيير الحالة
+                                                {{ _('Change Status') }}
                                             </button>
                                             <ul class="dropdown-menu">
-                                                <li><a class="dropdown-item" href="#" onclick="updateStatus({{ rfq.id }}, 'new')">جديد</a></li>
-                                                <li><a class="dropdown-item" href="#" onclick="updateStatus({{ rfq.id }}, 'in_progress')">قيد المعالجة</a></li>
-                                                <li><a class="dropdown-item" href="#" onclick="updateStatus({{ rfq.id }}, 'completed')">مكتمل</a></li>
-                                                <li><a class="dropdown-item" href="#" onclick="updateStatus({{ rfq.id }}, 'cancelled')">ملغي</a></li>
+                                                <li><a class="dropdown-item" href="#" onclick="updateStatus({{ rfq.id }}, 'new')">{{ _('New') }}</a></li>
+                                                <li><a class="dropdown-item" href="#" onclick="updateStatus({{ rfq.id }}, 'in_progress')">{{ _('In Progress') }}</a></li>
+                                                <li><a class="dropdown-item" href="#" onclick="updateStatus({{ rfq.id }}, 'completed')">{{ _('Completed') }}</a></li>
+                                                <li><a class="dropdown-item" href="#" onclick="updateStatus({{ rfq.id }}, 'cancelled')">{{ _('Cancelled') }}</a></li>
                                             </ul>
                                         </div>
                                     </td>
                                 </tr>
                                 {% else %}
                                 <tr>
-                                    <td colspan="9" class="text-center">لا توجد طلبات أسعار</td>
+                                    <td colspan="9" class="text-center">{{ _('No RFQs found') }}</td>
                                 </tr>
                                 {% endfor %}
                             </tbody>
@@ -119,7 +119,7 @@
                         <ul class="pagination justify-content-center">
                             {% if rfqs.has_prev %}
                                 <li class="page-item">
-                                    <a class="page-link" href="{{ url_for('admin.rfqs', page=rfqs.prev_num, status=current_status) }}">السابق</a>
+                                    <a class="page-link" href="{{ url_for('admin.rfqs', page=rfqs.prev_num, status=current_status) }}">{{ _('Previous') }}</a>
                                 </li>
                             {% endif %}
                             
@@ -143,7 +143,7 @@
                             
                             {% if rfqs.has_next %}
                                 <li class="page-item">
-                                    <a class="page-link" href="{{ url_for('admin.rfqs', page=rfqs.next_num, status=current_status) }}">التالي</a>
+                                    <a class="page-link" href="{{ url_for('admin.rfqs', page=rfqs.next_num, status=current_status) }}">{{ _('Next') }}</a>
                                 </li>
                             {% endif %}
                         </ul>
