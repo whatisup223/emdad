@@ -8,7 +8,9 @@ services:
     plan: free
     region: frankfurt
 
-    buildCommand: pip install --upgrade pip setuptools wheel && pip install --prefer-binary -r requirements.txt
+    buildCommand: |
+      pip install --upgrade pip setuptools wheel
+      pip install --only-binary=:all: --no-build-isolation -r requirements.txt || pip install --prefer-binary -r requirements.txt
     startCommand: gunicorn --workers 3 --threads 2 --timeout 120 -b 0.0.0.0:$PORT app:app
 
     # Run DB migrations automatically after each deploy
