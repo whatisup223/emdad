@@ -1,0 +1,74 @@
+# Render blueprint for deploying the Emdad Global Flask app
+# Docs: https://render.com/docs/blueprint-spec
+
+services:
+  - type: web
+    name: emdad-web
+    env: python
+    plan: free
+    region: frankfurt
+
+    buildCommand: pip install -r requirements.txt
+    startCommand: gunicorn --workers 3 --threads 2 --timeout 120 -b 0.0.0.0:$PORT app:app
+
+    # Run DB migrations automatically after each deploy
+    postDeployCommand: |
+      flask db upgrade || echo "No migrations to apply"
+
+    autoDeploy: true
+
+    # Persist uploads (and optionally SQLite DB) under the Flask instance folder
+    disks:
+      - name: uploads
+        mountPath: /opt/render/project/src/instance
+        sizeGB: 1
+
+    envVars:
+      # Flask
+      - key: FLASK_ENV
+        value: production
+      - key: FLASK_APP
+        value: app.py
+      - key: SECRET_KEY
+        generateValue: true
+
+      # Choose ONE database option below:
+      # 1) PostgreSQL (recommended for production). If using the database defined
+      #    below in this same blueprint, `DATABASE_URL` will be injected automatically
+      #    from the database connection string. Nothing to do.
+      # 2) SQLite on persistent disk (simple). Uncomment and set this instead:
+      # - key: DATABASE_URL
+      #   value: sqlite:////opt/render/project/src/instance/emdad_global.db
+
+      # Mail (optional)
+      - key: MAIL_SERVER
+        value: smtp.gmail.com
+      - key: MAIL_PORT
+        value: "587"
+      - key: MAIL_USE_TLS
+        value: "true"
+      - key: MAIL_USERNAME
+        sync: false
+      - key: MAIL_PASSWORD
+        sync: false
+      - key: MAIL_DEFAULT_SENDER
+        value: noreply@emdadglobal.com
+
+      # Company/SEO (optional)
+      - key: COMPANY_NAME
+        value: Emdad Global
+      - key: COMPANY_EMAIL
+        value: info@emdadglobal.com
+      - key: SITE_URL
+        value: https://emdad.onrender.com
+
+# Optional managed PostgreSQL database (recommended)
+databases:
+  - name: emdad-db
+    plan: free
+    region: frankfurt
+
+# Wiring the DB to the web service: Render will automatically set
+# DATABASE_URL in the service from this database's connection string.
+# (No extra config needed when using the blueprint deploy).
+
