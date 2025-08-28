@@ -31,8 +31,8 @@
                             <div class="card h-100">
                                 <div class="position-relative">
                                     {% if item.image_path %}
-                                        <img src="{{ url_for('uploaded_file', filename='gallery/' + item.image_path) }}" 
-                                             class="card-img-top" alt="{{ item.title_en or item.title_ar }}" 
+                                        <img src="{{ url_for('main.uploaded_file', filename='gallery/' + item.image_path) }}"
+                                             class="card-img-top" alt="{{ item.title_en or item.title_ar }}"
                                              style="height: 200px; object-fit: cover;">
                                     {% else %}
                                         <div class="card-img-top bg-light d-flex align-items-center justify-content-center" style="height: 200px;">

@@ -281,9 +281,8 @@ class CompanyInfoForm(FlaskForm):
 
 class UserForm(FlaskForm):
     """User management form."""
-    username = StringField('Username', validators=[DataRequired(), Length(min=3, max=80)])
-    email = StringField('Email', validators=[DataRequired(), Email(), Length(max=120)])
     name = StringField('Full Name', validators=[DataRequired(), Length(max=100)])
+    email = StringField('Email', validators=[DataRequired(), Email(), Length(max=120)])
     password = PasswordField('Password', validators=[Optional(), Length(min=6)])
     role = SelectField('Role', validators=[DataRequired()], choices=[
         ('viewer', 'Viewer'),

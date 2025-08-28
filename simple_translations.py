@@ -948,6 +948,8 @@ TRANSLATIONS = {
         "Privacy Policy": "سياسة الخصوصية",
         "Terms of Service": "شروط الخدمة",
         "Sitemap": "خريطة الموقع",
+        "Chat with us": "تحدث معنا",
+        "Working Hours": "ساعات العمل",
         "All Rights Reserved": "جميع الحقوق محفوظة",
         "Cold Chain": "سلسلة التبريد",
         "Logistics": "اللوجستيات",

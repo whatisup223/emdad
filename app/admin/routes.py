@@ -932,9 +932,8 @@ def users_new():
 
     if form.validate_on_submit():
         user = User(
-            username=form.username.data,
-            email=form.email.data,
             name=form.name.data,
+            email=form.email.data,
             role=form.role.data,
             is_active=form.is_active.data
         )
@@ -956,9 +955,8 @@ def users_edit(id):
     form = UserForm(obj=user)
 
     if form.validate_on_submit():
-        user.username = form.username.data
-        user.email = form.email.data
         user.name = form.name.data
+        user.email = form.email.data
         user.role = form.role.data
         user.is_active = form.is_active.data
 
