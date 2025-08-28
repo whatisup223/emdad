@@ -1,6 +1,6 @@
 {% extends "admin/base.html" %}
 
-{% block title %}تفاصيل طلب السعر #{{ rfq.id }}{% endblock %}
+{% block title %}{{ _('RFQ Details') }} #{{ rfq.id }}{% endblock %}
 
 {% block content %}
 <div class="container-fluid">
@@ -8,80 +8,80 @@
         <div class="col-12">
             <div class="card">
                 <div class="card-header d-flex justify-content-between align-items-center">
-                    <h3 class="card-title">تفاصيل طلب السعر #{{ rfq.id }}</h3>
+                    <h3 class="card-title">{{ _('RFQ Details') }} #{{ rfq.id }}</h3>
                     <a href="{{ url_for('admin.rfqs') }}" class="btn btn-secondary">
-                        <i class="fas fa-arrow-left"></i> العودة للقائمة
+                        <i class="fas fa-arrow-left"></i> {{ _('Back to List') }}
                     </a>
                 </div>
                 <div class="card-body">
                     <div class="row">
-                        <!-- معلومات العميل -->
+                        <!-- Customer Information -->
                         <div class="col-md-6">
-                            <h5 class="mb-3">معلومات العميل</h5>
+                            <h5 class="mb-3">{{ _('Customer Information') }}</h5>
                             <table class="table table-borderless">
                                 <tr>
-                                    <td><strong>الاسم:</strong></td>
+                                    <td><strong>{{ _('Name') }}:</strong></td>
                                     <td>{{ rfq.name }}</td>
                                 </tr>
                                 <tr>
-                                    <td><strong>البريد الإلكتروني:</strong></td>
+                                    <td><strong>{{ _('Email') }}:</strong></td>
                                     <td>{{ rfq.email }}</td>
                                 </tr>
                                 <tr>
-                                    <td><strong>الهاتف:</strong></td>
+                                    <td><strong>{{ _('Phone') }}:</strong></td>
                                     <td>{{ rfq.phone or '-' }}</td>
                                 </tr>
                                 <tr>
-                                    <td><strong>الشركة:</strong></td>
+                                    <td><strong>{{ _('Company') }}:</strong></td>
                                     <td>{{ rfq.company or '-' }}</td>
                                 </tr>
                                 <tr>
-                                    <td><strong>البلد:</strong></td>
+                                    <td><strong>{{ _('Country') }}:</strong></td>
                                     <td>{{ rfq.country }}</td>
                                 </tr>
                             </table>
                         </div>
 
-                        <!-- معلومات الطلب -->
+                        <!-- Request Information -->
                         <div class="col-md-6">
-                            <h5 class="mb-3">معلومات الطلب</h5>
+                            <h5 class="mb-3">{{ _('Request Information') }}</h5>
                             <table class="table table-borderless">
                                 <tr>
-                                    <td><strong>الحالة:</strong></td>
+                                    <td><strong>{{ _('Status') }}:</strong></td>
                                     <td>
                                         {% if rfq.status == 'new' %}
-                                            <span class="badge bg-warning">جديد</span>
+                                            <span class="badge bg-warning">{{ _('New') }}</span>
                                         {% elif rfq.status == 'in_progress' %}
-                                            <span class="badge bg-info">قيد المعالجة</span>
+                                            <span class="badge bg-info">{{ _('In Progress') }}</span>
                                         {% elif rfq.status == 'completed' %}
-                                            <span class="badge bg-success">مكتمل</span>
+                                            <span class="badge bg-success">{{ _('Completed') }}</span>
                                         {% elif rfq.status == 'cancelled' %}
-                                            <span class="badge bg-danger">ملغي</span>
+                                            <span class="badge bg-secondary">{{ _('Cancelled') }}</span>
                                         {% else %}
                                             <span class="badge bg-secondary">{{ rfq.status }}</span>
                                         {% endif %}
                                     </td>
                                 </tr>
                                 <tr>
-                                    <td><strong>الأولوية:</strong></td>
+                                    <td><strong>{{ _('Priority') }}:</strong></td>
                                     <td>
                                         {% if rfq.priority == 'high' %}
-                                            <span class="badge bg-danger">عالية</span>
+                                            <span class="badge bg-danger">{{ _('High') }}</span>
                                         {% elif rfq.priority == 'medium' %}
-                                            <span class="badge bg-warning">متوسطة</span>
+                                            <span class="badge bg-warning">{{ _('Medium') }}</span>
                                         {% elif rfq.priority == 'low' %}
-                                            <span class="badge bg-success">منخفضة</span>
+                                            <span class="badge bg-success">{{ _('Low') }}</span>
                                         {% else %}
                                             <span class="badge bg-secondary">{{ rfq.priority }}</span>
                                         {% endif %}
                                     </td>
                                 </tr>
                                 <tr>
-                                    <td><strong>تاريخ الإنشاء:</strong></td>
+                                    <td><strong>{{ _('Created At') }}:</strong></td>
                                     <td>{{ rfq.created_at.strftime('%Y-%m-%d %H:%M') }}</td>
                                 </tr>
                                 <tr>
-                                    <td><strong>آخر تحديث:</strong></td>
+                                    <td><strong>{{ _('Updated At') }}:</strong></td>
                                     <td>{{ rfq.updated_at.strftime('%Y-%m-%d %H:%M') if rfq.updated_at else '-' }}</td>
                                 </tr>
                             </table>
@@ -93,30 +93,30 @@
                     <!-- تفاصيل المنتج -->
                     <div class="row">
                         <div class="col-12">
-                            <h5 class="mb-3">تفاصيل المنتج المطلوب</h5>
+                            <h5 class="mb-3">{{ _('Product Details') }}</h5>
                             <table class="table table-borderless">
                                 <tr>
-                                    <td><strong>فئة المنتج:</strong></td>
+                                    <td><strong>{{ _('Category') }}:</strong></td>
                                     <td>{{ rfq.category.get_name() if rfq.category else '-' }}</td>
                                 </tr>
                                 <tr>
-                                    <td><strong>اسم المنتج المحدد:</strong></td>
+                                    <td><strong>{{ _('Product') }}:</strong></td>
                                     <td>{{ rfq.product_name or '-' }}</td>
                                 </tr>
                                 <tr>
-                                    <td><strong>الكمية المطلوبة:</strong></td>
+                                    <td><strong>{{ _('Quantity') }}:</strong></td>
                                     <td>{{ rfq.quantity or '-' }}</td>
                                 </tr>
                                 <tr>
-                                    <td><strong>تفضيلات التعبئة:</strong></td>
+                                    <td><strong>{{ _('Packaging Preferences') }}:</strong></td>
                                     <td>{{ rfq.packaging_preference or '-' }}</td>
                                 </tr>
                                 <tr>
-                                    <td><strong>تاريخ التسليم المطلوب:</strong></td>
+                                    <td><strong>{{ _('Delivery Date') }}:</strong></td>
                                     <td>{{ rfq.delivery_date.strftime('%Y-%m-%d') if rfq.delivery_date else '-' }}</td>
                                 </tr>
                                 <tr>
-                                    <td><strong>الميزانية المتوقعة:</strong></td>
+                                    <td><strong>{{ _('Budget') }}:</strong></td>
                                     <td>{{ rfq.budget or '-' }}</td>
                                 </tr>
                             </table>
@@ -128,10 +128,10 @@
                     <!-- الرسالة -->
                     <div class="row">
                         <div class="col-12">
-                            <h5 class="mb-3">الرسالة/المتطلبات</h5>
+                            <h5 class="mb-3">{{ _('Message') }}</h5>
                             <div class="card bg-light">
                                 <div class="card-body">
-                                    <p class="mb-0">{{ rfq.message or 'لا توجد رسالة' }}</p>
+                                    <p class="mb-0">{{ rfq.message or _('Not available') }}</p>
                                 </div>
                             </div>
                         </div>
@@ -142,32 +142,32 @@
                     <!-- إجراءات -->
                     <div class="row">
                         <div class="col-12">
-                            <h5 class="mb-3">الإجراءات</h5>
+                            <h5 class="mb-3">{{ _('Actions') }}</h5>
                             <div class="btn-group me-2">
                                 <button type="button" class="btn btn-outline-secondary dropdown-toggle" data-bs-toggle="dropdown">
-                                    تغيير الحالة
+                                    {{ _('Change Status') }}
                                 </button>
                                 <ul class="dropdown-menu">
-                                    <li><a class="dropdown-item" href="#" onclick="updateStatus('new')">جديد</a></li>
-                                    <li><a class="dropdown-item" href="#" onclick="updateStatus('in_progress')">قيد المعالجة</a></li>
-                                    <li><a class="dropdown-item" href="#" onclick="updateStatus('completed')">مكتمل</a></li>
-                                    <li><a class="dropdown-item" href="#" onclick="updateStatus('cancelled')">ملغي</a></li>
+                                    <li><a class="dropdown-item" href="#" onclick="updateStatus('new')">{{ _('New') }}</a></li>
+                                    <li><a class="dropdown-item" href="#" onclick="updateStatus('in_progress')">{{ _('In Progress') }}</a></li>
+                                    <li><a class="dropdown-item" href="#" onclick="updateStatus('completed')">{{ _('Completed') }}</a></li>
+                                    <li><a class="dropdown-item" href="#" onclick="updateStatus('cancelled')">{{ _('Cancelled') }}</a></li>
                                 </ul>
                             </div>
                             
                             <div class="btn-group me-2">
                                 <button type="button" class="btn btn-outline-secondary dropdown-toggle" data-bs-toggle="dropdown">
-                                    تغيير الأولوية
+                                    {{ _('Change Priority') }}
                                 </button>
                                 <ul class="dropdown-menu">
-                                    <li><a class="dropdown-item" href="#" onclick="updatePriority('low')">منخفضة</a></li>
-                                    <li><a class="dropdown-item" href="#" onclick="updatePriority('medium')">متوسطة</a></li>
-                                    <li><a class="dropdown-item" href="#" onclick="updatePriority('high')">عالية</a></li>
+                                    <li><a class="dropdown-item" href="#" onclick="updatePriority('low')">{{ _('Low') }}</a></li>
+                                    <li><a class="dropdown-item" href="#" onclick="updatePriority('medium')">{{ _('Medium') }}</a></li>
+                                    <li><a class="dropdown-item" href="#" onclick="updatePriority('high')">{{ _('High') }}</a></li>
                                 </ul>
                             </div>
 
-                            <a href="mailto:{{ rfq.email }}?subject=رد على طلب السعر #{{ rfq.id }}" class="btn btn-primary">
-                                <i class="fas fa-envelope"></i> إرسال رد بالبريد الإلكتروني
+                            <a href="mailto:{{ rfq.email }}?subject={{ _('RFQ Reply') }} #{{ rfq.id }}" class="btn btn-primary">
+                                <i class="fas fa-envelope"></i> {{ _('Send Email Reply') }}
                             </a>
                         </div>
                     </div>
@@ -179,7 +179,7 @@
 
 <script>
 function updateStatus(newStatus) {
-    if (confirm('هل أنت متأكد من تغيير حالة هذا الطلب؟')) {
+    if (confirm("{{ _('Are you sure?') }}")) {
         fetch(`/admin/rfqs/{{ rfq.id }}/status`, {
             method: 'POST',
             headers: {
@@ -193,18 +193,18 @@ function updateStatus(newStatus) {
             if (data.success) {
                 location.reload();
             } else {
-                alert('حدث خطأ في تحديث الحالة');
+                alert("{{ _('Error') }}");
             }
         })
         .catch(error => {
             console.error('Error:', error);
-            alert('حدث خطأ في تحديث الحالة');
+            alert("{{ _('Error') }}");
         });
     }
 }
 
 function updatePriority(newPriority) {
-    if (confirm('هل أنت متأكد من تغيير أولوية هذا الطلب؟')) {
+    if (confirm("{{ _('Are you sure?') }}")) {
         fetch(`/admin/rfqs/{{ rfq.id }}/priority`, {
             method: 'POST',
             headers: {
@@ -218,12 +218,12 @@ function updatePriority(newPriority) {
             if (data.success) {
                 location.reload();
             } else {
-                alert('حدث خطأ في تحديث الأولوية');
+                alert("{{ _('Error') }}");
             }
         })
         .catch(error => {
             console.error('Error:', error);
-            alert('حدث خطأ في تحديث الأولوية');
+            alert("{{ _('Error') }}");
         });
     }
 }
