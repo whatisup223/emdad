@@ -239,6 +239,17 @@
 
 
 
+            /* Footer v2: pure background image (no overlays). Toggle by adding class footer-v2--webp */
+            .footer-v2.footer-v2--webp {
+                position: relative;
+                background: url("{{ url_for('static', filename='images/footer.webp') }}") center/cover no-repeat !important;
+                color: #ffffff;
+            }
+            .footer-v2.footer-v2--webp::before,
+            .footer-v2.footer-v2--webp::after { content: none !important; }
+            .footer-v2.footer-v2--webp > .container { position: relative; z-index: 1; }
+
+
     </style>
 
     <!-- Favicon -->
@@ -408,7 +419,7 @@
     <!-- Placeholder for legacy footer removed to avoid conflicts -->
 
         <!-- Footer v2 -->
-        <footer class="footer-v2 py-5 mt-5">
+        <footer class="footer-v2 footer-v2--webp py-5 mt-5">
             <div class="container">
                 <div class="row gy-4">
                     <div class="col-lg-3">
