@@ -1,12 +1,30 @@
+#!/usr/bin/env python3
+"""
+WSGI entry point for Emdad Global application
+"""
+
 from flask import send_from_directory
 import os
-from app import create_app
+import sys
 
-# Import models to ensure they are registered with SQLAlchemy
-from app.models import *
+# Add current directory to Python path
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 
-# Create app instance
-app = create_app(os.environ.get('FLASK_ENV', 'production'))
+try:
+    from app import create_app
+    # Import models to ensure they are registered with SQLAlchemy
+    from app.models import *
+
+    # Create app instance
+    app = create_app(os.environ.get('FLASK_ENV', 'production'))
+
+    print(f"✅ Flask app created successfully in {os.environ.get('FLASK_ENV', 'production')} mode")
+
+except Exception as e:
+    print(f"❌ Failed to create Flask app: {e}")
+    import traceback
+    traceback.print_exc()
+    raise
 
 @app.route('/logo.png')
 def logo_file():

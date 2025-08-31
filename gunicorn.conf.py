@@ -25,6 +25,9 @@ access_log_format = '%(h)s %(l)s %(u)s %(t)s "%(r)s" %(s)s %(b)s "%(f)s" "%(a)s"
 # Process naming
 proc_name = "emdad_global"
 
+# WSGI module and callable
+wsgi_module = "wsgi:app"
+
 # Server mechanics
 preload_app = True
 daemon = False
