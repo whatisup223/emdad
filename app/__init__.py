@@ -129,54 +129,6 @@ def create_app(config_name=None):
         db.session.rollback()
         return render_template('errors/500.html'), 500
 
-    # Initialize database on first request
-    @app.before_first_request
-    def initialize_database():
-        """Initialize database tables and basic data on first request"""
-        try:
-            # Create all tables
-            db.create_all()
 
-            # Check if we need to create basic data
-            from app.models import User, Category
-
-            # Create admin user if not exists
-            if User.query.count() == 0:
-                admin_user = User(
-                    name='Administrator',
-                    email='admin@emdadglobal.com',
-                    role='admin'
-                )
-                admin_user.set_password('admin123')
-                db.session.add(admin_user)
-                print("✅ Created admin user")
-
-            # Create basic categories if not exist
-            if Category.query.count() == 0:
-                categories = [
-                    {'key': 'citrus', 'name_en': 'Citrus Fruits', 'name_ar': 'الحمضيات', 'slug': 'citrus-fruits'},
-                    {'key': 'fresh-fruits', 'name_en': 'Fresh Fruits', 'name_ar': 'الفواكه الطازجة', 'slug': 'fresh-fruits'},
-                    {'key': 'vegetables', 'name_en': 'Fresh Vegetables', 'name_ar': 'الخضروات الطازجة', 'slug': 'fresh-vegetables'},
-                    {'key': 'frozen', 'name_en': 'Frozen Fruits', 'name_ar': 'الفواكه المجمدة', 'slug': 'frozen-fruits'}
-                ]
-
-                for i, cat_data in enumerate(categories):
-                    category = Category(
-                        key=cat_data['key'],
-                        name_en=cat_data['name_en'],
-                        name_ar=cat_data['name_ar'],
-                        slug=cat_data['slug'],
-                        sort_order=i + 1,
-                        is_active=True
-                    )
-                    db.session.add(category)
-                print("✅ Created basic categories")
-
-            db.session.commit()
-            print("✅ Database initialization completed")
-
-        except Exception as e:
-            print(f"⚠️ Database initialization error: {e}")
-            db.session.rollback()
 
     return app
