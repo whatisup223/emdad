@@ -7,6 +7,7 @@ from flask_mail import Mail
 from flask_babel import Babel
 from flask_limiter import Limiter
 from flask_limiter.util import get_remote_address
+from flask_wtf.csrf import CSRFProtect
 from config import config
 
 # Initialize extensions
@@ -16,6 +17,7 @@ login_manager = LoginManager()
 mail = Mail()
 babel = Babel()
 limiter = Limiter(key_func=get_remote_address)
+csrf = CSRFProtect()
 
 def create_app(config_name=None):
     """Application factory pattern."""
@@ -31,6 +33,7 @@ def create_app(config_name=None):
     login_manager.init_app(app)
     mail.init_app(app)
     limiter.init_app(app)
+    csrf.init_app(app)
 
     # Configure Flask-Login
     login_manager.login_view = 'admin.login'
@@ -106,6 +109,11 @@ def create_app(config_name=None):
             except:
                 return []
 
+        def csrf_token():
+            """Generate CSRF token for templates"""
+            from flask_wtf.csrf import generate_csrf
+            return generate_csrf()
+
         return {
             'COMPANY_NAME': app.config['COMPANY_NAME'],
             'COMPANY_EMAIL': app.config['COMPANY_EMAIL'],
@@ -118,7 +126,8 @@ def create_app(config_name=None):
             'get_locale': lambda: current_language,
             'is_rtl': current_language == 'ar',
             '_': _,
-            'get_latest_news': get_latest_news
+            'get_latest_news': get_latest_news,
+            'csrf_token': csrf_token
         }
 
     # Error handlers
