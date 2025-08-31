@@ -32,6 +32,13 @@ touch /tmp/test_db.db && rm -f /tmp/test_db.db && echo "✅ /tmp is writable" ||
 
 # Initialize database
 echo "🗄️ Initializing database..."
-python3.11 init_db_render.py || python3 init_db_render.py
+if python3.11 init_db_render.py; then
+    echo "✅ Database initialized with python3.11"
+elif python3 init_db_render.py; then
+    echo "✅ Database initialized with python3"
+else
+    echo "❌ Database initialization failed"
+    exit 1
+fi
 
 echo "✅ Build completed successfully!"

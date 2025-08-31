@@ -75,6 +75,36 @@ def init_database():
             except Exception as user_error:
                 print(f"⚠️ Admin user creation skipped: {user_error}")
 
+            # Create basic categories if they don't exist
+            try:
+                from app.models import Category
+                if Category.query.count() == 0:
+                    print("Creating basic categories...")
+                    categories = [
+                        {'key': 'citrus', 'name_en': 'Citrus Fruits', 'name_ar': 'الحمضيات', 'slug': 'citrus-fruits'},
+                        {'key': 'fresh-fruits', 'name_en': 'Fresh Fruits', 'name_ar': 'الفواكه الطازجة', 'slug': 'fresh-fruits'},
+                        {'key': 'vegetables', 'name_en': 'Fresh Vegetables', 'name_ar': 'الخضروات الطازجة', 'slug': 'fresh-vegetables'},
+                        {'key': 'frozen', 'name_en': 'Frozen Fruits', 'name_ar': 'الفواكه المجمدة', 'slug': 'frozen-fruits'}
+                    ]
+
+                    for i, cat_data in enumerate(categories):
+                        category = Category(
+                            key=cat_data['key'],
+                            name_en=cat_data['name_en'],
+                            name_ar=cat_data['name_ar'],
+                            slug=cat_data['slug'],
+                            sort_order=i + 1,
+                            is_active=True
+                        )
+                        db.session.add(category)
+
+                    db.session.commit()
+                    print("✅ Basic categories created successfully!")
+                else:
+                    print("✅ Categories already exist")
+            except Exception as cat_error:
+                print(f"⚠️ Category creation skipped: {cat_error}")
+
             print("✅ Database initialization completed!")
             return True
 
