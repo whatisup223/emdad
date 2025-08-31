@@ -130,7 +130,7 @@ dmypy.json
 
 # Flask-specific
 *.db
-migrations/
+# migrations/ - Keep migrations for production deployment
 
 # Upload directories (keep structure but ignore content)
 uploads/*

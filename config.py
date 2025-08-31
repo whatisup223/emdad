@@ -11,8 +11,19 @@ class Config:
     SECRET_KEY = os.environ.get('SECRET_KEY') or 'dev-secret-key-change-in-production'
     
     # Database
-    SQLALCHEMY_DATABASE_URI = os.environ.get('DATABASE_URL') or 'sqlite:///emdad_global.db'
+    DATABASE_URL = os.environ.get('DATABASE_URL') or 'sqlite:///emdad_global.db'
+    # Fix for Render PostgreSQL URL format
+    if DATABASE_URL and DATABASE_URL.startswith('postgres://'):
+        DATABASE_URL = DATABASE_URL.replace('postgres://', 'postgresql://', 1)
+    SQLALCHEMY_DATABASE_URI = DATABASE_URL
     SQLALCHEMY_TRACK_MODIFICATIONS = False
+    SQLALCHEMY_ENGINE_OPTIONS = {
+        'pool_pre_ping': True,
+        'pool_recycle': 300,
+        'connect_args': {
+            'connect_timeout': 10,
+        } if 'sqlite' in DATABASE_URL else {}
+    }
     
     # Email Configuration
     MAIL_SERVER = os.environ.get('MAIL_SERVER') or 'localhost'

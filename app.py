@@ -5,9 +5,8 @@ from app import create_app
 # Import models to ensure they are registered with SQLAlchemy
 from app.models import *
 
-app = create_app()
-
-
+# Create app instance
+app = create_app(os.environ.get('FLASK_ENV', 'production'))
 
 @app.route('/logo.png')
 def logo_file():
@@ -32,9 +31,11 @@ def hero_bg_file():
         abort(404)
 
 if __name__ == '__main__':
-    # تشغيل التطبيق على جميع عناوين IP للوصول من الشبكة المحلية
+    # تشغيل التطبيق للتطوير المحلي فقط
+    port = int(os.environ.get('PORT', 5000))
+    debug = os.environ.get('FLASK_ENV') == 'development'
     app.run(
-        host='0.0.0.0',  # يسمح بالوصول من أي عنوان IP على الشبكة
-        port=5000,       # المنفذ
-        debug=True       # وضع التطوير
+        host='0.0.0.0',
+        port=port,
+        debug=debug
     )
