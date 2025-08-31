@@ -14,6 +14,15 @@ echo "🌐 Using PORT: $PORT"
 export PYTHONPATH="${PYTHONPATH}:$(pwd)"
 echo "🐍 Python path: $PYTHONPATH"
 
+# Ensure database is ready
+echo "🗄️ Ensuring database is ready..."
+if python3.11 ensure_db.py; then
+    echo "✅ Database is ready"
+else
+    echo "❌ Database initialization failed"
+    exit 1
+fi
+
 # Test WSGI import
 echo "🔍 Testing WSGI import..."
 python3.11 -c "

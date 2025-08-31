@@ -11,17 +11,25 @@ from datetime import datetime
 @bp.route('/')
 def index():
     """Homepage."""
-    # Get featured categories
-    featured_categories = Category.query.filter_by(
-        is_active=True,
-        parent_id=None
-    ).order_by(Category.sort_order).limit(4).all() or []
+    try:
+        # Get featured categories
+        featured_categories = Category.query.filter_by(
+            is_active=True,
+            parent_id=None
+        ).order_by(Category.sort_order).limit(4).all() or []
+    except Exception as e:
+        print(f"Warning: Could not load categories: {e}")
+        featured_categories = []
 
-    # Get featured products
-    featured_products = Product.query.filter_by(
-        status='active',
-        featured=True
-    ).order_by(Product.sort_order).limit(8).all() or []
+    try:
+        # Get featured products
+        featured_products = Product.query.filter_by(
+            status='active',
+            featured=True
+        ).order_by(Product.sort_order).limit(8).all() or []
+    except Exception as e:
+        print(f"Warning: Could not load products: {e}")
+        featured_products = []
 
     # Get latest news
     latest_news = News.query.filter_by(status='published').filter(
