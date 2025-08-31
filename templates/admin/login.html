@@ -3,127 +3,348 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Admin Login - {{ SITE_NAME }}</title>
-    
+    <title>{{ "تسجيل دخول الإدارة" if current_language == "ar" else "Admin Login" }} - {{ SITE_NAME }}</title>
+
     <!-- Bootstrap CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    
+
     <!-- Font Awesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    
+
     <!-- Custom CSS -->
     <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
-    
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/fonts.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/login.css') }}">
+
     <style>
         body {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background: var(--primary-gradient);
             min-height: 100vh;
             display: flex;
             align-items: center;
+            font-family: var(--font-body);
+            position: relative;
+            overflow-x: hidden;
         }
-        
+
+        /* Background Pattern */
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image:
+                radial-gradient(circle at 20% 80%, rgba(255, 255, 255, 0.1) 0%, transparent 50%),
+                radial-gradient(circle at 80% 20%, rgba(255, 255, 255, 0.1) 0%, transparent 50%),
+                radial-gradient(circle at 40% 40%, rgba(255, 255, 255, 0.05) 0%, transparent 50%);
+            z-index: -1;
+        }
+
+        .login-container {
+            position: relative;
+            z-index: 1;
+        }
+
         .login-card {
-            background: rgba(255, 255, 255, 0.95);
-            backdrop-filter: blur(10px);
-            border-radius: 15px;
-            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.1);
+            background: rgba(255, 255, 255, 0.98);
+            backdrop-filter: blur(20px);
+            border-radius: 20px;
+            box-shadow:
+                0 25px 50px rgba(0, 0, 0, 0.15),
+                0 0 0 1px rgba(255, 255, 255, 0.2);
+            border: none;
+            overflow: hidden;
+            transition: all 0.3s ease;
         }
-        
+
+        .login-card:hover {
+            transform: translateY(-5px);
+            box-shadow:
+                0 35px 70px rgba(0, 0, 0, 0.2),
+                0 0 0 1px rgba(255, 255, 255, 0.3);
+        }
+
         .login-header {
-            background: linear-gradient(135deg, #007bff, #0056b3);
+            background: var(--primary-gradient);
             color: white;
-            border-radius: 15px 15px 0 0;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .login-header::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(45deg, transparent 30%, rgba(255, 255, 255, 0.1) 50%, transparent 70%);
+            transform: translateX(-100%);
+            animation: shimmer 3s infinite;
+        }
+
+        @keyframes shimmer {
+            0% { transform: translateX(-100%); }
+            100% { transform: translateX(100%); }
+        }
+
+        .company-logo {
+            width: 60px;
+            height: 60px;
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 1rem;
+            font-size: 1.5rem;
+        }
+
+        .login-title {
+            font-family: {{ 'var(--font-arabic-heading)' if is_rtl else 'var(--font-english-heading)' }};
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+        }
+
+        .company-subtitle {
+            font-family: {{ 'var(--font-arabic-heading)' if is_rtl else 'var(--font-english-heading)' }};
+            opacity: 0.9;
+            font-size: 0.9rem;
+        }
+
+        /* Language Toggle */
+        .language-toggle {
+            position: fixed;
+            top: 20px;
+            {{ 'left' if is_rtl else 'right' }}: 20px;
+            z-index: 1000;
+        }
+
+        .language-btn {
+            background: rgba(255, 255, 255, 0.2);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            color: white;
+            border-radius: 25px;
+            padding: 8px 16px;
+            font-size: 0.85rem;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            backdrop-filter: blur(10px);
+        }
+
+        .language-btn:hover {
+            background: rgba(255, 255, 255, 0.3);
+            border-color: rgba(255, 255, 255, 0.5);
+            color: white;
+            transform: translateY(-2px);
+        }
+
+        /* Form Styling */
+        .form-label {
+            font-weight: 600;
+            color: var(--dark-color);
+            margin-bottom: 0.5rem;
+            font-family: {{ 'var(--font-arabic-heading)' if is_rtl else 'var(--font-english-heading)' }};
+        }
+
+        .form-control {
+            border: 2px solid #e9ecef;
+            border-radius: 12px;
+            padding: 12px 16px;
+            font-size: 0.95rem;
+            transition: all 0.3s ease;
+            background: rgba(255, 255, 255, 0.8);
+        }
+
+        .form-control:focus {
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 0.2rem rgba(104, 155, 138, 0.25);
+            background: white;
+        }
+
+        .input-group-text {
+            background: var(--primary-color);
+            border: 2px solid var(--primary-color);
+            color: white;
+            border-radius: 12px 0 0 12px;
+        }
+
+        .btn-primary {
+            background: var(--primary-gradient);
+            border: none;
+            border-radius: 12px;
+            padding: 12px 24px;
+            font-weight: 600;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+            font-family: {{ 'var(--font-arabic-heading)' if is_rtl else 'var(--font-english-heading)' }};
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(104, 155, 138, 0.3);
+        }
+
+        .btn-outline-secondary {
+            border-color: #e9ecef;
+            color: #6c757d;
+            border-radius: 0 12px 12px 0;
+        }
+
+        .btn-outline-secondary:hover {
+            background: var(--primary-color);
+            border-color: var(--primary-color);
+            color: white;
+        }
+
+        /* RTL Adjustments */
+        .rtl .input-group-text {
+            border-radius: 0 12px 12px 0;
+        }
+
+        .rtl .btn-outline-secondary {
+            border-radius: 12px 0 0 12px;
+        }
+
+        .rtl .form-control {
+            text-align: right;
         }
     </style>
 </head>
 <body>
-    <div class="container">
+    <!-- Language Toggle -->
+    <div class="language-toggle">
+        <a href="{{ url_for('main.set_language', language='ar' if current_language == 'en' else 'en') }}"
+           class="btn language-btn">
+            <i class="fas fa-globe me-1"></i>
+            {{ "English" if current_language == "ar" else "العربية" }}
+        </a>
+    </div>
+
+    <div class="container login-container">
         <div class="row justify-content-center">
-            <div class="col-md-6 col-lg-4">
-                <div class="card login-card border-0">
-                    <div class="card-header login-header text-center py-4">
-                        <h4 class="mb-0">
-                            <i class="fas fa-shield-alt me-2"></i>
-                            {{ _('Admin Login') }}
-                        </h4>
-                        <p class="mb-0 mt-2 opacity-75">{{ COMPANY_NAME }}</p>
+            <div class="col-md-6 col-lg-5 col-xl-4">
+                <div class="card login-card">
+                    <div class="card-header login-header text-center py-5">
+                        <div class="company-logo">
+                            <i class="fas fa-leaf"></i>
+                        </div>
+                        <h3 class="login-title">
+                            {{ "تسجيل دخول الإدارة" if current_language == "ar" else "Admin Login" }}
+                        </h3>
+                        <p class="company-subtitle mb-0">{{ COMPANY_NAME }}</p>
                     </div>
-                    
-                    <div class="card-body p-4">
+
+                    <div class="card-body p-5">
                         <!-- Flash Messages -->
                         {% with messages = get_flashed_messages(with_categories=true) %}
                             {% if messages %}
                                 {% for category, message in messages %}
                                     <div class="alert alert-{{ 'danger' if category == 'error' else category }} alert-dismissible fade show" role="alert">
+                                        <i class="fas fa-{{ 'exclamation-triangle' if category == 'error' else 'info-circle' }} me-2"></i>
                                         {{ message }}
                                         <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
                                     </div>
                                 {% endfor %}
                             {% endif %}
                         {% endwith %}
-                        
+
                         <form method="POST" class="needs-validation" novalidate>
                             {{ form.hidden_tag() }}
-                            
-                            <div class="mb-3">
-                                <label class="form-label" for="email">{{ _('Email') }}</label>
+
+                            <div class="mb-4">
+                                <label class="form-label" for="email">
+                                    <i class="fas fa-envelope me-2 text-primary"></i>
+                                    {{ "عنوان البريد الإلكتروني" if current_language == "ar" else "Email Address" }}
+                                </label>
                                 <div class="input-group">
                                     <span class="input-group-text">
-                                        <i class="fas fa-envelope"></i>
+                                        <i class="fas fa-user"></i>
                                     </span>
-                                    {{ form.email(class="form-control", placeholder=_('Enter your email'), id='email') }}
+                                    {{ form.email(class="form-control", placeholder=("أدخل عنوان بريدك الإلكتروني" if current_language == "ar" else "Enter your email address"), id='email', required=true) }}
                                 </div>
                                 {% if form.email.errors %}
                                     <div class="invalid-feedback d-block">
+                                        <i class="fas fa-exclamation-circle me-1"></i>
                                         {% for error in form.email.errors %}{{ error }}{% endfor %}
                                     </div>
                                 {% endif %}
                             </div>
-                            
-                            <div class="mb-3">
-                                <label class="form-label" for="password">{{ _('Password') }}</label>
+
+                            <div class="mb-4">
+                                <label class="form-label" for="password">
+                                    <i class="fas fa-lock me-2 text-primary"></i>
+                                    {{ "كلمة المرور" if current_language == "ar" else "Password" }}
+                                </label>
                                 <div class="input-group">
                                     <span class="input-group-text">
-                                        <i class="fas fa-lock"></i>
+                                        <i class="fas fa-key"></i>
                                     </span>
-                                    {{ form.password(class="form-control", placeholder=_('Enter your password'), id='password') }}
+                                    {{ form.password(class="form-control", placeholder=("أدخل كلمة المرور" if current_language == "ar" else "Enter your password"), id='password', required=true) }}
                                     <button class="btn btn-outline-secondary" type="button" id="togglePassword">
                                         <i class="fas fa-eye"></i>
                                     </button>
                                 </div>
                                 {% if form.password.errors %}
                                     <div class="invalid-feedback d-block">
+                                        <i class="fas fa-exclamation-circle me-1"></i>
                                         {% for error in form.password.errors %}{{ error }}{% endfor %}
                                     </div>
                                 {% endif %}
                             </div>
-                            
-                            <div class="mb-3 form-check">
-                                {{ form.remember_me(class="form-check-input") }}
-                                {{ form.remember_me.label(class="form-check-label") }}
+
+                            <div class="mb-4">
+                                <div class="form-check">
+                                    {{ form.remember_me(class="form-check-input") }}
+                                    <label class="form-check-label" for="{{ form.remember_me.id }}">
+                                        <i class="fas fa-clock me-1"></i>
+                                        {{ "تذكرني" if current_language == "ar" else "Remember me" }}
+                                    </label>
+                                </div>
                             </div>
-                            
-                            <div class="d-grid">
+
+                            <div class="d-grid mb-3">
                                 <button type="submit" class="btn btn-primary btn-lg">
-                                    <i class="fas fa-sign-in-alt me-2"></i>{{ _('Login') }}
+                                    <i class="fas fa-sign-in-alt me-2"></i>
+                                    {{ "تسجيل الدخول" if current_language == "ar" else "Sign In" }}
                                 </button>
                             </div>
                         </form>
                     </div>
-                    
-                    <div class="card-footer text-center py-3 bg-light">
-                        <small class="text-muted">
-                            <i class="fas fa-home me-1"></i>
-                            <a href="{{ url_for('main.index') }}" class="text-decoration-none">{{ _('Back to Website') }}</a>
+
+                    <div class="card-footer text-center py-4" style="background: rgba(248, 249, 250, 0.8); border-top: 1px solid rgba(0,0,0,0.1);">
+                        <div class="d-flex justify-content-center align-items-center flex-wrap gap-3">
+                            <small class="text-muted">
+                                <i class="fas fa-home me-1"></i>
+                                <a href="{{ url_for('main.index') }}" class="text-decoration-none text-primary">
+                                    {{ "العودة للموقع" if current_language == "ar" else "Back to Website" }}
+                                </a>
+                            </small>
+                            <span class="text-muted">|</span>
+                            <small class="text-muted">
+                                <i class="fas fa-shield-alt me-1"></i>
+                                {{ "وصول آمن" if current_language == "ar" else "Secure Access" }}
+                            </small>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Security Notice -->
+                <div class="text-center mt-4">
+                    <div class="d-inline-flex align-items-center bg-white bg-opacity-10 rounded-pill px-3 py-2">
+                        <i class="fas fa-lock me-2 text-white-50"></i>
+                        <small class="text-white">
+                            {{ "منطقة إدارة محمية" if current_language == "ar" else "Protected Admin Area" }}
                         </small>
                     </div>
                 </div>
-                
-                <!-- Security Notice -->
-                <div class="text-center mt-4">
+
+                <!-- Copyright -->
+                <div class="text-center mt-3">
                     <small class="text-white-50">
-                        <i class="fas fa-lock me-1"></i>
-                        {{ _('Secure admin access only') }}
+                        © <span id="currentYear">2025</span> {{ COMPANY_NAME }}. {{ "جميع الحقوق محفوظة" if current_language == "ar" else "All rights reserved" }}.
                     </small>
                 </div>
             </div>
@@ -132,44 +353,29 @@
 
     <!-- Bootstrap JS -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-    
+
+    <!-- Custom Login JS -->
+    <script src="{{ url_for('static', filename='js/login.js') }}"></script>
+
     <script>
-        // Password toggle functionality
-        document.getElementById('togglePassword').addEventListener('click', function() {
-            const passwordField = document.getElementById('password');
-            const icon = this.querySelector('i');
-            
-            if (passwordField.type === 'password') {
-                passwordField.type = 'text';
-                icon.classList.remove('fa-eye');
-                icon.classList.add('fa-eye-slash');
-            } else {
-                passwordField.type = 'password';
-                icon.classList.remove('fa-eye-slash');
-                icon.classList.add('fa-eye');
-            }
-        });
-        
-        // Form validation
-        (function() {
-            'use strict';
-            window.addEventListener('load', function() {
-                const forms = document.getElementsByClassName('needs-validation');
-                Array.prototype.filter.call(forms, function(form) {
-                    form.addEventListener('submit', function(event) {
-                        if (form.checkValidity() === false) {
-                            event.preventDefault();
-                            event.stopPropagation();
-                        }
-                        form.classList.add('was-validated');
-                    }, false);
-                });
-            }, false);
-        })();
-        
-        // Auto-focus on email field
+        // Fallback for browsers without module support
+        if (!window.LoginManager) {
+            console.log('Enhanced login functionality loaded via external script');
+        }
+
+        // Additional page-specific configurations
         document.addEventListener('DOMContentLoaded', function() {
-            document.getElementById('email').focus();
+            // Set page language attributes for better accessibility
+            document.documentElement.lang = '{{ current_language }}';
+
+            // Add loading indicator for slow connections
+            window.addEventListener('beforeunload', function() {
+                const submitBtn = document.querySelector('button[type="submit"]');
+                if (submitBtn && !submitBtn.disabled) {
+                    submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin me-2"></i>' + ('{{ "جاري التحميل..." if current_language == "ar" else "Loading..." }}');
+                    submitBtn.disabled = true;
+                }
+            });
         });
     </script>
 </body>

@@ -45,6 +45,48 @@ msgstr "Settings"
 msgid "Logout"
 msgstr "Logout"
 
+msgid "Admin Login"
+msgstr "Admin Login"
+
+msgid "Email Address"
+msgstr "Email Address"
+
+msgid "Enter your email address"
+msgstr "Enter your email address"
+
+msgid "Password"
+msgstr "Password"
+
+msgid "Enter your password"
+msgstr "Enter your password"
+
+msgid "Remember me"
+msgstr "Remember me"
+
+msgid "Sign In"
+msgstr "Sign In"
+
+msgid "Back to Website"
+msgstr "Back to Website"
+
+msgid "Secure Access"
+msgstr "Secure Access"
+
+msgid "Protected Admin Area"
+msgstr "Protected Admin Area"
+
+msgid "All rights reserved"
+msgstr "All rights reserved"
+
+msgid "Hide password"
+msgstr "Hide password"
+
+msgid "Show password"
+msgstr "Show password"
+
+msgid "Signing in..."
+msgstr "Signing in..."
+
 msgid "Content"
 msgstr "Content"
 
@@ -340,4 +382,340 @@ msgstr "Open Graph Image"
 
 msgid "Scheduled"
 msgstr "Scheduled"
+
+msgid "Loading..."
+msgstr "Loading..."
+
+msgid "Please wait"
+msgstr "Please wait"
+
+msgid "Invalid email or password"
+msgstr "Invalid email or password"
+
+msgid "Login successful"
+msgstr "Login successful"
+
+msgid "Welcome back"
+msgstr "Welcome back"
+
+msgid "Dashboard"
+msgstr "Dashboard"
+
+msgid "Profile"
+msgstr "Profile"
+
+msgid "Settings"
+msgstr "Settings"
+
+msgid "Language"
+msgstr "Language"
+
+msgid "Arabic"
+msgstr "Arabic"
+
+msgid "English"
+msgstr "English"
+
+msgid "Switch Language"
+msgstr "Switch Language"
+
+msgid "Required field"
+msgstr "Required field"
+
+msgid "Please enter a valid email"
+msgstr "Please enter a valid email"
+
+msgid "Password is required"
+msgstr "Password is required"
+
+msgid "Minimum 6 characters"
+msgstr "Minimum 6 characters"
+
+msgid "Login failed"
+msgstr "Login failed"
+
+msgid "Access denied"
+msgstr "Access denied"
+
+msgid "Session expired"
+msgstr "Session expired"
+
+msgid "Please login again"
+msgstr "Please login again"
+
+msgid "Forgot password?"
+msgstr "Forgot password?"
+
+msgid "Contact administrator"
+msgstr "Contact administrator"
+
+msgid "Help"
+msgstr "Help"
+
+msgid "Support"
+msgstr "Support"
+
+msgid "Version"
+msgstr "Version"
+
+msgid "Copyright"
+msgstr "Copyright"
+
+msgid "Privacy Policy"
+msgstr "Privacy Policy"
+
+msgid "Terms of Service"
+msgstr "Terms of Service"
+
+msgid "Home"
+msgstr "Home"
+
+msgid "About Us"
+msgstr "About Us"
+
+msgid "Our Products"
+msgstr "Our Products"
+
+msgid "Contact Us"
+msgstr "Contact Us"
+
+msgid "News"
+msgstr "News"
+
+msgid "Gallery"
+msgstr "Gallery"
+
+msgid "Search"
+msgstr "Search"
+
+msgid "Search products..."
+msgstr "Search products..."
+
+msgid "View All"
+msgstr "View All"
+
+msgid "Read More"
+msgstr "Read More"
+
+msgid "Learn More"
+msgstr "Learn More"
+
+msgid "Get Quote"
+msgstr "Get Quote"
+
+msgid "Request Quote"
+msgstr "Request Quote"
+
+msgid "Send Message"
+msgstr "Send Message"
+
+msgid "Submit"
+msgstr "Submit"
+
+msgid "Cancel"
+msgstr "Cancel"
+
+msgid "Close"
+msgstr "Close"
+
+msgid "Save"
+msgstr "Save"
+
+msgid "Edit"
+msgstr "Edit"
+
+msgid "Delete"
+msgstr "Delete"
+
+msgid "Add"
+msgstr "Add"
+
+msgid "Update"
+msgstr "Update"
+
+msgid "Create"
+msgstr "Create"
+
+msgid "View"
+msgstr "View"
+
+msgid "Download"
+msgstr "Download"
+
+msgid "Upload"
+msgstr "Upload"
+
+msgid "Export"
+msgstr "Export"
+
+msgid "Import"
+msgstr "Import"
+
+msgid "Print"
+msgstr "Print"
+
+msgid "Share"
+msgstr "Share"
+
+msgid "Copy"
+msgstr "Copy"
+
+msgid "Paste"
+msgstr "Paste"
+
+msgid "Cut"
+msgstr "Cut"
+
+msgid "Undo"
+msgstr "Undo"
+
+msgid "Redo"
+msgstr "Redo"
+
+msgid "Select All"
+msgstr "Select All"
+
+msgid "Clear"
+msgstr "Clear"
+
+msgid "Reset"
+msgstr "Reset"
+
+msgid "Refresh"
+msgstr "Refresh"
+
+msgid "Reload"
+msgstr "Reload"
+
+msgid "Back"
+msgstr "Back"
+
+msgid "Next"
+msgstr "Next"
+
+msgid "Previous"
+msgstr "Previous"
+
+msgid "First"
+msgstr "First"
+
+msgid "Last"
+msgstr "Last"
+
+msgid "Page"
+msgstr "Page"
+
+msgid "of"
+msgstr "of"
+
+msgid "Total"
+msgstr "Total"
+
+msgid "Items"
+msgstr "Items"
+
+msgid "Results"
+msgstr "Results"
+
+msgid "No results found"
+msgstr "No results found"
+
+msgid "No data available"
+msgstr "No data available"
+
+msgid "Loading data..."
+msgstr "Loading data..."
+
+msgid "Please select"
+msgstr "Please select"
+
+msgid "Choose file"
+msgstr "Choose file"
+
+msgid "No file chosen"
+msgstr "No file chosen"
+
+msgid "File uploaded successfully"
+msgstr "File uploaded successfully"
+
+msgid "Upload failed"
+msgstr "Upload failed"
+
+msgid "Invalid file type"
+msgstr "Invalid file type"
+
+msgid "File too large"
+msgstr "File too large"
+
+msgid "Maximum file size"
+msgstr "Maximum file size"
+
+msgid "Success"
+msgstr "Success"
+
+msgid "Error"
+msgstr "Error"
+
+msgid "Warning"
+msgstr "Warning"
+
+msgid "Information"
+msgstr "Information"
+
+msgid "Confirmation"
+msgstr "Confirmation"
+
+msgid "Are you sure?"
+msgstr "Are you sure?"
+
+msgid "This action cannot be undone"
+msgstr "This action cannot be undone"
+
+msgid "Yes"
+msgstr "Yes"
+
+msgid "No"
+msgstr "No"
+
+msgid "OK"
+msgstr "OK"
+
+msgid "Apply"
+msgstr "Apply"
+
+msgid "Confirm"
+msgstr "Confirm"
+
+msgid "Proceed"
+msgstr "Proceed"
+
+msgid "Continue"
+msgstr "Continue"
+
+msgid "Finish"
+msgstr "Finish"
+
+msgid "Complete"
+msgstr "Complete"
+
+msgid "Done"
+msgstr "Done"
+
+msgid "Skip"
+msgstr "Skip"
+
+msgid "Ignore"
+msgstr "Ignore"
+
+msgid "Retry"
+msgstr "Retry"
+
+msgid "Try again"
+msgstr "Try again"
+
+msgid "Go back"
+msgstr "Go back"
+
+msgid "Start over"
+msgstr "Start over"
 

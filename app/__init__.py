@@ -63,13 +63,17 @@ def create_app(config_name=None):
     # Language selector function
     def get_locale():
         from flask import request, session
-        # 1. Check if language is set in session
+        # 1. Check URL parameter
+        if request.args.get('lang') in app.config['LANGUAGES']:
+            session['language'] = request.args.get('lang')
+            return request.args.get('lang')
+
+        # 2. Check if language is set in session
         if 'language' in session and session['language'] in app.config['LANGUAGES']:
-            print(f"Using session language: {session['language']}")  # Debug
             return session['language']
-        # 2. Check Accept-Language header
+
+        # 3. Check Accept-Language header
         default_lang = request.accept_languages.best_match(app.config['LANGUAGES']) or app.config['BABEL_DEFAULT_LOCALE']
-        print(f"Using default language: {default_lang}")  # Debug
         return default_lang
 
     # Initialize Babel with locale selector

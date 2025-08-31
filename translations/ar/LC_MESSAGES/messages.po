@@ -46,6 +46,48 @@ msgstr "الإعدادات"
 msgid "Logout"
 msgstr "تسجيل الخروج"
 
+msgid "Admin Login"
+msgstr "تسجيل دخول الإدارة"
+
+msgid "Email Address"
+msgstr "عنوان البريد الإلكتروني"
+
+msgid "Enter your email address"
+msgstr "أدخل عنوان بريدك الإلكتروني"
+
+msgid "Password"
+msgstr "كلمة المرور"
+
+msgid "Enter your password"
+msgstr "أدخل كلمة المرور"
+
+msgid "Remember me"
+msgstr "تذكرني"
+
+msgid "Sign In"
+msgstr "تسجيل الدخول"
+
+msgid "Back to Website"
+msgstr "العودة للموقع"
+
+msgid "Secure Access"
+msgstr "وصول آمن"
+
+msgid "Protected Admin Area"
+msgstr "منطقة إدارة محمية"
+
+msgid "All rights reserved"
+msgstr "جميع الحقوق محفوظة"
+
+msgid "Hide password"
+msgstr "إخفاء كلمة المرور"
+
+msgid "Show password"
+msgstr "إظهار كلمة المرور"
+
+msgid "Signing in..."
+msgstr "جاري تسجيل الدخول..."
+
 msgid "Content"
 msgstr "المحتوى"
 
@@ -542,4 +584,340 @@ msgstr "شهادات دولية"
 
 msgid "Browse Products"
 msgstr "تصفح المنتجات"
+
+msgid "Loading..."
+msgstr "جاري التحميل..."
+
+msgid "Please wait"
+msgstr "يرجى الانتظار"
+
+msgid "Invalid email or password"
+msgstr "بريد إلكتروني أو كلمة مرور غير صحيحة"
+
+msgid "Login successful"
+msgstr "تم تسجيل الدخول بنجاح"
+
+msgid "Welcome back"
+msgstr "مرحباً بعودتك"
+
+msgid "Dashboard"
+msgstr "لوحة التحكم"
+
+msgid "Profile"
+msgstr "الملف الشخصي"
+
+msgid "Settings"
+msgstr "الإعدادات"
+
+msgid "Language"
+msgstr "اللغة"
+
+msgid "Arabic"
+msgstr "العربية"
+
+msgid "English"
+msgstr "الإنجليزية"
+
+msgid "Switch Language"
+msgstr "تبديل اللغة"
+
+msgid "Required field"
+msgstr "حقل مطلوب"
+
+msgid "Please enter a valid email"
+msgstr "يرجى إدخال بريد إلكتروني صحيح"
+
+msgid "Password is required"
+msgstr "كلمة المرور مطلوبة"
+
+msgid "Minimum 6 characters"
+msgstr "6 أحرف على الأقل"
+
+msgid "Login failed"
+msgstr "فشل تسجيل الدخول"
+
+msgid "Access denied"
+msgstr "تم رفض الوصول"
+
+msgid "Session expired"
+msgstr "انتهت صلاحية الجلسة"
+
+msgid "Please login again"
+msgstr "يرجى تسجيل الدخول مرة أخرى"
+
+msgid "Forgot password?"
+msgstr "نسيت كلمة المرور؟"
+
+msgid "Contact administrator"
+msgstr "اتصل بالمدير"
+
+msgid "Help"
+msgstr "مساعدة"
+
+msgid "Support"
+msgstr "الدعم"
+
+msgid "Version"
+msgstr "الإصدار"
+
+msgid "Copyright"
+msgstr "حقوق الطبع والنشر"
+
+msgid "Privacy Policy"
+msgstr "سياسة الخصوصية"
+
+msgid "Terms of Service"
+msgstr "شروط الخدمة"
+
+msgid "Home"
+msgstr "الرئيسية"
+
+msgid "About Us"
+msgstr "من نحن"
+
+msgid "Our Products"
+msgstr "منتجاتنا"
+
+msgid "Contact Us"
+msgstr "اتصل بنا"
+
+msgid "News"
+msgstr "الأخبار"
+
+msgid "Gallery"
+msgstr "المعرض"
+
+msgid "Search"
+msgstr "بحث"
+
+msgid "Search products..."
+msgstr "البحث في المنتجات..."
+
+msgid "View All"
+msgstr "عرض الكل"
+
+msgid "Read More"
+msgstr "اقرأ المزيد"
+
+msgid "Learn More"
+msgstr "تعرف على المزيد"
+
+msgid "Get Quote"
+msgstr "احصل على عرض سعر"
+
+msgid "Request Quote"
+msgstr "طلب عرض سعر"
+
+msgid "Send Message"
+msgstr "إرسال رسالة"
+
+msgid "Submit"
+msgstr "إرسال"
+
+msgid "Cancel"
+msgstr "إلغاء"
+
+msgid "Close"
+msgstr "إغلاق"
+
+msgid "Save"
+msgstr "حفظ"
+
+msgid "Edit"
+msgstr "تعديل"
+
+msgid "Delete"
+msgstr "حذف"
+
+msgid "Add"
+msgstr "إضافة"
+
+msgid "Update"
+msgstr "تحديث"
+
+msgid "Create"
+msgstr "إنشاء"
+
+msgid "View"
+msgstr "عرض"
+
+msgid "Download"
+msgstr "تحميل"
+
+msgid "Upload"
+msgstr "رفع"
+
+msgid "Export"
+msgstr "تصدير"
+
+msgid "Import"
+msgstr "استيراد"
+
+msgid "Print"
+msgstr "طباعة"
+
+msgid "Share"
+msgstr "مشاركة"
+
+msgid "Copy"
+msgstr "نسخ"
+
+msgid "Paste"
+msgstr "لصق"
+
+msgid "Cut"
+msgstr "قص"
+
+msgid "Undo"
+msgstr "تراجع"
+
+msgid "Redo"
+msgstr "إعادة"
+
+msgid "Select All"
+msgstr "تحديد الكل"
+
+msgid "Clear"
+msgstr "مسح"
+
+msgid "Reset"
+msgstr "إعادة تعيين"
+
+msgid "Refresh"
+msgstr "تحديث"
+
+msgid "Reload"
+msgstr "إعادة تحميل"
+
+msgid "Back"
+msgstr "رجوع"
+
+msgid "Next"
+msgstr "التالي"
+
+msgid "Previous"
+msgstr "السابق"
+
+msgid "First"
+msgstr "الأول"
+
+msgid "Last"
+msgstr "الأخير"
+
+msgid "Page"
+msgstr "صفحة"
+
+msgid "of"
+msgstr "من"
+
+msgid "Total"
+msgstr "المجموع"
+
+msgid "Items"
+msgstr "عناصر"
+
+msgid "Results"
+msgstr "النتائج"
+
+msgid "No results found"
+msgstr "لم يتم العثور على نتائج"
+
+msgid "No data available"
+msgstr "لا توجد بيانات متاحة"
+
+msgid "Loading data..."
+msgstr "جاري تحميل البيانات..."
+
+msgid "Please select"
+msgstr "يرجى الاختيار"
+
+msgid "Choose file"
+msgstr "اختر ملف"
+
+msgid "No file chosen"
+msgstr "لم يتم اختيار ملف"
+
+msgid "File uploaded successfully"
+msgstr "تم رفع الملف بنجاح"
+
+msgid "Upload failed"
+msgstr "فشل في رفع الملف"
+
+msgid "Invalid file type"
+msgstr "نوع ملف غير صحيح"
+
+msgid "File too large"
+msgstr "الملف كبير جداً"
+
+msgid "Maximum file size"
+msgstr "الحد الأقصى لحجم الملف"
+
+msgid "Success"
+msgstr "نجح"
+
+msgid "Error"
+msgstr "خطأ"
+
+msgid "Warning"
+msgstr "تحذير"
+
+msgid "Information"
+msgstr "معلومات"
+
+msgid "Confirmation"
+msgstr "تأكيد"
+
+msgid "Are you sure?"
+msgstr "هل أنت متأكد؟"
+
+msgid "This action cannot be undone"
+msgstr "لا يمكن التراجع عن هذا الإجراء"
+
+msgid "Yes"
+msgstr "نعم"
+
+msgid "No"
+msgstr "لا"
+
+msgid "OK"
+msgstr "موافق"
+
+msgid "Apply"
+msgstr "تطبيق"
+
+msgid "Confirm"
+msgstr "تأكيد"
+
+msgid "Proceed"
+msgstr "متابعة"
+
+msgid "Continue"
+msgstr "استمرار"
+
+msgid "Finish"
+msgstr "إنهاء"
+
+msgid "Complete"
+msgstr "مكتمل"
+
+msgid "Done"
+msgstr "تم"
+
+msgid "Skip"
+msgstr "تخطي"
+
+msgid "Ignore"
+msgstr "تجاهل"
+
+msgid "Retry"
+msgstr "إعادة المحاولة"
+
+msgid "Try again"
+msgstr "حاول مرة أخرى"
+
+msgid "Go back"
+msgstr "العودة"
+
+msgid "Start over"
+msgstr "البدء من جديد"
 
