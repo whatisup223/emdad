@@ -53,5 +53,3 @@ services:
     name: emdad-db
     env: postgresql
     plan: free
-    databaseName: emdad_global
-    user: emdad_user
