@@ -10,8 +10,37 @@ def init_database():
     try:
         import os
 
-        # Ensure instance directory exists
-        os.makedirs('instance', exist_ok=True)
+        # Ensure temp directory is writable
+        os.makedirs('/tmp', exist_ok=True)
+
+        # Test write permissions and set appropriate database URL
+        db_paths = [
+            '/tmp/emdad_global.db',
+            './emdad_global.db',
+            'emdad_global.db'
+        ]
+
+        database_url = None
+        for db_path in db_paths:
+            try:
+                # Test if we can create a file in this location
+                test_path = db_path.replace('.db', '_test.db')
+                with open(test_path, 'w') as f:
+                    f.write('test')
+                os.remove(test_path)
+                database_url = f'sqlite:///{db_path}'
+                print(f"✅ Using database path: {db_path}")
+                break
+            except Exception as e:
+                print(f"⚠️ Cannot write to {db_path}: {e}")
+                continue
+
+        if database_url:
+            os.environ['DATABASE_URL'] = database_url
+        else:
+            # Last resort - in-memory database
+            os.environ['DATABASE_URL'] = 'sqlite:///:memory:'
+            print("⚠️ Using in-memory database as fallback")
 
         print("Creating Flask app...")
         from app import create_app

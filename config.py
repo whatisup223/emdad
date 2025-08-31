@@ -11,7 +11,7 @@ class Config:
     SECRET_KEY = os.environ.get('SECRET_KEY') or 'dev-secret-key-change-in-production'
     
     # Database
-    DATABASE_URL = os.environ.get('DATABASE_URL') or 'sqlite:///instance/emdad_global.db'
+    DATABASE_URL = os.environ.get('DATABASE_URL') or 'sqlite:////tmp/emdad_global.db'
     # Fix for Render PostgreSQL URL format
     if DATABASE_URL and DATABASE_URL.startswith('postgres://'):
         DATABASE_URL = DATABASE_URL.replace('postgres://', 'postgresql://', 1)

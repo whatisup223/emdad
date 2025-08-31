@@ -24,6 +24,11 @@ mkdir -p uploads/products
 mkdir -p uploads/gallery
 mkdir -p instance/uploads
 mkdir -p instance
+mkdir -p /tmp
+
+# Test database directory permissions
+echo "🔍 Testing database directory permissions..."
+touch /tmp/test_db.db && rm -f /tmp/test_db.db && echo "✅ /tmp is writable" || echo "❌ /tmp is not writable"
 
 # Initialize database
 echo "🗄️ Initializing database..."
