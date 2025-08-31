@@ -90,13 +90,26 @@ def create_app(config_name=None):
     # Context processors
     @app.context_processor
     def inject_config():
-        from flask import session
+        from flask import session, g
         from flask_babel import gettext
 
         current_language = session.get('language', 'en')
 
+        # Set the locale in g for Babel
+        g.locale = current_language
+
         def _(text):
-            return gettext(text)
+            # Force locale for this translation
+            with app.app_context():
+                # Temporarily set the locale
+                original_locale = getattr(g, 'locale', None)
+                g.locale = current_language
+                try:
+                    translated = gettext(text)
+                    return translated
+                finally:
+                    if original_locale:
+                        g.locale = original_locale
 
         def get_latest_news(limit=2):
             """Get latest published news for footer"""

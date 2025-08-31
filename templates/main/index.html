@@ -13,7 +13,7 @@
 
 {% block content %}
 <!-- Hero Section -->
-<section class="hero-section position-relative overflow-hidden min-vh-100 d-flex align-items-center">
+<section class="hero-section dark-overlay-medium position-relative overflow-hidden min-vh-100 d-flex align-items-center">
     <!-- Agricultural Pattern Overlay -->
     <div class="agricultural-pattern"></div>
 
@@ -43,10 +43,20 @@
                         {{ _('Exports') }}
                     </h1>
 
-                    <p class="lead english-text mb-5">
+                    <p class="lead english-text mb-4">
                         {{ _('Supplying the world with the finest Egyptian citrus fruits, fresh produce, and frozen products.') }}
                         {{ _('Quality assured with international certifications and reliable global logistics.') }}
                     </p>
+
+                    <!-- New Action Buttons -->
+                    <div class="hero-action-buttons d-flex flex-column flex-sm-row gap-3 mb-4">
+                        <a href="{{ url_for('main.about') }}" class="btn btn-md px-4 py-2 hover-lift flex-fill flex-sm-fill-0" style="background: linear-gradient(135deg, #689b8a, #2c5f4f); color: white; font-weight: 600; border: none; box-shadow: 0 4px 15px rgba(104, 155, 138, 0.4); border-radius: 10px; font-size: 0.95rem;">
+                            <i class="fas fa-info-circle me-2"></i>{{ _('About Us') }}
+                        </a>
+                        <a href="{{ url_for('main.contact') }}" class="btn btn-outline-light btn-md px-4 py-2 hover-lift flex-fill flex-sm-fill-0" style="border: 2px solid rgba(255, 255, 255, 0.8); color: white; font-weight: 600; backdrop-filter: blur(10px); background: rgba(255, 255, 255, 0.1); border-radius: 10px; font-size: 0.95rem;">
+                            <i class="fas fa-quote-left me-2"></i>{{ _('Get Quote') }}
+                        </a>
+                    </div>
 
                     <div class="hero-buttons d-flex flex-wrap gap-3 mb-5">
                         <a href="{{ url_for('main.contact') }}" class="btn btn-lg px-5 py-3 hover-lift" style="background: linear-gradient(135deg, #f9cb99, #fbd7b0); color: #689b8a; font-weight: 700; border: none; box-shadow: 0 4px 15px rgba(249, 203, 153, 0.4);">

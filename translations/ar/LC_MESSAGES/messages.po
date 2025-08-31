@@ -921,3 +921,324 @@ msgstr "العودة"
 msgid "Start over"
 msgstr "البدء من جديد"
 
+msgid "Premium Quality Since 1999"
+msgstr "جودة ممتازة منذ عام 1999"
+
+msgid "Premium Egyptian"
+msgstr "المصرية الممتازة"
+
+msgid "Agricultural"
+msgstr "الزراعية"
+
+msgid "Exports"
+msgstr "الصادرات"
+
+msgid "Supplying the world with the finest Egyptian citrus fruits, fresh produce, and frozen products."
+msgstr "نزود العالم بأجود الحمضيات المصرية والمنتجات الطازجة والمجمدة."
+
+msgid "Quality assured with international certifications and reliable global logistics."
+msgstr "جودة مضمونة بشهادات دولية ولوجستيات عالمية موثوقة."
+
+msgid "Product Categories"
+msgstr "فئات المنتجات"
+
+msgid "Our Premium Product Range"
+msgstr "مجموعة منتجاتنا الممتازة"
+
+msgid "Discover our carefully curated selection of Egyptian agricultural products,"
+msgstr "اكتشف مجموعتنا المختارة بعناية من المنتجات الزراعية المصرية،"
+
+msgid "each category representing the finest quality and authentic taste."
+msgstr "كل فئة تمثل أجود جودة وطعم أصيل."
+
+msgid "Premium quality products from Egypt's finest agricultural regions."
+msgstr "منتجات عالية الجودة من أجود المناطق الزراعية في مصر."
+
+msgid "View Products"
+msgstr "عرض المنتجات"
+
+msgid "Featured Products"
+msgstr "المنتجات المميزة"
+
+msgid "Premium Quality Selection"
+msgstr "مجموعة مختارة عالية الجودة"
+
+msgid "Discover our handpicked selection of the finest Egyptian agricultural products,"
+msgstr "اكتشف مجموعتنا المختارة يدوياً من أجود المنتجات الزراعية المصرية،"
+
+msgid "each representing the pinnacle of quality and taste."
+msgstr "كل منها يمثل قمة الجودة والطعم."
+
+msgid "Premium quality Egyptian agricultural product with exceptional taste and nutritional value."
+msgstr "منتج زراعي مصري عالي الجودة بطعم استثنائي وقيمة غذائية عالية."
+
+msgid "Trusted by"
+msgstr "موثوق من قبل"
+
+msgid "Customers"
+msgstr "العملاء"
+
+msgid "Worldwide"
+msgstr "حول العالم"
+
+msgid "Over two decades of excellence in Egyptian agricultural exports,"
+msgstr "أكثر من عقدين من التميز في الصادرات الزراعية المصرية،"
+
+msgid "serving customers across 50+ countries with unwavering quality and reliability."
+msgstr "نخدم العملاء في أكثر من 50 دولة بجودة وموثوقية لا تتزعزع."
+
+msgid "Good Agricultural Practices"
+msgstr "الممارسات الزراعية الجيدة"
+
+msgid "Why Choose Us"
+msgstr "لماذا تختارنا"
+
+msgid "Your Trusted Export Partner"
+msgstr "شريكك الموثوق في التصدير"
+
+msgid "Experience the difference of working with Egypt's premier agricultural export company,"
+msgstr "اختبر الفرق في العمل مع شركة التصدير الزراعي الرائدة في مصر،"
+
+msgid "where quality meets reliability and tradition meets innovation."
+msgstr "حيث تلتقي الجودة بالموثوقية والتقليد بالابتكار."
+
+msgid "Latest Updates"
+msgstr "آخر التحديثات"
+
+msgid "News & Industry Insights"
+msgstr "الأخبار ورؤى الصناعة"
+
+msgid "Stay informed about our latest developments, industry trends, and insights"
+msgstr "ابق على اطلاع على آخر التطورات واتجاهات الصناعة والرؤى"
+
+msgid "from the world of Egyptian agricultural exports."
+msgstr "من عالم الصادرات الزراعية المصرية."
+
+msgid "Expanding Global Reach"
+msgstr "توسيع النطاق العالمي"
+
+msgid "Emdad Global announces new partnerships in European and Asian markets, strengthening our international presence."
+msgstr "إمداد جلوبال تعلن عن شراكات جديدة في الأسواق الأوروبية والآسيوية، مما يعزز حضورنا الدولي."
+
+msgid "Quality Certification Update"
+msgstr "تحديث شهادات الجودة"
+
+msgid "Successfully renewed ISO 22000 and Good Agricultural Practices certifications, reinforcing our commitment to quality standards."
+msgstr "تم تجديد شهادات ISO 22000 والممارسات الزراعية الجيدة بنجاح، مما يعزز التزامنا بمعايير الجودة."
+
+msgid "Sustainable Agriculture Initiative"
+msgstr "مبادرة الزراعة المستدامة"
+
+msgid "Launching new sustainable farming practices to support environmental conservation and premium product quality."
+msgstr "إطلاق ممارسات زراعية مستدامة جديدة لدعم الحفاظ على البيئة وجودة المنتجات الممتازة."
+
+msgid "Ready to Start Your"
+msgstr "هل أنت مستعد لبدء"
+
+msgid "Premium"
+msgstr "الممتاز"
+
+msgid "Agricultural Order?"
+msgstr "طلبك الزراعي؟"
+
+msgid "Join hundreds of satisfied clients worldwide who trust Emdad Global for their"
+msgstr "انضم إلى مئات العملاء الراضين حول العالم الذين يثقون في إمداد جلوبال لتلبية"
+
+msgid "agricultural sourcing needs. Get a personalized quote today and experience the difference."
+msgstr "احتياجاتهم من المصادر الزراعية. احصل على عرض أسعار مخصص اليوم واختبر الفرق."
+
+msgid "Egyptian Oranges"
+msgstr "البرتقال المصري"
+
+msgid "Citrus Fruits"
+msgstr "الحمضيات"
+
+msgid "Premium quality Egyptian oranges with exceptional sweetness and juice content."
+msgstr "برتقال مصري عالي الجودة بحلاوة استثنائية ومحتوى عصير عالي."
+
+msgid "Fresh Grapes"
+msgstr "العنب الطازج"
+
+msgid "Fresh Fruits"
+msgstr "الفواكه الطازجة"
+
+msgid "High-quality table grapes in various varieties for global markets."
+msgstr "عنب مائدة عالي الجودة بأصناف متنوعة للأسواق العالمية."
+
+msgid "Egyptian Garlic"
+msgstr "الثوم المصري"
+
+msgid "Vegetables"
+msgstr "الخضروات"
+
+msgid "Premium white garlic with strong flavor and excellent storage capabilities."
+msgstr "ثوم أبيض ممتاز بنكهة قوية وقدرات تخزين ممتازة."
+
+msgid "IQF Strawberries"
+msgstr "الفراولة المجمدة سريعاً"
+
+msgid "Frozen Products"
+msgstr "المنتجات المجمدة"
+
+msgid "Individually Quick Frozen strawberries maintaining fresh taste and nutrition."
+msgstr "فراولة مجمدة سريعاً بشكل فردي تحافظ على الطعم الطازج والتغذية."
+
+msgid "Request a Quote"
+msgstr "طلب عرض سعر"
+
+msgid "Details"
+msgstr "التفاصيل"
+
+msgid "Organic"
+msgstr "عضوي"
+
+msgid "Fresh"
+msgstr "طازج"
+
+msgid "Export Quality"
+msgstr "جودة التصدير"
+
+msgid "Certified"
+msgstr "معتمد"
+
+msgid "Years of Excellence"
+msgstr "سنوات من التميز"
+
+msgid "Countries Served"
+msgstr "دولة نخدمها"
+
+msgid "Products Exported"
+msgstr "منتج مُصدر"
+
+msgid "Satisfied Clients"
+msgstr "عميل راضي"
+
+msgid "ISO 22000 Certified"
+msgstr "معتمد ISO 22000"
+
+msgid "HACCP Compliant"
+msgstr "متوافق مع HACCP"
+
+msgid "Global GAP"
+msgstr "الممارسات الزراعية العالمية الجيدة"
+
+msgid "Quality Assurance"
+msgstr "ضمان الجودة"
+
+msgid "Reliable Supply Chain"
+msgstr "سلسلة توريد موثوقة"
+
+msgid "Expert Team"
+msgstr "فريق خبراء"
+
+msgid "Customer Support"
+msgstr "دعم العملاء"
+
+msgid "Competitive Pricing"
+msgstr "أسعار تنافسية"
+
+msgid "On-Time Delivery"
+msgstr "التسليم في الوقت المحدد"
+
+msgid "Read More"
+msgstr "اقرأ المزيد"
+
+msgid "Learn More"
+msgstr "تعرف على المزيد"
+
+msgid "Contact Us Today"
+msgstr "اتصل بنا اليوم"
+
+msgid "Get Started"
+msgstr "ابدأ الآن"
+
+msgid "Explore Our Products"
+msgstr "استكشف منتجاتنا"
+
+msgid "Download Catalog"
+msgstr "تحميل الكتالوج"
+
+msgid "Request Samples"
+msgstr "طلب عينات"
+
+msgid "Schedule Meeting"
+msgstr "جدولة اجتماع"
+
+msgid "Premium quality"
+msgstr "جودة ممتازة"
+
+msgid "International standards"
+msgstr "معايير دولية"
+
+msgid "Sustainable farming"
+msgstr "زراعة مستدامة"
+
+msgid "Fresh from farm"
+msgstr "طازج من المزرعة"
+
+msgid "Export ready"
+msgstr "جاهز للتصدير"
+
+msgid "Quality control"
+msgstr "مراقبة الجودة"
+
+msgid "Cold chain"
+msgstr "سلسلة التبريد"
+
+msgid "Packaging excellence"
+msgstr "تميز التعبئة"
+
+msgid "Logistics support"
+msgstr "دعم لوجستي"
+
+msgid "Documentation"
+msgstr "التوثيق"
+
+msgid "Certificates"
+msgstr "الشهادات"
+
+msgid "Traceability"
+msgstr "إمكانية التتبع"
+
+msgid "Food safety"
+msgstr "سلامة الغذاء"
+
+msgid "Nutritional value"
+msgstr "القيمة الغذائية"
+
+msgid "Shelf life"
+msgstr "مدة الصلاحية"
+
+msgid "Storage conditions"
+msgstr "ظروف التخزين"
+
+msgid "Shipping terms"
+msgstr "شروط الشحن"
+
+msgid "Payment terms"
+msgstr "شروط الدفع"
+
+msgid "Minimum order"
+msgstr "الحد الأدنى للطلب"
+
+msgid "Delivery time"
+msgstr "وقت التسليم"
+
+msgid "Port of origin"
+msgstr "ميناء المنشأ"
+
+msgid "Destination port"
+msgstr "ميناء الوصول"
+
+msgid "Incoterms"
+msgstr "شروط التجارة الدولية"
+
+msgid "FOB"
+msgstr "فوب"
+
+msgid "CIF"
+msgstr "سيف"
+
+msgid "CFR"
+msgstr "سي إف آر"
+
