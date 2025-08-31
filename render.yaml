@@ -3,13 +3,11 @@ services:
     name: emdad-global
     env: python
     plan: free
-    buildCommand: |
-      pip install --upgrade pip==23.3.1 setuptools==68.2.2 wheel==0.41.2
-      pip install --only-binary=all -r requirements.txt
-      mkdir -p uploads/news uploads/products uploads/gallery instance/uploads instance
-      python init_db_render.py
-    startCommand: gunicorn app:app --config gunicorn.conf.py
+    buildCommand: chmod +x build.sh && ./build.sh
+    startCommand: python3.11 -m gunicorn app:app --bind 0.0.0.0:$PORT --workers 2 --timeout 120
     envVars:
+      - key: PYTHON_VERSION
+        value: 3.11.9
       - key: FLASK_ENV
         value: production
       - key: SECRET_KEY
