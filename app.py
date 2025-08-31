@@ -13,7 +13,7 @@ sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 try:
     from app import create_app
     # Import models to ensure they are registered with SQLAlchemy
-    from app.models import *
+    import app.models  # noqa: F401
 
     # Create app instance
     app = create_app(os.environ.get('FLASK_ENV', 'production'))
