@@ -119,9 +119,10 @@ def categories():
 def category_new():
     """Create new category."""
     form = CategoryForm()
-    
-    if form.validate_on_submit():
-        category = Category(
+
+    if request.method == 'POST':
+        if form.validate_on_submit():
+            category = Category(
             key=form.key.data,
             name_en=form.name_en.data,
             name_ar=form.name_ar.data,
@@ -146,23 +147,29 @@ def category_new():
             form.image.data.save(upload_path)
             category.image_path = filename
         
-        db.session.add(category)
-        db.session.commit()
-        
-        # Log the action
-        audit_log = AuditLog(
-            user_id=current_user.id,
-            action='create',
-            entity_type='category',
-            entity_id=category.id,
-            ip_address=request.remote_addr
-        )
-        db.session.add(audit_log)
-        db.session.commit()
-        
-        flash('Category created successfully.', 'success')
-        return redirect(url_for('admin.categories'))
-    
+            db.session.add(category)
+            db.session.commit()
+
+            # Log the action
+            audit_log = AuditLog(
+                user_id=current_user.id,
+                action='create',
+                entity_type='category',
+                entity_id=category.id,
+                ip_address=request.remote_addr
+            )
+            db.session.add(audit_log)
+            db.session.commit()
+
+            flash('Category created successfully.', 'success')
+            return redirect(url_for('admin.categories'))
+        else:
+            # Form validation failed
+            for field, errors in form.errors.items():
+                for error in errors:
+                    flash(f'{field}: {error}', 'error')
+            return redirect(url_for('admin.categories'))
+
     return render_template('admin/category_form.html', form=form, title='New Category')
 
 @bp.route('/categories/<int:id>/edit', methods=['GET', 'POST'])

@@ -88,12 +88,12 @@ def create_app(config_name=None):
     @app.context_processor
     def inject_config():
         from flask import session
-        from simple_translations import translate, get_current_language
+        from flask_babel import gettext
 
         current_language = session.get('language', 'en')
 
         def _(text):
-            return translate(text, current_language)
+            return gettext(text)
 
         def get_latest_news(limit=2):
             """Get latest published news for footer"""

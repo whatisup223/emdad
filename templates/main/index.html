@@ -536,32 +536,33 @@
             {% else %}
                 <!-- Default Products -->
                 {% set default_products = [
-                    {'name': _('Egyptian Oranges'), 'category': _('Citrus Fruits'), 'icon': 'fas fa-circle', 'description': _('Premium quality Egyptian oranges with exceptional sweetness and juice content.')},
-                    {'name': _('Fresh Grapes'), 'category': _('Fresh Fruits'), 'icon': 'fas fa-grape-cluster', 'description': _('High-quality table grapes in various varieties for global markets.')},
-                    {'name': _('Egyptian Garlic'), 'category': _('Vegetables'), 'icon': 'fas fa-seedling', 'description': _('Premium white garlic with strong flavor and excellent storage capabilities.')},
-                    {'name': _('IQF Strawberries'), 'category': _('Frozen Products'), 'icon': 'fas fa-snowflake', 'description': _('Individually Quick Frozen strawberries maintaining fresh taste and nutrition.')}
+                    {'name': _('Egyptian Oranges'), 'category': _('Citrus Fruits'), 'icon': 'fas fa-apple-alt', 'color': '#FF8C00', 'description': _('Premium quality Egyptian oranges with exceptional sweetness and juice content.')},
+                    {'name': _('Fresh Grapes'), 'category': _('Fresh Fruits'), 'icon': 'fas fa-seedling', 'color': '#8B4513', 'description': _('High-quality table grapes in various varieties for global markets.')},
+                    {'name': _('Egyptian Garlic'), 'category': _('Vegetables'), 'icon': 'fas fa-leaf', 'color': '#228B22', 'description': _('Premium white garlic with strong flavor and excellent storage capabilities.')},
+                    {'name': _('IQF Strawberries'), 'category': _('Frozen Products'), 'icon': 'fas fa-snowflake', 'color': '#87CEEB', 'description': _('Individually Quick Frozen strawberries maintaining fresh taste and nutrition.')}
                 ] %}
 
                 {% for product in default_products %}
                 <div class="col-lg-4 col-md-6 col-sm-12 product-col" data-aos="fade-up" data-aos-delay="{{ loop.index0 * 100 }}">
-                    <div class="product-card card h-100 border-0 shadow-lg hover-lift position-relative overflow-hidden">
+                    <div class="product-card card h-100 border-0 shadow-lg hover-lift position-relative overflow-hidden" style="border-radius: 20px;">
                         <div class="position-absolute top-0 start-0 p-3 z-index-3">
-                            <span class="badge bg-gradient-secondary text-dark fw-semibold">
+                            <span class="badge text-dark fw-semibold" style="background: linear-gradient(135deg, #ffd700, #ffed4e); box-shadow: 0 4px 15px rgba(255, 215, 0, 0.3);">
                                 <i class="fas fa-star me-1"></i>{{ _('Featured') }}
                             </span>
                         </div>
 
-                        <div class="card-img-top bg-gradient-primary d-flex align-items-center justify-content-center" style="height: 250px;">
-                            <i class="{{ product.icon }} fa-4x text-white opacity-75"></i>
+                        <div class="card-img-top bg-gradient-primary d-flex align-items-center justify-content-center position-relative" style="height: 250px;">
+                            <div class="position-absolute w-100 h-100" style="background: linear-gradient(135deg, {{ product.color }}15, {{ product.color }}25);"></div>
+                            <i class="{{ product.icon }} fa-4x text-white opacity-90 position-relative" style="filter: drop-shadow(0 4px 8px rgba(0,0,0,0.3));"></i>
                         </div>
 
                         <div class="card-body p-4">
-                            <div class="product-category mb-2">
-                                <span class="badge bg-light text-primary-custom fw-semibold">{{ product.category }}</span>
+                            <div class="product-category mb-3">
+                                <span class="badge text-white fw-semibold px-3 py-2" style="background: linear-gradient(135deg, {{ product.color }}, {{ product.color }}CC); border-radius: 15px;">{{ product.category }}</span>
                             </div>
 
-                            <h5 class="card-title fw-bold mb-3">{{ product.name }}</h5>
-                            <p class="card-text text-muted mb-4">{{ product.description }}</p>
+                            <h5 class="card-title fw-bold mb-3 {{ 'arabic-heading' if current_language == 'ar' else 'english-heading' }}" style="color: #2c5f4f;">{{ product.name }}</h5>
+                            <p class="card-text text-muted mb-4 {{ 'arabic-text' if current_language == 'ar' else 'english-text' }}" style="line-height: 1.6;">{{ product.description }}</p>
 
                             <div class="product-features mb-4">
                                 <div class="row g-2">
@@ -581,10 +582,10 @@
                             </div>
 
                             <div class="d-flex gap-2 mt-auto">
-                                <a href="{{ url_for('main.products') }}" class="btn btn-outline-primary flex-grow-1 hover-lift">
+                                <a href="{{ url_for('main.products') }}" class="btn btn-outline-primary flex-grow-1 hover-lift" style="border-radius: 12px; border-width: 2px;">
                                     <i class="fas fa-info-circle me-1"></i>{{ _('Details') }}
                                 </a>
-                                <a href="{{ url_for('main.contact') }}" class="btn btn-primary hover-lift">
+                                <a href="{{ url_for('main.contact') }}" class="btn btn-primary hover-lift" style="border-radius: 12px; background: linear-gradient(135deg, #689b8a, #2c5f4f); border: none; box-shadow: 0 4px 15px rgba(104, 155, 138, 0.3);">
                                     <i class="fas fa-envelope"></i>
                                 </a>
                             </div>
@@ -592,7 +593,7 @@
 
                         <!-- Decorative Element -->
                         <div class="product-decoration position-absolute top-0 end-0 p-3">
-                            <div class="decoration-circle bg-gradient-primary opacity-25 rounded-circle" style="width: 80px; height: 80px; transform: translate(50%, -50%);"></div>
+                            <div class="decoration-circle rounded-circle" style="width: 80px; height: 80px; transform: translate(50%, -50%); background: linear-gradient(135deg, {{ product.color }}30, {{ product.color }}50); backdrop-filter: blur(10px);"></div>
                         </div>
                     </div>
                 </div>

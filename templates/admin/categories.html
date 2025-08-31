@@ -44,7 +44,7 @@
                                     <td>{{ category.id }}</td>
                                     <td>{{ category.name_ar }}</td>
                                     <td>{{ category.name_en }}</td>
-                                    <td>{{ category.description_ar[:50] }}...</td>
+                                    <td>{{ (category.description_ar or category.description_en or '')[:50] }}{% if (category.description_ar or category.description_en or '')|length > 50 %}...{% endif %}</td>
                                     <td>
                                         {% if category.image_path %}
                                             <img src="{{ url_for('main.uploaded_file', filename='categories/' + category.image_path) }}"
@@ -55,10 +55,9 @@
                                     </td>
                                     <td>{{ category.created_at.strftime('%Y-%m-%d') }}</td>
                                     <td>
-                                        <button type="button" class="btn btn-sm btn-warning" 
-                                                onclick="editCategory({{ category.id }}, '{{ category.name_ar }}', '{{ category.name_en }}', '{{ category.description_ar }}', '{{ category.description_en }}')">
+                                        <a href="{{ url_for('admin.category_edit', id=category.id) }}" class="btn btn-sm btn-warning">
                                             <i class="fas fa-edit"></i>
-                                        </button>
+                                        </a>
                                         <form method="POST" action="{{ url_for('admin.category_delete', id=category.id) }}"
                                               style="display: inline;" onsubmit="return confirm('{{ _('Are you sure you want to delete this category?') }}')">
                                             <button type="submit" class="btn btn-sm btn-danger">
@@ -90,6 +89,7 @@
                 <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
             </div>
             <form method="POST" action="{{ url_for('admin.category_new') }}" enctype="multipart/form-data">
+                <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"/>
                 <div class="modal-body">
                     <div class="row">
                         <div class="col-md-6">
@@ -102,6 +102,22 @@
                             <div class="mb-3">
                                 <label for="name_en" class="form-label">الاسم (إنجليزي)</label>
                                 <input type="text" class="form-control" id="name_en" name="name_en" required>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <label for="key" class="form-label">مفتاح الفئة</label>
+                                <input type="text" class="form-control" id="key" name="key" required>
+                                <div class="form-text">مفتاح فريد للفئة (مثل: citrus-fruits)</div>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <label for="slug" class="form-label">الرابط</label>
+                                <input type="text" class="form-control" id="slug" name="slug" required>
+                                <div class="form-text">سيتم إنشاؤه تلقائياً من الاسم الإنجليزي</div>
                             </div>
                         </div>
                     </div>
@@ -142,6 +158,7 @@
                 <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
             </div>
             <form method="POST" id="editCategoryForm" enctype="multipart/form-data">
+                <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"/>
                 <div class="modal-body">
                     <div class="row">
                         <div class="col-md-6">
@@ -187,13 +204,26 @@
 </div>
 
 <script>
+// Auto-generate slug and key from English name
+document.getElementById('name_en').addEventListener('input', function() {
+    const nameEn = this.value;
+    const slug = nameEn.toLowerCase()
+        .replace(/[^a-z0-9\s-]/g, '')
+        .replace(/\s+/g, '-')
+        .replace(/-+/g, '-')
+        .trim('-');
+
+    document.getElementById('slug').value = slug;
+    document.getElementById('key').value = slug;
+});
+
 function editCategory(id, nameAr, nameEn, descAr, descEn) {
-    document.getElementById('edit_name_ar').value = nameAr;
-    document.getElementById('edit_name_en').value = nameEn;
-    document.getElementById('edit_description_ar').value = descAr;
-    document.getElementById('edit_description_en').value = descEn;
+    document.getElementById('edit_name_ar').value = nameAr || '';
+    document.getElementById('edit_name_en').value = nameEn || '';
+    document.getElementById('edit_description_ar').value = descAr || '';
+    document.getElementById('edit_description_en').value = descEn || '';
     document.getElementById('editCategoryForm').action = '/admin/categories/' + id + '/edit';
-    
+
     var editModal = new bootstrap.Modal(document.getElementById('editCategoryModal'));
     editModal.show();
 }
