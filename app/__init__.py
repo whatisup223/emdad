@@ -65,18 +65,21 @@ def create_app(config_name=None):
 
     # Language selector function
     def get_locale():
-        from flask import request, session
+        from flask import request, session, g
         # 1. Check URL parameter
         if request.args.get('lang') in app.config['LANGUAGES']:
             session['language'] = request.args.get('lang')
+            g.locale = request.args.get('lang')
             return request.args.get('lang')
 
         # 2. Check if language is set in session
         if 'language' in session and session['language'] in app.config['LANGUAGES']:
+            g.locale = session.get('language')
             return session['language']
 
         # 3. Check Accept-Language header
         default_lang = request.accept_languages.best_match(app.config['LANGUAGES']) or app.config['BABEL_DEFAULT_LOCALE']
+        g.locale = default_lang
         return default_lang
 
     # Initialize Babel with locale selector
@@ -98,18 +101,221 @@ def create_app(config_name=None):
         # Set the locale in g for Babel
         g.locale = current_language
 
+        # Manual translation dictionary for critical texts
+        manual_translations = {
+            'ar': {
+                'Premium Quality Since 1999': 'جودة ممتازة منذ عام 1999',
+                'Premium Egyptian': 'المصرية الممتازة',
+                'Agricultural': 'الزراعية',
+                'Exports': 'الصادرات',
+                'Supplying the world with the finest Egyptian citrus fruits, fresh produce, and frozen products.': 'نزود العالم بأجود الحمضيات المصرية والمنتجات الطازجة والمجمدة.',
+                'Quality assured with international certifications and reliable global logistics.': 'جودة مضمونة بشهادات دولية ولوجستيات عالمية موثوقة.',
+                'Countries Served': 'دولة نخدمها',
+                'Premium Products': 'منتج ممتاز',
+                'Years Experience': 'سنة خبرة',
+                'Cold Chain': 'سلسلة التبريد',
+                'Logistics': 'اللوجستيات',
+                'Certified': 'معتمد',
+                'About Us': 'من نحن',
+                'Get Quote': 'احصل على عرض سعر',
+                'Request a Quote': 'طلب عرض سعر',
+                'View Products': 'عرض المنتجات',
+                'Product Categories': 'فئات المنتجات',
+                'Our Premium Product Range': 'مجموعة منتجاتنا الممتازة',
+                'Featured Products': 'المنتجات المميزة',
+                'Premium Quality Selection': 'مجموعة مختارة عالية الجودة',
+                'Why Choose Us': 'لماذا تختارنا',
+                'Your Trusted Export Partner': 'شريكك الموثوق في التصدير',
+                'Latest Updates': 'آخر التحديثات',
+                'News & Industry Insights': 'الأخبار ورؤى الصناعة',
+                'Our Introduction': 'مقدمتنا',
+                'Professional Farmers': 'مزارعون محترفون',
+                'Organic & Eco Solutions': 'حلول عضوية وبيئية',
+                'Discover More': 'اكتشف المزيد',
+                'Trusted by': 'موثوق من قبل',
+                'Customers': 'العملاء',
+                'Worldwide': 'حول العالم',
+                'Our Achievements': 'إنجازاتنا',
+                'Over two decades of excellence in Egyptian agricultural exports,': 'أكثر من عقدين من التميز في الصادرات الزراعية المصرية،',
+                'serving customers across 50+ countries with unwavering quality and reliability.': 'نخدم العملاء في أكثر من 50 دولة بجودة وموثوقية لا تتزعزع.',
+                'ISO 22000 Certified': 'معتمد ISO 22000',
+                'Food Safety Management System': 'نظام إدارة سلامة الغذاء',
+                'Cold Chain Excellence': 'تميز سلسلة التبريد',
+                'Temperature-controlled logistics': 'لوجستيات مُتحكم بدرجة الحرارة',
+                'Map Coverage': 'تغطية الخريطة',
+                'Discover our carefully curated selection of Egyptian agricultural products,': 'اكتشف مجموعتنا المختارة بعناية من المنتجات الزراعية المصرية،',
+                'each category representing the finest quality and authentic taste.': 'كل فئة تمثل أجود جودة وطعم أصيل.',
+                'Explore Products': 'استكشف المنتجات',
+                'Premium quality products from Egypt\'s finest agricultural regions.': 'منتجات عالية الجودة من أجود المناطق الزراعية في مصر.',
+                'View All Categories': 'عرض جميع الفئات',
+                'Discover our handpicked selection of the finest Egyptian agricultural products,': 'اكتشف مجموعتنا المختارة يدوياً من أجود المنتجات الزراعية المصرية،',
+                'each representing the pinnacle of quality and taste.': 'كل منها يمثل قمة الجودة والطعم.',
+                'Featured': 'مميز',
+                'Quick View': 'عرض سريع',
+                'Premium': 'ممتاز',
+                'Premium quality Egyptian agricultural product with exceptional taste and nutritional value.': 'منتج زراعي مصري عالي الجودة بطعم استثنائي وقيمة غذائية عالية.',
+                'Fresh': 'طازج',
+                'Details': 'التفاصيل',
+                'Citrus Fruits': 'الحمضيات',
+                'Premium Egyptian oranges, lemons, and mandarins with exceptional sweetness and quality.': 'حمضيات مصرية ممتازة من البرتقال والليمون واليوسفي بحلاوة وجودة استثنائية.',
+                'Fresh Fruits': 'الفواكه الطازجة',
+                'Seasonal fresh fruits including grapes, mangoes, and pomegranates from Egyptian farms.': 'فواكه طازجة موسمية تشمل العنب والمانجو والرمان من المزارع المصرية.',
+                'Fresh Vegetables': 'الخضروات الطازجة',
+                'High-quality vegetables including garlic, onions, and potatoes for global markets.': 'خضروات عالية الجودة تشمل الثوم والبصل والبطاطس للأسواق العالمية.',
+                'Frozen Products': 'المنتجات المجمدة',
+                'IQF frozen fruits and vegetables maintaining freshness and nutritional value.': 'فواكه وخضروات مجمدة سريعاً تحافظ على النضارة والقيمة الغذائية.',
+                'Explore All Products': 'استكشف جميع المنتجات',
+                'Experience the difference of working with Egypt\'s premier agricultural export company,': 'اختبر الفرق في العمل مع شركة التصدير الزراعي الرائدة في مصر،',
+                'where quality meets reliability and tradition meets innovation.': 'حيث تلتقي الجودة بالموثوقية والتقليد بالابتكار.',
+                'Premium Quality': 'جودة ممتازة',
+                'Rigorous quality control processes and international certifications ensure': 'عمليات مراقبة الجودة الصارمة والشهادات الدولية تضمن',
+                'every product meets the highest global standards.': 'أن كل منتج يلبي أعلى المعايير العالمية.',
+                'Reliable Logistics': 'لوجستيات موثوقة',
+                'Advanced cold chain management ensures your products': 'إدارة سلسلة التبريد المتقدمة تضمن أن منتجاتك',
+                'arrive fresh and on time, anywhere in the world.': 'تصل طازجة وفي الوقت المحدد، في أي مكان في العالم.',
+                'Global Network': 'شبكة عالمية',
+                'Global Reach': 'نطاق عالمي',
+                'Serving 50+ countries worldwide with trusted partnerships': 'نخدم أكثر من 50 دولة حول العالم بشراكات موثوقة',
+                'and comprehensive market knowledge.': 'ومعرفة شاملة بالسوق.',
+                '50+ Countries': 'أكثر من 50 دولة',
+                'Trusted Partners': 'شركاء موثوقون',
+                'Trusted Partnership': 'شراكة موثوقة',
+                'Over 25 years of experience building lasting relationships': 'أكثر من 25 عاماً من الخبرة في بناء علاقات دائمة',
+                'with clients through integrity and excellence.': 'مع العملاء من خلال النزاهة والتميز.',
+                '25+ Years Experience': 'أكثر من 25 عاماً من الخبرة',
+                '500+ Clients': 'أكثر من 500 عميل',
+                'Satisfied Clients': 'عميل راضي',
+                'Stay informed about our latest developments, industry trends, and insights': 'ابق على اطلاع على آخر التطورات واتجاهات الصناعة والرؤى',
+                'from the world of Egyptian agricultural exports.': 'من عالم الصادرات الزراعية المصرية.',
+                'News': 'أخبار',
+                'Stay updated with the latest news and developments from Emdad Global.': 'ابق على اطلاع بآخر الأخبار والتطورات من إمداد جلوبال.',
+                'Read More': 'اقرأ المزيد',
+                'Expanding Global Reach': 'توسيع النطاق العالمي',
+                'Emdad Global announces new partnerships in European and Asian markets, strengthening our international presence.': 'إمداد جلوبال تعلن عن شراكات جديدة في الأسواق الأوروبية والآسيوية، مما يعزز حضورنا الدولي.',
+                'Quality Certification Update': 'تحديث شهادات الجودة',
+                'Successfully renewed ISO 22000 and Good Agricultural Practices certifications, reinforcing our commitment to quality standards.': 'تم تجديد شهادات ISO 22000 والممارسات الزراعية الجيدة بنجاح، مما يعزز التزامنا بمعايير الجودة.',
+                'Sustainable Agriculture Initiative': 'مبادرة الزراعة المستدامة',
+                'Launching new sustainable farming practices to support environmental conservation and premium product quality.': 'إطلاق ممارسات زراعية مستدامة جديدة لدعم الحفاظ على البيئة وجودة المنتجات الممتازة.',
+                'View All News': 'عرض جميع الأخبار',
+                'Partnership Opportunity': 'فرصة شراكة',
+                'Ready to Start Your': 'هل أنت مستعد لبدء',
+                'Agricultural Order?': 'طلبك الزراعي؟',
+                'Join hundreds of satisfied clients worldwide who trust Emdad Global for their': 'انضم إلى مئات العملاء الراضين حول العالم الذين يثقون في إمداد جلوبال لتلبية',
+                'agricultural sourcing needs. Get a personalized quote today and experience the difference.': 'احتياجاتهم من المصادر الزراعية. احصل على عرض أسعار مخصص اليوم واختبر الفرق.',
+                'Quick Response': 'استجابة سريعة',
+                'Quality Guaranteed': 'جودة مضمونة',
+                '24-hour quote turnaround': 'دورة عرض أسعار خلال 24 ساعة',
+                'International certifications': 'شهادات دولية',
+                'Browse Products': 'تصفح المنتجات',
+                'Egyptian Oranges': 'البرتقال المصري',
+                'Premium quality Egyptian oranges with exceptional sweetness and juice content.': 'برتقال مصري عالي الجودة بحلاوة استثنائية ومحتوى عصير عالي.',
+                'Fresh Grapes': 'العنب الطازج',
+                'High-quality table grapes in various varieties for global markets.': 'عنب مائدة عالي الجودة بأصناف متنوعة للأسواق العالمية.',
+                'Egyptian Garlic': 'الثوم المصري',
+                'Vegetables': 'الخضروات',
+                'Premium white garlic with strong flavor and excellent storage capabilities.': 'ثوم أبيض ممتاز بنكهة قوية وقدرات تخزين ممتازة.',
+                'IQF Strawberries': 'الفراولة المجمدة سريعاً',
+                'Individually Quick Frozen strawberries maintaining fresh taste and nutrition.': 'فراولة مجمدة سريعاً بشكل فردي تحافظ على الطعم الطازج والتغذية.',
+                'Organic': 'عضوي',
+                'Export Quality': 'جودة التصدير',
+                'Years of Excellence': 'سنوات من التميز',
+                'Products Exported': 'منتج مُصدر',
+                'GlobalG.A.P': 'الممارسات الزراعية العالمية الجيدة',
+                'Quality Assurance': 'ضمان الجودة',
+                'Reliable Supply Chain': 'سلسلة توريد موثوقة',
+                'Expert Team': 'فريق خبراء',
+                'Customer Support': 'دعم العملاء',
+                'Competitive Pricing': 'أسعار تنافسية',
+                'On-Time Delivery': 'التسليم في الوقت المحدد',
+                'Learn More': 'تعرف على المزيد',
+                'Contact Us Today': 'اتصل بنا اليوم',
+                'Get Started': 'ابدأ الآن',
+                'Explore Our Products': 'استكشف منتجاتنا',
+                'Download Catalog': 'تحميل الكتالوج',
+                'Request Samples': 'طلب عينات',
+                'Schedule Meeting': 'جدولة اجتماع',
+                # Navigation Menu
+                'Toggle navigation': 'تبديل التنقل',
+                'Home': 'الرئيسية',
+                'Products': 'المنتجات',
+                'All Products': 'جميع المنتجات',
+                'Certifications': 'الشهادات',
+                'Services': 'الخدمات',
+                'Gallery': 'المعرض',
+                'Contact': 'اتصل بنا',
+                # Footer
+                'Quick Links': 'روابط سريعة',
+                'Categories': 'الفئات',
+                'Frozen Fruits': 'الفواكه المجمدة',
+                'Herbs & Spices': 'الأعشاب والتوابل',
+                'WhatsApp Chat': 'محادثة واتساب',
+                'Cairo, Egypt': 'القاهرة، مصر',
+                'Privacy Policy': 'سياسة الخصوصية',
+                'Terms of Service': 'شروط الخدمة',
+                'Support': 'الدعم',
+                # Additional common terms
+                'Contact Information': 'معلومات الاتصال',
+                'Follow Us': 'تابعنا',
+                'Social Media': 'وسائل التواصل الاجتماعي',
+                'Company': 'الشركة',
+                'Information': 'المعلومات',
+                'Links': 'الروابط',
+                'Address': 'العنوان',
+                'Phone': 'الهاتف',
+                'Email': 'البريد الإلكتروني',
+                'Working Hours': 'ساعات العمل',
+                'Business Hours': 'ساعات العمل',
+                'Office Hours': 'ساعات المكتب',
+                'Monday': 'الإثنين',
+                'Tuesday': 'الثلاثاء',
+                'Wednesday': 'الأربعاء',
+                'Thursday': 'الخميس',
+                'Friday': 'الجمعة',
+                'Saturday': 'السبت',
+                'Sunday': 'الأحد',
+                'Mon - Fri': 'الإثنين - الجمعة',
+                'All rights reserved': 'جميع الحقوق محفوظة',
+                'Copyright': 'حقوق الطبع والنشر',
+                'Website': 'الموقع الإلكتروني',
+                'Online': 'متصل',
+                'Offline': 'غير متصل',
+                'Available': 'متاح',
+                'Unavailable': 'غير متاح',
+                'Open': 'مفتوح',
+                'Closed': 'مغلق',
+                'Loading': 'جاري التحميل',
+                'Please wait': 'يرجى الانتظار',
+                'Error': 'خطأ',
+                'Success': 'نجح',
+                'Warning': 'تحذير',
+                'Info': 'معلومات',
+                'Back to top': 'العودة إلى الأعلى',
+                'Go to top': 'الذهاب إلى الأعلى',
+                'Scroll to top': 'التمرير إلى الأعلى',
+                'Menu': 'القائمة',
+                'Navigation': 'التنقل',
+                'Main Menu': 'القائمة الرئيسية',
+                'Language': 'اللغة',
+                'Select Language': 'اختر اللغة',
+                'Change Language': 'تغيير اللغة',
+                'English': 'الإنجليزية',
+                'Arabic': 'العربية'
+            }
+        }
+
         def _(text):
-            # Force locale for this translation
-            with app.app_context():
-                # Temporarily set the locale
-                original_locale = getattr(g, 'locale', None)
-                g.locale = current_language
-                try:
-                    translated = gettext(text)
-                    return translated
-                finally:
-                    if original_locale:
-                        g.locale = original_locale
+            # First try manual translations
+            if current_language in manual_translations and text in manual_translations[current_language]:
+                return manual_translations[current_language][text]
+
+            # Fallback to gettext
+            try:
+                if not hasattr(g, 'locale'):
+                    g.locale = current_language
+                translated = gettext(text)
+                return translated
+            except:
+                return text
 
         def get_latest_news(limit=2):
             """Get latest published news for footer"""

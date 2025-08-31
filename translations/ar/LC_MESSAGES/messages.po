@@ -1242,3 +1242,21 @@ msgstr "سيف"
 msgid "CFR"
 msgstr "سي إف آر"
 
+msgid "Countries Served"
+msgstr "دولة نخدمها"
+
+msgid "Premium Products"
+msgstr "منتج ممتاز"
+
+msgid "Years Experience"
+msgstr "سنة خبرة"
+
+msgid "Cold Chain"
+msgstr "سلسلة التبريد"
+
+msgid "Logistics"
+msgstr "اللوجستيات"
+
+msgid "GlobalG.A.P"
+msgstr "الممارسات الزراعية العالمية الجيدة"
+
