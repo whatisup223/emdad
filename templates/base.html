@@ -137,6 +137,8 @@
             .footer-v2 {
                 background: linear-gradient(135deg, var(--primary-dark, #1b5e20), #103d24);
                 color: #ffffff;
+                overflow-x: hidden;
+                position: relative;
             }
             .footer-v2 .brand-logo { height: 50px; width: auto; }
             .footer-v2 .brand-name { font-weight: 700; }
@@ -283,6 +285,293 @@
             .rtl .footer-v2 .footer-link {
                 margin-left: 0.5rem;
                 margin-right: 0.5rem;
+            }
+
+            /* Footer Large Plane Animation */
+            .footer-export-animations {
+                position: absolute;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 100%;
+                pointer-events: none;
+                z-index: 1;
+                overflow: visible;
+            }
+
+            /* Optional: Flight path trail effect */
+            .footer-export-animations::before {
+                content: '';
+                position: absolute;
+                top: 50%;
+                left: 0;
+                right: 0;
+                height: 1px;
+                background: linear-gradient(90deg,
+                    transparent 0%,
+                    rgba(249, 203, 153, 0.1) 20%,
+                    rgba(249, 203, 153, 0.2) 50%,
+                    rgba(249, 203, 153, 0.1) 80%,
+                    transparent 100%);
+                transform: translateY(-50%);
+                opacity: 0.3;
+                animation: pathPulse 8s infinite ease-in-out;
+            }
+
+            @keyframes pathPulse {
+                0%, 100% { opacity: 0.1; }
+                50% { opacity: 0.3; }
+            }
+
+            .footer-v2 .container {
+                position: relative;
+                z-index: 2;
+            }
+
+            /* Footer section headings styling */
+            .footer-v2 h6 {
+                color: #f9cb99 !important;
+                font-weight: 600;
+                font-size: 1.1rem;
+                margin-bottom: 1rem !important;
+                padding-bottom: 0.5rem;
+                border-bottom: 2px solid rgba(249, 203, 153, 0.3);
+                text-transform: uppercase;
+                letter-spacing: 0.5px;
+                text-shadow: 0 1px 2px rgba(0,0,0,0.5);
+            }
+
+            /* Footer lists styling */
+            .footer-v2 .list-unstyled {
+                padding-left: 0;
+            }
+
+            .footer-v2 .list-unstyled li {
+                margin-bottom: 0.75rem !important;
+                padding-left: 1rem;
+                position: relative;
+            }
+
+            .footer-v2 .list-unstyled li::before {
+                content: "▶";
+                position: absolute;
+                left: 0;
+                color: #f9cb99;
+                font-size: 0.8rem;
+                top: 0.1rem;
+            }
+
+            /* Remove arrows from contact info items that have icons */
+            .footer-v2 .list-unstyled li.d-flex::before {
+                display: none;
+            }
+
+            .footer-v2 .list-unstyled li.d-flex {
+                padding-left: 0;
+            }
+
+            /* RTL support for list items */
+            .rtl .footer-v2 .list-unstyled li {
+                padding-left: 0;
+                padding-right: 1rem;
+            }
+
+            .rtl .footer-v2 .list-unstyled li::before {
+                left: auto;
+                right: 0;
+                content: "◀";
+            }
+
+            /* RTL support for contact info without arrows */
+            .rtl .footer-v2 .list-unstyled li.d-flex {
+                padding-right: 0;
+            }
+
+            /* Footer links enhanced styling */
+            .footer-v2 .footer-link {
+                color: rgba(255,255,255,0.9) !important;
+                text-decoration: none;
+                transition: all 0.3s ease;
+                font-weight: 400;
+                display: inline-block;
+            }
+
+            .footer-v2 .footer-link:hover {
+                color: #f9cb99 !important;
+                transform: translateX(3px);
+                text-shadow: 0 1px 3px rgba(0,0,0,0.3);
+            }
+
+            .rtl .footer-v2 .footer-link:hover {
+                transform: translateX(-3px);
+            }
+
+            .footer-large-plane {
+                position: absolute;
+                top: 50%;
+                color: #f9cb99;
+                font-size: 4rem;
+                opacity: 0.3;
+                text-shadow: 0 0 20px rgba(249, 203, 153, 0.8);
+                line-height: 1;
+                z-index: 1;
+                transform: translateY(-50%);
+                will-change: transform;
+                display: block;
+            }
+
+            .footer-plane-1 {
+                left: -200px;
+                transform: translateY(-50%) rotate(15deg);
+                animation: footerPlane1Move 12s infinite linear;
+            }
+
+            .footer-plane-2 {
+                right: -200px;
+                transform: translateY(-50%) rotate(-165deg);
+                animation: footerPlane2Move 12s infinite linear;
+                animation-delay: 6s;
+            }
+
+            @keyframes footerPlane1Move {
+                0% {
+                    left: -200px;
+                    transform: translateY(-50%) rotate(15deg);
+                    opacity: 0;
+                }
+                5% {
+                    opacity: 0.3;
+                }
+                95% {
+                    opacity: 0.3;
+                }
+                100% {
+                    left: calc(100% + 200px);
+                    transform: translateY(-50%) rotate(15deg);
+                    opacity: 0;
+                }
+            }
+
+            @keyframes footerPlane2Move {
+                0% {
+                    right: -200px;
+                    transform: translateY(-50%) rotate(-165deg);
+                    opacity: 0;
+                }
+                5% {
+                    opacity: 0.3;
+                }
+                95% {
+                    opacity: 0.3;
+                }
+                100% {
+                    right: calc(100% + 200px);
+                    transform: translateY(-50%) rotate(-165deg);
+                    opacity: 0;
+                }
+            }
+
+            /* RTL Support for planes */
+            .rtl .footer-plane-1 {
+                left: auto;
+                right: -150px;
+                transform: translateY(-50%) rotate(-165deg);
+                animation: footerPlane1MoveRTL 15s infinite linear;
+            }
+
+            .rtl .footer-plane-2 {
+                right: auto;
+                left: -150px;
+                transform: translateY(-50%) rotate(15deg);
+                animation: footerPlane2MoveRTL 15s infinite linear;
+                animation-delay: 7.5s;
+            }
+
+            @keyframes footerPlane1MoveRTL {
+                0% {
+                    right: -150px;
+                    transform: translateY(-50%) rotate(-165deg);
+                    opacity: 0;
+                }
+                10% {
+                    opacity: 0.2;
+                }
+                90% {
+                    opacity: 0.2;
+                }
+                100% {
+                    right: calc(100% + 150px);
+                    transform: translateY(-50%) rotate(-165deg);
+                    opacity: 0;
+                }
+            }
+
+            @keyframes footerPlane2MoveRTL {
+                0% {
+                    left: -150px;
+                    transform: translateY(-50%) rotate(15deg);
+                    opacity: 0;
+                }
+                10% {
+                    opacity: 0.2;
+                }
+                90% {
+                    opacity: 0.2;
+                }
+                100% {
+                    left: calc(100% + 150px);
+                    transform: translateY(-50%) rotate(15deg);
+                    opacity: 0;
+                }
+            }
+
+            /* Responsive adjustments */
+            @media (max-width: 768px) {
+                .footer-large-plane {
+                    font-size: 3rem;
+                }
+
+                .footer-plane-1,
+                .footer-plane-2,
+                .rtl .footer-plane-1,
+                .rtl .footer-plane-2 {
+                    left: -100px;
+                    right: -100px;
+                }
+
+                .rtl .footer-plane-1 {
+                    left: auto;
+                    right: -100px;
+                }
+
+                .rtl .footer-plane-2 {
+                    right: auto;
+                    left: -100px;
+                }
+            }
+
+            @media (max-width: 480px) {
+                .footer-large-plane {
+                    font-size: 2.5rem;
+                }
+
+                .footer-plane-1,
+                .footer-plane-2,
+                .rtl .footer-plane-1,
+                .rtl .footer-plane-2 {
+                    left: -80px;
+                    right: -80px;
+                }
+
+                .rtl .footer-plane-1 {
+                    left: auto;
+                    right: -80px;
+                }
+
+                .rtl .footer-plane-2 {
+                    right: auto;
+                    left: -80px;
+                }
             }
 
 
@@ -489,9 +778,23 @@
     <!-- Placeholder for legacy footer removed to avoid conflicts -->
 
         <!-- Footer v2 -->
-        <footer class="footer-v2 footer-v2--webp footer-v2--mobile-left footer-v2--contrast py-5 mt-5">
+        <footer class="footer-v2 footer-v2--webp footer-v2--mobile-left footer-v2--contrast py-2 mt-5">
+            <!-- START_FOOTER_EXPORT_ANIMATIONS (reversible: say "تراجع" to remove) -->
+            <div class="footer-export-animations">
+                <!-- Large Background Plane 1 (Left to Right) -->
+                <div class="footer-large-plane footer-plane-1">
+                    <i class="fas fa-plane"></i>
+                </div>
+
+                <!-- Large Background Plane 2 (Right to Left) -->
+                <div class="footer-large-plane footer-plane-2">
+                    <i class="fas fa-plane"></i>
+                </div>
+            </div>
+            <!-- END_FOOTER_EXPORT_ANIMATIONS -->
+
             <div class="container">
-                <div class="row gy-4">
+                <div class="row gy-2">
                     <div class="col-lg-3">
                         <div class="d-flex align-items-center mb-2">
                             <img src="{{ url_for('static', filename='images/logo.png') }}" alt="{{ COMPANY_NAME }}" class="brand-logo me-2">
@@ -583,7 +886,7 @@
                             </li>
                             <li class="mb-2 d-flex align-items-center">
                                 <span class="icon" aria-hidden="true">
-                                    <svg viewBox="0 0 24 24" role="img" aria-hidden="true"><path d="M12 1a11 11 0 100 22 11 11 0 000-22zm.5 5h-1v6l5 3 .5-.86-4.5-2.64V6z"/></svg>
+                                    <svg viewBox="0 0 24 24" role="img" aria-hidden="true"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8zm.5-13H11v6l5.25 3.15.75-1.23-4.5-2.67V7z"/></svg>
                                 </span>
                                 <span class="footer-link {{ 'arabic-text' if is_rtl else 'english-text' }}">
                                     {% if is_rtl %}الإثنين - الجمعة: 9:00 ص - 6:00 م{% else %}Mon - Fri: 9:00 AM - 6:00 PM{% endif %}

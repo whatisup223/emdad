@@ -27,6 +27,31 @@
         <i class="fas fa-lemon simple-agri-icon icon-citrus-1"></i>
     </div>
 
+    <!-- START_HERO_EXPORT_ANIMATIONS (reversible: say "تراجع" to remove) -->
+    <div class="hero-export-animations">
+        <!-- Background planes -->
+        <div class="hero-plane hero-plane-1">
+            <i class="fas fa-plane"></i>
+        </div>
+        <div class="hero-plane hero-plane-2">
+            <i class="fas fa-plane"></i>
+        </div>
+
+        <!-- Background ships -->
+        <div class="hero-ship hero-ship-1">
+            <i class="fas fa-ship"></i>
+        </div>
+
+        <!-- Floating export boxes -->
+        <div class="hero-export-box hero-box-1">
+            <i class="fas fa-box"></i>
+        </div>
+        <div class="hero-export-box hero-box-2">
+            <i class="fas fa-boxes"></i>
+        </div>
+    </div>
+    <!-- END_HERO_EXPORT_ANIMATIONS -->
+
 
 
     <div class="container position-relative z-index-2">
@@ -208,35 +233,7 @@
         animation-delay: 4s;
     }
 
-    /* Ship Animation */
-    .ship {
-        position: absolute;
-        color: #f9cb99;
-        font-size: 1.8rem;
-        opacity: 0.7;
-    }
 
-    .ship-1 {
-        bottom: 25%;
-        left: -60px;
-        animation: sailAcross 12s infinite linear;
-        animation-delay: 2s;
-    }
-
-    /* Truck Animation */
-    .truck {
-        position: absolute;
-        color: #f9cb99;
-        font-size: 1.6rem;
-        opacity: 0.8;
-    }
-
-    .truck-1 {
-        bottom: 10%;
-        right: -50px;
-        animation: driveAcross 9s infinite linear;
-        animation-delay: 6s;
-    }
 
     /* Globe with Pulse */
     .globe {
@@ -265,26 +262,7 @@
         opacity: 0.6;
     }
 
-    /* Export Boxes */
-    .export-box {
-        position: absolute;
-        color: #f9cb99;
-        font-size: 1.4rem;
-        opacity: 0.7;
-    }
 
-    .box-1 {
-        top: 40%;
-        left: 10%;
-        animation: bounce 4s infinite;
-    }
-
-    .box-2 {
-        bottom: 40%;
-        right: 20%;
-        animation: bounce 4s infinite;
-        animation-delay: 2s;
-    }
 
     /* Keyframe Animations */
     @keyframes flyAcross1 {
@@ -299,15 +277,7 @@
         100% { right: calc(100% + 50px); transform: rotate(180deg); }
     }
 
-    @keyframes sailAcross {
-        0% { left: -60px; }
-        100% { left: calc(100% + 60px); }
-    }
 
-    @keyframes driveAcross {
-        0% { right: -50px; transform: scaleX(-1); }
-        100% { right: calc(100% + 50px); transform: scaleX(-1); }
-    }
 
     @keyframes rotate {
         0% { transform: rotate(0deg); }
@@ -320,16 +290,101 @@
         100% { transform: translate(-50%, -50%) scale(2); opacity: 0; }
     }
 
-    @keyframes bounce {
-        0%, 100% { transform: translateY(0); }
-        50% { transform: translateY(-10px); }
-    }
+
 
     /* Responsive adjustments */
     @media (max-width: 768px) {
         .plane, .ship, .truck { font-size: 1.2rem; }
         .globe { font-size: 1.5rem; }
         .export-box { font-size: 1rem; }
+    }
+
+    /* Hero Export Animations */
+    .hero-export-animations {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        pointer-events: none;
+        z-index: 1;
+        opacity: 0.6;
+    }
+
+    .hero-plane {
+        position: absolute;
+        color: #f9cb99;
+        font-size: 1.2rem;
+        opacity: 0.4;
+    }
+
+    .hero-plane-1 {
+        top: 15%;
+        left: -40px;
+        animation: heroFlyAcross1 20s infinite linear;
+    }
+
+    .hero-plane-2 {
+        top: 70%;
+        right: -40px;
+        animation: heroFlyAcross2 25s infinite linear;
+        animation-delay: 10s;
+    }
+
+    .hero-ship {
+        position: absolute;
+        color: #f9cb99;
+        font-size: 1.4rem;
+        opacity: 0.3;
+    }
+
+    .hero-ship-1 {
+        bottom: 20%;
+        left: -50px;
+        animation: heroSailAcross 30s infinite linear;
+        animation-delay: 5s;
+    }
+
+    .hero-export-box {
+        position: absolute;
+        color: #f9cb99;
+        font-size: 1rem;
+        opacity: 0.4;
+    }
+
+    .hero-box-1 {
+        top: 40%;
+        left: 5%;
+        animation: heroFloat 8s infinite;
+    }
+
+    .hero-box-2 {
+        bottom: 35%;
+        right: 10%;
+        animation: heroFloat 8s infinite;
+        animation-delay: 4s;
+    }
+
+    @keyframes heroFlyAcross1 {
+        0% { left: -40px; transform: rotate(15deg); }
+        100% { left: calc(100% + 40px); transform: rotate(15deg); }
+    }
+
+    @keyframes heroFlyAcross2 {
+        0% { right: -40px; transform: rotate(195deg); }
+        100% { right: calc(100% + 40px); transform: rotate(195deg); }
+    }
+
+    @keyframes heroSailAcross {
+        0% { left: -50px; }
+        100% { left: calc(100% + 50px); }
+    }
+
+    @keyframes heroFloat {
+        0%, 100% { transform: translateY(0) rotate(0deg); }
+        25% { transform: translateY(-15px) rotate(5deg); }
+        50% { transform: translateY(-10px) rotate(0deg); }
+        75% { transform: translateY(-20px) rotate(-5deg); }
     }
 </style>
 <section class="about-section py-5">
@@ -415,28 +470,10 @@
                                 <i class="fas fa-plane"></i>
                             </div>
 
-                            <!-- Shipping Icons -->
-                            <div class="ship ship-1">
-                                <i class="fas fa-ship"></i>
-                            </div>
-
-                            <!-- Truck Icon -->
-                            <div class="truck truck-1">
-                                <i class="fas fa-truck"></i>
-                            </div>
-
                             <!-- Globe with Pulse -->
                             <div class="globe globe-1">
                                 <i class="fas fa-globe-americas"></i>
                                 <div class="pulse-ring"></div>
-                            </div>
-
-                            <!-- Export Boxes -->
-                            <div class="export-box box-1">
-                                <i class="fas fa-box"></i>
-                            </div>
-                            <div class="export-box box-2">
-                                <i class="fas fa-boxes"></i>
                             </div>
                         </div>
                         <!-- END_EXPORT_ANIMATIONS -->
@@ -942,9 +979,109 @@
                   .coverage-map .pin-gcc{ left:52.5%; top:55%; }
                   .coverage-map .pin-asia{ left:64%; top:47%; }
                   .coverage-map .map-legend { z-index:2; }
+
+                  /* Map Planes Animation */
+                  .map-export-animations {
+                    position: absolute !important;
+                    top: 0 !important;
+                    left: 0 !important;
+                    width: 100% !important;
+                    height: 100% !important;
+                    pointer-events: none !important;
+                    z-index: 1000 !important;
+                  }
+
+                  .map-plane {
+                    position: absolute;
+                    color: #f9cb99;
+                    font-size: 1.2rem;
+                    opacity: 0.8;
+                    text-shadow: 0 0 10px rgba(249, 203, 153, 0.8);
+                  }
+
+                  .map-plane-1 {
+                    top: 30%;
+                    left: -40px;
+                    animation: mapFlyAcross1 15s infinite linear;
+                  }
+
+                  .map-plane-2 {
+                    top: 60%;
+                    right: -40px;
+                    animation: mapFlyAcross2 18s infinite linear;
+                    animation-delay: 6s;
+                  }
+
+                  .map-plane-3 {
+                    top: 45%;
+                    left: -40px;
+                    animation: mapFlyAcross3 20s infinite linear;
+                    animation-delay: 12s;
+                  }
+
+                  @keyframes mapFlyAcross1 {
+                    0% { left: -40px; transform: rotate(15deg); }
+                    100% { left: calc(100% + 40px); transform: rotate(15deg); }
+                  }
+
+                  @keyframes mapFlyAcross2 {
+                    0% { right: -40px; transform: rotate(195deg); }
+                    100% { right: calc(100% + 40px); transform: rotate(195deg); }
+                  }
+
+                  @keyframes mapFlyAcross3 {
+                    0% { left: -40px; transform: rotate(25deg); }
+                    100% { left: calc(100% + 40px); transform: rotate(25deg); }
+                  }
+
+
+
+
+
+                  /* Egypt highlight */
+                  .egypt-highlight {
+                    position: absolute;
+                    left: 46%;
+                    top: 50%;
+                    width: 12px;
+                    height: 12px;
+                    background: #90EE90;
+                    border: 2px solid #32CD32;
+                    border-radius: 50%;
+                    transform: translate(-50%, -50%);
+                    box-shadow: 0 0 15px rgba(144, 238, 144, 0.8);
+                    animation: egyptPulse 3s infinite;
+                    z-index: 1001;
+                  }
+
+                  @keyframes egyptPulse {
+                    0%, 100% {
+                      transform: translate(-50%, -50%) scale(1);
+                      box-shadow: 0 0 15px rgba(144, 238, 144, 0.8);
+                    }
+                    50% {
+                      transform: translate(-50%, -50%) scale(1.2);
+                      box-shadow: 0 0 25px rgba(144, 238, 144, 1);
+                    }
+                  }
                 </style>
-                <div class="coverage-map card border-0 shadow-lg p-4 glass-effect">
-                  <div id="coverageMap" style="height: 360px; width:100%;"></div>
+                <div class="coverage-map card border-0 shadow-lg p-4 glass-effect" style="position: relative;">
+                  <div id="coverageMap" style="height: 360px; width:100%; position: relative;"></div>
+
+                  <!-- START_MAP_ANIMATIONS (reversible: say "تراجع" to remove) -->
+                  <div class="map-export-animations" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 1000; pointer-events: none;">
+                    <!-- Flying Planes like in About section -->
+                    <div class="map-plane map-plane-1">
+                      <i class="fas fa-plane"></i>
+                    </div>
+                    <div class="map-plane map-plane-2">
+                      <i class="fas fa-plane"></i>
+                    </div>
+                    <div class="map-plane map-plane-3">
+                      <i class="fas fa-plane"></i>
+                    </div>
+                  </div>
+                  <!-- END_MAP_ANIMATIONS -->
                   <div class="map-legend badge bg-gradient-secondary text-dark px-3 py-2 rounded-pill position-absolute end-0 bottom-0 m-3 fs-6 fw-semibold">
                     {% if session.get('language') == 'ar' %} تغطية خريطتنا {% else %} {{ _('Map Coverage') }} {% endif %}
                   </div>
@@ -1830,7 +1967,6 @@ document.head.appendChild(style);
       zoomOnScroll: false,
       regionStyle: {
         initial: { fill: '#e8efeccc', stroke: 'rgba(0,0,0,0.05)' },
-        // keep selected color visible even when hovering
         hover: { cursor: 'pointer', stroke: 'rgba(0,0,0,0.15)' },
         selected: { fill: '#f9cb99' }
       },
@@ -1857,6 +1993,13 @@ document.head.appendChild(style);
     // Initial enforce
     reapplyBaseSelection();
 
+    // Color Egypt in light green
+    setTimeout(function() {
+      var egyptElement = document.querySelector('[data-code="EG"]');
+      if (egyptElement) {
+        egyptElement.style.fill = '#90EE90';
+      }
+    }, 100);
 
   }
 

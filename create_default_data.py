@@ -5,7 +5,7 @@ Creates default categories, products, and news articles
 """
 
 from app import create_app
-from app.models import db, Category, Product, News, ProductImage
+from app.models import db, Category, Product, News, ProductImage, CompanyInfo
 from datetime import datetime
 import os
 
@@ -139,10 +139,30 @@ def create_default_products(categories):
     
     return created_products
 
+def create_about_intro():
+    """Create about intro section if it doesn't exist"""
+    existing = CompanyInfo.query.filter_by(key='about_intro').first()
+
+    if existing:
+        print(f"⚠️  About intro already exists: {existing.title_en}")
+        return
+
+    about_intro = CompanyInfo(
+        key='about_intro',
+        title_en='About Emdad Global',
+        title_ar='حول إمداد جلوبال',
+        content_en='<p>Emdad Global is a leading Egyptian export company specializing in premium agricultural products. With over 25 years of experience, we have built a reputation for delivering the highest quality fresh and frozen fruits and vegetables to markets worldwide.</p><p>Our commitment to excellence, combined with state-of-the-art facilities and international certifications, ensures that our products meet the strictest quality standards demanded by global markets.</p>',
+        content_ar='<p>إمداد جلوبال هي شركة تصدير مصرية رائدة متخصصة في المنتجات الزراعية الممتازة. مع أكثر من 25 عاماً من الخبرة، بنينا سمعة في تقديم أعلى جودة من الفواكه والخضروات الطازجة والمجمدة إلى الأسواق في جميع أنحاء العالم.</p>',
+        is_active=True,
+        sort_order=1
+    )
+    db.session.add(about_intro)
+    print(f"✅ Created about intro section")
+
 def create_default_news():
     """Create default news articles if less than 3 exist"""
     existing_count = News.query.filter_by(status='published').count()
-    
+
     if existing_count >= 3:
         print(f"⚠️  Already have {existing_count} published articles. Skipping news creation.")
         return
@@ -207,17 +227,21 @@ def main():
         print("🚀 Creating default data for Emdad Global...")
         print("=" * 50)
         
+        # Create about intro
+        print("\n📄 Creating about intro section...")
+        create_about_intro()
+
         # Create categories
         print("\n📁 Creating default categories...")
         categories = create_default_categories()
-        
+
         # Commit categories first
         db.session.commit()
-        
+
         # Create products
         print("\n🥕 Creating default products...")
         products = create_default_products(categories)
-        
+
         # Create news articles
         print("\n📰 Creating default news articles...")
         create_default_news()
