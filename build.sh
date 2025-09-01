@@ -21,14 +21,30 @@ python3.11 -m pip install -r requirements.txt || python3 -m pip install -r requi
 echo "📁 Creating directories..."
 mkdir -p uploads/news
 mkdir -p uploads/products
+mkdir -p uploads/categories
 mkdir -p uploads/gallery
-mkdir -p instance/uploads
+mkdir -p instance/uploads/news
+mkdir -p instance/uploads/products
+mkdir -p instance/uploads/categories
+mkdir -p instance/uploads/gallery
+mkdir -p instance/uploads/rfq
 mkdir -p instance
 mkdir -p /tmp
+mkdir -p static/images/samples
 
 # Test database directory permissions
 echo "🔍 Testing database directory permissions..."
 touch /tmp/test_db.db && rm -f /tmp/test_db.db && echo "✅ /tmp is writable" || echo "❌ /tmp is not writable"
+
+# Create sample images
+echo "🖼️ Creating sample images..."
+if python3.11 create_sample_images.py; then
+    echo "✅ Sample images created with python3.11"
+elif python3 create_sample_images.py; then
+    echo "✅ Sample images created with python3"
+else
+    echo "⚠️ Sample images creation failed, continuing anyway"
+fi
 
 # Initialize database
 echo "🗄️ Initializing database..."
