@@ -36,15 +36,8 @@ mkdir -p static/images/samples
 echo "🔍 Testing database directory permissions..."
 touch /tmp/test_db.db && rm -f /tmp/test_db.db && echo "✅ /tmp is writable" || echo "❌ /tmp is not writable"
 
-# Create sample images
-echo "🖼️ Creating sample images..."
-if python3.11 create_sample_images.py; then
-    echo "✅ Sample images created with python3.11"
-elif python3 create_sample_images.py; then
-    echo "✅ Sample images created with python3"
-else
-    echo "⚠️ Sample images creation failed, continuing anyway"
-fi
+# Sample images are now created automatically in init_db_render.py
+echo "🖼️ Sample images will be created during database initialization..."
 
 # Initialize database
 echo "🗄️ Initializing database..."
