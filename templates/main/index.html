@@ -183,7 +183,7 @@
 
 
 <!-- About Intro Section -->
-{% if about_intro %}
+<!-- Always show this section with fallback content -->
 <style>
     /* Fix z-index issue for discover more button */
     .about-content-wrapper {
@@ -394,11 +394,25 @@
             <div class="col-lg-6" data-aos="fade-right" data-aos-duration="1000">
                 <div class="about-content-wrapper">
                     <div class="about-intro-badge">{{ _('Our Introduction') }}</div>
-                    <h2 class="about-main-title">{{ about_intro.get_title(current_language) }}</h2>
-
-                    <div class="about-description">
-                        {{ about_intro.get_content(current_language) | safe }}
-                    </div>
+                    {% if about_intro %}
+                        <h2 class="about-main-title">{{ about_intro.get_title(current_language) }}</h2>
+                        <div class="about-description">
+                            {{ about_intro.get_content(current_language) | safe }}
+                        </div>
+                    {% else %}
+                        <h2 class="about-main-title">
+                            {% if current_language == 'ar' %}حول إمداد جلوبال{% else %}About Emdad Global{% endif %}
+                        </h2>
+                        <div class="about-description">
+                            {% if current_language == 'ar' %}
+                                <p>إمداد جلوبال هي شركة تصدير مصرية رائدة متخصصة في المنتجات الزراعية الممتازة. مع أكثر من 25 عاماً من الخبرة، بنينا سمعة في تقديم أعلى جودة من الفواكه والخضروات الطازجة والمجمدة إلى الأسواق في جميع أنحاء العالم.</p>
+                                <p>التزامنا بالتميز، إلى جانب المرافق الحديثة والشهادات الدولية، يضمن أن منتجاتنا تلبي أصرم معايير الجودة التي تتطلبها الأسواق العالمية.</p>
+                            {% else %}
+                                <p>Emdad Global is a leading Egyptian export company specializing in premium agricultural products. With over 25 years of experience, we have built a reputation for delivering the highest quality fresh and frozen fruits and vegetables to markets worldwide.</p>
+                                <p>Our commitment to excellence, combined with state-of-the-art facilities and international certifications, ensures that our products meet the strictest quality standards demanded by global markets.</p>
+                            {% endif %}
+                        </div>
+                    {% endif %}
 
                     <!-- Features Grid -->
                     <div class="about-features">
@@ -452,7 +466,7 @@
                 <div class="about-single-image">
                     <!-- Main Image -->
                     <div class="single-image-wrapper">
-                        {% if about_intro.image_path %}
+                        {% if about_intro and about_intro.image_path %}
                         <img src="{{ url_for('static', filename='uploads/' + about_intro.image_path) }}"
                              alt="{{ about_intro.get_title(current_language) }}" class="single-about-image">
                         {% else %}
@@ -484,7 +498,6 @@
         </div>
     </div>
 </section>
-{% endif %}
 
 <!-- Stats Highlights Section (Cards) - separate from About -->
 
