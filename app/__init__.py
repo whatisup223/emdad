@@ -58,6 +58,7 @@ def create_app(config_name=None):
     # Create upload directories
     upload_dir = os.path.join(app.instance_path, app.config['UPLOAD_FOLDER'])
     os.makedirs(upload_dir, exist_ok=True)
+    os.makedirs(os.path.join(upload_dir, 'categories'), exist_ok=True)
     os.makedirs(os.path.join(upload_dir, 'products'), exist_ok=True)
     os.makedirs(os.path.join(upload_dir, 'gallery'), exist_ok=True)
     os.makedirs(os.path.join(upload_dir, 'news'), exist_ok=True)

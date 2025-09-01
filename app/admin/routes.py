@@ -336,6 +336,9 @@ def product_new():
             sort_order=form.sort_order.data
         )
 
+        db.session.add(product)
+        db.session.flush()  # Get the product ID
+
         # Handle image upload
         if form.image.data:
             filename = secure_filename(form.image.data.filename)
@@ -347,9 +350,18 @@ def product_new():
                                      'products', filename)
             os.makedirs(os.path.dirname(upload_path), exist_ok=True)
             form.image.data.save(upload_path)
-            product.image_path = filename
 
-        db.session.add(product)
+            # Create ProductImage record
+            from app.models import ProductImage
+            product_image = ProductImage(
+                product_id=product.id,
+                filename=filename,
+                alt_text_en=product.name_en,
+                alt_text_ar=product.name_ar,
+                is_main=True,
+                sort_order=0
+            )
+            db.session.add(product_image)
 
         # Log the action
         audit_log = AuditLog(
@@ -411,7 +423,23 @@ def product_edit(id):
                                      'products', filename)
             os.makedirs(os.path.dirname(upload_path), exist_ok=True)
             form.image.data.save(upload_path)
-            product.image_path = filename
+
+            # Remove old main image
+            from app.models import ProductImage
+            old_main_image = ProductImage.query.filter_by(product_id=product.id, is_main=True).first()
+            if old_main_image:
+                db.session.delete(old_main_image)
+
+            # Create new ProductImage record
+            product_image = ProductImage(
+                product_id=product.id,
+                filename=filename,
+                alt_text_en=product.name_en,
+                alt_text_ar=product.name_ar,
+                is_main=True,
+                sort_order=0
+            )
+            db.session.add(product_image)
 
         db.session.commit()
 
