@@ -159,6 +159,179 @@
 
 <!-- About Intro Section -->
 {% if about_intro %}
+<style>
+    /* Fix z-index issue for discover more button */
+    .about-content-wrapper {
+        position: relative;
+        z-index: 100 !important;
+    }
+    .about-action {
+        position: relative !important;
+        z-index: 200 !important;
+    }
+    .about-single-image {
+        z-index: 1 !important;
+    }
+    .single-image-wrapper {
+        z-index: 1 !important;
+    }
+
+    /* Export Animation Styles */
+    .export-animations {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        pointer-events: none;
+        z-index: 3;
+    }
+
+    /* Plane Animations */
+    .plane {
+        position: absolute;
+        color: #f9cb99;
+        font-size: 1.5rem;
+        opacity: 0.8;
+    }
+
+    .plane-1 {
+        top: 20%;
+        left: -50px;
+        animation: flyAcross1 8s infinite linear;
+    }
+
+    .plane-2 {
+        top: 60%;
+        right: -50px;
+        animation: flyAcross2 10s infinite linear;
+        animation-delay: 4s;
+    }
+
+    /* Ship Animation */
+    .ship {
+        position: absolute;
+        color: #f9cb99;
+        font-size: 1.8rem;
+        opacity: 0.7;
+    }
+
+    .ship-1 {
+        bottom: 25%;
+        left: -60px;
+        animation: sailAcross 12s infinite linear;
+        animation-delay: 2s;
+    }
+
+    /* Truck Animation */
+    .truck {
+        position: absolute;
+        color: #f9cb99;
+        font-size: 1.6rem;
+        opacity: 0.8;
+    }
+
+    .truck-1 {
+        bottom: 10%;
+        right: -50px;
+        animation: driveAcross 9s infinite linear;
+        animation-delay: 6s;
+    }
+
+    /* Globe with Pulse */
+    .globe {
+        position: absolute;
+        top: 15%;
+        right: 15%;
+        color: #f9cb99;
+        font-size: 2rem;
+        opacity: 0.9;
+    }
+
+    .globe i {
+        animation: rotate 20s infinite linear;
+    }
+
+    .pulse-ring {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        width: 40px;
+        height: 40px;
+        border: 2px solid #f9cb99;
+        border-radius: 50%;
+        transform: translate(-50%, -50%);
+        animation: pulse 3s infinite;
+        opacity: 0.6;
+    }
+
+    /* Export Boxes */
+    .export-box {
+        position: absolute;
+        color: #f9cb99;
+        font-size: 1.4rem;
+        opacity: 0.7;
+    }
+
+    .box-1 {
+        top: 40%;
+        left: 10%;
+        animation: bounce 4s infinite;
+    }
+
+    .box-2 {
+        bottom: 40%;
+        right: 20%;
+        animation: bounce 4s infinite;
+        animation-delay: 2s;
+    }
+
+    /* Keyframe Animations */
+    @keyframes flyAcross1 {
+        0% { left: -50px; transform: rotate(0deg); }
+        50% { left: 50%; transform: rotate(5deg); }
+        100% { left: calc(100% + 50px); transform: rotate(0deg); }
+    }
+
+    @keyframes flyAcross2 {
+        0% { right: -50px; transform: rotate(180deg); }
+        50% { right: 50%; transform: rotate(175deg); }
+        100% { right: calc(100% + 50px); transform: rotate(180deg); }
+    }
+
+    @keyframes sailAcross {
+        0% { left: -60px; }
+        100% { left: calc(100% + 60px); }
+    }
+
+    @keyframes driveAcross {
+        0% { right: -50px; transform: scaleX(-1); }
+        100% { right: calc(100% + 50px); transform: scaleX(-1); }
+    }
+
+    @keyframes rotate {
+        0% { transform: rotate(0deg); }
+        100% { transform: rotate(360deg); }
+    }
+
+    @keyframes pulse {
+        0% { transform: translate(-50%, -50%) scale(1); opacity: 0.6; }
+        50% { transform: translate(-50%, -50%) scale(1.5); opacity: 0.3; }
+        100% { transform: translate(-50%, -50%) scale(2); opacity: 0; }
+    }
+
+    @keyframes bounce {
+        0%, 100% { transform: translateY(0); }
+        50% { transform: translateY(-10px); }
+    }
+
+    /* Responsive adjustments */
+    @media (max-width: 768px) {
+        .plane, .ship, .truck { font-size: 1.2rem; }
+        .globe { font-size: 1.5rem; }
+        .export-box { font-size: 1rem; }
+    }
+</style>
 <section class="about-section py-5">
     <div class="container">
         <div class="row align-items-center g-5">
@@ -194,11 +367,27 @@
                     </div>
 
                     <!-- Action Button -->
-                    <div class="about-action">
-                        <a href="{{ url_for('main.about') }}" class="discover-more-btn">
+                    <div class="about-action" style="position: relative; z-index: 9999 !important; margin-top: 2rem;">
+                        <button onclick="window.location.href='/about'" style="
+                            background: linear-gradient(135deg, #689b8a, #2c5f4f);
+                            color: white;
+                            border: none;
+                            padding: 15px 30px;
+                            border-radius: 12px;
+                            font-weight: 600;
+                            cursor: pointer;
+                            display: inline-flex;
+                            align-items: center;
+                            gap: 10px;
+                            font-size: 1rem;
+                            transition: all 0.3s ease;
+                            box-shadow: 0 4px 15px rgba(104, 155, 138, 0.3);
+                            position: relative;
+                            z-index: 99999;
+                        " onmouseover="this.style.transform='translateY(-2px)'; this.style.boxShadow='0 6px 20px rgba(104, 155, 138, 0.4)'" onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='0 4px 15px rgba(104, 155, 138, 0.3)'">
                             <span>{{ _('Discover More') }}</span>
                             <i class="fas fa-arrow-right"></i>
-                        </a>
+                        </button>
                     </div>
                 </div>
             </div>
@@ -212,18 +401,46 @@
                         <img src="{{ url_for('static', filename='uploads/' + about_intro.image_path) }}"
                              alt="{{ about_intro.get_title(current_language) }}" class="single-about-image">
                         {% else %}
-                        <img src="{{ url_for('static', filename='images/about-intro.jpg') }}"
+                        <img src="{{ url_for('static', filename='images/aboutimg.webp') }}"
                              alt="About Emdad Global" class="single-about-image">
                         {% endif %}
+
+                        <!-- START_EXPORT_ANIMATIONS (reversible: say "تراجع" to remove) -->
+                        <div class="export-animations">
+                            <!-- Flying Planes -->
+                            <div class="plane plane-1">
+                                <i class="fas fa-plane"></i>
+                            </div>
+                            <div class="plane plane-2">
+                                <i class="fas fa-plane"></i>
+                            </div>
+
+                            <!-- Shipping Icons -->
+                            <div class="ship ship-1">
+                                <i class="fas fa-ship"></i>
+                            </div>
+
+                            <!-- Truck Icon -->
+                            <div class="truck truck-1">
+                                <i class="fas fa-truck"></i>
+                            </div>
+
+                            <!-- Globe with Pulse -->
+                            <div class="globe globe-1">
+                                <i class="fas fa-globe-americas"></i>
+                                <div class="pulse-ring"></div>
+                            </div>
+
+                            <!-- Export Boxes -->
+                            <div class="export-box box-1">
+                                <i class="fas fa-box"></i>
+                            </div>
+                            <div class="export-box box-2">
+                                <i class="fas fa-boxes"></i>
+                            </div>
+                        </div>
+                        <!-- END_EXPORT_ANIMATIONS -->
                     </div>
-
-                    <!-- Stats Card -->
-                    <div class="about-stats-overlay">
-                        <div class="stats-number">8,700</div>
-                        <div class="stats-label">{{ _('Trusted by') }}</div>
-                    </div>
-
-
 
                 </div>
             </div>
@@ -898,6 +1115,35 @@
           }
         </style>
 
+        <!-- Enhanced hover effects for category and product buttons -->
+        <style>
+          /* Apply same hover effect to category and product buttons */
+          .category-card .btn-outline-primary:hover,
+          .category-card .btn-outline-primary:focus,
+          .category-card .btn-outline-primary:active,
+          .category-card .btn-outline-primary:focus-visible,
+          .product-card .btn-outline-primary:hover,
+          .product-card .btn-outline-primary:focus,
+          .product-card .btn-outline-primary:active,
+          .product-card .btn-outline-primary:focus-visible {
+            background: #f9cb99 !important;
+            border-color: #f9cb99 !important;
+            color: #103d24 !important; /* dark text for contrast */
+            transform: translateY(-5px);
+            box-shadow: 0 8px 25px rgba(249, 203, 153, 0.4);
+          }
+          .category-card .btn-outline-primary:hover i,
+          .category-card .btn-outline-primary:focus i,
+          .category-card .btn-outline-primary:active i,
+          .category-card .btn-outline-primary:focus-visible i,
+          .product-card .btn-outline-primary:hover i,
+          .product-card .btn-outline-primary:focus i,
+          .product-card .btn-outline-primary:active i,
+          .product-card .btn-outline-primary:focus-visible i {
+            color: #103d24 !important; /* dark icon for contrast */
+          }
+        </style>
+
     <!-- Background Elements -->
 
         <!-- START_NEWS_BG_ICONS (reversible: say "تراجع" to remove) -->
@@ -958,7 +1204,7 @@
         </div>
 
         <div class="row g-4">
-            {% if latest_news %}
+            {% if latest_news and latest_news|length > 0 %}
                 {% for article in latest_news %}
                 <div class="col-lg-4" data-aos="fade-up" data-aos-delay="{{ loop.index0 * 100 }}">
                     <article class="news-card card h-100 border-0 shadow-lg hover-lift position-relative overflow-hidden">
@@ -1030,7 +1276,7 @@
                 ] %}
 
                 {% for article in default_news %}
-                <div class="col-lg-4" data-aos="fade-up" data-aos-delay="{{ loop.index0 * 100 }}">
+                <div class="col-lg-4 col-md-6 col-sm-12" data-aos="fade-up" data-aos-delay="{{ loop.index0 * 100 }}">
                     <article class="news-card card h-100 border-0 shadow-lg hover-lift position-relative overflow-hidden">
                         <div class="card-img-top bg-gradient-primary d-flex align-items-center justify-content-center" style="height: 250px;">
                             <i class="fas fa-newspaper fa-4x text-white opacity-75"></i>

@@ -105,11 +105,26 @@ def create_app(config_name=None):
         manual_translations = {
             'ar': {
                 'Premium Quality Since 1999': 'جودة ممتازة منذ عام 1999',
-                'Premium Egyptian': 'المصرية الممتازة',
-                'Agricultural': 'الزراعية',
-                'Exports': 'الصادرات',
-                'Supplying the world with the finest Egyptian citrus fruits, fresh produce, and frozen products.': 'نزود العالم بأجود الحمضيات المصرية والمنتجات الطازجة والمجمدة.',
+                'Premium Egyptian': 'إمداد جلوبال',
+                'Agricultural': 'لتصدير المنتجات',
+                'Exports': 'الزراعية المصرية',
+                'Supplying the world with the finest Egyptian citrus fruits, fresh produce, and frozen products.': 'نزود العالم بأجود المنتجات الزراعية المصرية الطازجة والمجمدة.',
                 'Quality assured with international certifications and reliable global logistics.': 'جودة مضمونة بشهادات دولية ولوجستيات عالمية موثوقة.',
+
+                # News Articles
+                'Expanding Global Reach': 'توسيع النطاق العالمي',
+                'Emdad Global announces new partnerships in European and Asian markets, strengthening our international presence.': 'تعلن إمداد جلوبال عن شراكات جديدة في الأسواق الأوروبية والآسيوية، مما يعزز حضورنا الدولي.',
+
+                'Quality Certification Update': 'تحديث شهادات الجودة',
+                'Successfully renewed ISO 22000 and Good Agricultural Practices certifications, reinforcing our commitment to quality standards.': 'تم تجديد شهادات ISO 22000 وممارسات الزراعة الجيدة بنجاح، مما يعزز التزامنا بمعايير الجودة.',
+
+                'Sustainable Agriculture Initiative': 'مبادرة الزراعة المستدامة',
+                'Launching new sustainable farming practices to support environmental conservation and premium product quality.': 'إطلاق ممارسات زراعية مستدامة جديدة لدعم الحفاظ على البيئة وجودة المنتجات المتميزة.',
+
+                # Navigation
+                'Emdad Global': 'إمداد جلوبال',
+                'Request Quote': 'طلب عرض سعر',
+                'Quote': 'عرض سعر',
                 'Countries Served': 'دولة نخدمها',
                 'Premium Products': 'منتج ممتاز',
                 'Years Experience': 'سنة خبرة',

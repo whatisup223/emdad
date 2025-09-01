@@ -242,12 +242,48 @@
             /* Footer v2: pure background image (no overlays). Toggle by adding class footer-v2--webp */
             .footer-v2.footer-v2--webp {
                 position: relative;
-                background: url("{{ url_for('static', filename='images/footer.webp') }}") center/cover no-repeat !important;
+                background: url("{{ url_for('static', filename='images/footerbg.webp') }}") center/cover no-repeat !important;
                 color: #ffffff;
             }
-            .footer-v2.footer-v2--webp::before,
-            .footer-v2.footer-v2--webp::after { content: none !important; }
-            .footer-v2.footer-v2--webp > .container { position: relative; z-index: 1; }
+
+            /* Add dark overlay between background and content */
+            .footer-v2.footer-v2--webp::after {
+                content: '';
+                position: absolute;
+                top: 0;
+                left: 0;
+                right: 0;
+                bottom: 0;
+                background: linear-gradient(135deg, rgba(0, 0, 0, 0.8), rgba(119, 170, 153, 0.75));
+                z-index: 0;
+                pointer-events: none;
+            }
+
+            /* Ensure content appears above overlay and background */
+            .footer-v2.footer-v2--webp .container {
+                position: relative;
+                z-index: 10;
+            }
+
+            /* Ensure all footer content is above the overlay */
+            .footer-v2.footer-v2--webp * {
+                position: relative;
+                z-index: 10;
+            }
+
+            /* Footer links spacing */
+            .footer-v2 .footer-link {
+                margin-left: 0.5rem;
+                margin-right: 0.5rem;
+                padding: 0.25rem 0.5rem;
+                display: inline-block;
+            }
+
+            /* RTL spacing for footer links */
+            .rtl .footer-v2 .footer-link {
+                margin-left: 0.5rem;
+                margin-right: 0.5rem;
+            }
 
 
             /* Footer v2: higher text contrast (no overlays). Remove footer-v2--contrast class to revert */
@@ -463,7 +499,7 @@
                         </div>
                         <p class="brand-desc {{ 'arabic-text' if is_rtl else 'english-text' }} mb-3">
                             {% if is_rtl %}
-                                صادرات زراعية مصرية متميزة بمعايير جودة عالمية ولوجستيات موثوقة.
+                                إمداد جلوبال شريكك الموثوق في عالم الصادرات الزراعية
                             {% else %}
                                 Premium Egyptian agricultural exports with international quality standards and reliable logistics.
                             {% endif %}
@@ -562,15 +598,15 @@
                         <div class="col-md-6">
                             <p class="mb-0 small {{ 'arabic-text' if is_rtl else 'english-text' }}" style="color: rgba(255,255,255,0.8);">
                                 {% if is_rtl %}
-                                    &copy; 2024 <a href="{{ url_for('main.index') }}" class="footer-link">{{ COMPANY_NAME }}</a>. جميع الحقوق محفوظة.
+                                    &copy; 2025 <a href="{{ url_for('main.index') }}" class="footer-link">{{ COMPANY_NAME }}</a>. جميع الحقوق محفوظة.
                                 {% else %}
-                                    &copy; 2024 <a href="{{ url_for('main.index') }}" class="footer-link">{{ COMPANY_NAME }}</a>. All rights reserved.
+                                    &copy; 2025 <a href="{{ url_for('main.index') }}" class="footer-link">{{ COMPANY_NAME }}</a>. All rights reserved.
                                 {% endif %}
                             </p>
                         </div>
                         <div class="col-md-6 text-md-end">
-                            <a href="#" class="footer-link me-3 {{ 'arabic-text' if is_rtl else 'english-text' }}">{{ _('Privacy Policy') }}</a>
-                            <a href="#" class="footer-link me-3 {{ 'arabic-text' if is_rtl else 'english-text' }}">{{ _('Terms of Service') }}</a>
+                            <a href="#" class="footer-link {{ 'arabic-text' if is_rtl else 'english-text' }}" style="margin-right: 1.5rem;">{{ _('Privacy Policy') }}</a>
+                            <a href="#" class="footer-link {{ 'arabic-text' if is_rtl else 'english-text' }}" style="margin-right: 1.5rem;">{{ _('Terms of Service') }}</a>
                             <a href="{{ url_for('main.contact') }}" class="footer-link {{ 'arabic-text' if is_rtl else 'english-text' }}">{{ _('Support') }}</a>
                         </div>
                     </div>
