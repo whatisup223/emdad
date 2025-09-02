@@ -12,29 +12,30 @@ from datetime import datetime
 def index():
     """Homepage."""
     try:
-        # Get featured categories
+        # Get featured categories (now using show_on_homepage instead of parent_id=None)
         featured_categories = Category.query.filter_by(
             is_active=True,
-            parent_id=None
+            show_on_homepage=True
         ).order_by(Category.sort_order).limit(4).all() or []
     except Exception as e:
         print(f"Warning: Could not load categories: {e}")
         featured_categories = []
 
     try:
-        # Get featured products
+        # Get featured products (now using show_on_homepage)
         featured_products = Product.query.filter_by(
             status='active',
-            featured=True
+            show_on_homepage=True
         ).order_by(Product.sort_order).limit(8).all() or []
     except Exception as e:
         print(f"Warning: Could not load products: {e}")
         featured_products = []
 
-    # Get latest news
-    latest_news = News.query.filter_by(status='published').filter(
-        News.publish_at <= datetime.utcnow()
-    ).order_by(News.publish_at.desc()).limit(3).all() or []
+    # Get latest news (now using show_on_homepage)
+    latest_news = News.query.filter_by(
+        status='published',
+        show_on_homepage=True
+    ).filter(News.publish_at <= datetime.utcnow()).order_by(News.publish_at.desc()).limit(3).all() or []
 
     # Get company info sections for homepage
     about_intro = CompanyInfo.query.filter_by(key='about_intro', is_active=True).first()

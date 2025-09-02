@@ -68,9 +68,10 @@ class CategoryForm(FlaskForm):
     slug = StringField('URL Slug', validators=[DataRequired(), Length(max=100)])
     description_en = TextAreaField('Description (English)', validators=[Optional()])
     description_ar = TextAreaField('Description (Arabic)', validators=[Optional()])
-    parent_id = SelectField('Parent Category', validators=[Optional()], coerce=lambda x: int(x) if x else None, choices=[])
+    parent_id = SelectField('Parent Category (Optional)', validators=[Optional()], coerce=lambda x: int(x) if x else None, choices=[])
     sort_order = IntegerField('Sort Order', validators=[Optional()], default=0)
     is_active = BooleanField('Active', default=True)
+    show_on_homepage = BooleanField('Show on Homepage', default=True)
     image = FileField('Category Image', validators=[
         FileAllowed(['jpg', 'jpeg', 'png', 'gif'], 'Only image files allowed!')
     ])
@@ -110,6 +111,7 @@ class ProductForm(FlaskForm):
         ('draft', 'Draft')
     ])
     featured = BooleanField('Featured Product')
+    show_on_homepage = BooleanField('Show on Homepage', default=False)
     sort_order = IntegerField('Sort Order', validators=[Optional()], default=0)
     image = FileField('Product Image', validators=[
         FileAllowed(['jpg', 'jpeg', 'png', 'gif'], 'Only image files allowed!')
@@ -211,6 +213,7 @@ class NewsForm(FlaskForm):
     # Publishing options
     status = SelectField(_l('Status'), validators=[DataRequired()], choices=[])
     featured = BooleanField(_l('Featured Article'))
+    show_on_homepage = BooleanField(_l('Show on Homepage'), default=False)
     publish_at = DateTimeField(_l('Publish Date'), validators=[Optional()], format='%Y-%m-%d %H:%M:%S')
 
     # Enhanced file uploads

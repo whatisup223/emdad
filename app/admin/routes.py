@@ -131,15 +131,16 @@ def category_new():
             description_ar=form.description_ar.data,
             parent_id=form.parent_id.data or None,
             sort_order=form.sort_order.data,
-            is_active=form.is_active.data
+            is_active=form.is_active.data,
+            show_on_homepage=form.show_on_homepage.data
         )
         
         # Handle image upload
-        if form.image.data:
+        if form.image.data and hasattr(form.image.data, 'filename') and form.image.data.filename:
             filename = secure_filename(form.image.data.filename)
             timestamp = datetime.now().strftime('%Y%m%d_%H%M%S_')
             filename = timestamp + filename
-            
+
             upload_path = os.path.join(current_app.instance_path,
                                      current_app.config['UPLOAD_FOLDER'],
                                      'categories', filename)
@@ -189,14 +190,15 @@ def category_edit(id):
         category.parent_id = form.parent_id.data or None
         category.sort_order = form.sort_order.data
         category.is_active = form.is_active.data
+        category.show_on_homepage = form.show_on_homepage.data
         category.updated_at = datetime.utcnow()
         
         # Handle image upload
-        if form.image.data:
+        if form.image.data and hasattr(form.image.data, 'filename') and form.image.data.filename:
             filename = secure_filename(form.image.data.filename)
             timestamp = datetime.now().strftime('%Y%m%d_%H%M%S_')
             filename = timestamp + filename
-            
+
             upload_path = os.path.join(current_app.instance_path,
                                      current_app.config['UPLOAD_FOLDER'],
                                      'categories', filename)
@@ -333,6 +335,7 @@ def product_new():
             seo_description_ar=form.seo_description_ar.data,
             status=form.status.data,
             featured=form.featured.data,
+            show_on_homepage=form.show_on_homepage.data,
             sort_order=form.sort_order.data
         )
 
@@ -409,6 +412,7 @@ def product_edit(id):
         product.seo_description_ar = form.seo_description_ar.data
         product.status = form.status.data
         product.featured = form.featured.data
+        product.show_on_homepage = form.show_on_homepage.data
         product.sort_order = form.sort_order.data
         product.updated_at = datetime.utcnow()
 
@@ -684,6 +688,7 @@ def news_new():
             # Publishing
             status=status,
             featured=form.featured.data,
+            show_on_homepage=form.show_on_homepage.data,
             publish_at=publish_at
         )
 
@@ -756,6 +761,7 @@ def news_edit(id):
         # Publishing
         news_item.status = form.status.data
         news_item.featured = form.featured.data
+        news_item.show_on_homepage = form.show_on_homepage.data
         news_item.publish_at = form.publish_at.data
         news_item.updated_at = datetime.utcnow()
 

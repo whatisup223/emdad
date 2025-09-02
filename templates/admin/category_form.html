@@ -108,6 +108,10 @@
                                 <div class="mb-3">
                                     {{ form.parent_id.label(class="form-label") }}
                                     {{ form.parent_id(class="form-select" + (" is-invalid" if form.parent_id.errors else "")) }}
+                                    <div class="form-text text-warning">
+                                        <i class="fas fa-exclamation-triangle"></i>
+                                        <strong>تحذير:</strong> اختيار فئة أب سيجعل هذه الفئة فرعية ولن تظهر في الصفحة الرئيسية.
+                                    </div>
                                     {% if form.parent_id.errors %}
                                         <div class="invalid-feedback">
                                             {% for error in form.parent_id.errors %}{{ error }}{% endfor %}
@@ -132,6 +136,14 @@
                                     <div class="form-check">
                                         {{ form.is_active(class="form-check-input") }}
                                         {{ form.is_active.label(class="form-check-label") }}
+                                    </div>
+                                    <div class="form-check mt-2">
+                                        {{ form.show_on_homepage(class="form-check-input") }}
+                                        {{ form.show_on_homepage.label(class="form-check-label") }}
+                                        <div class="form-text text-info">
+                                            <i class="fas fa-info-circle"></i>
+                                            سيتم عرض هذه الفئة في قسم "فئات المنتجات" بالصفحة الرئيسية
+                                        </div>
                                     </div>
                                 </div>
                             </div>

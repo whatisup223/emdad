@@ -58,6 +58,7 @@ class Category(db.Model):
     parent_id = db.Column(db.Integer, db.ForeignKey('category.id'))
     sort_order = db.Column(db.Integer, default=0)
     is_active = db.Column(db.Boolean, default=True)
+    show_on_homepage = db.Column(db.Boolean, default=True)  # New field for homepage display
     image_path = db.Column(db.String(255))
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
     updated_at = db.Column(db.DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
@@ -107,6 +108,7 @@ class Product(db.Model):
     # Status and ordering
     status = db.Column(db.String(20), default='active')  # active, inactive, draft
     featured = db.Column(db.Boolean, default=False)
+    show_on_homepage = db.Column(db.Boolean, default=False)  # New field for homepage display
     sort_order = db.Column(db.Integer, default=0)
 
     # Main image path (for backward compatibility)
@@ -286,6 +288,7 @@ class News(db.Model):
     # Publishing
     status = db.Column(db.String(20), default='draft')  # draft, published, scheduled, archived
     featured = db.Column(db.Boolean, default=False)
+    show_on_homepage = db.Column(db.Boolean, default=False)  # New field for homepage display
     publish_at = db.Column(db.DateTime)
 
     # Content metadata
