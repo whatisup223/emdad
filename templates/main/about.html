@@ -1,305 +1,1169 @@
 {% extends "base.html" %}
 
-{% block title %}About Us - {{ SITE_NAME }}{% endblock %}
+{% block title %}{{ _('About Us') }} - {{ SITE_NAME }}{% endblock %}
 
-{% block meta_description %}Learn about Emdad Global, a leading Egyptian agricultural export company with over 25 years of experience in premium fruits and vegetables.{% endblock %}
+{% block meta_description %}{{ _('Learn about Emdad Global, a leading Egyptian agricultural export company with over 25 years of experience in premium fruits and vegetables.') }}{% endblock %}
+
+{% block extra_css %}
+<!-- Force refresh CSS -->
+<link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}?v={{ moment().timestamp() }}">
+<style>
+/* FORCE WHITE TEXT AND BACKGROUND - HIGHEST PRIORITY */
+.hero-about {
+    background: linear-gradient(135deg, #6b9080 0%, #5a7c6b 50%, #6b9080 100%) !important;
+    background-size: 200% 200% !important;
+    animation: gradientShift 8s ease infinite !important;
+    position: relative !important;
+    overflow: hidden !important;
+    min-height: 50vh !important;
+    padding: 80px 0 60px !important;
+    color: white !important;
+    width: 100% !important;
+}
+
+.hero-about, .hero-about *, .hero-about h1, .hero-about p, .hero-about .lead {
+    color: white !important;
+}
+
+/* Animated gradient background */
+@keyframes gradientShift {
+    0% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+    100% { background-position: 0% 50%; }
+}
+/* Hero section with animated gradient */
+.hero-about {
+    background: linear-gradient(135deg, #6b9080 0%, #5a7c6b 50%, #6b9080 100%) !important;
+    background-size: 200% 200% !important;
+    animation: gradientShift 8s ease infinite;
+    position: relative;
+    overflow: hidden;
+    min-height: 50vh;
+    padding: 80px 0 60px;
+    color: white !important;
+    width: 100%;
+}
+
+/* Animated gradient background */
+@keyframes gradientShift {
+    0% {
+        background-position: 0% 50%;
+    }
+    50% {
+        background-position: 100% 50%;
+    }
+    100% {
+        background-position: 0% 50%;
+    }
+}
+
+/* Animated background circles */
+.hero-about::before {
+    content: '';
+    position: absolute;
+    top: -100px;
+    left: -100px;
+    width: 300px;
+    height: 300px;
+    background: rgba(255, 255, 255, 0.1) !important;
+    border-radius: 50%;
+    z-index: 1;
+    animation: float-slow 8s ease-in-out infinite;
+}
+
+.hero-about::after {
+    content: '';
+    position: absolute;
+    bottom: -150px;
+    right: -150px;
+    width: 400px;
+    height: 400px;
+    background: rgba(255, 255, 255, 0.08) !important;
+    border-radius: 50%;
+    z-index: 1;
+    animation: float-reverse 10s ease-in-out infinite;
+}
+
+/* Floating animations */
+@keyframes float-slow {
+    0%, 100% {
+        transform: translateY(0px) translateX(0px) scale(1);
+        opacity: 0.1;
+    }
+    50% {
+        transform: translateY(-30px) translateX(20px) scale(1.1);
+        opacity: 0.15;
+    }
+}
+
+@keyframes float-reverse {
+    0%, 100% {
+        transform: translateY(0px) translateX(0px) scale(1);
+        opacity: 0.08;
+    }
+    50% {
+        transform: translateY(20px) translateX(-15px) scale(0.9);
+        opacity: 0.12;
+    }
+}
+
+.hero-about .container {
+    position: relative;
+    z-index: 2;
+}
+
+/* Force background color if needed */
+section.hero-about {
+    background-color: #6b9080 !important;
+    background-image: linear-gradient(135deg, #6b9080 0%, #5a7c6b 100%) !important;
+}
+
+/* Ensure ALL text is white with highest priority */
+.hero-about,
+.hero-about *,
+.hero-about h1,
+.hero-about h2,
+.hero-about h3,
+.hero-about h4,
+.hero-about h5,
+.hero-about h6,
+.hero-about p,
+.hero-about span,
+.hero-about div,
+.hero-about .lead,
+.hero-about .display-3 {
+    color: white !important;
+}
+
+.hero-about .badge {
+    color: #103d24 !important;
+    background: white !important;
+}
+
+.hero-about .breadcrumb-item a {
+    color: rgba(255, 255, 255, 0.7) !important;
+}
+
+.hero-about .breadcrumb-item.active {
+    color: white !important;
+}
+
+/* Stats cards styling - consistent with other sections */
+.stats-card {
+    background: linear-gradient(135deg, #f9cb99 0%, #f4b882 100%);
+    border-radius: 20px;
+    padding: 2rem;
+    text-align: center;
+    color: #103d24;
+    box-shadow: 0 10px 30px rgba(249, 203, 153, 0.3);
+    transition: transform 0.3s ease;
+    border: none;
+    height: 100%;
+}
+
+.stats-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 15px 40px rgba(249, 203, 153, 0.4);
+}
+
+.stats-card .mb-3 i {
+    color: #103d24;
+    font-size: 3rem;
+    margin-bottom: 1rem;
+}
+
+.stats-card h2 {
+    font-size: 3rem;
+    font-weight: 700;
+    color: #103d24 !important;
+    margin-bottom: 0.5rem;
+    text-shadow: none;
+}
+
+.stats-card h6 {
+    font-size: 1rem;
+    color: #103d24 !important;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+/* Call to Action Section */
+.cta-section {
+    background: linear-gradient(135deg, #103d24 0%, #1a5a32 50%, #2d7a4a 100%);
+    background-attachment: fixed;
+    position: relative;
+    overflow: hidden;
+    color: white;
+}
+
+.cta-section::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: url('{{ url_for("static", filename="images/hero-bg.webp") }}') center/cover;
+    opacity: 0.1;
+    z-index: 1;
+}
+
+.cta-section .container {
+    position: relative;
+    z-index: 2;
+}
+
+.cta-section h2,
+.cta-section p,
+.cta-section h6,
+.cta-section small {
+    color: white !important;
+    text-shadow: 0 2px 4px rgba(0,0,0,0.3);
+}
+
+.cta-section .btn-light {
+    background: #f9cb99;
+    border-color: #f9cb99;
+    color: #103d24;
+    font-weight: 600;
+}
+
+.cta-section .btn-light:hover {
+    background: white;
+    border-color: white;
+    color: #103d24;
+    transform: translateY(-3px);
+    box-shadow: 0 10px 25px rgba(255, 255, 255, 0.3);
+}
+
+.cta-section .btn-outline-light {
+    border-color: rgba(255, 255, 255, 0.8);
+    color: white;
+}
+
+.cta-section .btn-outline-light:hover {
+    background: rgba(255, 255, 255, 0.1);
+    border-color: #f9cb99;
+    color: #f9cb99;
+    transform: translateY(-3px);
+    box-shadow: 0 10px 25px rgba(249, 203, 153, 0.2);
+}
+
+/* Additional animated decorative circles */
+.hero-about .extra-circle-1 {
+    position: absolute;
+    top: 20%;
+    right: 10%;
+    width: 150px;
+    height: 150px;
+    background: rgba(255, 255, 255, 0.05);
+    border-radius: 50%;
+    z-index: 1;
+    animation: pulse-glow 6s ease-in-out infinite;
+}
+
+.hero-about .extra-circle-2 {
+    position: absolute;
+    bottom: 30%;
+    left: 15%;
+    width: 100px;
+    height: 100px;
+    background: rgba(255, 255, 255, 0.08);
+    border-radius: 50%;
+    z-index: 1;
+    animation: rotate-float 12s linear infinite;
+}
+
+.hero-about .extra-circle-3 {
+    position: absolute;
+    top: 60%;
+    left: 5%;
+    width: 80px;
+    height: 80px;
+    background: rgba(249, 203, 153, 0.1);
+    border-radius: 50%;
+    z-index: 1;
+    animation: bounce-soft 7s ease-in-out infinite;
+}
+
+.hero-about .extra-circle-4 {
+    position: absolute;
+    top: 40%;
+    right: 25%;
+    width: 60px;
+    height: 60px;
+    background: rgba(255, 255, 255, 0.06);
+    border-radius: 50%;
+    z-index: 1;
+    animation: drift 9s ease-in-out infinite;
+}
+
+/* Animation keyframes */
+@keyframes pulse-glow {
+    0%, 100% {
+        transform: scale(1);
+        opacity: 0.05;
+        box-shadow: 0 0 0 0 rgba(255, 255, 255, 0.1);
+    }
+    50% {
+        transform: scale(1.2);
+        opacity: 0.1;
+        box-shadow: 0 0 20px 10px rgba(255, 255, 255, 0.05);
+    }
+}
+
+@keyframes rotate-float {
+    0% {
+        transform: rotate(0deg) translateY(0px);
+    }
+    25% {
+        transform: rotate(90deg) translateY(-10px);
+    }
+    50% {
+        transform: rotate(180deg) translateY(0px);
+    }
+    75% {
+        transform: rotate(270deg) translateY(10px);
+    }
+    100% {
+        transform: rotate(360deg) translateY(0px);
+    }
+}
+
+@keyframes bounce-soft {
+    0%, 100% {
+        transform: translateY(0px) scale(1);
+    }
+    50% {
+        transform: translateY(-20px) scale(1.1);
+    }
+}
+
+@keyframes drift {
+    0%, 100% {
+        transform: translateX(0px) translateY(0px);
+    }
+    25% {
+        transform: translateX(15px) translateY(-10px);
+    }
+    50% {
+        transform: translateX(0px) translateY(-20px);
+    }
+    75% {
+        transform: translateX(-10px) translateY(-5px);
+    }
+}
+
+/* Floating Icons */
+.floating-icon {
+    position: absolute;
+    color: rgba(255, 255, 255, 0.3);
+    font-size: 2rem;
+    z-index: 1;
+    pointer-events: none;
+}
+
+.floating-icon-1 {
+    top: 20%;
+    left: 15%;
+    animation: floatUpDown 4s ease-in-out infinite;
+}
+
+.floating-icon-2 {
+    top: 30%;
+    right: 20%;
+    animation: floatLeftRight 5s ease-in-out infinite;
+}
+
+.floating-icon-3 {
+    bottom: 25%;
+    left: 25%;
+    animation: floatDiagonal 6s ease-in-out infinite;
+}
+
+.floating-icon-4 {
+    bottom: 35%;
+    right: 15%;
+    animation: floatRotate 7s ease-in-out infinite;
+}
+
+/* Animated Particles */
+.particle {
+    position: absolute;
+    background: rgba(255, 255, 255, 0.2);
+    border-radius: 50%;
+    z-index: 1;
+    pointer-events: none;
+}
+
+.particle-1 {
+    width: 8px;
+    height: 8px;
+    top: 15%;
+    left: 10%;
+    animation: particleFloat1 8s linear infinite;
+}
+
+.particle-2 {
+    width: 6px;
+    height: 6px;
+    top: 25%;
+    right: 30%;
+    animation: particleFloat2 10s linear infinite;
+}
+
+.particle-3 {
+    width: 10px;
+    height: 10px;
+    bottom: 20%;
+    left: 20%;
+    animation: particleFloat3 12s linear infinite;
+}
+
+.particle-4 {
+    width: 4px;
+    height: 4px;
+    top: 40%;
+    right: 10%;
+    animation: particleFloat4 6s linear infinite;
+}
+
+.particle-5 {
+    width: 7px;
+    height: 7px;
+    bottom: 30%;
+    right: 25%;
+    animation: particleFloat5 9s linear infinite;
+}
+
+/* Icon Animation Keyframes */
+@keyframes floatUpDown {
+    0%, 100% { transform: translateY(0px); }
+    50% { transform: translateY(-20px); }
+}
+
+@keyframes floatLeftRight {
+    0%, 100% { transform: translateX(0px); }
+    50% { transform: translateX(15px); }
+}
+
+@keyframes floatDiagonal {
+    0%, 100% { transform: translate(0px, 0px) rotate(0deg); }
+    50% { transform: translate(10px, -15px) rotate(180deg); }
+}
+
+@keyframes floatRotate {
+    0%, 100% { transform: rotate(0deg) scale(1); }
+    50% { transform: rotate(180deg) scale(1.2); }
+}
+
+/* Particle Animation Keyframes */
+@keyframes particleFloat1 {
+    0% { transform: translateY(0px) translateX(0px); opacity: 0; }
+    10% { opacity: 1; }
+    90% { opacity: 1; }
+    100% { transform: translateY(-100px) translateX(50px); opacity: 0; }
+}
+
+@keyframes particleFloat2 {
+    0% { transform: translateY(0px) translateX(0px); opacity: 0; }
+    15% { opacity: 1; }
+    85% { opacity: 1; }
+    100% { transform: translateY(-80px) translateX(-30px); opacity: 0; }
+}
+
+@keyframes particleFloat3 {
+    0% { transform: translateY(0px) translateX(0px); opacity: 0; }
+    20% { opacity: 1; }
+    80% { opacity: 1; }
+    100% { transform: translateY(-120px) translateX(20px); opacity: 0; }
+}
+
+@keyframes particleFloat4 {
+    0% { transform: translateY(0px) translateX(0px); opacity: 0; }
+    25% { opacity: 1; }
+    75% { opacity: 1; }
+    100% { transform: translateY(-60px) translateX(-40px); opacity: 0; }
+}
+
+@keyframes particleFloat5 {
+    0% { transform: translateY(0px) translateX(0px); opacity: 0; }
+    30% { opacity: 1; }
+    70% { opacity: 1; }
+    100% { transform: translateY(-90px) translateX(10px); opacity: 0; }
+}
+
+/* Hero text animations */
+.hero-title {
+    animation: fadeInUp 1s ease-out 0.3s both;
+    text-shadow: 0 3px 6px rgba(0,0,0,0.3);
+}
+
+.hero-subtitle {
+    animation: fadeInUp 1s ease-out 0.6s both;
+    text-shadow: 0 2px 4px rgba(0,0,0,0.2);
+}
+
+.hero-buttons {
+    animation: fadeInUp 1s ease-out 0.9s both;
+}
+
+.breadcrumb {
+    animation: fadeInDown 1s ease-out 0.1s both;
+}
+
+/* Animation keyframes for text */
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(30px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes fadeInDown {
+    from {
+        opacity: 0;
+        transform: translateY(-20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.section-badge {
+    background: linear-gradient(135deg, #f9cb99 0%, #f4b882 100%);
+    color: #103d24;
+    font-weight: 600;
+    border: none;
+    box-shadow: 0 4px 15px rgba(249, 203, 153, 0.3);
+    display: inline-block;
+}
+
+.section-heading {
+    font-size: 2.5rem;
+    font-weight: 700;
+    line-height: 1.2;
+}
+
+.english-heading {
+    font-family: 'Inter', 'Segoe UI', sans-serif;
+}
+
+.gradient-text {
+    background: linear-gradient(135deg, #103d24 0%, #2d7a4a 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+
+.feature-card {
+    transition: all 0.3s ease;
+    border: none;
+    background: white;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+}
+
+.feature-card:hover {
+    transform: translateY(-10px);
+    box-shadow: 0 20px 40px rgba(0,0,0,0.15);
+}
+
+.feature-icon {
+    width: 80px;
+    height: 80px;
+    background: linear-gradient(135deg, #103d24 0%, #2d7a4a 100%);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 1.5rem;
+    box-shadow: 0 8px 25px rgba(16, 61, 36, 0.3);
+}
+
+.stats-card {
+    background: linear-gradient(135deg, #f9cb99 0%, #f4b882 100%);
+    border-radius: 20px;
+    padding: 2rem;
+    text-align: center;
+    color: #103d24;
+    box-shadow: 0 10px 30px rgba(249, 203, 153, 0.3);
+    transition: transform 0.3s ease;
+}
+
+.stats-card:hover {
+    transform: translateY(-5px);
+}
+
+.timeline-item {
+    position: relative;
+    padding-left: 3rem;
+    margin-bottom: 2rem;
+}
+
+.timeline-item::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 20px;
+    height: 20px;
+    background: linear-gradient(135deg, #103d24 0%, #2d7a4a 100%);
+    border-radius: 50%;
+    box-shadow: 0 0 0 4px rgba(16, 61, 36, 0.2);
+}
+
+.timeline-item::after {
+    content: '';
+    position: absolute;
+    left: 9px;
+    top: 20px;
+    width: 2px;
+    height: calc(100% + 1rem);
+    background: linear-gradient(to bottom, #103d24, transparent);
+}
+
+.timeline-item:last-child::after {
+    display: none;
+}
+
+.bg-gradient-light {
+    background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+}
+
+.hover-lift {
+    transition: all 0.3s ease;
+}
+
+.hover-lift:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 15px 35px rgba(0,0,0,0.2);
+}
+
+/* Button enhancements */
+.btn-light:hover {
+    background: #f9cb99 !important;
+    border-color: #f9cb99 !important;
+    color: #103d24 !important;
+    transform: translateY(-3px);
+    box-shadow: 0 10px 25px rgba(249, 203, 153, 0.4);
+}
+
+.btn-outline-light:hover {
+    background: rgba(255, 255, 255, 0.1) !important;
+    border-color: #f9cb99 !important;
+    color: #f9cb99 !important;
+    transform: translateY(-3px);
+    box-shadow: 0 10px 25px rgba(249, 203, 153, 0.2);
+}
+
+/* Breadcrumb styling */
+.breadcrumb {
+    background: transparent;
+    padding: 0;
+    margin: 0;
+}
+
+.breadcrumb-item + .breadcrumb-item::before {
+    content: "›";
+    color: rgba(255, 255, 255, 0.5);
+    font-weight: bold;
+    margin: 0 0.5rem;
+}
+
+.breadcrumb-item a:hover {
+    color: #f9cb99 !important;
+    transform: translateY(-2px);
+    transition: all 0.3s ease;
+}
+
+/* Hero text styling */
+.hero-about h1 {
+    text-shadow: 0 3px 6px rgba(0,0,0,0.3);
+    color: white;
+}
+
+.hero-about .badge {
+    box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    .hero-about {
+        min-height: 45vh;
+        padding: 60px 0 40px;
+    }
+
+    .hero-about h1 {
+        font-size: 2.5rem;
+    }
+
+    .floating-icon {
+        font-size: 1.5rem;
+    }
+
+    .particle {
+        display: none; /* Hide particles on mobile for performance */
+    }
+
+    .feature-icon {
+        width: 60px;
+        height: 60px;
+    }
+
+    .timeline-item {
+        padding-left: 2rem;
+    }
+
+    .section-heading {
+        font-size: 2rem;
+    }
+}
+
+@media (max-width: 576px) {
+    .hero-about {
+        min-height: 40vh;
+        padding: 50px 0 30px;
+    }
+
+    .hero-about h1 {
+        font-size: 2rem;
+    }
+
+    .floating-icon {
+        font-size: 1.2rem;
+    }
+}
+
+@media (max-width: 576px) {
+    .hero-about {
+        padding: 60px 0 40px;
+        background-attachment: scroll; /* Fix for mobile */
+    }
+
+    .hero-about .row.g-4 {
+        gap: 1rem !important;
+    }
+
+    .display-3 {
+        font-size: 2rem;
+    }
+}
+
+/* Fallback solid background if images fail */
+.hero-about-fallback {
+    background: linear-gradient(135deg, #103d24 0%, #1a5a32 50%, #2d7a4a 100%) !important;
+}
+</style>
+{% endblock %}
 
 {% block content %}
-<!-- Page Header -->
-<section class="py-5 bg-primary text-white">
+<!-- Hero Section -->
+<section class="hero-about" style="background: linear-gradient(135deg, #6b9080 0%, #5a7c6b 100%) !important; color: white !important; min-height: 50vh; padding: 80px 0 60px;">
+    <!-- Animated Background Elements -->
+    <div class="extra-circle-1"></div>
+    <div class="extra-circle-2"></div>
+    <div class="extra-circle-3"></div>
+    <div class="extra-circle-4"></div>
+
+    <!-- Floating Icons -->
+    <div class="floating-icon floating-icon-1">
+        <i class="fas fa-leaf"></i>
+    </div>
+    <div class="floating-icon floating-icon-2">
+        <i class="fas fa-globe"></i>
+    </div>
+    <div class="floating-icon floating-icon-3">
+        <i class="fas fa-seedling"></i>
+    </div>
+    <div class="floating-icon floating-icon-4">
+        <i class="fas fa-handshake"></i>
+    </div>
+
+    <!-- Animated Particles -->
+    <div class="particle particle-1"></div>
+    <div class="particle particle-2"></div>
+    <div class="particle particle-3"></div>
+    <div class="particle particle-4"></div>
+    <div class="particle particle-5"></div>
+
     <div class="container">
-        <div class="row align-items-center">
-            <div class="col-lg-8">
-                <nav aria-label="breadcrumb">
-                    <ol class="breadcrumb text-white-50">
-                        <li class="breadcrumb-item"><a href="{{ url_for('main.index') }}" class="text-white-50">Home</a></li>
-                        <li class="breadcrumb-item active text-white">About Us</li>
+        <div class="row text-center text-white">
+            <div class="col-lg-8 mx-auto">
+                <!-- Breadcrumb -->
+                <nav aria-label="breadcrumb" class="mb-4">
+                    <ol class="breadcrumb justify-content-center">
+                        <li class="breadcrumb-item">
+                            <a href="{{ url_for('main.index') }}" class="text-white-50 text-decoration-none hover-lift">
+                                <i class="fas fa-home me-1"></i>{{ _('Home') }}
+                            </a>
+                        </li>
+                        <li class="breadcrumb-item active text-white">{{ _('About Us') }}</li>
                     </ol>
                 </nav>
-                
-                <h1 class="display-5 fw-bold mb-3">About Emdad Global</h1>
-                <p class="lead">Leading Egyptian agricultural exports with international quality standards</p>
+
+                <!-- Main Heading -->
+                <h1 class="display-3 fw-bold mb-4 english-heading hero-title" style="color: white !important; text-shadow: 0 3px 6px rgba(0,0,0,0.3);">
+                    {{ _('About Us') }}
+                </h1>
+
+                <!-- Subtitle -->
+                <p class="lead mb-5 hero-subtitle" style="color: white !important; text-shadow: 0 2px 4px rgba(0,0,0,0.2);">
+                    {{ _('Leading Egyptian agricultural exports with over 25 years of excellence, serving global markets with premium quality products and unwavering commitment to international standards.') }}
+                </p>
+
+                <!-- Action Buttons -->
+                <div class="d-flex flex-wrap justify-content-center gap-3 hero-buttons">
+                    <a href="#our-story" class="btn btn-light btn-lg px-5 py-3 hover-lift rounded-pill">
+                        <i class="fas fa-arrow-down me-2"></i>{{ _('Learn More') }}
+                    </a>
+                    <a href="{{ url_for('main.contact') }}" class="btn btn-outline-light btn-lg px-5 py-3 hover-lift rounded-pill">
+                        <i class="fas fa-envelope me-2"></i>{{ _('Contact Us') }}
+                    </a>
+                </div>
             </div>
         </div>
     </div>
 </section>
 
-<!-- Company Profile -->
-<section class="py-5">
+<!-- Our Story Section -->
+<section id="our-story" class="py-5 position-relative bg-white">
     <div class="container">
         <div class="row align-items-center">
-            <div class="col-lg-6 mb-4">
-                {% if company_profile %}
-                    <h2 class="mb-4">{{ company_profile.get_title() }}</h2>
-                    <div class="text-muted">
-                        {{ company_profile.get_content() | safe }}
+            <div class="col-lg-6 mb-5 mb-lg-0" data-aos="fade-right">
+                <div class="section-badge badge bg-gradient-secondary text-dark px-4 py-2 rounded-pill mb-3 fs-6 fw-semibold">
+                    <i class="fas fa-history me-2"></i>{{ _('Our Journey') }}
+                </div>
+
+                <h2 class="section-heading english-heading gradient-text mb-4">
+                    {{ _('25+ Years of Agricultural Excellence') }}
+                </h2>
+
+                <p class="lead text-muted mb-4">
+                    {{ _('From humble beginnings to global leadership in Egyptian agricultural exports') }}
+                </p>
+
+                <div class="mb-4">
+                    <p class="text-muted mb-3">
+                        {{ _('Emdad Global has been at the forefront of Egyptian agricultural exports for over 25 years. We specialize in premium quality citrus fruits, fresh fruits, vegetables, and frozen products that meet the highest international standards.') }}
+                    </p>
+
+                    <p class="text-muted mb-3">
+                        {{ _('Our commitment to quality, combined with state-of-the-art facilities and comprehensive certifications, has made us a trusted partner for importers worldwide. We serve over 50 countries across Europe, Asia, Africa, and the Americas.') }}
+                    </p>
+
+                    <p class="text-muted">
+                        {{ _('From our headquarters in Egypt, we coordinate with carefully selected farms and processing facilities to ensure that every product bearing the Emdad Global name meets our exacting standards for quality, freshness, and safety.') }}
+                    </p>
+                </div>
+
+                <!-- Key Highlights -->
+                <div class="row g-3">
+                    <div class="col-6">
+                        <div class="d-flex align-items-center">
+                            <div class="feature-icon bg-primary text-white rounded-circle me-3" style="width: 50px; height: 50px; font-size: 1.2rem;">
+                                <i class="fas fa-globe"></i>
+                            </div>
+                            <div>
+                                <h6 class="mb-0 fw-bold">50+ Countries</h6>
+                                <small class="text-muted">{{ _('Global Reach') }}</small>
+                            </div>
+                        </div>
                     </div>
-                {% else %}
-                    <h2 class="mb-4">Our Story</h2>
-                    <p class="lead text-primary mb-4">Excellence in Egyptian Agricultural Exports</p>
-                    <p>Emdad Global has been at the forefront of Egyptian agricultural exports for over 25 years. We specialize in premium quality citrus fruits, fresh fruits, vegetables, and frozen products that meet the highest international standards.</p>
-                    <p>Our commitment to quality, combined with state-of-the-art facilities and comprehensive certifications, has made us a trusted partner for importers worldwide. We serve over 50 countries across Europe, Asia, Africa, and the Americas.</p>
-                    <p>From our headquarters in Egypt, we coordinate with carefully selected farms and processing facilities to ensure that every product bearing the Emdad Global name meets our exacting standards for quality, freshness, and safety.</p>
-                {% endif %}
+
+                    <div class="col-6">
+                        <div class="d-flex align-items-center">
+                            <div class="feature-icon bg-success text-white rounded-circle me-3" style="width: 50px; height: 50px; font-size: 1.2rem;">
+                                <i class="fas fa-award"></i>
+                            </div>
+                            <div>
+                                <h6 class="mb-0 fw-bold">ISO Certified</h6>
+                                <small class="text-muted">{{ _('Quality Standards') }}</small>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
-            <div class="col-lg-6">
-                {% if company_profile and company_profile.image_path %}
-                    <img src="{{ url_for('static', filename='uploads/' + company_profile.image_path) }}" 
-                         alt="{{ company_profile.get_title() }}" class="img-fluid rounded shadow">
-                {% else %}
-                    <img src="{{ url_for('static', filename='images/about-company.jpg') }}" 
-                         alt="Emdad Global Facilities" class="img-fluid rounded shadow">
-                {% endif %}
+
+            <div class="col-lg-6" data-aos="fade-left">
+                <div class="position-relative">
+                    <img src="{{ url_for('static', filename='images/hero-bg.webp') }}"
+                         alt="{{ _('Emdad Global Facilities') }}"
+                         class="img-fluid rounded-3 shadow-lg hover-lift">
+
+                    <!-- Floating Stats -->
+                    <div class="position-absolute top-0 end-0 translate-middle">
+                        <div class="stats-card">
+                            <h3 class="fw-bold mb-1">25+</h3>
+                            <small>{{ _('Years Experience') }}</small>
+                        </div>
+                    </div>
+
+                    <div class="position-absolute bottom-0 start-0 translate-middle">
+                        <div class="stats-card">
+                            <h3 class="fw-bold mb-1">1000+</h3>
+                            <small>{{ _('Happy Clients') }}</small>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
 </section>
 
-<!-- Mission & Vision -->
-<section class="py-5 bg-light">
+<!-- Mission & Vision Section -->
+<section class="py-5 bg-gradient-light position-relative">
     <div class="container">
-        {% if mission_vision %}
-            <div class="row">
-                <div class="col-lg-8 mx-auto text-center">
-                    <h2 class="mb-4">{{ mission_vision.get_title() }}</h2>
-                    <div class="text-muted">
-                        {{ mission_vision.get_content() | safe }}
+        <div class="text-center mb-5" data-aos="fade-up">
+            <div class="section-badge badge bg-gradient-secondary text-dark px-4 py-2 rounded-pill mb-3 fs-6 fw-semibold">
+                <i class="fas fa-compass me-2"></i>{{ _('Our Purpose') }}
+            </div>
+            <h2 class="section-heading english-heading gradient-text">{{ _('Mission & Vision') }}</h2>
+            <p class="lead text-muted col-lg-8 mx-auto">
+                {{ _('Guided by our commitment to excellence and sustainable growth in agricultural exports') }}
+            </p>
+        </div>
+
+        <div class="row g-4">
+            <!-- Mission Card -->
+            <div class="col-lg-6" data-aos="fade-up" data-aos-delay="100">
+                <div class="feature-card card h-100 border-0 shadow-lg hover-lift">
+                    <div class="card-body text-center p-5">
+                        <div class="feature-icon text-white mb-4">
+                            <i class="fas fa-bullseye fa-2x"></i>
+                        </div>
+                        <h3 class="english-heading mb-4">{{ _('Our Mission') }}</h3>
+                        <p class="text-muted lead mb-0">
+                            {{ _('To be the leading provider of premium Egyptian agricultural products to global markets, ensuring the highest quality standards while supporting local farmers and sustainable agricultural practices.') }}
+                        </p>
                     </div>
                 </div>
             </div>
-        {% else %}
-            <div class="row">
-                <div class="col-lg-6 mb-4">
-                    <div class="card border-0 shadow-sm h-100">
-                        <div class="card-body text-center p-5">
-                            <div class="feature-icon bg-primary text-white rounded-circle d-inline-flex align-items-center justify-content-center mb-4" style="width: 80px; height: 80px;">
-                                <i class="fas fa-bullseye fa-2x"></i>
-                            </div>
-                            <h3 class="mb-3">Our Mission</h3>
-                            <p class="text-muted">To be the leading provider of premium Egyptian agricultural products to global markets, ensuring the highest quality standards while supporting local farmers and sustainable agricultural practices.</p>
+
+            <!-- Vision Card -->
+            <div class="col-lg-6" data-aos="fade-up" data-aos-delay="200">
+                <div class="feature-card card h-100 border-0 shadow-lg hover-lift">
+                    <div class="card-body text-center p-5">
+                        <div class="feature-icon text-white mb-4">
+                            <i class="fas fa-eye fa-2x"></i>
                         </div>
-                    </div>
-                </div>
-                
-                <div class="col-lg-6 mb-4">
-                    <div class="card border-0 shadow-sm h-100">
-                        <div class="card-body text-center p-5">
-                            <div class="feature-icon bg-success text-white rounded-circle d-inline-flex align-items-center justify-content-center mb-4" style="width: 80px; height: 80px;">
-                                <i class="fas fa-eye fa-2x"></i>
-                            </div>
-                            <h3 class="mb-3">Our Vision</h3>
-                            <p class="text-muted">To establish Egypt as the premier source of high-quality agricultural products globally, while building long-term partnerships based on trust, reliability, and mutual success.</p>
-                        </div>
+                        <h3 class="english-heading mb-4">{{ _('Our Vision') }}</h3>
+                        <p class="text-muted lead mb-0">
+                            {{ _('To establish Egypt as the premier source of high-quality agricultural products globally, while building long-term partnerships based on trust, reliability, and mutual success.') }}
+                        </p>
                     </div>
                 </div>
             </div>
-        {% endif %}
+        </div>
     </div>
 </section>
 
-<!-- Core Values -->
-<section class="py-5">
+<!-- Core Values Section -->
+<section class="py-5 position-relative bg-white">
     <div class="container">
-        {% if core_values %}
-            <div class="text-center mb-5">
-                <h2 class="mb-4">{{ core_values.get_title() }}</h2>
-                <div class="text-muted">
-                    {{ core_values.get_content() | safe }}
+        <div class="text-center mb-5" data-aos="fade-up">
+            <div class="section-badge badge bg-gradient-secondary text-dark px-4 py-2 rounded-pill mb-3 fs-6 fw-semibold">
+                <i class="fas fa-heart me-2"></i>{{ _('Our Values') }}
+            </div>
+            <h2 class="section-heading english-heading gradient-text">{{ _('Core Values') }}</h2>
+            <p class="lead text-muted col-lg-8 mx-auto">
+                {{ _('The fundamental principles that guide everything we do and shape our company culture') }}
+            </p>
+        </div>
+
+        <div class="row g-4">
+            <!-- Integrity -->
+            <div class="col-lg-3 col-md-6" data-aos="fade-up" data-aos-delay="100">
+                <div class="feature-card card h-100 border-0 text-center p-4 hover-lift">
+                    <div class="feature-icon text-white mb-3">
+                        <i class="fas fa-handshake fa-2x"></i>
+                    </div>
+                    <h5 class="english-heading mb-3">{{ _('Integrity') }}</h5>
+                    <p class="text-muted mb-0">
+                        {{ _('Honest and transparent business practices in all our relationships with clients, partners, and stakeholders.') }}
+                    </p>
                 </div>
             </div>
-        {% else %}
-            <div class="text-center mb-5">
-                <h2 class="mb-3">Our Core Values</h2>
-                <p class="lead text-muted">The principles that guide everything we do</p>
-            </div>
-            
-            <div class="row">
-                <div class="col-lg-3 col-md-6 mb-4">
-                    <div class="text-center">
-                        <div class="feature-icon bg-primary text-white rounded-circle d-inline-flex align-items-center justify-content-center mb-3" style="width: 80px; height: 80px;">
-                            <i class="fas fa-handshake fa-2x"></i>
-                        </div>
-                        <h5>Integrity</h5>
-                        <p class="text-muted">Honest and transparent business practices in all our relationships</p>
+
+            <!-- Quality -->
+            <div class="col-lg-3 col-md-6" data-aos="fade-up" data-aos-delay="200">
+                <div class="feature-card card h-100 border-0 text-center p-4 hover-lift">
+                    <div class="feature-icon text-white mb-3">
+                        <i class="fas fa-award fa-2x"></i>
                     </div>
-                </div>
-                
-                <div class="col-lg-3 col-md-6 mb-4">
-                    <div class="text-center">
-                        <div class="feature-icon bg-success text-white rounded-circle d-inline-flex align-items-center justify-content-center mb-3" style="width: 80px; height: 80px;">
-                            <i class="fas fa-award fa-2x"></i>
-                        </div>
-                        <h5>Quality</h5>
-                        <p class="text-muted">Uncompromising commitment to the highest quality standards</p>
-                    </div>
-                </div>
-                
-                <div class="col-lg-3 col-md-6 mb-4">
-                    <div class="text-center">
-                        <div class="feature-icon bg-info text-white rounded-circle d-inline-flex align-items-center justify-content-center mb-3" style="width: 80px; height: 80px;">
-                            <i class="fas fa-shield-alt fa-2x"></i>
-                        </div>
-                        <h5>Trust</h5>
-                        <p class="text-muted">Building reliable partnerships through consistent performance</p>
-                    </div>
-                </div>
-                
-                <div class="col-lg-3 col-md-6 mb-4">
-                    <div class="text-center">
-                        <div class="feature-icon bg-warning text-white rounded-circle d-inline-flex align-items-center justify-content-center mb-3" style="width: 80px; height: 80px;">
-                            <i class="fas fa-users fa-2x"></i>
-                        </div>
-                        <h5>Partnership</h5>
-                        <p class="text-muted">Collaborative approach to achieving mutual success</p>
-                    </div>
+                    <h5 class="english-heading mb-3">{{ _('Quality') }}</h5>
+                    <p class="text-muted mb-0">
+                        {{ _('Uncompromising commitment to the highest quality standards in every product and service we deliver.') }}
+                    </p>
                 </div>
             </div>
-        {% endif %}
+
+            <!-- Trust -->
+            <div class="col-lg-3 col-md-6" data-aos="fade-up" data-aos-delay="300">
+                <div class="feature-card card h-100 border-0 text-center p-4 hover-lift">
+                    <div class="feature-icon text-white mb-3">
+                        <i class="fas fa-shield-alt fa-2x"></i>
+                    </div>
+                    <h5 class="english-heading mb-3">{{ _('Trust') }}</h5>
+                    <p class="text-muted mb-0">
+                        {{ _('Building reliable partnerships through consistent performance and dependable service delivery.') }}
+                    </p>
+                </div>
+            </div>
+
+            <!-- Innovation -->
+            <div class="col-lg-3 col-md-6" data-aos="fade-up" data-aos-delay="400">
+                <div class="feature-card card h-100 border-0 text-center p-4 hover-lift">
+                    <div class="feature-icon text-white mb-3">
+                        <i class="fas fa-lightbulb fa-2x"></i>
+                    </div>
+                    <h5 class="english-heading mb-3">{{ _('Innovation') }}</h5>
+                    <p class="text-muted mb-0">
+                        {{ _('Continuously improving our processes and embracing new technologies to serve our clients better.') }}
+                    </p>
+                </div>
+            </div>
+        </div>
     </div>
 </section>
 
-<!-- Global Reach -->
-<section class="py-5 bg-light">
+<!-- Statistics Section -->
+<section class="py-5 bg-gradient-light position-relative">
     <div class="container">
-        {% if global_reach %}
-            <div class="text-center mb-5">
-                <h2 class="mb-4">{{ global_reach.get_title() }}</h2>
-                <div class="text-muted">
-                    {{ global_reach.get_content() | safe }}
-                </div>
+        <div class="text-center mb-5" data-aos="fade-up">
+            <div class="section-badge badge bg-gradient-secondary text-dark px-4 py-2 rounded-pill mb-3 fs-6 fw-semibold">
+                <i class="fas fa-chart-line me-2"></i>{{ _('Our Impact') }}
             </div>
-        {% else %}
-            <div class="text-center mb-5">
-                <h2 class="mb-3">Global Reach</h2>
-                <p class="lead text-muted">Serving customers worldwide with Egyptian agricultural excellence</p>
-            </div>
-            
-            <div class="row">
-                <div class="col-lg-8 mx-auto">
-                    <div class="row text-center">
-                        <div class="col-md-3 mb-4">
-                            <div class="stat-item">
-                                <h3 class="text-primary mb-2">50+</h3>
-                                <p class="text-muted mb-0">Countries Served</p>
-                            </div>
-                        </div>
-                        <div class="col-md-3 mb-4">
-                            <div class="stat-item">
-                                <h3 class="text-success mb-2">25+</h3>
-                                <p class="text-muted mb-0">Years Experience</p>
-                            </div>
-                        </div>
-                        <div class="col-md-3 mb-4">
-                            <div class="stat-item">
-                                <h3 class="text-info mb-2">100+</h3>
-                                <p class="text-muted mb-0">Premium Products</p>
-                            </div>
-                        </div>
-                        <div class="col-md-3 mb-4">
-                            <div class="stat-item">
-                                <h3 class="text-warning mb-2">500+</h3>
-                                <p class="text-muted mb-0">Satisfied Clients</p>
-                            </div>
-                        </div>
+            <h2 class="section-heading english-heading gradient-text">{{ _('Global Reach & Excellence') }}</h2>
+            <p class="lead text-muted col-lg-8 mx-auto">
+                {{ _('Serving customers worldwide with Egyptian agricultural excellence and proven track record') }}
+            </p>
+        </div>
+
+        <div class="row g-4">
+            <!-- Countries Served -->
+            <div class="col-lg-3 col-md-6" data-aos="fade-up" data-aos-delay="100">
+                <div class="stats-card text-center hover-lift">
+                    <div class="mb-3">
+                        <i class="fas fa-globe fa-3x"></i>
                     </div>
+                    <h2 class="fw-bold mb-2">50+</h2>
+                    <h6 class="mb-0">{{ _('Countries Served') }}</h6>
                 </div>
             </div>
-            
-            <div class="row mt-5">
-                <div class="col-lg-10 mx-auto">
+
+            <!-- Years Experience -->
+            <div class="col-lg-3 col-md-6" data-aos="fade-up" data-aos-delay="200">
+                <div class="stats-card text-center hover-lift">
+                    <div class="mb-3">
+                        <i class="fas fa-calendar-alt fa-3x"></i>
+                    </div>
+                    <h2 class="fw-bold mb-2">25+</h2>
+                    <h6 class="mb-0">{{ _('Years Experience') }}</h6>
+                </div>
+            </div>
+
+            <!-- Premium Products -->
+            <div class="col-lg-3 col-md-6" data-aos="fade-up" data-aos-delay="300">
+                <div class="stats-card text-center hover-lift">
+                    <div class="mb-3">
+                        <i class="fas fa-seedling fa-3x"></i>
+                    </div>
+                    <h2 class="fw-bold mb-2">100+</h2>
+                    <h6 class="mb-0">{{ _('Premium Products') }}</h6>
+                </div>
+            </div>
+
+            <!-- Happy Clients -->
+            <div class="col-lg-3 col-md-6" data-aos="fade-up" data-aos-delay="400">
+                <div class="stats-card text-center hover-lift">
+                    <div class="mb-3">
+                        <i class="fas fa-handshake fa-3x"></i>
+                    </div>
+                    <h2 class="fw-bold mb-2">1000+</h2>
+                    <h6 class="mb-0">{{ _('Happy Clients') }}</h6>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Timeline Section -->
+<section class="py-5 position-relative bg-gradient-light">
+    <div class="container">
+        <div class="text-center mb-5" data-aos="fade-up">
+            <div class="section-badge badge bg-gradient-secondary text-dark px-4 py-2 rounded-pill mb-3 fs-6 fw-semibold">
+                <i class="fas fa-timeline me-2"></i>{{ _('Our Journey') }}
+            </div>
+            <h2 class="section-heading english-heading gradient-text">{{ _('Milestones & Achievements') }}</h2>
+            <p class="lead text-muted col-lg-8 mx-auto">
+                {{ _('Key moments that shaped our growth and success in agricultural exports') }}
+            </p>
+        </div>
+
+        <div class="row">
+            <div class="col-lg-8 mx-auto">
+                <!-- Timeline Item 1 -->
+                <div class="timeline-item" data-aos="fade-right" data-aos-delay="100">
                     <div class="card border-0 shadow-sm">
                         <div class="card-body p-4">
-                            <h5 class="card-title mb-3">Our Markets</h5>
-                            <div class="row">
-                                <div class="col-md-3 mb-3">
-                                    <h6 class="text-primary">Europe</h6>
-                                    <ul class="list-unstyled text-muted small">
-                                        <li>Germany</li>
-                                        <li>Netherlands</li>
-                                        <li>United Kingdom</li>
-                                        <li>France</li>
-                                        <li>Italy</li>
-                                    </ul>
-                                </div>
-                                <div class="col-md-3 mb-3">
-                                    <h6 class="text-success">Asia</h6>
-                                    <ul class="list-unstyled text-muted small">
-                                        <li>Saudi Arabia</li>
-                                        <li>UAE</li>
-                                        <li>Kuwait</li>
-                                        <li>Malaysia</li>
-                                        <li>Singapore</li>
-                                    </ul>
-                                </div>
-                                <div class="col-md-3 mb-3">
-                                    <h6 class="text-info">Africa</h6>
-                                    <ul class="list-unstyled text-muted small">
-                                        <li>South Africa</li>
-                                        <li>Kenya</li>
-                                        <li>Nigeria</li>
-                                        <li>Morocco</li>
-                                        <li>Libya</li>
-                                    </ul>
-                                </div>
-                                <div class="col-md-3 mb-3">
-                                    <h6 class="text-warning">Americas</h6>
-                                    <ul class="list-unstyled text-muted small">
-                                        <li>United States</li>
-                                        <li>Canada</li>
-                                        <li>Brazil</li>
-                                        <li>Argentina</li>
-                                        <li>Mexico</li>
-                                    </ul>
-                                </div>
+                            <div class="d-flex align-items-center mb-3">
+                                <span class="badge bg-primary px-3 py-2 me-3">1999</span>
+                                <h5 class="mb-0 english-heading">{{ _('Company Foundation') }}</h5>
                             </div>
+                            <p class="text-muted mb-0">
+                                {{ _('Emdad Global was established with a vision to become a leading exporter of Egyptian agricultural products to international markets.') }}
+                            </p>
                         </div>
                     </div>
                 </div>
-            </div>
-        {% endif %}
-    </div>
-</section>
 
-<!-- Emdad Group -->
-<section class="py-5">
-    <div class="container">
-        <div class="row align-items-center">
-            <div class="col-lg-6">
-                <h2 class="mb-4">Part of Emdad Group</h2>
-                <p class="lead text-primary mb-3">A Legacy of Excellence</p>
-                <p>Emdad Global is a proud member of the Emdad Group, a diversified business conglomerate with interests spanning agriculture, logistics, technology, and international trade.</p>
-                <p>The Group's integrated approach allows us to leverage synergies across different sectors, ensuring optimal efficiency in our supply chain and providing comprehensive solutions to our clients.</p>
-                <p>This affiliation strengthens our capabilities and enhances our ability to serve our customers with the highest levels of professionalism and reliability.</p>
-            </div>
-            <div class="col-lg-6">
-                <div class="card border-0 shadow-sm">
-                    <div class="card-body p-4">
-                        <h5 class="card-title mb-3">Group Companies</h5>
-                        <div class="row">
-                            <div class="col-6 mb-3">
-                                <div class="d-flex align-items-center">
-                                    <i class="fas fa-leaf text-success me-2"></i>
-                                    <span class="small">Emdad Agriculture</span>
-                                </div>
+                <!-- Timeline Item 2 -->
+                <div class="timeline-item" data-aos="fade-left" data-aos-delay="200">
+                    <div class="card border-0 shadow-sm">
+                        <div class="card-body p-4">
+                            <div class="d-flex align-items-center mb-3">
+                                <span class="badge bg-success px-3 py-2 me-3">2005</span>
+                                <h5 class="mb-0 english-heading">{{ _('International Expansion') }}</h5>
                             </div>
-                            <div class="col-6 mb-3">
-                                <div class="d-flex align-items-center">
-                                    <i class="fas fa-shipping-fast text-primary me-2"></i>
-                                    <span class="small">Emdad Logistics</span>
-                                </div>
+                            <p class="text-muted mb-0">
+                                {{ _('Expanded operations to serve European and Asian markets, establishing long-term partnerships with major importers.') }}
+                            </p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Timeline Item 3 -->
+                <div class="timeline-item" data-aos="fade-right" data-aos-delay="300">
+                    <div class="card border-0 shadow-sm">
+                        <div class="card-body p-4">
+                            <div class="d-flex align-items-center mb-3">
+                                <span class="badge bg-info px-3 py-2 me-3">2015</span>
+                                <h5 class="mb-0 english-heading">{{ _('Quality Certifications') }}</h5>
                             </div>
-                            <div class="col-6 mb-3">
-                                <div class="d-flex align-items-center">
-                                    <i class="fas fa-laptop text-info me-2"></i>
-                                    <span class="small">Emdad Technology</span>
-                                </div>
+                            <p class="text-muted mb-0">
+                                {{ _('Achieved ISO 22000 and Good Agricultural Practices certifications, reinforcing our commitment to quality and food safety.') }}
+                            </p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Timeline Item 4 -->
+                <div class="timeline-item" data-aos="fade-left" data-aos-delay="400">
+                    <div class="card border-0 shadow-sm">
+                        <div class="card-body p-4">
+                            <div class="d-flex align-items-center mb-3">
+                                <span class="badge bg-warning px-3 py-2 me-3">2024</span>
+                                <h5 class="mb-0 english-heading">{{ _('Sustainable Future') }}</h5>
                             </div>
-                            <div class="col-6 mb-3">
-                                <div class="d-flex align-items-center">
-                                    <i class="fas fa-globe text-warning me-2"></i>
-                                    <span class="small">Emdad Trading</span>
-                                </div>
-                            </div>
+                            <p class="text-muted mb-0">
+                                {{ _('Launching new sustainable farming initiatives and expanding digital presence to serve global markets more efficiently.') }}
+                            </p>
                         </div>
                     </div>
                 </div>
@@ -307,19 +1171,71 @@
         </div>
     </div>
 </section>
+<!-- Call to Action Section -->
+<section class="py-5 cta-section position-relative">
+    <!-- Background decorative elements -->
+    <div class="position-absolute top-0 start-0 w-100 h-100" style="z-index: 1;">
+        <div class="position-absolute" style="top: 10%; left: 5%; width: 100px; height: 100px; background: rgba(249, 203, 153, 0.1); border-radius: 50%; animation: float-slow 6s ease-in-out infinite;"></div>
+        <div class="position-absolute" style="bottom: 15%; right: 8%; width: 80px; height: 80px; background: rgba(255, 255, 255, 0.08); border-radius: 50%; animation: float-reverse 8s ease-in-out infinite;"></div>
+        <div class="position-absolute" style="top: 30%; right: 15%; width: 60px; height: 60px; background: rgba(249, 203, 153, 0.08); border-radius: 50%; animation: pulse-glow 5s ease-in-out infinite;"></div>
+    </div>
 
-<!-- Call to Action -->
-<section class="py-5 bg-primary text-white">
     <div class="container">
-        <div class="row align-items-center">
-            <div class="col-lg-8">
-                <h3 class="mb-2">Ready to Partner with Us?</h3>
-                <p class="mb-0">Discover how Emdad Global can meet your agricultural product needs with quality and reliability.</p>
-            </div>
-            <div class="col-lg-4 text-lg-end">
-                <a href="{{ url_for('main.contact') }}" class="btn btn-light btn-lg">
-                    <i class="fas fa-envelope me-2"></i>Contact Us Today
-                </a>
+        <div class="row align-items-center text-center text-white">
+            <div class="col-lg-8 mx-auto" data-aos="fade-up">
+                <div class="section-badge badge bg-light text-dark px-4 py-2 rounded-pill mb-4 fs-6 fw-semibold">
+                    <i class="fas fa-rocket me-2"></i>{{ _('Get Started') }}
+                </div>
+
+                <h2 class="display-5 fw-bold mb-4 english-heading">
+                    {{ _('Ready to Partner with Us?') }}
+                </h2>
+
+                <p class="lead mb-5 opacity-90">
+                    {{ _('Join thousands of satisfied clients worldwide who trust Emdad Global for premium Egyptian agricultural products. Let\'s build a successful partnership together.') }}
+                </p>
+
+                <div class="d-flex flex-wrap justify-content-center gap-3">
+                    <a href="{{ url_for('main.contact') }}" class="btn btn-light btn-lg px-5 py-3 hover-lift">
+                        <i class="fas fa-envelope me-2"></i>{{ _('Contact Us Today') }}
+                    </a>
+                    <a href="{{ url_for('main.products') }}" class="btn btn-outline-light btn-lg px-5 py-3 hover-lift">
+                        <i class="fas fa-leaf me-2"></i>{{ _('View Our Products') }}
+                    </a>
+                </div>
+
+                <!-- Contact Info -->
+                <div class="row mt-5 text-center">
+                    <div class="col-md-4 mb-3">
+                        <div class="d-flex align-items-center justify-content-center">
+                            <i class="fas fa-phone fa-lg me-3 opacity-75"></i>
+                            <div>
+                                <h6 class="mb-0">{{ _('Call Us') }}</h6>
+                                <small class="opacity-75">+20 123 456 789</small>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-md-4 mb-3">
+                        <div class="d-flex align-items-center justify-content-center">
+                            <i class="fas fa-envelope fa-lg me-3 opacity-75"></i>
+                            <div>
+                                <h6 class="mb-0">{{ _('Email Us') }}</h6>
+                                <small class="opacity-75">info@emdadglobal.com</small>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-md-4 mb-3">
+                        <div class="d-flex align-items-center justify-content-center">
+                            <i class="fas fa-map-marker-alt fa-lg me-3 opacity-75"></i>
+                            <div>
+                                <h6 class="mb-0">{{ _('Visit Us') }}</h6>
+                                <small class="opacity-75">{{ _('Cairo, Egypt') }}</small>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
@@ -327,11 +1243,21 @@
 {% endblock %}
 
 {% block extra_scripts %}
+<!-- AOS Animation Library -->
+<script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
 <script>
 document.addEventListener('DOMContentLoaded', function() {
+    // Initialize AOS animations
+    AOS.init({
+        duration: 800,
+        easing: 'ease-in-out',
+        once: true,
+        offset: 100
+    });
+
     // Animate statistics on scroll
-    const stats = document.querySelectorAll('.stat-item h3');
-    
+    const stats = document.querySelectorAll('.stats-card h2');
+
     const animateStats = (entries, observer) => {
         entries.forEach(entry => {
             if (entry.isIntersecting) {
@@ -339,7 +1265,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 const finalValue = parseInt(target.textContent);
                 let currentValue = 0;
                 const increment = finalValue / 50;
-                
+
                 const timer = setInterval(() => {
                     currentValue += increment;
                     if (currentValue >= finalValue) {
@@ -349,17 +1275,34 @@ document.addEventListener('DOMContentLoaded', function() {
                         target.textContent = Math.floor(currentValue) + '+';
                     }
                 }, 30);
-                
+
                 observer.unobserve(target);
             }
         });
     };
-    
+
     const observer = new IntersectionObserver(animateStats, {
         threshold: 0.5
     });
-    
+
     stats.forEach(stat => observer.observe(stat));
+
+    // Smooth scrolling for anchor links
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+        anchor.addEventListener('click', function (e) {
+            e.preventDefault();
+            const target = document.querySelector(this.getAttribute('href'));
+            if (target) {
+                target.scrollIntoView({
+                    behavior: 'smooth',
+                    block: 'start'
+                });
+            }
+        });
+    });
 });
 </script>
+
+<!-- Add AOS CSS -->
+<link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
 {% endblock %}
