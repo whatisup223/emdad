@@ -134,6 +134,117 @@
     font-family: 'Cairo', 'Amiri', 'Noto Sans Arabic', sans-serif;
 }
 
+/* Complete fix for Summernote icons - force text display */
+.note-toolbar .note-btn {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif !important;
+    font-size: 12px !important;
+    line-height: 1.4 !important;
+    padding: 4px 8px !important;
+    min-width: auto !important;
+}
+
+/* Hide all Font Awesome icons and show text instead */
+.note-toolbar .note-btn i {
+    display: none !important;
+}
+
+.note-toolbar .note-btn:before {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif !important;
+    font-style: normal !important;
+    font-weight: 600 !important;
+    font-size: 11px !important;
+}
+
+/* Specific button text content */
+.note-btn[data-original-title*="Bold"]:before { content: "B"; font-weight: bold; }
+.note-btn[data-original-title*="Italic"]:before { content: "I"; font-style: italic; }
+.note-btn[data-original-title*="Underline"]:before { content: "U"; text-decoration: underline; }
+.note-btn[data-original-title*="Strikethrough"]:before { content: "S"; text-decoration: line-through; }
+.note-btn[data-original-title*="Clear"]:before { content: "Clear"; }
+.note-btn[data-original-title*="Unordered"]:before { content: "• List"; }
+.note-btn[data-original-title*="Ordered"]:before { content: "1. List"; }
+.note-btn[data-original-title*="Link"]:before { content: "Link"; }
+.note-btn[data-original-title*="Picture"]:before { content: "Image"; }
+.note-btn[data-original-title*="Table"]:before { content: "Table"; }
+.note-btn[data-original-title*="Horizontal"]:before { content: "Line"; }
+.note-btn[data-original-title*="Full"]:before { content: "Full"; }
+.note-btn[data-original-title*="Code"]:before { content: "Code"; }
+.note-btn[data-original-title*="Color"]:before { content: "Color"; }
+.note-btn[data-original-title*="Size"]:before { content: "Size"; }
+.note-btn[data-original-title*="Font"]:before { content: "Font"; }
+.note-btn[data-original-title*="Style"]:before { content: "Style"; }
+.note-btn[data-original-title*="Paragraph"]:before { content: "Para"; }
+.note-btn[data-original-title*="Height"]:before { content: "Height"; }
+.note-btn[data-original-title*="Help"]:before { content: "Help"; }
+
+/* Dropdown arrows */
+.note-toolbar .note-btn .caret {
+    display: inline-block !important;
+    width: 0 !important;
+    height: 0 !important;
+    margin-left: 4px !important;
+    vertical-align: middle !important;
+    border-top: 4px solid #333 !important;
+    border-right: 4px solid transparent !important;
+    border-left: 4px solid transparent !important;
+    border-bottom: 0 !important;
+}
+
+/* Color picker styling */
+.note-toolbar .note-color .note-recent-color {
+    width: 16px !important;
+    height: 16px !important;
+    border: 1px solid #ddd !important;
+    border-radius: 2px !important;
+    display: inline-block !important;
+    margin-right: 4px !important;
+}
+
+/* Dropdown menu styling */
+.note-toolbar .dropdown-menu {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif !important;
+    font-size: 13px !important;
+}
+
+/* Button groups spacing */
+.note-toolbar .note-btn-group {
+    margin-right: 4px !important;
+}
+
+/* Active button state */
+.note-toolbar .note-btn.active {
+    background-color: #007bff !important;
+    color: white !important;
+}
+
+/* Custom text spans for buttons */
+.note-toolbar .btn-text {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif !important;
+    font-size: 11px !important;
+    font-weight: 600 !important;
+    line-height: 1 !important;
+    display: inline-block !important;
+    padding: 0 !important;
+    margin: 0 !important;
+}
+
+/* Special styling for formatting buttons */
+.note-toolbar .btn-text:contains("B") {
+    font-weight: bold !important;
+}
+
+.note-toolbar .btn-text:contains("I") {
+    font-style: italic !important;
+}
+
+.note-toolbar .btn-text:contains("U") {
+    text-decoration: underline !important;
+}
+
+.note-toolbar .btn-text:contains("S") {
+    text-decoration: line-through !important;
+}
+
 @media (max-width: 768px) {
     .news-form-container {
         padding: 1rem 0;
@@ -207,7 +318,7 @@
 
                             <!-- Excerpt -->
                             <div class="form-floating mb-4">
-                                {{ form.excerpt_en(class="form-control summernote-excerpt", placeholder=_("Brief description"), rows="3") }}
+                                {{ form.excerpt_en(class="form-control", placeholder=_("Brief description"), rows="3") }}
                                 <label for="excerpt_en" class="form-label">{{ _('Excerpt') }} ({{ _('English') }})</label>
                                 {% if form.excerpt_en.errors %}
                                     <div class="invalid-feedback d-block">
@@ -249,7 +360,7 @@
 
                                         <div class="mb-3">
                                             <label for="excerpt_ar" class="form-label">{{ _('Excerpt') }} ({{ _('Arabic') }})</label>
-                                            {{ form.excerpt_ar(class="form-control summernote-excerpt", placeholder=_("Brief description"), rows="3", dir="rtl") }}
+                                            {{ form.excerpt_ar(class="form-control", placeholder=_("Brief description"), rows="3", dir="rtl") }}
                                             {% if form.excerpt_ar.errors %}
                                                 <div class="invalid-feedback d-block">
                                                     {% for error in form.excerpt_ar.errors %}{{ error }}{% endfor %}
@@ -374,17 +485,103 @@ document.addEventListener('DOMContentLoaded', function() {
         direction: '{{ current_language }}' === 'ar' ? 'rtl' : 'ltr',
         toolbar: [
             ['style', ['style']],
-            ['font', ['bold', 'italic', 'underline', 'strikethrough', 'clear']],
+            ['font', ['bold', 'italic', 'underline', 'clear']],
             ['fontname', ['fontname']],
             ['fontsize', ['fontsize']],
             ['color', ['color']],
             ['para', ['ul', 'ol', 'paragraph']],
-            ['height', ['height']],
             ['table', ['table']],
             ['insert', ['link', 'picture', 'hr']],
-            ['view', ['fullscreen', 'codeview']],
-            ['help', ['help']]
+            ['view', ['fullscreen', 'codeview']]
         ],
+        icons: {
+            // Text formatting
+            'bold': '<b>B</b>',
+            'italic': '<i>I</i>',
+            'underline': '<u>U</u>',
+            'strikethrough': '<s>S</s>',
+            'superscript': 'x²',
+            'subscript': 'x₂',
+            'clear': 'Clear',
+
+            // Lists
+            'insertOrderedList': '1.',
+            'insertUnorderedList': '•',
+            'orderedlist': '1.',
+            'unorderedlist': '•',
+
+            // Alignment
+            'justifyLeft': 'Left',
+            'justifyCenter': 'Center',
+            'justifyRight': 'Right',
+            'justifyFull': 'Justify',
+            'align': 'Align',
+            'alignCenter': 'Center',
+            'alignJustify': 'Justify',
+            'alignLeft': 'Left',
+            'alignRight': 'Right',
+
+            // Indentation
+            'indent': 'Indent',
+            'outdent': 'Outdent',
+
+            // Insert elements
+            'link': 'Link',
+            'unlink': 'Unlink',
+            'picture': 'Image',
+            'table': 'Table',
+            'hr': 'Line',
+            'insertHorizontalRule': 'Line',
+
+            // Table operations
+            'rowBelow': '+Row',
+            'colBefore': '+Col',
+            'colAfter': '+Col',
+            'rowAbove': '+Row',
+            'rowRemove': '-Row',
+            'colRemove': '-Col',
+
+            // View options
+            'fullscreen': 'Full',
+            'codeview': 'Code',
+            'code': 'Code',
+
+            // History
+            'undo': 'Undo',
+            'redo': 'Redo',
+
+            // Font options
+            'font': 'Font',
+            'fontname': 'Font',
+            'fontsize': 'Size',
+            'fontsizeunit': 'px',
+            'color': 'Color',
+            'forecolor': 'Text',
+            'backcolor': 'Back',
+
+            // Misc
+            'style': 'Style',
+            'paragraph': 'Para',
+            'height': 'Height',
+            'help': 'Help',
+            'close': '×',
+            'caret': '▼',
+            'caretup': '▲',
+            'dropdown-toggle': '▼',
+            'menuCheck': '✓',
+            'circle': '○',
+            'square': '□',
+            'pencil': 'Edit',
+            'eraser': 'Clear',
+            'magic': 'Format',
+            'trash': 'Delete',
+            'question': '?',
+            'exclamation': '!',
+            'frame': 'Frame',
+            'resize': 'Resize',
+            'arrowsAlt': 'Move',
+            'textHeight': 'Height'
+        },
         fontNames: [
             'Arial', 'Arial Black', 'Comic Sans MS', 'Courier New',
             'Helvetica Neue', 'Helvetica', 'Impact', 'Lucida Grande',
@@ -398,27 +595,84 @@ document.addEventListener('DOMContentLoaded', function() {
                 for (let i = 0; i < files.length; i++) {
                     uploadImage(files[i], this);
                 }
+            },
+            onInit: function() {
+                // Fix any remaining icon issues after initialization
+                fixSummernoteIcons();
             }
         }
     });
 
-    // Initialize Summernote for excerpt fields (shorter)
-    $('.summernote-excerpt').summernote({
-        height: 150,
-        minHeight: 100,
-        maxHeight: 200,
-        focus: false,
-        lang: '{{ current_language }}' === 'ar' ? 'ar-AR' : 'en-US',
-        direction: '{{ current_language }}' === 'ar' ? 'rtl' : 'ltr',
-        toolbar: [
-            ['font', ['bold', 'italic', 'underline', 'clear']],
-            ['color', ['color']],
-            ['para', ['ul', 'ol']],
-            ['insert', ['link']],
-            ['view', ['codeview']]
-        ],
-        placeholder: '{{ current_language }}' === 'ar' ? 'ملخص المحتوى...' : 'Content excerpt...'
-    });
+    // Excerpt fields are now simple textareas (no rich editor needed)
+
+    // Function to completely fix Summernote icons
+    function fixSummernoteIcons() {
+        setTimeout(function() {
+            // Remove all Font Awesome icons and replace with text
+            $('.note-toolbar .note-btn').each(function() {
+                var $btn = $(this);
+                var $icon = $btn.find('i');
+                var title = $btn.attr('data-original-title') || $btn.attr('title') || '';
+
+                // Remove the icon element completely
+                $icon.remove();
+
+                // Add text content based on button function
+                var textContent = '';
+                if (title.includes('Bold')) textContent = 'B';
+                else if (title.includes('Italic')) textContent = 'I';
+                else if (title.includes('Underline')) textContent = 'U';
+                else if (title.includes('Strikethrough')) textContent = 'S';
+                else if (title.includes('Clear') || title.includes('Remove')) textContent = 'Clear';
+                else if (title.includes('Unordered')) textContent = '• List';
+                else if (title.includes('Ordered')) textContent = '1. List';
+                else if (title.includes('Link')) textContent = 'Link';
+                else if (title.includes('Picture') || title.includes('Image')) textContent = 'Image';
+                else if (title.includes('Table')) textContent = 'Table';
+                else if (title.includes('Horizontal') || title.includes('Rule')) textContent = 'Line';
+                else if (title.includes('Full')) textContent = 'Full';
+                else if (title.includes('Code')) textContent = 'Code';
+                else if (title.includes('Color')) textContent = 'Color';
+                else if (title.includes('Size')) textContent = 'Size';
+                else if (title.includes('Font')) textContent = 'Font';
+                else if (title.includes('Style')) textContent = 'Style';
+                else if (title.includes('Paragraph')) textContent = 'Para';
+                else if (title.includes('Height')) textContent = 'Height';
+                else if (title.includes('Help')) textContent = 'Help';
+                else if (title.includes('Indent')) textContent = 'Indent';
+                else if (title.includes('Outdent')) textContent = 'Outdent';
+                else if (title.includes('Left')) textContent = 'Left';
+                else if (title.includes('Center')) textContent = 'Center';
+                else if (title.includes('Right')) textContent = 'Right';
+                else if (title.includes('Justify')) textContent = 'Justify';
+
+                // If we found appropriate text, add it to the button
+                if (textContent && !$btn.find('.btn-text').length) {
+                    $btn.prepend('<span class="btn-text">' + textContent + '</span>');
+                }
+            });
+
+            // Fix dropdown carets specifically
+            $('.note-toolbar .caret').each(function() {
+                var $caret = $(this);
+                $caret.empty().css({
+                    'display': 'inline-block',
+                    'width': '0',
+                    'height': '0',
+                    'margin-left': '4px',
+                    'vertical-align': 'middle',
+                    'border-top': '4px solid #333',
+                    'border-right': '4px solid transparent',
+                    'border-left': '4px solid transparent',
+                    'border-bottom': '0'
+                });
+            });
+
+            // Force refresh of toolbar
+            $('.note-toolbar').css('visibility', 'hidden').css('visibility', 'visible');
+
+        }, 200);
+    }
 
     // Image upload function
     function uploadImage(file, editor) {

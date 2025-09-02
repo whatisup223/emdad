@@ -121,6 +121,10 @@ def category_new():
     """Create new category."""
     form = CategoryForm()
 
+    # Load parent category choices
+    categories = Category.query.filter_by(is_active=True).all()
+    form.parent_id.choices = [('', 'No Parent')] + [(str(cat.id), cat.name_en) for cat in categories]
+
     if request.method == 'POST':
         if form.validate_on_submit():
             category = Category(
@@ -180,6 +184,10 @@ def category_edit(id):
     """Edit category."""
     category = Category.query.get_or_404(id)
     form = CategoryForm(obj=category, category=category)
+
+    # Load parent category choices (exclude current category to prevent circular reference)
+    categories = Category.query.filter(Category.is_active == True, Category.id != id).all()
+    form.parent_id.choices = [('', 'No Parent')] + [(str(cat.id), cat.name_en) for cat in categories]
     
     if form.validate_on_submit():
         category.key = form.key.data

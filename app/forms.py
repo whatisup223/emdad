@@ -68,7 +68,7 @@ class CategoryForm(FlaskForm):
     slug = StringField('URL Slug', validators=[DataRequired(), Length(max=100)])
     description_en = TextAreaField('Description (English)', validators=[Optional()])
     description_ar = TextAreaField('Description (Arabic)', validators=[Optional()])
-    parent_id = SelectField('Parent Category (Optional)', validators=[Optional()], coerce=lambda x: int(x) if x else None, choices=[])
+    parent_id = SelectField('Parent Category (Optional)', validators=[Optional()], coerce=lambda x: int(x) if x and x != '' and x != 'None' else None, choices=[])
     sort_order = IntegerField('Sort Order', validators=[Optional()], default=0)
     is_active = BooleanField('Active', default=True)
     show_on_homepage = BooleanField('Show on Homepage', default=True)
