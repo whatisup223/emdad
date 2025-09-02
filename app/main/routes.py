@@ -288,9 +288,23 @@ Emdad Global Team
 
 @bp.route('/uploads/<path:filename>')
 def uploaded_file(filename):
-    """Serve uploaded files."""
+    """Serve uploaded files with cache control."""
+    from flask import make_response
     upload_path = os.path.join(current_app.instance_path, current_app.config.get('UPLOAD_FOLDER', 'uploads'))
-    return send_from_directory(upload_path, filename)
+
+    try:
+        response = make_response(send_from_directory(upload_path, filename))
+
+        # Add cache control headers to prevent caching issues
+        response.headers['Cache-Control'] = 'no-cache, no-store, must-revalidate'
+        response.headers['Pragma'] = 'no-cache'
+        response.headers['Expires'] = '0'
+
+        return response
+    except FileNotFoundError:
+        # If file not found, return 404
+        from flask import abort
+        abort(404)
 
 @bp.route('/set-language/<language>')
 def set_language(language):

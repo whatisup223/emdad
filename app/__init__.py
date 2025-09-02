@@ -96,6 +96,7 @@ def create_app(config_name=None):
     def inject_config():
         from flask import session, g
         from flask_babel import gettext
+        import time
 
         current_language = session.get('language', 'en')
 
@@ -349,6 +350,13 @@ def create_app(config_name=None):
             from flask_wtf.csrf import generate_csrf
             return generate_csrf()
 
+        def image_url_with_timestamp(filename):
+            """Add timestamp to image URL to prevent caching"""
+            import time
+            from flask import url_for
+            timestamp = int(time.time())
+            return f"{url_for('main.uploaded_file', filename=filename)}?t={timestamp}"
+
         return {
             'COMPANY_NAME': app.config['COMPANY_NAME'],
             'COMPANY_EMAIL': app.config['COMPANY_EMAIL'],
@@ -362,7 +370,8 @@ def create_app(config_name=None):
             'is_rtl': current_language == 'ar',
             '_': _,
             'get_latest_news': get_latest_news,
-            'csrf_token': csrf_token
+            'csrf_token': csrf_token,
+            'image_url_with_timestamp': image_url_with_timestamp
         }
 
     # Error handlers
