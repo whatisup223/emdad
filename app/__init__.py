@@ -63,6 +63,7 @@ def create_app(config_name=None):
     os.makedirs(os.path.join(upload_dir, 'gallery'), exist_ok=True)
     os.makedirs(os.path.join(upload_dir, 'news'), exist_ok=True)
     os.makedirs(os.path.join(upload_dir, 'rfq'), exist_ok=True)
+    os.makedirs(os.path.join(upload_dir, 'editor'), exist_ok=True)
 
     # Language selector function
     def get_locale():

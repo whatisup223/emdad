@@ -8,6 +8,7 @@ from app import db
 import os
 import json
 from datetime import datetime
+import uuid
 
 def admin_required(f):
     """Decorator to require admin role."""
@@ -1056,3 +1057,41 @@ def settings():
     company_info = CompanyInfo.query.first()
 
     return render_template('admin/settings.html', company_info=company_info)
+
+@bp.route('/upload-editor-image', methods=['POST'])
+@login_required
+def upload_editor_image():
+    """Upload image for Summernote editor."""
+    try:
+        if 'file' not in request.files:
+            return jsonify({'success': False, 'error': 'No file provided'})
+
+        file = request.files['file']
+        if file.filename == '':
+            return jsonify({'success': False, 'error': 'No file selected'})
+
+        # Check file type
+        allowed_extensions = {'png', 'jpg', 'jpeg', 'gif', 'webp'}
+        if not ('.' in file.filename and
+                file.filename.rsplit('.', 1)[1].lower() in allowed_extensions):
+            return jsonify({'success': False, 'error': 'Invalid file type'})
+
+        # Generate unique filename
+        filename = secure_filename(file.filename)
+        unique_id = str(uuid.uuid4())[:8]
+        timestamp = datetime.now().strftime('%Y%m%d_%H%M%S')
+        filename = f"{timestamp}_{unique_id}_{filename}"
+
+        # Save file
+        upload_path = os.path.join(current_app.instance_path,
+                                 current_app.config['UPLOAD_FOLDER'],
+                                 'editor', filename)
+        os.makedirs(os.path.dirname(upload_path), exist_ok=True)
+        file.save(upload_path)
+
+        # Return URL
+        file_url = url_for('main.uploaded_file', filename=f'editor/{filename}')
+        return jsonify({'success': True, 'url': file_url})
+
+    except Exception as e:
+        return jsonify({'success': False, 'error': str(e)})

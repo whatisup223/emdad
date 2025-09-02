@@ -5,10 +5,10 @@
 {% endblock %}
 
 {% block extra_css %}
-<!-- TinyMCE Editor -->
-<script src="https://cdn.tiny.cloud/1/no-api-key/tinymce/6/tinymce.min.js" referrerpolicy="origin"></script>
 <!-- Date Picker -->
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+<!-- Summernote CSS -->
+<link href="{{ url_for('static', filename='css/summernote-lite.min.css') }}" rel="stylesheet">
 
 <style>
 .news-form-container {
@@ -98,18 +98,40 @@
     border-color: #004085;
 }
 
-.tox-tinymce {
-    border-radius: 6px !important;
-    border: 1px solid #ced4da !important;
+/* Summernote styling */
+.note-editor {
+    border: 1px solid #dee2e6;
+    border-radius: 0.375rem;
 }
 
-.tox-tinymce:focus-within {
-    border-color: #007bff !important;
-    box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25) !important;
+.note-editor.note-frame {
+    border: 1px solid #dee2e6;
 }
 
-.tox-toolbar {
-    background: #f8f9fa !important;
+.note-editor.note-frame.is-invalid {
+    border-color: #dc3545;
+}
+
+.note-toolbar {
+    background-color: #f8f9fa;
+    border-bottom: 1px solid #dee2e6;
+}
+
+.note-editing-area {
+    background-color: #fff;
+}
+
+.note-editable {
+    padding: 15px;
+    min-height: 200px;
+    font-size: 14px;
+    line-height: 1.6;
+}
+
+/* Arabic support */
+.note-editable[dir="rtl"] {
+    text-align: right;
+    font-family: 'Cairo', 'Amiri', 'Noto Sans Arabic', sans-serif;
 }
 
 @media (max-width: 768px) {
@@ -185,7 +207,7 @@
 
                             <!-- Excerpt -->
                             <div class="form-floating mb-4">
-                                {{ form.excerpt_en(class="form-control", placeholder=_("Brief description"), rows="3") }}
+                                {{ form.excerpt_en(class="form-control summernote-excerpt", placeholder=_("Brief description"), rows="3") }}
                                 <label for="excerpt_en" class="form-label">{{ _('Excerpt') }} ({{ _('English') }})</label>
                                 {% if form.excerpt_en.errors %}
                                     <div class="invalid-feedback d-block">
@@ -227,7 +249,7 @@
 
                                         <div class="mb-3">
                                             <label for="excerpt_ar" class="form-label">{{ _('Excerpt') }} ({{ _('Arabic') }})</label>
-                                            {{ form.excerpt_ar(class="form-control", placeholder=_("Brief description"), rows="3", dir="rtl") }}
+                                            {{ form.excerpt_ar(class="form-control summernote-excerpt", placeholder=_("Brief description"), rows="3", dir="rtl") }}
                                             {% if form.excerpt_ar.errors %}
                                                 <div class="invalid-feedback d-block">
                                                     {% for error in form.excerpt_ar.errors %}{{ error }}{% endfor %}
@@ -237,7 +259,7 @@
 
                                         <div class="mb-3">
                                             <label for="content_en" class="form-label">{{ _('Content') }} ({{ _('English') }})</label>
-                                            {{ form.content_en(class="form-control rich-editor", id="content_en") }}
+                                            {{ form.content_en(class="form-control summernote", id="content_en") }}
                                             {% if form.content_en.errors %}
                                                 <div class="invalid-feedback d-block">
                                                     {% for error in form.content_en.errors %}{{ error }}{% endfor %}
@@ -250,7 +272,7 @@
                                     <div class="tab-pane fade" id="arabic" role="tabpanel">
                                         <div class="mb-3">
                                             <label for="content_ar" class="form-label">{{ _('Content') }} ({{ _('Arabic') }})</label>
-                                            {{ form.content_ar(class="form-control rich-editor", id="content_ar", dir="rtl") }}
+                                            {{ form.content_ar(class="form-control summernote", id="content_ar", dir="rtl") }}
                                             {% if form.content_ar.errors %}
                                                 <div class="invalid-feedback d-block">
                                                     {% for error in form.content_ar.errors %}{{ error }}{% endfor %}
@@ -336,34 +358,93 @@
 <!-- Date Picker -->
 <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
 
+<!-- Summernote JavaScript -->
+<script src="{{ url_for('static', filename='js/summernote-lite.min.js') }}"></script>
+<script src="{{ url_for('static', filename='js/summernote-ar-AR.min.js') }}"></script>
+
 <script>
 document.addEventListener('DOMContentLoaded', function() {
-    // Initialize TinyMCE Rich Text Editor
-    tinymce.init({
-        selector: '.rich-editor',
-        height: 400,
-        menubar: true,
-        plugins: [
-            'advlist', 'autolink', 'lists', 'link', 'image', 'charmap', 'preview',
-            'anchor', 'searchreplace', 'visualblocks', 'code', 'fullscreen',
-            'insertdatetime', 'media', 'table', 'help', 'wordcount'
+    // Initialize Summernote editors
+    $('.summernote').summernote({
+        height: 300,
+        minHeight: 200,
+        maxHeight: 500,
+        focus: false,
+        lang: '{{ current_language }}' === 'ar' ? 'ar-AR' : 'en-US',
+        direction: '{{ current_language }}' === 'ar' ? 'rtl' : 'ltr',
+        toolbar: [
+            ['style', ['style']],
+            ['font', ['bold', 'italic', 'underline', 'strikethrough', 'clear']],
+            ['fontname', ['fontname']],
+            ['fontsize', ['fontsize']],
+            ['color', ['color']],
+            ['para', ['ul', 'ol', 'paragraph']],
+            ['height', ['height']],
+            ['table', ['table']],
+            ['insert', ['link', 'picture', 'hr']],
+            ['view', ['fullscreen', 'codeview']],
+            ['help', ['help']]
         ],
-        toolbar: 'undo redo | blocks | ' +
-            'bold italic backcolor | alignleft aligncenter ' +
-            'alignright alignjustify | bullist numlist outdent indent | ' +
-            'removeformat | help',
-        content_style: 'body { font-family: -apple-system, BlinkMacSystemFont, San Francisco, Segoe UI, Roboto, Helvetica Neue, sans-serif; font-size: 14px; }',
-        branding: false,
-        promotion: false,
-        setup: function (editor) {
-            editor.on('change', function () {
-                editor.save();
-            });
-        },
-        directionality: function(element) {
-            return element.getAttribute('dir') === 'rtl' ? 'rtl' : 'ltr';
+        fontNames: [
+            'Arial', 'Arial Black', 'Comic Sans MS', 'Courier New',
+            'Helvetica Neue', 'Helvetica', 'Impact', 'Lucida Grande',
+            'Tahoma', 'Times New Roman', 'Verdana',
+            'Cairo', 'Amiri', 'Noto Sans Arabic', 'Tajawal'
+        ],
+        fontSizes: ['8', '9', '10', '11', '12', '14', '16', '18', '20', '24', '28', '32', '36', '48', '64'],
+        placeholder: '{{ current_language }}' === 'ar' ? 'اكتب المحتوى هنا...' : 'Write your content here...',
+        callbacks: {
+            onImageUpload: function(files) {
+                for (let i = 0; i < files.length; i++) {
+                    uploadImage(files[i], this);
+                }
+            }
         }
     });
+
+    // Initialize Summernote for excerpt fields (shorter)
+    $('.summernote-excerpt').summernote({
+        height: 150,
+        minHeight: 100,
+        maxHeight: 200,
+        focus: false,
+        lang: '{{ current_language }}' === 'ar' ? 'ar-AR' : 'en-US',
+        direction: '{{ current_language }}' === 'ar' ? 'rtl' : 'ltr',
+        toolbar: [
+            ['font', ['bold', 'italic', 'underline', 'clear']],
+            ['color', ['color']],
+            ['para', ['ul', 'ol']],
+            ['insert', ['link']],
+            ['view', ['codeview']]
+        ],
+        placeholder: '{{ current_language }}' === 'ar' ? 'ملخص المحتوى...' : 'Content excerpt...'
+    });
+
+    // Image upload function
+    function uploadImage(file, editor) {
+        var data = new FormData();
+        data.append("file", file);
+        data.append("csrf_token", "{{ csrf_token() }}");
+
+        $.ajax({
+            url: "/admin/upload-editor-image",
+            cache: false,
+            contentType: false,
+            processData: false,
+            data: data,
+            type: "POST",
+            success: function(response) {
+                if (response.success) {
+                    $(editor).summernote('insertImage', response.url);
+                } else {
+                    alert('{{ _("Image upload failed") }}: ' + response.error);
+                }
+            },
+            error: function() {
+                alert('{{ _("Image upload failed") }}');
+            }
+        });
+    }
 
     // Initialize date/time picker
     const publishField = document.querySelector('.datetime-picker');
@@ -431,7 +512,7 @@ document.addEventListener('DOMContentLoaded', function() {
     if (form) {
         form.addEventListener('submit', function(e) {
             const titleEn = document.getElementById('title_en').value.trim();
-            const contentEn = tinymce.get('content_en') ? tinymce.get('content_en').getContent() : '';
+            const contentEn = $('#content_en').summernote('code');
 
             if (!titleEn) {
                 e.preventDefault();

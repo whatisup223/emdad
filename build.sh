@@ -28,6 +28,7 @@ mkdir -p instance/uploads/products
 mkdir -p instance/uploads/categories
 mkdir -p instance/uploads/gallery
 mkdir -p instance/uploads/rfq
+mkdir -p instance/uploads/editor
 mkdir -p instance
 mkdir -p /tmp
 mkdir -p static/images/samples
