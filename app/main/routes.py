@@ -50,18 +50,9 @@ def index():
 
 @bp.route('/about')
 def about():
-    """About us page."""
-    # Get company info sections
-    company_profile = CompanyInfo.query.filter_by(key='company_profile', is_active=True).first()
-    mission_vision = CompanyInfo.query.filter_by(key='mission_vision', is_active=True).first()
-    core_values = CompanyInfo.query.filter_by(key='core_values', is_active=True).first()
-    global_reach = CompanyInfo.query.filter_by(key='global_reach', is_active=True).first()
-    
-    return render_template('main/about.html',
-                         company_profile=company_profile,
-                         mission_vision=mission_vision,
-                         core_values=core_values,
-                         global_reach=global_reach)
+    """About page (new)."""
+    return render_template('main/about.html')
+
 
 @bp.route('/products')
 def products():
@@ -72,24 +63,24 @@ def products():
         page = request.args.get('page', 1, type=int)
     except ValueError:
         page = 1
-    
+
     # Base query
     query = Product.query.filter_by(status='active')
-    
+
     # Filter by category if specified
     selected_category = None
     if category_key:
         selected_category = Category.query.filter_by(key=category_key, is_active=True).first()
         if selected_category:
             query = query.filter_by(category_id=selected_category.id)
-    
+
     # Paginate results
     products = query.order_by(Product.sort_order, Product.name_en).paginate(
-        page=page, 
-        per_page=current_app.config['PRODUCTS_PER_PAGE'], 
+        page=page,
+        per_page=current_app.config['PRODUCTS_PER_PAGE'],
         error_out=False
     )
-    
+
     # Get all categories for filter menu
     categories = Category.query.filter_by(is_active=True, parent_id=None).order_by(Category.sort_order).all() or []
 
@@ -102,13 +93,13 @@ def products():
 def product_detail(slug):
     """Product detail page."""
     product = Product.query.filter_by(slug=slug, status='active').first_or_404()
-    
+
     # Get related products from same category
     related_products = Product.query.filter_by(
         category_id=product.category_id,
         status='active'
     ).filter(Product.id != product.id).order_by(Product.sort_order).limit(4).all()
-    
+
     return render_template('main/product_detail.html',
                          product=product,
                          related_products=related_products)
@@ -129,20 +120,20 @@ def services():
 def gallery():
     """Gallery page."""
     category = request.args.get('category', 'all')
-    
+
     # Base query
     query = Gallery.query.filter_by(is_active=True)
-    
+
     # Filter by category if specified
     if category != 'all':
         query = query.filter_by(category=category)
-    
+
     gallery_items = query.order_by(Gallery.sort_order).all()
-    
+
     # Get available categories
     categories = db.session.query(Gallery.category).filter_by(is_active=True).distinct().all()
     categories = [cat[0] for cat in categories if cat[0]]
-    
+
     return render_template('main/gallery.html',
                          gallery_items=gallery_items,
                          categories=categories,
@@ -155,7 +146,7 @@ def news():
         page = request.args.get('page', 1, type=int)
     except ValueError:
         page = 1
-    
+
     # Get published news
     news_items = News.query.filter_by(status='published').filter(
         News.publish_at <= datetime.utcnow()
@@ -164,13 +155,13 @@ def news():
         per_page=current_app.config['POSTS_PER_PAGE'],
         error_out=False
     )
-    
+
     # Get featured news
     featured_news = News.query.filter_by(
         status='published',
         featured=True
     ).filter(News.publish_at <= datetime.utcnow()).order_by(News.publish_at.desc()).limit(3).all()
-    
+
     return render_template('main/news.html',
                          news_items=news_items,
                          featured_news=featured_news)
@@ -181,13 +172,13 @@ def news_detail(slug):
     article = News.query.filter_by(slug=slug, status='published').filter(
         News.publish_at <= datetime.utcnow()
     ).first_or_404()
-    
+
     # Get related articles
     related_articles = News.query.filter_by(status='published').filter(
         News.id != article.id,
         News.publish_at <= datetime.utcnow()
     ).order_by(News.publish_at.desc()).limit(3).all()
-    
+
     return render_template('main/news_detail.html',
                          article=article,
                          related_articles=related_articles)
@@ -197,7 +188,7 @@ def news_detail(slug):
 def contact():
     """Contact page with RFQ form."""
     form = RFQForm()
-    
+
     if form.validate_on_submit():
         # Create RFQ record
         rfq = RFQ(
@@ -212,24 +203,24 @@ def contact():
             packaging_preference=form.packaging_preference.data,
             message=form.message.data
         )
-        
+
         # Handle file upload
         if form.attachment.data:
             filename = secure_filename(form.attachment.data.filename)
             timestamp = datetime.now().strftime('%Y%m%d_%H%M%S_')
             filename = timestamp + filename
-            
-            upload_path = os.path.join(current_app.instance_path, 
-                                     current_app.config['UPLOAD_FOLDER'], 
+
+            upload_path = os.path.join(current_app.instance_path,
+                                     current_app.config['UPLOAD_FOLDER'],
                                      'rfq', filename)
             os.makedirs(os.path.dirname(upload_path), exist_ok=True)
             form.attachment.data.save(upload_path)
             rfq.attachment_path = filename
-        
+
         # Save to database
         db.session.add(rfq)
         db.session.commit()
-        
+
         # Send notification emails
         try:
             # Email to admin
@@ -254,7 +245,7 @@ RFQ ID: {rfq.id}
                 """
             )
             mail.send(admin_msg)
-            
+
             # Auto-reply to customer
             customer_msg = Message(
                 subject='Thank you for your inquiry - Emdad Global',
@@ -278,13 +269,13 @@ Emdad Global Team
                 """
             )
             mail.send(customer_msg)
-            
+
         except Exception as e:
             current_app.logger.error(f'Failed to send RFQ emails: {e}')
-        
+
         flash('Thank you for your inquiry! We will contact you within 24 hours.', 'success')
         return redirect(url_for('main.contact'))
-    
+
     return render_template('main/contact.html', form=form)
 
 @bp.route('/uploads/<path:filename>')
@@ -320,12 +311,12 @@ def api_products_by_category(category_key):
     category = Category.query.filter_by(key=category_key, is_active=True).first()
     if not category:
         return jsonify([])
-    
+
     products = Product.query.filter_by(
         category_id=category.id,
         status='active'
     ).order_by(Product.name_en).all()
-    
+
     return jsonify([{
         'id': product.id,
         'name': product.name_en,

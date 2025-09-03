@@ -646,6 +646,7 @@
                         <li class="nav-item">
                             <a class="nav-link nav-text arabic-heading" href="{{ url_for('main.about') }}">{{ _('About Us') }}</a>
                         </li>
+
                         <li class="nav-item dropdown">
                             <a class="nav-link dropdown-toggle nav-text arabic-heading"
                                href="#"
@@ -687,6 +688,7 @@
                         <li class="nav-item">
                             <a class="nav-link nav-text english-heading" href="{{ url_for('main.about') }}">{{ _('About Us') }}</a>
                         </li>
+
                         <li class="nav-item dropdown">
                             <a class="nav-link dropdown-toggle nav-text english-heading"
                                href="#"
@@ -833,7 +835,7 @@
                     <div class="col-lg-3">
                         <h6 class="{{ 'arabic-heading' if is_rtl else 'english-heading' }} mb-3">{{ _('Quick Links') }}</h6>
                         <ul class="list-unstyled mb-0">
-                            <li class="mb-2"><a class="footer-link {{ 'arabic-text' if is_rtl else 'english-text' }}" href="{{ url_for('main.about') }}">{{ _('About Us') }}</a></li>
+
                             <li class="mb-2"><a class="footer-link {{ 'arabic-text' if is_rtl else 'english-text' }}" href="{{ url_for('main.products') }}">{{ _('Products') }}</a></li>
                             <li class="mb-2"><a class="footer-link {{ 'arabic-text' if is_rtl else 'english-text' }}" href="{{ url_for('main.services') }}">{{ _('Services') }}</a></li>
                             <li class="mb-2"><a class="footer-link {{ 'arabic-text' if is_rtl else 'english-text' }}" href="{{ url_for('main.certifications') }}">{{ _('Certifications') }}</a></li>
