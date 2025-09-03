@@ -145,7 +145,7 @@ class Product(db.Model):
 
     def get_specifications_lang(self, language='en'):
         """Return specifications for the given language.
-        Supports two shapes:
+        Supports two shapes and ALWAYS returns a dict safe for templates:
         - {'en': '{...json...}', 'ar': '{...json...}'} (textarea-stored JSON strings per language)
         - {'brix': '12-14', 'sizes': ['S','M']} (direct dict for all languages)
         """
@@ -158,11 +158,13 @@ class Product(db.Model):
             if isinstance(val, str):
                 # Try parse the inner JSON string
                 try:
-                    return json.loads(val)
+                    parsed = json.loads(val)
+                    return parsed if isinstance(parsed, dict) else {'notes': parsed}
                 except Exception:
                     # Fallback to a single-note field
                     return {'notes': val}
-            return val if isinstance(val, dict) else {}
+            # If already a dict, return it; otherwise wrap as note
+            return val if isinstance(val, dict) else {'notes': val}
         # Already direct dict
         return data if isinstance(data, dict) else {}
 
