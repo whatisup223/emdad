@@ -98,11 +98,27 @@ def create_app(config_name=None):
         from flask import session, g
         from flask_babel import gettext
         import time
+        # Lazy import to avoid circular imports during app initialization
+        try:
+            from app.models import Category
+        except Exception:
+            Category = None
 
         current_language = session.get('language', 'en')
 
         # Set the locale in g for Babel
         g.locale = current_language
+
+        # Build categories for navbar (dynamic)
+        nav_categories = []
+        if Category is not None:
+            try:
+                nav_categories = (Category.query
+                                  .filter_by(is_active=True, parent_id=None)
+                                  .order_by(Category.sort_order)
+                                  .all()) or []
+            except Exception:
+                nav_categories = []
 
         # Manual translation dictionary for critical texts
         manual_translations = {

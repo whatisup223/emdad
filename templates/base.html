@@ -659,10 +659,11 @@
                             <ul class="dropdown-menu dropdown-menu-center">
                                 <li><a class="dropdown-item nav-text arabic-heading" href="{{ url_for('main.products') }}">{{ _('All Products') }}</a></li>
                                 <li><hr class="dropdown-divider"></li>
-                                <li><a class="dropdown-item nav-text arabic-heading" href="{{ url_for('main.products', cat='citrus') }}">{{ _('Citrus Fruits') }}</a></li>
-                                <li><a class="dropdown-item nav-text arabic-heading" href="{{ url_for('main.products', cat='fresh-fruits') }}">{{ _('Fresh Fruits') }}</a></li>
-                                <li><a class="dropdown-item nav-text arabic-heading" href="{{ url_for('main.products', cat='fresh-vegetables') }}">{{ _('Fresh Vegetables') }}</a></li>
-                                <li><a class="dropdown-item nav-text arabic-heading" href="{{ url_for('main.products', cat='frozen-fruits') }}">{{ _('Frozen Fruits (IQF)') }}</a></li>
+                                {% for cat in nav_categories %}
+                                <li>
+                                  <a class="dropdown-item nav-text arabic-heading" href="{{ url_for('main.products', cat=cat.key) }}">{{ cat.get_name(current_language) }}</a>
+                                </li>
+                                {% endfor %}
                             </ul>
                         </li>
                         <li class="nav-item">
@@ -701,10 +702,11 @@
                             <ul class="dropdown-menu dropdown-menu-center">
                                 <li><a class="dropdown-item nav-text english-heading" href="{{ url_for('main.products') }}">{{ _('All Products') }}</a></li>
                                 <li><hr class="dropdown-divider"></li>
-                                <li><a class="dropdown-item nav-text english-heading" href="{{ url_for('main.products', cat='citrus') }}">{{ _('Citrus Fruits') }}</a></li>
-                                <li><a class="dropdown-item nav-text english-heading" href="{{ url_for('main.products', cat='fresh-fruits') }}">{{ _('Fresh Fruits') }}</a></li>
-                                <li><a class="dropdown-item nav-text english-heading" href="{{ url_for('main.products', cat='fresh-vegetables') }}">{{ _('Fresh Vegetables') }}</a></li>
-                                <li><a class="dropdown-item nav-text english-heading" href="{{ url_for('main.products', cat='frozen-fruits') }}">{{ _('Frozen Fruits (IQF)') }}</a></li>
+                                {% for cat in nav_categories %}
+                                <li>
+                                  <a class="dropdown-item nav-text english-heading" href="{{ url_for('main.products', cat=cat.key) }}">{{ cat.get_name(current_language) }}</a>
+                                </li>
+                                {% endfor %}
                             </ul>
                         </li>
                         <li class="nav-item">
