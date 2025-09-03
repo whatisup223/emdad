@@ -2,56 +2,68 @@
 
 {% block title %}
 {% if selected_category %}
-{{ selected_category.get_name() }} - Products - {{ SITE_NAME }}
+{{ selected_category.get_name(current_language) if selected_category else '' }} - {% if is_rtl %}المنتجات{% else %}{{ _('Products') }}{% endif %} - {{ SITE_NAME }}
 {% else %}
-All Products - {{ SITE_NAME }}
+{% if is_rtl %}كل المنتجات{% else %}{{ _('All Products') }}{% endif %} - {{ SITE_NAME }}
 {% endif %}
 {% endblock %}
 
 {% block meta_description %}
 {% if selected_category %}
-Explore our premium {{ selected_category.get_name().lower() }} from Egypt. {{ selected_category.get_description() }}
+{% if is_rtl %}استكشف أفضل منتجات {{ selected_category.get_name(current_language).lower() }} من مصر. {{ selected_category.get_description() }}{% else %}{{ _('Explore our premium') }} {{ selected_category.get_name(current_language).lower() }} {{ _('from Egypt.') }} {{ selected_category.get_description() }}{% endif %}
 {% else %}
 Browse our complete range of premium Egyptian agricultural products including citrus fruits, fresh fruits, vegetables, and frozen products.
 {% endif %}
 {% endblock %}
 
 {% block content %}
-<!-- Page Header -->
-<section class="py-5 bg-primary text-white">
-    <div class="container">
-        <div class="row align-items-center">
-            <div class="col-lg-8">
-                <nav aria-label="breadcrumb">
-                    <ol class="breadcrumb text-white-50">
-                        <li class="breadcrumb-item"><a href="{{ url_for('main.index') }}" class="text-white-50">Home</a></li>
-                        <li class="breadcrumb-item active text-white">Products</li>
+<!-- Page Header (styled like site sections) -->
+<section class="py-5 products-hero position-relative overflow-hidden" style="background:#689b8a;">
+    <style>
+      .products-hero .section-heading, .products-hero .lead { color:#fff !important; }
+      .products-hero .breadcrumb, .products-hero .breadcrumb * { color:rgba(255,255,255,0.85) !important; }
+      .products-hero .section-badge { background: var(--secondary-gradient) !important; color: var(--dark-color) !important; }
+      .products-hero .pattern-dots { color: rgba(255,255,255,.15); }
+    </style>
+            <style>
+              .products-hero .section-heading { color:#fff !important; }
+            </style>
+
+    <!-- Background Elements -->
+    <div class="position-absolute top-0 start-0 w-100 h-100">
+        <div class="pattern-dots opacity-25"></div>
+    </div>
+
+    <div class="container position-relative">
+        <div class="row align-items-center g-4">
+            <div class="col-lg-8" data-aos="fade-right">
+                <div class="mb-3">
+                    <div class="section-badge badge bg-gradient-primary text-white px-4 py-2 rounded-pill mb-3 fs-6 fw-semibold">
+                        <i class="fas fa-seedling me-2"></i>{% if is_rtl %}منتجاتنا{% else %}{{ _('Our Products') }}{% endif %}
+                    </div>
+                    <h1 class="section-heading english-heading mb-3">
                         {% if selected_category %}
-                        <li class="breadcrumb-item active text-white">{{ selected_category.get_name() }}</li>
+                            {{ selected_category.get_name(current_language) if selected_category else '' }}
+                        {% else %}
+                            {% if is_rtl %}تشكيلة منتجاتنا المتميزة{% else %}{{ _('Our Premium Product Range') }}{% endif %}
                         {% endif %}
-                    </ol>
-                </nav>
-                
-                <h1 class="display-5 fw-bold mb-3">
-                    {% if selected_category %}
-                    {{ selected_category.get_name() }}
-                    {% else %}
-                    Our Products
-                    {% endif %}
-                </h1>
-                
-                <p class="lead">
-                    {% if selected_category %}
-                    {{ selected_category.get_description() }}
-                    {% else %}
-                    Discover our premium range of Egyptian agricultural products, carefully selected and processed to meet international quality standards.
-                    {% endif %}
-                </p>
+                    </h1>
+                    <p class="lead english-text text-muted">
+                        {% if selected_category %}
+                            {{ selected_category.get_description() }}
+                        {% else %}
+                            {% if is_rtl %}
+                                استكشف تشكيلتنا المختارة بعناية من المنتجات الزراعية المصرية، حيث تلتقي الجودة العالية بالمذاق الأصيل والمعايير الدولية.
+                            {% else %}
+                                {{ _('Discover our carefully curated selection of Egyptian agricultural products, each representing the finest quality and authentic taste.') }}
+                            {% endif %}
+                        {% endif %}
+                    </p>
+                </div>
             </div>
-            
-            <div class="col-lg-4 text-lg-end">
-                <a href="{{ url_for('main.contact') }}" class="btn btn-light btn-lg">
-                    <i class="fas fa-envelope me-2"></i>Request Quote
+            <div class="col-lg-4 text-lg-end" data-aos="fade-left">
+                <a href="{{ url_for('main.contact') }}" class="btn btn-primary btn-lg px-4 py-3 hover-lift" style="border-radius: 12px;">
+                    <i class="fas fa-envelope me-2"></i>{% if is_rtl %}اطلب عرض سعر{% else %}{{ _('Request Quote') }}{% endif %}
                 </a>
             </div>
         </div>
@@ -59,27 +71,45 @@ Browse our complete range of premium Egyptian agricultural products including ci
 </section>
 
 <!-- Category Filter -->
-<section class="py-4 bg-light border-bottom">
+
+<style>
+  .category-filter .btn { border-radius: 999px; padding: .5rem 1rem; font-weight: 600; }
+  .category-filter .btn-outline-primary { border-color: var(--secondary-color); color: var(--secondary-color); background: rgba(249,203,153,.1); }
+  .category-filter .btn-outline-primary:hover { background: var(--secondary-gradient); color: var(--dark-color); }
+  .category-filter .btn-primary { background: var(--secondary-gradient); border-color: transparent; color: var(--dark-color); }
+  @media (max-width: 576px) {
+    .category-filter .btn { padding: .4rem .75rem; font-size: .9rem; }
+  }
+</style>
+
+<section class="py-4 bg-white border-bottom">
     <div class="container">
         <div class="row align-items-center">
             <div class="col-lg-8">
-                <div class="d-flex flex-wrap gap-2">
-                    <a href="{{ url_for('main.products') }}" 
+                <div class="d-flex flex-wrap gap-2 category-filter">
+                    <a href="{{ url_for('main.products') }}"
                        class="btn {% if not selected_category %}btn-primary{% else %}btn-outline-primary{% endif %}">
-                        All Products
+                        {% if is_rtl %}كل المنتجات{% else %}{{ _('All Products') }}{% endif %}
                     </a>
                     {% for category in categories %}
-                    <a href="{{ url_for('main.products', cat=category.key) }}" 
+                    <a href="{{ url_for('main.products', cat=category.key) }}"
                        class="btn {% if selected_category and selected_category.id == category.id %}btn-primary{% else %}btn-outline-primary{% endif %}">
-                        {{ category.get_name() }}
+                        {{ category.get_name(current_language) }}
                     </a>
                     {% endfor %}
                 </div>
             </div>
-            
+
             <div class="col-lg-4 text-lg-end mt-3 mt-lg-0">
                 <span class="text-muted">
-                    Showing {{ (products.items|length) if products.items else 0 }} of {{ products.total if products.total else 0 }} products
+                    {% if is_rtl %}
+                        {% set shown = (products.items|length) if products.items else 0 %}
+                        {% set total = products.total if products.total else 0 %}
+                        {% set noun = 'منتج' if total == 1 else 'منتجات' %}
+                        عرض {{ shown }} من {{ total }} {{ noun }}
+                    {% else %}
+                        {{ _('Showing') }} {{ (products.items|length) if products.items else 0 }} {{ _('of') }} {{ products.total if products.total else 0 }} {{ _('products') }}
+                    {% endif %}
                 </span>
             </div>
         </div>
@@ -87,38 +117,83 @@ Browse our complete range of premium Egyptian agricultural products including ci
 </section>
 
 <!-- Products Grid -->
+
+<!-- START_PRODUCTS_GRID_RESTYLE (reversible: say "تراجع" to remove) -->
+<style>
+  .product-card { border-radius: 20px; overflow: hidden; transition: transform .3s ease, box-shadow .3s ease; }
+  .product-card:hover { transform: translateY(-8px); box-shadow: 0 20px 40px rgba(0,0,0,.15); }
+  .product-image-wrapper { position: relative; overflow: hidden; border-top-left-radius: 20px; border-top-right-radius: 20px; }
+  .product-overlay { opacity: 0; transition: opacity .3s ease, transform .3s ease; transform: scale(.98); background: linear-gradient(180deg, rgba(0,0,0,.0), rgba(0,0,0,.35)); }
+  .product-card:hover .product-overlay { opacity: 1; transform: scale(1); }
+  .product-overlay .btn { border-radius: 12px; }
+  .product-category .badge { background: rgba(249, 203, 153, 0.15); color: var(--secondary-color); }
+</style>
+
 <section class="py-5">
     <div class="container">
         {% if products and products.items %}
-        <div class="row">
+        <div class="row g-4 products-grid">
             {% for product in products.items %}
-            <div class="col-lg-3 col-md-6 mb-4">
-                <div class="card h-100 border-0 shadow-sm product-card">
+            <div class="col-lg-4 col-md-6 col-sm-12 product-col" data-aos="fade-up" data-aos-delay="{{ loop.index0 * 100 }}">
+                <div class="product-card card h-100 border-0 shadow-lg hover-lift position-relative overflow-hidden">
                     <!-- Product Image -->
                     {% set main_image = product.get_main_image() %}
                     {% if main_image %}
-                    <img src="{{ url_for('main.uploaded_file', filename='products/' + main_image.filename) }}"
-                         class="card-img-top" alt="{{ product.get_name() }}"
-                         style="height: 250px; object-fit: cover;">
+                    <div class="product-image-wrapper position-relative overflow-hidden">
+  <img src="{{ url_for('main.uploaded_file', filename='products/' + main_image.filename) }}"
+       class="card-img-top" alt="{{ product.get_name(current_language) if product.get_name is defined else product.get_name() }}"
+       style="height: 250px; object-fit: cover;">
+  <div class="product-overlay position-absolute top-0 start-0 w-100 h-100 d-flex align-items-center justify-content-center">
+    <div class="overlay-content text-center text-white">
+      <div class="btn-group-vertical">
+        <a href="{{ url_for('main.product_detail', slug=product.slug) }}" class="btn btn-light btn-sm mb-2">
+          <i class="fas fa-eye me-1"></i>{{ _('Quick View') }}
+        </a>
+        <a href="{{ url_for('main.contact') }}?product={{ product.slug }}" class="btn btn-primary btn-sm">
+          <i class="fas fa-envelope me-1"></i>{{ _('Get Quote') }}
+        </a>
+      </div>
+    </div>
+  </div>
+</div>
                     {% else %}
-                    <div class="card-img-top bg-light d-flex align-items-center justify-content-center" 
-                         style="height: 250px;">
-                        <i class="fas fa-image fa-3x text-muted"></i>
-                    </div>
+                    <div class="product-image-wrapper position-relative overflow-hidden">
+  <div class="card-img-top bg-gradient-primary d-flex align-items-center justify-content-center" style="height: 250px;">
+    <i class="fas fa-apple-alt fa-3x text-white opacity-90"></i>
+  </div>
+  <div class="product-overlay position-absolute top-0 start-0 w-100 h-100 d-flex align-items-center justify-content-center">
+    <div class="overlay-content text-center text-white">
+      <div class="btn-group-vertical">
+        <a href="{{ url_for('main.product_detail', slug=product.slug) }}" class="btn btn-light btn-sm mb-2">
+          <i class="fas fa-eye me-1"></i>{{ _('Quick View') }}
+
+                        <!-- Decorative Element -->
+                        <div class="product-decoration position-absolute top-0 end-0 p-3">
+                            <div class="decoration-circle bg-gradient-primary opacity-25 rounded-circle" style="width: 80px; height: 80px; transform: translate(50%, -50%);"></div>
+                        </div>
+
+        </a>
+        <a href="{{ url_for('main.contact') }}?product={{ product.slug }}" class="btn btn-primary btn-sm">
+          <i class="fas fa-envelope me-1"></i>{{ _('Get Quote') }}
+        </a>
+      </div>
+    </div>
+  </div>
+</div>
                     {% endif %}
-                    
+
                     <!-- Product Info -->
                     <div class="card-body d-flex flex-column">
-                        <div class="mb-2">
-                            <small class="text-primary fw-semibold">{{ product.category.get_name() }}</small>
-                        </div>
-                        
-                        <h5 class="card-title">{{ product.get_name() }}</h5>
-                        
-                        <p class="card-text text-muted flex-grow-1">
-                            {{ product.get_short_description() | truncate(100) }}
-                        </p>
-                        
+                        <div class="product-category mb-2">
+  <span class="badge bg-light text-primary-custom fw-semibold">{{ product.category.get_name(current_language) if product.category else _('Premium') }}</span>
+</div>
+
+                        <h5 class="card-heading {{ 'arabic-heading' if current_language == 'ar' else 'english-heading' }}">{{ product.get_name(current_language) if product.get_name is defined else product.get_name() }}</h5>
+
+                        <p class="card-text {{ 'arabic-text' if current_language == 'ar' else 'english-text' }} text-muted flex-grow-1">
+  {{ (product.get_short_description(current_language) if product.get_short_description is defined else product.get_short_description()) | truncate(100) if (product.get_short_description is defined or product.get_short_description()) else _('Premium quality Egyptian agricultural product with exceptional taste and nutritional value.') }}
+</p>
+
                         <!-- Product Features -->
                         {% set specs = product.get_specifications() %}
                         {% if specs %}
@@ -134,24 +209,22 @@ Browse our complete range of premium Egyptian agricultural products including ci
                             {% endif %}
                         </div>
                         {% endif %}
-                        
+
                         <!-- Action Buttons -->
                         <div class="d-flex gap-2 mt-auto">
-                            <a href="{{ url_for('main.product_detail', slug=product.slug) }}" 
-                               class="btn btn-outline-primary flex-grow-1">
-                                <i class="fas fa-eye me-1"></i>View Details
-                            </a>
-                            <a href="{{ url_for('main.contact') }}?product={{ product.slug }}" 
-                               class="btn btn-primary">
-                                <i class="fas fa-envelope"></i>
-                            </a>
-                        </div>
+  <a href="{{ url_for('main.product_detail', slug=product.slug) }}" class="btn btn-outline-primary btn-text english-heading flex-grow-1 hover-lift">
+    <i class="fas fa-info-circle me-1"></i>{{ _('Details') }}
+  </a>
+  <a href="{{ url_for('main.contact') }}?product={{ product.slug }}" class="btn btn-primary hover-lift">
+    <i class="fas fa-envelope"></i>
+  </a>
+</div>
                     </div>
                 </div>
             </div>
             {% endfor %}
         </div>
-        
+
         <!-- Pagination -->
         {% if products and products.pages > 1 %}
         <div class="row mt-5">
@@ -165,7 +238,7 @@ Browse our complete range of premium Egyptian agricultural products including ci
                             </a>
                         </li>
                         {% endif %}
-                        
+
                         {% for page_num in products.iter_pages() if products %}
                             {% if page_num %}
                                 {% if page_num != products.page %}
@@ -185,7 +258,7 @@ Browse our complete range of premium Egyptian agricultural products including ci
                             </li>
                             {% endif %}
                         {% endfor %}
-                        
+
                         {% if products.has_next %}
                         <li class="page-item">
                             <a class="page-link" href="{{ url_for('main.products', page=products.next_num, cat=request.args.get('cat')) }}">
@@ -198,23 +271,31 @@ Browse our complete range of premium Egyptian agricultural products including ci
             </div>
         </div>
         {% endif %}
-        
+
         {% else %}
         <!-- No Products Found -->
         <div class="row">
             <div class="col-lg-8 mx-auto text-center">
                 <div class="py-5">
+
+{% block extra_head %}
+<style>
+  /* Improve page-level transitions */
+  .products-hero .pattern-dots { background-image: radial-gradient(currentColor 1px, transparent 1px); background-size: 10px 10px; color: rgba(0,0,0,.06); }
+</style>
+{% endblock %}
+
                     <i class="fas fa-search fa-4x text-muted mb-4"></i>
                     <h3 class="mb-3">No Products Found</h3>
                     <p class="text-muted mb-4">
                         {% if selected_category %}
-                        No products are currently available in the {{ selected_category.get_name() }} category.
+                        {% if is_rtl %}لا توجد منتجات حالياً ضمن فئة {{ selected_category.get_name(current_language) }}.{% else %}{{ _('No products are currently available in the') }} {{ selected_category.get_name(current_language) }} {{ _('category.') }}{% endif %}
                         {% else %}
                         No products match your current filters.
                         {% endif %}
                     </p>
                     <a href="{{ url_for('main.products') }}" class="btn btn-primary">
-                        View All Products
+                        {% if is_rtl %}عرض كل المنتجات{% else %}{{ _('View All Products') }}{% endif %}
                     </a>
                 </div>
             </div>
@@ -229,7 +310,7 @@ Browse our complete range of premium Egyptian agricultural products including ci
     <div class="container">
         <div class="row">
             <div class="col-lg-8 mx-auto text-center">
-                <h3 class="mb-4">About {{ selected_category.get_name() }}</h3>
+                <h3 class="mb-4">{% if is_rtl %}عن قسم {{ selected_category.get_name(current_language) }}{% else %}{{ _('About') }} {{ selected_category.get_name(current_language) }}{% endif %}</h3>
                 <div class="text-muted">
                     {{ selected_category.get_description() }}
                 </div>
@@ -239,17 +320,25 @@ Browse our complete range of premium Egyptian agricultural products including ci
 </section>
 {% endif %}
 
-<!-- Call to Action -->
-<section class="py-5 bg-primary text-white">
-    <div class="container">
+<!-- Call to Action (styled to match site) -->
+<section class="py-5 position-relative overflow-hidden" style="background:#689b8a;">
+    <div class="position-absolute top-0 start-0 w-100 h-100" aria-hidden="true">
+        <div class="pattern-dots" style="color: rgba(255,255,255,.15);"></div>
+    </div>
+    <div class="container position-relative">
         <div class="row align-items-center">
-            <div class="col-lg-8">
-                <h3 class="mb-2">Interested in Our Products?</h3>
-                <p class="mb-0">Contact us for detailed specifications, pricing, and availability information.</p>
+            <div class="col-lg-8" data-aos="fade-right">
+                <div class="section-badge badge bg-gradient-secondary text-dark px-4 py-2 rounded-pill mb-3 fs-6 fw-semibold">
+                    <i class="fas fa-box-open me-2"></i>{% if is_rtl %}جاهزون للتعاون{% else %}{{ _('Ready to Partner with Us?') }}{% endif %}
+                </div>
+                <h3 class="mb-2 text-white {{ 'arabic-heading' if is_rtl else 'english-heading' }}">{% if is_rtl %}مهتمون بمنتجاتنا؟{% else %}{{ _('Interested in Our Products?') }}{% endif %}</h3>
+                <p class="mb-0 text-white-50 {{ 'arabic-text' if is_rtl else 'english-text' }}">
+                    {% if is_rtl %}تواصل معنا للحصول على المواصفات التفصيلية والأسعار وتوافر المنتجات.{% else %}{{ _('Contact us for detailed specifications, pricing, and availability information.') }}{% endif %}
+                </p>
             </div>
-            <div class="col-lg-4 text-lg-end">
-                <a href="{{ url_for('main.contact') }}" class="btn btn-light btn-lg">
-                    <i class="fas fa-envelope me-2"></i>Get a Quote
+            <div class="col-lg-4 text-lg-end" data-aos="fade-left">
+                <a href="{{ url_for('main.contact') }}" class="btn btn-light btn-lg hover-lift" style="border-radius: 12px;">
+                    <i class="fas fa-envelope me-2"></i>{% if is_rtl %}احصل على عرض سعر{% else %}{{ _('Get a Quote') }}{% endif %}
                 </a>
             </div>
         </div>
@@ -268,13 +357,13 @@ document.addEventListener('DOMContentLoaded', function() {
             this.style.transition = 'transform 0.3s ease, box-shadow 0.3s ease';
             this.style.boxShadow = '0 0.75rem 1.5rem rgba(0, 0, 0, 0.15)';
         });
-        
+
         card.addEventListener('mouseleave', function() {
             this.style.transform = 'translateY(0)';
             this.style.boxShadow = '';
         });
     });
-    
+
     // Smooth scroll to products section when coming from category filter
     if (window.location.hash === '#products') {
         document.querySelector('.py-5').scrollIntoView({ behavior: 'smooth' });
