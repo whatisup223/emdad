@@ -114,8 +114,8 @@ def create_app(config_name=None):
         if Category is not None:
             try:
                 nav_categories = (Category.query
-                                  .filter_by(is_active=True, parent_id=None)
-                                  .order_by(Category.sort_order)
+                                  .filter_by(is_active=True)
+                                  .order_by(Category.sort_order, Category.name_en)
                                   .all()) or []
             except Exception:
                 nav_categories = []
