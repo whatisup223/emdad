@@ -442,19 +442,21 @@ Browse our complete range of premium Egyptian agricultural products including ci
 </section>
 
 
-<!-- Call to Action (styled to match site) -->
-<section class="py-5 position-relative overflow-hidden" style="background:#689b8a;">
-    <div class="position-absolute top-0 start-0 w-100 h-100" aria-hidden="true">
-        <div class="pattern-dots" style="color: rgba(255,255,255,.15);"></div>
+<!-- CTA Section (Partnership Opportunity style) -->
+<section class="py-5 bg-gradient-primary text-white position-relative overflow-hidden">
+    <div class="position-absolute top-0 start-0 w-100 h-100">
+        <div class="cta-pattern opacity-10"></div>
     </div>
     <div class="container position-relative">
         <div class="row align-items-center">
             <div class="col-lg-8" data-aos="fade-right">
-                <div class="section-badge badge bg-gradient-secondary text-dark px-4 py-2 rounded-pill mb-3 fs-6 fw-semibold">
-                    <i class="fas fa-box-open me-2"></i>{% if is_rtl %}جاهزون للتعاون{% else %}{{ _('Ready to Partner with Us?') }}{% endif %}
+                <div class="cta-badge badge bg-gradient-secondary text-dark px-4 py-2 rounded-pill mb-3 fs-6 fw-semibold">
+                    <i class="fas fa-handshake me-2"></i>{% if is_rtl %}جاهزون للتعاون{% else %}{{ _('Partnership Opportunity') }}{% endif %}
                 </div>
-                <h3 class="mb-2 text-white {{ 'arabic-heading' if is_rtl else 'english-heading' }}">{% if is_rtl %}مهتمون بمنتجاتنا؟{% else %}{{ _('Interested in Our Products?') }}{% endif %}</h3>
-                <p class="mb-0 text-white-50 {{ 'arabic-text' if is_rtl else 'english-text' }}">
+                <h3 class="mb-2 text-white {{ 'arabic-heading' if is_rtl else 'english-heading' }}">
+                    {% if is_rtl %}مهتمون بمنتجاتنا؟{% else %}{{ _('Interested in Our Products?') }}{% endif %}
+                </h3>
+                <p class="mb-0 text-white-75 {{ 'arabic-text' if is_rtl else 'english-text' }}">
                     {% if is_rtl %}تواصل معنا للحصول على المواصفات التفصيلية والأسعار وتوافر المنتجات.{% else %}{{ _('Contact us for detailed specifications, pricing, and availability information.') }}{% endif %}
                 </p>
             </div>
