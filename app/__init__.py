@@ -388,7 +388,8 @@ def create_app(config_name=None):
             '_': _,
             'get_latest_news': get_latest_news,
             'csrf_token': csrf_token,
-            'image_url_with_timestamp': image_url_with_timestamp
+            'image_url_with_timestamp': image_url_with_timestamp,
+            'nav_categories': nav_categories
         }
 
     # Error handlers
