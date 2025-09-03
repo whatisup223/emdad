@@ -442,7 +442,7 @@ Browse our complete range of premium Egyptian agricultural products including ci
 </section>
 
 
-<!-- CTA Section (Partnership Opportunity style) -->
+<!-- CTA Section copied from homepage Partnership Opportunity -->
 <section class="py-5 bg-gradient-primary text-white position-relative overflow-hidden">
     <div class="position-absolute top-0 start-0 w-100 h-100">
         <div class="cta-pattern opacity-10"></div>
@@ -453,17 +453,63 @@ Browse our complete range of premium Egyptian agricultural products including ci
                 <div class="cta-badge badge bg-gradient-secondary text-dark px-4 py-2 rounded-pill mb-3 fs-6 fw-semibold">
                     <i class="fas fa-handshake me-2"></i>{% if is_rtl %}جاهزون للتعاون{% else %}{{ _('Partnership Opportunity') }}{% endif %}
                 </div>
-                <h3 class="mb-2 text-white {{ 'arabic-heading' if is_rtl else 'english-heading' }}">
-                    {% if is_rtl %}مهتمون بمنتجاتنا؟{% else %}{{ _('Interested in Our Products?') }}{% endif %}
-                </h3>
-                <p class="mb-0 text-white-75 {{ 'arabic-text' if is_rtl else 'english-text' }}">
-                    {% if is_rtl %}تواصل معنا للحصول على المواصفات التفصيلية والأسعار وتوافر المنتجات.{% else %}{{ _('Contact us for detailed specifications, pricing, and availability information.') }}{% endif %}
+                <h2 class="section-heading {{ 'arabic-heading' if is_rtl else 'english-heading' }} text-shadow" style="color: #ffffff;">
+                    {% if selected_category %}
+                        {% if is_rtl %}هل أنت مهتم بـ <span style="color: var(--secondary-color);">{{ selected_category.get_name(current_language) }}</span>؟{% else %}{{ _('Interested in') }} <span style="color: var(--secondary-color);">{{ selected_category.get_name(current_language) }}</span>?{% endif %}
+                    {% else %}
+                        {% if is_rtl %}هل انت مستعد للتعاون معنا؟{% else %}{{ _('Ready to Start Your') }} <span style="color: #f9cb99;">{{ _('Premium') }}</span> {{ _('Agricultural Order?') }}{% endif %}
+                    {% endif %}
+                </h2>
+                <p class="lead mb-4 text-shadow-sm">
+                    {{ _('Join hundreds of satisfied clients worldwide who trust Emdad Global for their') }}
+                    {{ _('agricultural sourcing needs. Get a personalized quote today and experience the difference.') }}
                 </p>
+                <div class="cta-features row g-3 mb-4">
+                    <div class="col-12">
+                        <div class="mb-2 d-flex align-items-center justify-content-between small fw-semibold" style="color:#ffffff;">
+                            <span>{{ _('Quick Response') }}</span>
+                            <span class="progress-value">100%</span>
+                        </div>
+                        <div class="progress" style="height: 10px; background: rgba(255,255,255,0.15);">
+                            <div class="progress-bar" role="progressbar" style="width: 100%; background: #f9cb99;"></div>
+                        </div>
+                    </div>
+                    <div class="col-12">
+                        <div class="mb-2 d-flex align-items-center justify-content-between small fw-semibold" style="color:#ffffff;">
+                            <span>{{ _('Quality Guaranteed') }}</span>
+                            <span class="progress-value">100%</span>
+                        </div>
+                        <div class="progress" style="height: 10px; background: rgba(255,255,255,0.15);">
+                            <div class="progress-bar" role="progressbar" style="width: 100%; background: #f9cb99;"></div>
+                        </div>
+                    </div>
+                </div>
             </div>
-            <div class="col-lg-4 text-lg-end" data-aos="fade-left">
-                <a href="{{ url_for('main.contact') }}" class="btn btn-light btn-lg hover-lift" style="border-radius: 12px;">
-                    <i class="fas fa-envelope me-2"></i>{% if is_rtl %}احصل على عرض سعر{% else %}{{ _('Get a Quote') }}{% endif %}
-                </a>
+            <div class="col-lg-4 text-lg-center" data-aos="fade-left" data-aos-delay="200">
+                <div class="cta-actions">
+                    <a href="{{ url_for('main.contact') }}" class="btn btn-secondary btn-lg px-5 py-3 mb-3 d-block hover-lift">
+                        <span class="me-2 d-inline-flex align-items-center" aria-hidden="true" style="line-height:0;">
+                            <svg viewBox="0 0 24 24" width="18" height="18" role="img" aria-hidden="true" style="display:block;fill:currentColor;"><path d="M20.5 7.5h-6.25l-1.6-2.4a2 2 0 00-1.66-.9H3.5A2.5 2.5 0 001 6.7v10.8A2.5 2.5 0 003.5 20h17a2.5 2.5 0 002.5-2.5v-7a3 3 0 00-2.5-3zm-8.5 0h-1l-.8-1.2c-.09-.14-.24-.3-.45-.3H3.5a.5.5 0 00-.5.5v.5h9.5zM3 8.5h17.5c.83 0 1.5.67 1.5 1.5v7c0 .55-.45 1-1 1H3.5c-.28 0-.5-.22-.5-.5v-9zM6 13.5h5c.28 0 .5.22.5.5s-.22.5-.5.5H6a.5.5 0 010-1zm0 2h9c.28 0 .5.22.5.5s-.22.5-.5.5H6a.5.5 0 010-1z"/></svg>
+                        </span>{% if is_rtl %}اطلب عرض سعر{% else %}{{ _('Request a Quote') }}{% endif %}
+                    </a>
+                    <a href="{{ url_for('main.products') }}" class="btn btn-outline-light btn-lg px-5 py-3 d-block hover-lift">
+                        <i class="fas fa-leaf me-2"></i>{% if is_rtl %}تصفح المنتجات{% else %}{{ _('Browse Products') }}{% endif %}
+                    </a>
+                    <div class="contact-info mt-4 p-3 glass-effect rounded-3">
+                        <a href="tel:{{ COMPANY_PHONE }}" class="btn btn-outline-light btn-lg px-5 py-3 d-block hover-lift mb-3" style="border: 2px solid white; color: white; font-weight: 600; backdrop-filter: blur(10px); background: rgba(255, 255, 255, 0.1);">
+                            <span class="me-2 d-inline-flex align-items-center" aria-hidden="true" style="color: #f9cb99; line-height:0;">
+                                <svg viewBox="0 0 24 24" width="18" height="18" role="img" aria-hidden="true" style="display:block;fill:currentColor;"><path d="M6.62 10.79a15.05 15.05 0 006.59 6.59l2.2-2.2c.27-.27.67-.36 1.02-.24 1.12.37 2.33.57 3.57.57.55 0 1 .45 1 1V21c0 .55-.45 1-1 1C10.07 22 2 13.93 2 3c0-.55.45-1 1-1h3.5c.55 0 1 .45 1 1 0 1.24.2 2.45.57 3.57.11.35.03.74-.24 1.02l-2.2 2.2z"/></svg>
+                            </span>
+                            <span class="fw-semibold" style="color:#ffffff;">{{ COMPANY_PHONE or '+20-xxx-xxx-xxxx' }}</span>
+                        </a>
+                        <a href="mailto:{{ COMPANY_EMAIL }}" class="btn btn-outline-light btn-lg px-5 py-3 d-block hover-lift" style="border: 2px solid white; color: white; font-weight: 600; backdrop-filter: blur(10px); background: rgba(255, 255, 255, 0.1);">
+                            <span class="me-2 d-inline-flex align-items-center" aria-hidden="true" style="color: #f9cb99; line-height:0;">
+                                <svg viewBox="0 0 24 24" width="18" height="18" role="img" aria-hidden="true" style="display:block;fill:currentColor;"><path d="M2 5h20v14H2V5zm10 7L3.5 7h17L12 12z"/></svg>
+                            </span>
+                            <span class="fw-semibold" style="color:#ffffff;">{{ COMPANY_EMAIL or 'info@emdadglobal.com' }}</span>
+                        </a>
+                    </div>
+                </div>
             </div>
         </div>
     </div>

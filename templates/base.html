@@ -843,7 +843,7 @@
                             <li class="mb-2"><a class="footer-link {{ 'arabic-text' if is_rtl else 'english-text' }}" href="{{ url_for('main.certifications') }}">{{ _('Certifications') }}</a></li>
                             <li class="mb-2"><a class="footer-link {{ 'arabic-text' if is_rtl else 'english-text' }}" href="{{ url_for('main.gallery') }}">{{ _('Gallery') }}</a></li>
                             <li class="mb-2"><a class="footer-link {{ 'arabic-text' if is_rtl else 'english-text' }}" href="{{ url_for('main.news') }}">{{ _('News') }}</a></li>
-                            <li class="mb-2"><a class="footer-link {{ 'arabic-text' if is_rtl else 'english-text' }}" href="{{ url_for('main.contact') }}">{{ _('Contact') }}</a></li>
+
                         </ul>
                     </div>
 
@@ -902,21 +902,16 @@
                 </div>
 
                 <div class="border-top mt-4 pt-3" style="border-color: rgba(255,255,255,0.15) !important;">
-                    <div class="row align-items-center">
-                        <div class="col-md-6">
-                            <p class="mb-0 small {{ 'arabic-text' if is_rtl else 'english-text' }}" style="color: rgba(255,255,255,0.8);">
-                                {% if is_rtl %}
-                                    &copy; 2025 <a href="{{ url_for('main.index') }}" class="footer-link">{{ COMPANY_NAME }}</a>. جميع الحقوق محفوظة.
-                                {% else %}
-                                    &copy; 2025 <a href="{{ url_for('main.index') }}" class="footer-link">{{ COMPANY_NAME }}</a>. All rights reserved.
-                                {% endif %}
-                            </p>
-                        </div>
-                        <div class="col-md-6 text-md-end">
-                            <a href="#" class="footer-link {{ 'arabic-text' if is_rtl else 'english-text' }}" style="margin-right: 1.5rem;">{{ _('Privacy Policy') }}</a>
-                            <a href="#" class="footer-link {{ 'arabic-text' if is_rtl else 'english-text' }}" style="margin-right: 1.5rem;">{{ _('Terms of Service') }}</a>
-                            <a href="{{ url_for('main.contact') }}" class="footer-link {{ 'arabic-text' if is_rtl else 'english-text' }}">{{ _('Support') }}</a>
-                        </div>
+                    <div class="text-center">
+                        <p class="mb-0 small {{ 'arabic-text' if is_rtl else 'english-text' }}" style="color: rgba(255,255,255,0.9); text-align: center;">
+                            {% if is_rtl %}
+                                جميع الحقوق محفوظة لشركة إمداد جلوبال 2025 © صنع بكل <span aria-label="حب">❤️</span> بواسطة
+                                <a href="https://facebook.com/marketati0n/" class="footer-link" target="_blank" rel="noopener">ماركتيشن</a>
+                            {% else %}
+                                All Rights Reserved To Emdad Global 2025 © Made With <span aria-label="love">❤️</span> By
+                                <a href="https://facebook.com/marketati0n/" class="footer-link" target="_blank" rel="noopener">Marketation</a>
+                            {% endif %}
+                        </p>
                     </div>
                 </div>
 

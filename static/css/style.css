@@ -2665,6 +2665,19 @@ section.bg-gradient-light .btn-outline-primary:hover::before {
   background: var(--secondary-gradient) !important;
 }
 
+/* Fix contrast for Details buttons inside product cards */
+.product-card .btn-outline-primary:hover,
+.product-card .btn-outline-primary:focus,
+.product-card .btn-outline-primary:active {
+  background: var(--secondary-gradient) !important;
+  border-color: var(--secondary-color) !important;
+  color: var(--dark-color) !important;
+}
+.product-card .btn-outline-primary:hover::before,
+.product-card .btn-outline-primary:focus::before,
+.product-card .btn-outline-primary:active::before { background: var(--secondary-gradient) !important; width: 100%; }
+
+
 .btn-outline-secondary {
     color: var(--secondary-color);
     border-color: var(--secondary-color);
