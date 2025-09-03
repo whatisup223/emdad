@@ -34,6 +34,78 @@ Browse our complete range of premium Egyptian agricultural products including ci
         <div class="pattern-dots opacity-25"></div>
     </div>
 
+    <!-- START_PRODUCTS_ANIMATIONS (reversible: say "تراجع" to remove) -->
+    <style>
+      /* Hero animated bubbles */
+      .hero-animated-bg { position:absolute; inset:0; z-index:0; pointer-events:none; }
+      .hero-bubble { position:absolute; border-radius:50%; background: rgba(255,255,255,.18); filter: blur(.4px); animation: heroFloat 10s ease-in-out infinite; }
+      .hero-bubble.b1 { width:90px; height:90px; top:12%; left:10%; animation-duration: 12s; }
+      .hero-bubble.b2 { width:140px; height:140px; bottom:10%; right:12%; animation-duration: 14s; animation-direction: reverse; }
+      .hero-bubble.b3 { width:70px; height:70px; top:35%; right:28%; animation-duration: 11s; }
+      .hero-bubble.b4 { width:110px; height:110px; bottom:20%; left:22%; animation-duration: 13s; }
+      @keyframes heroFloat { 0%,100%{ transform: translateY(0);} 50%{ transform: translateY(-14px);} }
+
+      /* Grid floating leaves */
+      .grid-animated-bg { position:absolute; inset:0; z-index:0; pointer-events:none; }
+      .leaf { position:absolute; color: rgba(249,203,153,.55); font-size: 1rem; animation: leafDrift 18s linear infinite; }
+      .leaf.l1 { top:10%; left:-40px; animation-duration: 18s; }
+      .leaf.l2 { top:40%; left:-60px; animation-duration: 20s; animation-delay: 3s; }
+      .leaf.l3 { top:70%; left:-50px; animation-duration: 22s; animation-delay: 6s; }
+      @keyframes leafDrift { 0%{ transform: translateX(0) rotate(0deg);} 50%{ transform: translateX(50vw) rotate(10deg);} 100%{ transform: translateX(100vw) rotate(0deg);} }
+
+      /* Decoration glow on hover */
+      .product-card:hover .decoration-circle { box-shadow: 0 0 0 10px rgba(104,155,138,.08), 0 0 25px rgba(249,203,153,.45); }
+
+      /* Ripple effect for filter buttons */
+      .category-filter .btn { position: relative; overflow: hidden; }
+      .btn-ripple { position:absolute; border-radius:50%; transform: translate(-50%,-50%); pointer-events:none; width:10px; height:10px; background: rgba(249,203,153,.45); animation: rippleOut .6s ease-out forwards; }
+      @keyframes rippleOut { to { opacity:0; width:220px; height:220px; } }
+
+      /* Image skeleton shimmer */
+      .img-skeleton { position:relative; background: linear-gradient(90deg, rgba(0,0,0,.06), rgba(255,255,255,.15), rgba(0,0,0,.06)); background-size: 200% 100%; animation: shimmer 1.2s linear infinite; }
+      @keyframes shimmer { 0%{ background-position: 200% 0;} 100%{ background-position: -200% 0;} }
+
+      /* Reduced motion: minimize animations */
+      @media (prefers-reduced-motion: reduce) {
+        .hero-bubble, .leaf { animation: none !important; }
+      }
+    </style>
+
+    <!-- Animated layer in hero -->
+    <div class="hero-animated-bg" aria-hidden="true">
+
+<style>
+  /* Prevent overlays from covering content on small screens */
+  @media (max-width: 991.98px) {
+    .product-overlay { opacity: 1; background: linear-gradient(180deg, rgba(0,0,0,.15), rgba(0,0,0,.35)); }
+    .overlay-content .btn { padding: .35rem .6rem; font-size: .85rem; }
+  }
+  @media (max-width: 575.98px) {
+    .product-card { border-radius: 16px; }
+    .product-image-wrapper { border-top-left-radius: 16px; border-top-right-radius: 16px; }
+    .product-card .card-body { padding: 1rem !important; }
+    .product-col { padding-left: .5rem; padding-right: .5rem; }
+  }
+</style>
+
+      <span class="hero-bubble b1"></span>
+      <span class="hero-bubble b2"></span>
+      <span class="hero-bubble b3"></span>
+      <span class="hero-bubble b4"></span>
+    </div>
+    <!-- END_PRODUCTS_ANIMATIONS -->
+
+
+
+<style>
+  /* Mobile fixes for animated layers */
+  @media (max-width: 767.98px) {
+    .hero-animated-bg { display: none !important; }
+    .grid-animated-bg { display: none !important; }
+    .products-hero { padding-top: 2.25rem !important; padding-bottom: 2.25rem !important; }
+  }
+</style>
+
     <div class="container position-relative">
         <div class="row align-items-center g-4">
             <div class="col-lg-8" data-aos="fade-right">
@@ -82,7 +154,14 @@ Browse our complete range of premium Egyptian agricultural products including ci
   }
 </style>
 
-<section class="py-4 bg-white border-bottom">
+<section class="py-4 bg-white border-bottom position-relative overflow-hidden category-filter-section">
+                <!-- Floating leaves background -->
+                <div class="grid-animated-bg" aria-hidden="true">
+                  <i class="fas fa-leaf leaf l1"></i>
+                  <i class="fas fa-leaf leaf l2"></i>
+                  <i class="fas fa-leaf leaf l3"></i>
+                </div>
+
     <div class="container">
         <div class="row align-items-center">
             <div class="col-lg-8">
@@ -257,6 +336,16 @@ Browse our complete range of premium Egyptian agricultural products including ci
                                 <span class="page-link">...</span>
                             </li>
                             {% endif %}
+
+<style>
+  /* CTA mobile spacing and readability */
+  @media (max-width: 767.98px) {
+    section[style*="#689b8a"] .section-badge { margin-bottom: .75rem !important; }
+    section[style*="#689b8a"] h3 { font-size: 1.25rem; }
+    section[style*="#689b8a"] p { font-size: .95rem; }
+  }
+</style>
+
                         {% endfor %}
 
                         {% if products.has_next %}
@@ -290,6 +379,54 @@ Browse our complete range of premium Egyptian agricultural products including ci
                     <p class="text-muted mb-4">
                         {% if selected_category %}
                         {% if is_rtl %}لا توجد منتجات حالياً ضمن فئة {{ selected_category.get_name(current_language) }}.{% else %}{{ _('No products are currently available in the') }} {{ selected_category.get_name(current_language) }} {{ _('category.') }}{% endif %}
+
+<script>
+  // START_PRODUCTS_ANIMATIONS (reversible)
+  document.addEventListener('DOMContentLoaded', function(){
+    // Ripple on category filter buttons
+    document.querySelectorAll('.category-filter .btn').forEach(btn => {
+      btn.addEventListener('click', function(e){
+        const r = document.createElement('span');
+        r.className = 'btn-ripple';
+        const rect = this.getBoundingClientRect();
+        r.style.left = (e.clientX - rect.left) + 'px';
+        r.style.top = (e.clientY - rect.top) + 'px';
+        this.appendChild(r);
+        setTimeout(() => r.remove(), 650);
+      });
+    });
+
+    // Image skeleton for slow loads
+    document.querySelectorAll('.product-image-wrapper img').forEach(img => {
+      const wrap = img.closest('.product-image-wrapper');
+      if (!wrap) return;
+      wrap.classList.add('img-skeleton');
+      if (img.complete) wrap.classList.remove('img-skeleton');
+      img.addEventListener('load', () => wrap.classList.remove('img-skeleton'));
+      img.addEventListener('error', () => wrap.classList.remove('img-skeleton'));
+    });
+
+    // Tilt/Parallax on desktop only
+    const isMobile = window.matchMedia('(max-width: 991px)').matches;
+    if (!isMobile) {
+      document.querySelectorAll('.product-card').forEach(card => {
+        const img = card.querySelector('.product-image');
+        card.addEventListener('mousemove', (e) => {
+          const r = card.getBoundingClientRect();
+          const x = e.clientX - r.left; const y = e.clientY - r.top;
+          const rx = ((y / r.height) - 0.5) * -6;
+          const ry = ((x / r.width) - 0.5) * 6;
+          card.style.transform = `perspective(800px) rotateX(${rx}deg) rotateY(${ry}deg)`;
+        });
+        card.addEventListener('mouseleave', () => {
+          card.style.transform = '';
+        });
+      });
+    }
+  });
+  // END_PRODUCTS_ANIMATIONS
+</script>
+
                         {% else %}
                         No products match your current filters.
                         {% endif %}
