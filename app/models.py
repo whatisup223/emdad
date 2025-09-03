@@ -135,40 +135,89 @@ class Product(db.Model):
         return getattr(self, f'short_description_{language}', self.short_description_en)
     
     def get_specifications(self):
-        """Get specifications as dictionary."""
+        """Get raw specifications JSON as dictionary (may contain language keys)."""
         if self.specifications:
             try:
                 return json.loads(self.specifications)
             except json.JSONDecodeError:
                 return {}
         return {}
-    
+
+    def get_specifications_lang(self, language='en'):
+        """Return specifications for the given language.
+        Supports two shapes:
+        - {'en': '{...json...}', 'ar': '{...json...}'} (textarea-stored JSON strings per language)
+        - {'brix': '12-14', 'sizes': ['S','M']} (direct dict for all languages)
+        """
+        data = self.get_specifications()
+        if not data:
+            return {}
+        # If language-keyed
+        if isinstance(data, dict) and ('en' in data or 'ar' in data):
+            val = data.get(language) or data.get('en') or data.get('ar')
+            if isinstance(val, str):
+                # Try parse the inner JSON string
+                try:
+                    return json.loads(val)
+                except Exception:
+                    # Fallback to a single-note field
+                    return {'notes': val}
+            return val if isinstance(val, dict) else {}
+        # Already direct dict
+        return data if isinstance(data, dict) else {}
+
     def set_specifications(self, specs_dict):
         """Set specifications from dictionary."""
         self.specifications = json.dumps(specs_dict) if specs_dict else None
-    
+
     def get_seasonality(self):
-        """Get seasonality as dictionary."""
+        """Get raw seasonality JSON as dictionary (may contain language keys)."""
         if self.seasonality:
             try:
                 return json.loads(self.seasonality)
             except json.JSONDecodeError:
                 return {}
         return {}
-    
-    def set_seasonality(self, seasonality_dict):
-        """Set seasonality from dictionary."""
-        self.seasonality = json.dumps(seasonality_dict) if seasonality_dict else None
-    
+
+    def get_seasonality_lang(self, language='en'):
+        """Return seasonality for the given language if language-keyed, else raw dict."""
+        data = self.get_seasonality()
+        if not data:
+            return {}
+        if isinstance(data, dict) and ('en' in data or 'ar' in data):
+            val = data.get(language) or data.get('en') or data.get('ar')
+            if isinstance(val, str):
+                try:
+                    return json.loads(val)
+                except Exception:
+                    return {'notes': val}
+            return val if isinstance(val, dict) else {}
+        return data if isinstance(data, dict) else {}
+
     def get_packaging_options(self):
-        """Get packaging options as dictionary."""
+        """Get raw packaging options JSON as dictionary (may contain language keys)."""
         if self.packaging_options:
             try:
                 return json.loads(self.packaging_options)
             except json.JSONDecodeError:
                 return {}
         return {}
-    
+
+    def get_packaging_options_lang(self, language='en'):
+        """Return packaging options for the given language if language-keyed, else raw dict."""
+        data = self.get_packaging_options()
+        if not data:
+            return {}
+        if isinstance(data, dict) and ('en' in data or 'ar' in data):
+            val = data.get(language) or data.get('en') or data.get('ar')
+            if isinstance(val, str):
+                try:
+                    return json.loads(val)
+                except Exception:
+                    return {'notes': val}
+            return val if isinstance(val, dict) else {}
+        return data if isinstance(data, dict) else {}
+
     def set_packaging_options(self, packaging_dict):
         """Set packaging options from dictionary."""
         self.packaging_options = json.dumps(packaging_dict) if packaging_dict else None

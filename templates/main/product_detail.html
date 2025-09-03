@@ -1,11 +1,11 @@
 {% extends "base.html" %}
 
-{% block title %}{{ product.get_name() }} - {{ product.category.get_name() }} - {{ SITE_NAME }}{% endblock %}
+{% block title %}{{ product.get_name(current_language) }} - {{ product.category.get_name(current_language) }} - {{ SITE_NAME }}{% endblock %}
 
-{% block meta_description %}{{ product.get_short_description() or product.get_description() | truncate(160) }}{% endblock %}
+{% block meta_description %}{{ (product.get_short_description(current_language) if product.get_short_description is defined else product.get_short_description()) or (product.get_description(current_language) if product.get_description is defined else product.get_description()) | truncate(160) }}{% endblock %}
 
-{% block og_title %}{{ product.get_name() }} - Premium Egyptian {{ product.category.get_name() }}{% endblock %}
-{% block og_description %}{{ product.get_short_description() or product.get_description() | truncate(160) }}{% endblock %}
+{% block og_title %}{{ product.get_name(current_language) }} - {{ _('Premium Egyptian') }} {{ product.category.get_name(current_language) }}{% endblock %}
+{% block og_description %}{{ (product.get_short_description(current_language) if product.get_short_description is defined else product.get_short_description()) or (product.get_description(current_language) if product.get_description is defined else product.get_description()) | truncate(160) }}{% endblock %}
 {% block og_image %}
 {% set main_image = product.get_main_image() %}
 {% if main_image %}
@@ -16,44 +16,161 @@
 {% endblock %}
 
 {% block content %}
-<!-- Product Header -->
-<section class="py-5 bg-light">
-    <div class="container">
-        <nav aria-label="breadcrumb">
-            <ol class="breadcrumb">
-                <li class="breadcrumb-item"><a href="{{ url_for('main.index') }}">Home</a></li>
-                <li class="breadcrumb-item"><a href="{{ url_for('main.products') }}">Products</a></li>
-                <li class="breadcrumb-item"><a href="{{ url_for('main.products', cat=product.category.key) }}">{{ product.category.get_name() }}</a></li>
-                <li class="breadcrumb-item active">{{ product.get_name() }}</li>
-            </ol>
-        </nav>
+<!-- Product Header (green hero like products page) -->
+<section class="py-5 product-hero position-relative overflow-hidden" style="background:#689b8a;">
+  <style>
+    .product-hero .section-badge { background: var(--secondary-gradient) !important; color: var(--dark-color) !important; }
+    .product-hero .breadcrumb, .product-hero .breadcrumb * { color: rgba(255,255,255,.85) !important; }
+    .product-hero .product-title { color:#fff !important; }
+    .product-hero .lead { color:#fff !important; opacity:.9; }
+    .product-hero .pattern-dots { color: rgba(255,255,255,.15); }
+    /* hero bubbles */
+    .ph-animated { position:absolute; inset:0; pointer-events:none; }
+    .ph-bubble{ position:absolute; border-radius:50%; background: rgba(255,255,255,.18); filter: blur(.4px); animation: phFloat 12s ease-in-out infinite; }
+    .ph-b1{ width:90px; height:90px; top:12%; left:10%; }
+    .ph-b2{ width:140px; height:140px; bottom:10%; right:12%; animation-direction: reverse; animation-duration: 14s; }
+    .ph-b3{ width:70px; height:70px; top:35%; right:28%; animation-duration: 11s; }
+    @keyframes phFloat { 0%,100%{ transform: translateY(0);} 50%{ transform: translateY(-14px);} }
+    @media (max-width: 767.98px){ .ph-animated{ display:none !important; } }
+  </style>
+  <div class="position-absolute top-0 start-0 w-100 h-100"><div class="pattern-dots opacity-25"></div></div>
+  <div class="ph-animated" aria-hidden="true">
+    <span class="ph-bubble ph-b1"></span>
+    <span class="ph-bubble ph-b2"></span>
+    <span class="ph-bubble ph-b3"></span>
+  </div>
+  <div class="container position-relative">
+    <nav aria-label="breadcrumb">
+      <ol class="breadcrumb">
+        <li class="breadcrumb-item"><a href="{{ url_for('main.index') }}">{% if is_rtl %}الرئيسية{% else %}{{ _('Home') }}{% endif %}</a></li>
+        <li class="breadcrumb-item"><a href="{{ url_for('main.products') }}">{% if is_rtl %}المنتجات{% else %}{{ _('Products') }}{% endif %}</a></li>
+        <li class="breadcrumb-item"><a href="{{ url_for('main.products', cat=product.category.key) }}">{{ product.category.get_name(current_language) }}</a></li>
+        <li class="breadcrumb-item active" aria-current="page">{{ product.get_name(current_language) }}</li>
+      </ol>
+    </nav>
+    <div class="mt-3">
+      <div class="section-badge badge px-4 py-2 rounded-pill mb-3 fs-6 fw-semibold">
+        <i class="fas fa-apple-alt me-2"></i>{{ product.category.get_name(current_language) }}
+      </div>
+      <h1 class="product-title {{ 'arabic-heading' if is_rtl else 'english-heading' }} mb-2">{{ product.get_name(current_language) }}</h1>
+      {% if product.get_short_description %}
+      <p class="lead {{ 'arabic-text' if is_rtl else 'english-text' }} mb-0">{{ (product.get_short_description(current_language) if product.get_short_description is defined else product.get_short_description()) or '' }}</p>
+      {% endif %}
     </div>
+  </div>
 </section>
 
+
+<!-- Unified CTA button style (applies to all products) -->
+<style>
+  .btn-green-to-peach {
+    border: 2px solid var(--brand-green, #689b8a);
+    background: var(--brand-green, #689b8a);
+    color: #fff;
+    border-radius: 12px;
+    transition: transform .2s ease, box-shadow .2s ease, background .2s ease, color .2s ease, border-color .2s ease;
+  }
+  .btn-green-to-peach:hover,
+  .btn-green-to-peach:focus,
+  .btn-green-to-peach:active {
+    background: var(--secondary-gradient);
+    color: var(--dark-color);
+    border-color: transparent;
+    transform: translateY(-2px);
+    box-shadow: 0 8px 18px rgba(249,203,153,.35);
+  }
+</style>
+
 <!-- Product Details -->
-<section class="py-5">
+
+<style>
+  /* Floating leaves like products page */
+  .grid-animated-bg { position:absolute; inset:0; z-index:0; pointer-events:none; }
+  .leaf { position:absolute; color: rgba(249,203,153,.55); font-size: 1rem; animation: leafDrift 18s linear infinite; }
+  .leaf.l1 { top:10%; left:-40px; animation-duration: 18s; }
+  .leaf.l2 { top:20%; left:-60px; animation-duration: 20s; animation-delay: 3s; }
+  .leaf.l3 { top:35%; left:-50px; animation-duration: 22s; animation-delay: 6s; }
+  .leaf.l4 { top:55%; left:-70px; animation-duration: 24s; animation-delay: 2s; }
+  .leaf.l5 { top:75%; left:-45px; animation-duration: 26s; animation-delay: 5s; }
+  .leaf.l6 { top:85%; left:-80px; animation-duration: 28s; animation-delay: 7s; }
+  @keyframes leafDrift { 0%{ transform: translateX(0) rotate(0deg);} 50%{ transform: translateX(50vw) rotate(10deg);} 100%{ transform: translateX(100vw) rotate(0deg);} }
+  @media (max-width: 767.98px){ .grid-animated-bg{ display:none !important; } }
+</style>
+
+
+<section class="py-5 position-relative overflow-hidden">
     <div class="container">
         <div class="row">
             <!-- Product Images -->
+<div class="grid-animated-bg" aria-hidden="true">
+  <i class="fas fa-leaf leaf l1"></i>
+  <i class="fas fa-leaf leaf l2"></i>
+  <i class="fas fa-leaf leaf l3"></i>
+  <i class="fas fa-leaf leaf l4"></i>
+  <i class="fas fa-leaf leaf l5"></i>
+  <i class="fas fa-leaf leaf l6"></i>
+</div>
+
             <div class="col-lg-6 mb-4">
-                <div class="product-images">
+                <div class="product-images position-relative">
                     <!-- Main Image -->
-                    <div class="main-image mb-3">
+
+<style>
+  /* Product image hover effects and on-image leaves */
+  .product-image-wrapper { border-radius: 22px; overflow: hidden; transition: border-radius .35s ease, box-shadow .35s ease; }
+  .product-image-wrapper:hover { border-radius: 28px; box-shadow: 0 20px 40px rgba(0,0,0,.12); }
+  .product-image-wrapper img.product-image { transition: transform .5s ease, filter .5s ease; will-change: transform; }
+  .product-image-wrapper:hover img.product-image { transform: scale(1.06); filter: saturate(1.04) contrast(1.03); }
+  /* Leaves overlay inside the image */
+  .image-leaves { position:absolute; inset:0; z-index:2; pointer-events:none; }
+  .img-leaf { position:absolute; color: rgba(249,203,153,.75); opacity: 0; font-size: 14px; animation: imgLeafDrift 16s linear infinite; filter: drop-shadow(0 2px 2px rgba(0,0,0,.1)); }
+  .img-leaf.i1 { top: 8%; left: -12%; animation-delay: 0s; }
+  .img-leaf.i2 { top: 28%; left: -16%; animation-delay: 1.5s; }
+  .img-leaf.i3 { top: 46%; left: -14%; animation-delay: 3s; }
+  .img-leaf.i4 { top: 65%; left: -18%; animation-delay: 4.5s; font-size: 12px; opacity:.9; }
+  .img-leaf.i5 { top: 20%; left: -20%; animation-delay: 2.2s; font-size: 16px; }
+  .img-leaf.i6 { top: 80%; left: -22%; animation-delay: 5.5s; font-size: 12px; }
+  .img-leaf.i7 { top: 38%; left: -24%; animation-delay: 6.8s; font-size: 15px; }
+  .img-leaf.i8 { top: 58%; left: -26%; animation-delay: 7.5s; font-size: 13px; }
+  @keyframes imgLeafDrift {
+    0% { transform: translateX(0) rotate(0deg); opacity: 0; }
+    8% { opacity: .95; }
+    50% { transform: translateX(60%) rotate(10deg); }
+    100% { transform: translateX(120%) rotate(0deg); opacity: 0; }
+  }
+  @media (max-width: 575.98px) {
+    .product-image-wrapper img.product-image { height: 320px; }
+  }
+</style>
+
+                    <div class="main-image mb-3 product-image-wrapper position-relative overflow-hidden">
                         {% set main_image = product.get_main_image() %}
                         {% if main_image %}
                         <img id="mainProductImage"
                              src="{{ url_for('main.uploaded_file', filename='products/' + main_image.filename) }}"
-                             alt="{{ product.get_name() }}"
-                             class="img-fluid rounded shadow"
+                             alt="{{ product.get_name(current_language) }}"
+                             class="img-fluid rounded shadow product-image"
                              style="width: 100%; height: 400px; object-fit: cover; cursor: pointer;"
-                             onclick="openImageModal(this.src, '{{ product.get_name() }}')">
+                             onclick="openImageModal(this.src, '{{ product.get_name(current_language) }}')">
+
                         {% else %}
-                        <div class="bg-light d-flex align-items-center justify-content-center rounded shadow" style="height: 400px;">
-                            <i class="fas fa-image fa-4x text-muted"></i>
+                        <div class="product-image-wrapper position-relative overflow-hidden rounded shadow" style="height: 400px;">
+                            <div class="card-img-top bg-gradient-primary d-flex align-items-center justify-content-center w-100 h-100"><i class="fas fa-apple-alt fa-4x text-white opacity-90"></i></div>
+                        <div class="image-leaves" aria-hidden="true">
+                          <i class="fas fa-leaf img-leaf i1"></i>
+                          <i class="fas fa-leaf img-leaf i2"></i>
+                          <i class="fas fa-leaf img-leaf i3"></i>
+                          <i class="fas fa-leaf img-leaf i4"></i>
+                          <i class="fas fa-leaf img-leaf i5"></i>
+                          <i class="fas fa-leaf img-leaf i6"></i>
+                          <i class="fas fa-leaf img-leaf i7"></i>
+                          <i class="fas fa-leaf img-leaf i8"></i>
+                        </div>
+
                         </div>
                         {% endif %}
                     </div>
-                    
+
                     <!-- Thumbnail Gallery -->
                     {% if product.images.count() > 1 %}
                     <div class="thumbnail-gallery">
@@ -72,37 +189,37 @@
                     {% endif %}
                 </div>
             </div>
-            
+
             <!-- Product Information -->
             <div class="col-lg-6">
                 <div class="product-info">
                     <!-- Category Badge -->
                     <div class="mb-3">
-                        <span class="badge bg-primary fs-6">{{ product.category.get_name() }}</span>
+                        <span class="badge bg-gradient-secondary text-dark fs-6">{{ product.category.get_name(current_language) }}</span>
                         {% if product.featured %}
-                        <span class="badge bg-warning text-dark ms-2">Featured</span>
+                        <span class="badge bg-warning text-dark ms-2">{% if is_rtl %}مميز{% else %}{{ _('Featured') }}{% endif %}</span>
                         {% endif %}
                     </div>
-                    
+
                     <!-- Product Name -->
-                    <h1 class="display-6 fw-bold mb-3">{{ product.get_name() }}</h1>
-                    
+                    <h1 class="display-6 fw-bold mb-3 {{ 'arabic-heading' if is_rtl else 'english-heading' }}">{{ product.get_name(current_language) }}</h1>
+
                     <!-- Short Description -->
-                    {% if product.get_short_description() %}
-                    <p class="lead text-muted mb-4">{{ product.get_short_description() }}</p>
+                    {% if product.get_short_description() or (product.get_short_description is defined and product.get_short_description(current_language)) %}
+                    <p class="lead text-muted mb-4 {{ 'arabic-text' if is_rtl else 'english-text' }}">{{ (product.get_short_description(current_language) if product.get_short_description is defined else product.get_short_description()) }}</p>
                     {% endif %}
-                    
+
                     <!-- Key Features -->
-                    {% set specs = product.get_specifications() %}
+                    {% set specs = product.get_specifications_lang(current_language) %}
                     {% if specs %}
                     <div class="key-features mb-4">
-                        <h5 class="mb-3">Key Features</h5>
+                        <h5 class="mb-3">{% if is_rtl %}المميزات الرئيسية{% else %}{{ _('Key Features') }}{% endif %}</h5>
                         <div class="row">
                             {% if specs.get('sizes') %}
                             <div class="col-md-6 mb-2">
                                 <div class="d-flex align-items-center">
                                     <i class="fas fa-ruler text-primary me-2"></i>
-                                    <span class="small">Multiple Sizes Available</span>
+                                    <span class="small">{% if is_rtl %}مقاسات متعددة متاحة{% else %}{{ _('Multiple Sizes Available') }}{% endif %}</span>
                                 </div>
                             </div>
                             {% endif %}
@@ -125,43 +242,43 @@
                             <div class="col-md-6 mb-2">
                                 <div class="d-flex align-items-center">
                                     <i class="fas fa-certificate text-warning me-2"></i>
-                                    <span class="small">Certified Quality</span>
+                                    <span class="small">{% if is_rtl %}جودة معتمدة{% else %}{{ _('Certified Quality') }}{% endif %}</span>
                                 </div>
                             </div>
                         </div>
                     </div>
                     {% endif %}
-                    
+
                     <!-- Action Buttons -->
                     <div class="action-buttons mb-4">
-                        <a href="{{ url_for('main.contact') }}?product={{ product.slug }}" class="btn btn-primary btn-lg me-3">
-                            <i class="fas fa-envelope me-2"></i>Request Quote
+                        <a href="{{ url_for('main.contact') }}?product={{ product.slug }}" class="btn btn-primary btn-lg me-3 hover-lift" style="border-radius: 12px;">
+                            <i class="fas fa-envelope me-2"></i>{% if is_rtl %}اطلب عرض سعر{% else %}{{ _('Request Quote') }}{% endif %}
                         </a>
-                        <button class="btn btn-outline-secondary" onclick="shareProduct()">
-                            <i class="fas fa-share-alt me-2"></i>Share
+                        <button class="btn btn-outline-secondary hover-lift" onclick="shareProduct()">
+                            <i class="fas fa-share-alt me-2"></i>{% if is_rtl %}مشاركة{% else %}{{ _('Share') }}{% endif %}
                         </button>
                     </div>
-                    
+
                     <!-- Quick Info -->
                     <div class="quick-info">
                         <div class="row">
                             <div class="col-6">
                                 <div class="info-item mb-3">
-                                    <h6 class="text-muted mb-1">Category</h6>
-                                    <p class="mb-0">{{ product.category.get_name() }}</p>
+                                    <h6 class="text-muted mb-1">{% if is_rtl %}الفئة{% else %}{{ _('Category') }}{% endif %}</h6>
+                                    <p class="mb-0">{{ product.category.get_name(current_language) }}</p>
                                 </div>
                             </div>
                             <div class="col-6">
                                 <div class="info-item mb-3">
-                                    <h6 class="text-muted mb-1">Origin</h6>
-                                    <p class="mb-0">Egypt</p>
+                                    <h6 class="text-muted mb-1">{% if is_rtl %}المنشأ{% else %}{{ _('Origin') }}{% endif %}</h6>
+                                    <p class="mb-0">{% if is_rtl %}مصر{% else %}{{ _('Egypt') }}{% endif %}</p>
                                 </div>
                             </div>
-                            {% set seasonality = product.get_seasonality() %}
+                            {% set seasonality = product.get_seasonality_lang(current_language) %}
                             {% if seasonality.get('harvest') %}
                             <div class="col-6">
                                 <div class="info-item mb-3">
-                                    <h6 class="text-muted mb-1">Harvest Season</h6>
+                                    <h6 class="text-muted mb-1">{% if is_rtl %}موسم الحصاد{% else %}{{ _('Harvest Season') }}{% endif %}</h6>
                                     <p class="mb-0">{{ seasonality.harvest }}</p>
                                 </div>
                             </div>
@@ -169,7 +286,7 @@
                             {% if seasonality.get('peak') %}
                             <div class="col-6">
                                 <div class="info-item mb-3">
-                                    <h6 class="text-muted mb-1">Peak Season</h6>
+                                    <h6 class="text-muted mb-1">{% if is_rtl %}موسم الذروة{% else %}{{ _('Peak Season') }}{% endif %}</h6>
                                     <p class="mb-0">{{ seasonality.peak }}</p>
                                 </div>
                             </div>
@@ -188,58 +305,84 @@
         <div class="row">
             <div class="col-lg-10 mx-auto">
                 <!-- Tab Navigation -->
-                <ul class="nav nav-tabs nav-fill mb-4" id="productTabs" role="tablist">
+
+<style>
+  /* Tabs styling and mobile scroll */
+  .product-tabs .nav-link { border-radius: 999px; border: 2px solid transparent; padding: .6rem 1rem; font-weight: 600; color: var(--primary-color); }
+  .product-tabs .nav-link.active { background: var(--secondary-gradient); color: var(--dark-color); border-color: transparent; }
+  .product-tabs .nav-link:not(.active) { border-color: var(--secondary-color); color: var(--secondary-color); background: rgba(249,203,153,.08); }
+  .product-tabs .nav-link:hover { filter: brightness(1.05); }
+  .tabs-scroller { overflow-x: auto; -webkit-overflow-scrolling: touch; }
+  .tabs-scroller::-webkit-scrollbar { height: 6px; }
+  .tabs-scroller::-webkit-scrollbar-thumb { background: rgba(0,0,0,.15); border-radius: 3px; }
+</style>
+
+                <div class="tabs-scroller product-tabs"><ul class="nav nav-pills nav-fill mb-4 flex-nowrap" id="productTabs" role="tablist" data-aos="fade-up" style="overflow-x:auto; white-space:nowrap; gap:.5rem;">
+
                     <li class="nav-item" role="presentation">
                         <button class="nav-link active" id="description-tab" data-bs-toggle="tab" data-bs-target="#description" type="button" role="tab">
-                            <i class="fas fa-info-circle me-2"></i>Description
+                            <i class="fas fa-info-circle me-2"></i>{% if is_rtl %}الوصف{% else %}{{ _('Description') }}{% endif %}
                         </button>
                     </li>
                     <li class="nav-item" role="presentation">
                         <button class="nav-link" id="specifications-tab" data-bs-toggle="tab" data-bs-target="#specifications" type="button" role="tab">
-                            <i class="fas fa-list me-2"></i>Specifications
+                            <i class="fas fa-list me-2"></i>{% if is_rtl %}المواصفات{% else %}{{ _('Specifications') }}{% endif %}
                         </button>
                     </li>
                     <li class="nav-item" role="presentation">
                         <button class="nav-link" id="packaging-tab" data-bs-toggle="tab" data-bs-target="#packaging" type="button" role="tab">
-                            <i class="fas fa-box me-2"></i>Packaging
+                            <i class="fas fa-box me-2"></i>{% if is_rtl %}التعبئة{% else %}{{ _('Packaging') }}{% endif %}
                         </button>
                     </li>
                     <li class="nav-item" role="presentation">
                         <button class="nav-link" id="certifications-tab" data-bs-toggle="tab" data-bs-target="#certifications" type="button" role="tab">
-                            <i class="fas fa-certificate me-2"></i>Certifications
+                            <i class="fas fa-certificate me-2"></i>{% if is_rtl %}الشهادات{% else %}{{ _('Certifications') }}{% endif %}
                         </button>
                     </li>
-                </ul>
-                
+                </ul></div>
+
                 <!-- Tab Content -->
                 <div class="tab-content" id="productTabsContent">
                     <!-- Description Tab -->
-                    <div class="tab-pane fade show active" id="description" role="tabpanel">
+                    <div class="tab-pane fade show active" id="description" role="tabpanel" data-aos="fade-up">
                         <div class="card border-0 shadow-sm">
                             <div class="card-body p-4">
                                 {% if product.get_description() %}
-                                    {{ product.get_description() | safe }}
+                                    {{ product.get_description(current_language) | safe }}
                                 {% else %}
-                                    <p>{{ product.get_name() }} represents the finest quality Egyptian agricultural produce. Our products are carefully selected from premium farms and processed using state-of-the-art facilities to ensure optimal freshness and quality.</p>
-                                    
-                                    <h5 class="mt-4 mb-3">Quality Assurance</h5>
-                                    <p>Every batch undergoes rigorous quality control processes including:</p>
+                                    <p>{% if is_rtl %}{{ product.get_name(current_language) }} يمثل أعلى معايير الجودة في المنتجات الزراعية المصرية. نختار منتجاتنا بعناية من أفضل المزارع ونقوم بمعالجتها باستخدام أحدث التقنيات لضمان أقصى درجات النضارة والجودة.{% else %}{{ product.get_name(current_language) }} represents the finest quality Egyptian agricultural produce. Our products are carefully selected from premium farms and processed using state-of-the-art facilities to ensure optimal freshness and quality.{% endif %}</p>
+
+                                    <h5 class="mt-4 mb-3">{% if is_rtl %}ضمان الجودة{% else %}{{ _('Quality Assurance') }}{% endif %}</h5>
+                                    <p>{% if is_rtl %}كل دفعة تمر بإجراءات صارمة لمراقبة الجودة وتشمل:{% else %}{{ _('Every batch undergoes rigorous quality control processes including:') }}{% endif %}</p>
                                     <ul>
-                                        <li>Visual inspection for size, color, and appearance</li>
-                                        <li>Laboratory testing for safety and nutritional content</li>
-                                        <li>Cold chain management throughout processing and storage</li>
-                                        <li>Compliance with international export standards</li>
+
+<style>
+  /* Specifications grid polish */
+  .spec-item { background: rgba(249,203,153,.06); border: 1px solid rgba(249,203,153,.25); border-radius: 12px; padding: .75rem 1rem; }
+</style>
+
+                                        {% if is_rtl %}
+                                        <li>فحص بصري للحجم واللون والمظهر</li>
+                                        <li>اختبارات معملية للسلامة والقيمة الغذائية</li>
+                                        <li>إدارة سلسلة التبريد أثناء المعالجة والتخزين</li>
+                                        <li>الالتزام بالمعايير الدولية للتصدير</li>
+                                        {% else %}
+                                        <li>{{ _('Visual inspection for size, color, and appearance') }}</li>
+                                        <li>{{ _('Laboratory testing for safety and nutritional content') }}</li>
+                                        <li>{{ _('Cold chain management throughout processing and storage') }}</li>
+                                        <li>{{ _('Compliance with international export standards') }}</li>
+                                        {% endif %}
                                     </ul>
-                                    
-                                    <h5 class="mt-4 mb-3">Why Choose Our {{ product.get_name() }}?</h5>
-                                    <p>Our commitment to excellence ensures that you receive products that meet the highest international standards while maintaining the authentic taste and nutritional value that Egyptian agriculture is renowned for worldwide.</p>
+
+                                    <h5 class="mt-4 mb-3">{% if is_rtl %}لماذا تختار {{ product.get_name(current_language) }} لدينا؟{% else %}{{ _('Why Choose Our') }} {{ product.get_name(current_language) }}?{% endif %}</h5>
+                                    <p>{% if is_rtl %}التزامنا بالتميّز يضمن لك منتجات تلبي أعلى المعايير الدولية مع الحفاظ على الطعم الأصيل والقيمة الغذائية التي تشتهر بها الزراعة المصرية عالمياً.{% else %}{{ _('Our commitment to excellence ensures that you receive products that meet the highest international standards while maintaining the authentic taste and nutritional value that Egyptian agriculture is renowned for worldwide.') }}{% endif %}</p>
                                 {% endif %}
                             </div>
                         </div>
                     </div>
-                    
+
                     <!-- Specifications Tab -->
-                    <div class="tab-pane fade" id="specifications" role="tabpanel">
+                    <div class="tab-pane fade" id="specifications" role="tabpanel" data-aos="fade-up">
                         <div class="card border-0 shadow-sm">
                             <div class="card-body p-4">
                                 {% if specs %}
@@ -257,29 +400,51 @@
                                                 {% else %}
                                                     <p class="text-muted mb-0">{{ value }}</p>
                                                 {% endif %}
+
+<style>
+  /* Packaging cards style */
+  .packaging-option { background: rgba(104,155,138,.06); border: 1px solid rgba(104,155,138,.25); border-radius: 12px; padding: 1rem; height: 100%; }
+</style>
+
                                             </div>
                                         </div>
                                         {% endfor %}
+
+<style>
+  /* Peach-themed hover for CTA buttons to match design */
+  .btn-peach-hover { border: none; background: var(--primary-gradient, var(--secondary-gradient)); color: var(--dark-color); transition: transform .2s ease, box-shadow .2s ease; }
+  .btn-peach-hover:hover { filter: brightness(1.05); transform: translateY(-2px); box-shadow: 0 8px 18px rgba(249,203,153,.35); }
+  .btn-peach-outline { border-color: var(--secondary-color) !important; color: var(--secondary-color) !important; background: transparent !important; transition: transform .2s ease, box-shadow .2s ease, background .2s ease, color .2s ease, border-color .2s ease; }
+  .btn-peach-outline:hover,
+  .btn-peach-outline:focus,
+  .btn-green-to-peach { border:2px solid var(--brand-green, #689b8a); background: var(--brand-green, #689b8a); color: #fff; border-radius: 12px; transition: transform .2s ease, box-shadow .2s ease, background .2s ease, color .2s ease, border-color .2s ease; }
+  .btn-green-to-peach:hover,
+  .btn-green-to-peach:focus,
+  .btn-green-to-peach:active { background: var(--secondary-gradient); color: var(--dark-color); border-color: transparent; transform: translateY(-2px); box-shadow: 0 8px 18px rgba(249,203,153,.35); }
+
+  .btn-peach-outline:active { background: var(--secondary-gradient) !important; color: var(--dark-color) !important; border-color: transparent !important; transform: translateY(-2px); box-shadow: 0 8px 18px rgba(249,203,153,.35); }
+</style>
+
                                     </div>
                                 {% else %}
                                     <div class="text-center py-4">
                                         <i class="fas fa-clipboard-list fa-3x text-muted mb-3"></i>
-                                        <h5>Detailed Specifications Available</h5>
-                                        <p class="text-muted">Contact us for complete technical specifications and quality parameters.</p>
-                                        <a href="{{ url_for('main.contact') }}" class="btn btn-primary">
-                                            <i class="fas fa-envelope me-2"></i>Request Specifications
+                                        <h5>{% if is_rtl %}المواصفات التفصيلية متاحة{% else %}{{ _('Detailed Specifications Available') }}{% endif %}</h5>
+                                        <p class="text-muted">{% if is_rtl %}تواصل معنا للحصول على المواصفات الفنية الكاملة ومعايير الجودة.{% else %}{{ _('Contact us for complete technical specifications and quality parameters.') }}{% endif %}</p>
+                                        <a href="{{ url_for('main.contact') }}" class="btn btn-green-to-peach">
+                                            <i class="fas fa-envelope me-2"></i>{% if is_rtl %}اطلب المواصفات{% else %}{{ _('Request Specifications') }}{% endif %}
                                         </a>
                                     </div>
                                 {% endif %}
                             </div>
                         </div>
                     </div>
-                    
+
                     <!-- Packaging Tab -->
-                    <div class="tab-pane fade" id="packaging" role="tabpanel">
+                    <div class="tab-pane fade" id="packaging" role="tabpanel" data-aos="fade-up">
                         <div class="card border-0 shadow-sm">
                             <div class="card-body p-4">
-                                {% set packaging = product.get_packaging_options() %}
+                                {% set packaging = product.get_packaging_options_lang(current_language) %}
                                 {% if packaging %}
                                     <div class="row">
                                         {% for key, value in packaging.items() %}
@@ -298,50 +463,73 @@
                                         <div class="col-md-6 mb-4">
                                             <div class="packaging-option">
                                                 <h6 class="text-success mb-2">
-                                                    <i class="fas fa-box me-2"></i>Bulk Packaging
+                                                    <i class="fas fa-box me-2"></i>{% if is_rtl %}تعبئة بالجملة{% else %}{{ _('Bulk Packaging') }}{% endif %}
                                                 </h6>
-                                                <p class="text-muted mb-0">15kg cartons, 18kg cartons, or custom bulk sizes</p>
+                                                <p class="text-muted mb-0">{% if is_rtl %}كراتين 15 كجم، 18 كجم، أو أحجام بالجملة مخصصة{% else %}{{ _('15kg cartons, 18kg cartons, or custom bulk sizes') }}{% endif %}</p>
                                             </div>
                                         </div>
                                         <div class="col-md-6 mb-4">
                                             <div class="packaging-option">
                                                 <h6 class="text-success mb-2">
-                                                    <i class="fas fa-shopping-bag me-2"></i>Retail Packaging
+                                                    <i class="fas fa-shopping-bag me-2"></i>{% if is_rtl %}تعبئة تجزئة{% else %}{{ _('Retail Packaging') }}{% endif %}
                                                 </h6>
-                                                <p class="text-muted mb-0">1kg, 2kg, 5kg consumer-ready packages</p>
+                                                <p class="text-muted mb-0">{% if is_rtl %}عبوات جاهزة للمستهلك 1كجم، 2كجم، 5كجم{% else %}{{ _('1kg, 2kg, 5kg consumer-ready packages') }}{% endif %}</p>
                                             </div>
                                         </div>
                                         <div class="col-md-6 mb-4">
                                             <div class="packaging-option">
                                                 <h6 class="text-success mb-2">
-                                                    <i class="fas fa-tags me-2"></i>Private Labeling
+                                                    <i class="fas fa-tags me-2"></i>{% if is_rtl %}ملصقات خاصة بالعلامة التجارية{% else %}{{ _('Private Labeling') }}{% endif %}
                                                 </h6>
-                                                <p class="text-muted mb-0">Custom labels with your brand and specifications</p>
+                                                <p class="text-muted mb-0">{% if is_rtl %}ملصقات مخصصة بعلامتك التجارية ومواصفاتك{% else %}{{ _('Custom labels with your brand and specifications') }}{% endif %}</p>
                                             </div>
                                         </div>
                                         <div class="col-md-6 mb-4">
                                             <div class="packaging-option">
                                                 <h6 class="text-success mb-2">
-                                                    <i class="fas fa-thermometer-half me-2"></i>Cold Chain
+                                                    <i class="fas fa-thermometer-half me-2"></i>{% if is_rtl %}سلسلة التبريد{% else %}{{ _('Cold Chain') }}{% endif %}
                                                 </h6>
-                                                <p class="text-muted mb-0">Temperature-controlled packaging for optimal freshness</p>
+                                                <p class="text-muted mb-0">{% if is_rtl %}تعبئة مُحكمة الحرارة لأقصى درجات النضارة{% else %}{{ _('Temperature-controlled packaging for optimal freshness') }}{% endif %}</p>
                                             </div>
+
+
                                         </div>
                                     </div>
                                 {% endif %}
-                                
+
                                 <div class="mt-4 p-3 bg-light rounded">
-                                    <h6 class="mb-2">Custom Packaging Available</h6>
-                                    <p class="text-muted mb-0">We offer flexible packaging solutions to meet your specific market requirements. Contact us to discuss custom options.</p>
+                                    <h6 class="mb-2">{% if is_rtl %}تعبئة مخصصة متاحة{% else %}{{ _('Custom Packaging Available') }}{% endif %}</h6>
+                                    <p class="text-muted mb-0">{% if is_rtl %}نقدّم حلول تعبئة مرنة لتلبية متطلبات سوقك. تواصل معنا لمناقشة الخيارات المخصصة.{% else %}{{ _('We offer flexible packaging solutions to meet your specific market requirements. Contact us to discuss custom options.') }}{% endif %}</p>
                                 </div>
                             </div>
                         </div>
                     </div>
-                    
+
                     <!-- Certifications Tab -->
-                    <div class="tab-pane fade" id="certifications" role="tabpanel">
+                    <div class="tab-pane fade" id="certifications" role="tabpanel" data-aos="fade-up">
                         <div class="card border-0 shadow-sm">
                             <div class="card-body p-4">
+                                <div class="text-center py-4">
+                                    <i class="fas fa-award fa-3x text-muted mb-3"></i>
+                                    <h5>{% if is_rtl %}جودة معتمدة{% else %}{{ _('Quality Certified') }}{% endif %}</h5>
+                                    <p class="text-muted">{% if is_rtl %}هذا المنتج يلبّي المعايير الدولية للجودة والسلامة.{% else %}{{ _('This product meets international quality and safety standards.') }}{% endif %}</p>
+                                </div>
+
+                                <style>
+                                  .cert-icons-row { display:flex; gap:1rem; justify-content:center; align-items:center; flex-wrap:wrap; margin: 0.5rem 0 1.25rem; }
+                                  .cert-icon-circle { width:72px; height:72px; border-radius:50%; border:2px solid var(--brand-green, #689b8a); color: var(--brand-green, #689b8a); background: rgba(104,155,138,.08); display:flex; align-items:center; justify-content:center; position:relative; transition: transform .2s ease, box-shadow .2s ease, background .2s ease, color .2s ease, border-color .2s ease; }
+                                  .cert-icon-circle:hover { background: var(--secondary-gradient); color: var(--dark-color); border-color: transparent; transform: translateY(-3px); box-shadow: 0 8px 18px rgba(249,203,153,.35); }
+                                  @media (max-width: 575.98px){ .cert-icon-circle{ width:64px; height:64px; } }
+                                </style>
+                                <div class="cert-icons-row" data-aos="zoom-in">
+                                  <div class="cert-icon-circle" title="ISO 22000"><i class="fas fa-certificate"></i></div>
+                                  <div class="cert-icon-circle" title="GlobalG.A.P"><i class="fas fa-seedling"></i></div>
+                                  <div class="cert-icon-circle" title="HACCP"><i class="fas fa-shield-alt"></i></div>
+                                  <div class="cert-icon-circle" title="BRC"><i class="fas fa-award"></i></div>
+                                  <div class="cert-icon-circle" title="FDA"><i class="fas fa-check-circle"></i></div>
+                                  <div class="cert-icon-circle" title="Halal"><i class="fas fa-leaf"></i></div>
+                                </div>
+
                                 {% if product.certifications %}
                                     <div class="row">
                                         {% for cert in product.certifications %}
@@ -349,27 +537,24 @@
                                             <div class="certification-item d-flex align-items-start">
                                                 {% if cert.logo_path %}
                                                 <img src="{{ url_for('main.uploaded_file', filename='certifications/' + cert.logo_path) }}"
-                                                     alt="{{ cert.get_name() }}" class="me-3" style="width: 50px; height: 50px; object-fit: contain;">
+                                                     alt="{{ cert.get_name(current_language) }}" class="me-3" style="width: 50px; height: 50px; object-fit: contain;">
                                                 {% else %}
                                                 <div class="cert-icon bg-primary text-white rounded d-flex align-items-center justify-content-center me-3" style="width: 50px; height: 50px;">
                                                     <i class="fas fa-certificate"></i>
                                                 </div>
                                                 {% endif %}
                                                 <div>
-                                                    <h6 class="mb-1">{{ cert.get_name() }}</h6>
-                                                    <p class="text-muted small mb-0">{{ cert.get_description() | truncate(100) }}</p>
+                                                    <h6 class="mb-1">{{ cert.get_name(current_language) }}</h6>
+                                                    <p class="text-muted small mb-0">{{ cert.get_description(current_language) | truncate(100) }}</p>
                                                 </div>
                                             </div>
                                         </div>
                                         {% endfor %}
                                     </div>
                                 {% else %}
-                                    <div class="text-center py-4">
-                                        <i class="fas fa-award fa-3x text-muted mb-3"></i>
-                                        <h5>Quality Certified</h5>
-                                        <p class="text-muted">This product meets international quality and safety standards.</p>
-                                        <a href="{{ url_for('main.certifications') }}" class="btn btn-outline-primary">
-                                            <i class="fas fa-certificate me-2"></i>View All Certifications
+                                    <div class="text-center py-2">
+                                        <a href="{{ url_for('main.certifications') }}" class="btn btn-green-to-peach">
+                                            <i class="fas fa-certificate me-2"></i>{% if is_rtl %}عرض كل الشهادات{% else %}{{ _('View All Certifications') }}{% endif %}
                                         </a>
                                     </div>
                                 {% endif %}
@@ -377,6 +562,7 @@
                         </div>
                     </div>
                 </div>
+
             </div>
         </div>
     </div>
@@ -387,32 +573,49 @@
 <section class="py-5">
     <div class="container">
         <div class="text-center mb-5">
-            <h2 class="mb-3">Related Products</h2>
-            <p class="lead text-muted">More products from {{ product.category.get_name() }}</p>
+            <h2 class="mb-3">{% if is_rtl %}منتجات ذات صلة{% else %}{{ _('Related Products') }}{% endif %}</h2>
+            <p class="lead text-muted">{% if is_rtl %}المزيد من المنتجات من {{ product.category.get_name(current_language) }}{% else %}{{ _('More products from') }} {{ product.category.get_name(current_language) }}{% endif %}</p>
         </div>
-        
-        <div class="row">
+
+        <div class="row g-4 products-grid">
             {% for related in related_products %}
-            <div class="col-lg-3 col-md-6 mb-4">
-                <div class="card h-100 border-0 shadow-sm product-card">
+
+<style>
+  /* Mobile polish similar to products page */
+  @media (max-width: 767.98px) {
+    .product-hero { padding-top: 2.25rem !important; padding-bottom: 2.25rem !important; }
+  }
+</style>
+
+            <div class="col-lg-4 col-md-6 col-sm-12 product-col" data-aos="fade-up" data-aos-delay="{{ loop.index0 * 100 }}">
+                <div class="product-card card h-100 border-0 shadow-lg hover-lift position-relative overflow-hidden">
                     {% set related_image = related.get_main_image() %}
                     {% if related_image %}
-                    <img src="{{ url_for('main.uploaded_file', filename='products/' + related_image.filename) }}"
-                         class="card-img-top" alt="{{ related.get_name() }}" style="height: 200px; object-fit: cover;">
+                    <div class="product-image-wrapper position-relative overflow-hidden">
+                      <img src="{{ url_for('main.uploaded_file', filename='products/' + related_image.filename) }}"
+                           class="card-img-top product-image" alt="{{ related.get_name(current_language) }}" style="height: 200px; object-fit: cover;">
+
+                    </div>
                     {% else %}
-                    <div class="card-img-top bg-light d-flex align-items-center justify-content-center" style="height: 200px;">
-                        <i class="fas fa-image fa-2x text-muted"></i>
+                    <div class="product-image-wrapper position-relative overflow-hidden" style="height:200px;">
+                      <div class="card-img-top bg-gradient-primary d-flex align-items-center justify-content-center w-100 h-100">
+                        <i class="fas fa-apple-alt fa-2x text-white opacity-90"></i>
+                      </div>
+
                     </div>
                     {% endif %}
-                    
+
                     <div class="card-body d-flex flex-column">
-                        <h6 class="card-title">{{ related.get_name() }}</h6>
-                        <p class="card-text text-muted flex-grow-1">{{ related.get_short_description() | truncate(80) }}</p>
-                        
-                        <div class="mt-auto">
-                            <a href="{{ url_for('main.product_detail', slug=related.slug) }}" class="btn btn-outline-primary btn-sm">
-                                View Details
-                            </a>
+                        <h6 class="card-title">{{ related.get_name(current_language) }}</h6>
+                        <p class="card-text text-muted flex-grow-1">{{ (related.get_short_description(current_language) if related.get_short_description is defined else related.get_short_description()) | truncate(80) }}</p>
+
+                        <div class="d-flex gap-2 mt-auto">
+                          <a href="{{ url_for('main.product_detail', slug=related.slug) }}" class="btn btn-outline-primary btn-text english-heading flex-grow-1 hover-lift">
+                            <i class="fas fa-info-circle me-1"></i>{{ _('Details') }}
+                          </a>
+                          <a href="{{ url_for('main.contact') }}?product={{ related.slug }}" class="btn btn-primary hover-lift">
+                            <i class="fas fa-envelope"></i>
+                          </a>
                         </div>
                     </div>
                 </div>
@@ -423,21 +626,27 @@
 </section>
 {% endif %}
 
-<!-- Call to Action -->
-<section class="py-5 bg-primary text-white">
-    <div class="container">
-        <div class="row align-items-center">
-            <div class="col-lg-8">
-                <h3 class="mb-2">Interested in {{ product.get_name() }}?</h3>
-                <p class="mb-0">Contact us for pricing, availability, and custom packaging options.</p>
-            </div>
-            <div class="col-lg-4 text-lg-end">
-                <a href="{{ url_for('main.contact') }}?product={{ product.slug }}" class="btn btn-light btn-lg">
-                    <i class="fas fa-envelope me-2"></i>Get Quote
-                </a>
-            </div>
+<!-- Call to Action (styled to match products page) -->
+<section class="py-5 position-relative overflow-hidden" style="background:#689b8a;">
+  <div class="position-absolute top-0 start-0 w-100 h-100" aria-hidden="true">
+    <div class="pattern-dots" style="color: rgba(255,255,255,.15);"></div>
+  </div>
+  <div class="container position-relative">
+    <div class="row align-items-center">
+      <div class="col-lg-8" data-aos="fade-right">
+        <div class="section-badge badge bg-gradient-secondary text-dark px-4 py-2 rounded-pill mb-3 fs-6 fw-semibold">
+          <i class="fas fa-box-open me-2"></i>{% if is_rtl %}جاهزون للتعاون{% else %}{{ _('Ready to Partner with Us?') }}{% endif %}
         </div>
+        <h3 class="mb-2 text-white {{ 'arabic-heading' if is_rtl else 'english-heading' }}">{% if is_rtl %}مهتمون بـ {{ product.get_name(current_language) }}؟{% else %}{{ _('Interested in') }} {{ product.get_name(current_language) }}?{% endif %}</h3>
+        <p class="mb-0 text-white-50 {{ 'arabic-text' if is_rtl else 'english-text' }}">{% if is_rtl %}تواصل معنا لمعرفة الأسعار والتوافر وخيارات التعبئة المخصصة.{% else %}{{ _('Contact us for pricing, availability, and custom packaging options.') }}{% endif %}</p>
+      </div>
+      <div class="col-lg-4 text-lg-end" data-aos="fade-left">
+        <a href="{{ url_for('main.contact') }}?product={{ product.slug }}" class="btn btn-light btn-lg hover-lift" style="border-radius: 12px;">
+          <i class="fas fa-envelope me-2"></i>{% if is_rtl %}احصل على عرض سعر{% else %}{{ _('Get a Quote') }}{% endif %}
+        </a>
+      </div>
     </div>
+  </div>
 </section>
 {% endblock %}
 
@@ -459,8 +668,8 @@ function openImageModal(src, title) {
 function shareProduct() {
     if (navigator.share) {
         navigator.share({
-            title: '{{ product.get_name() }} - {{ SITE_NAME }}',
-            text: '{{ product.get_short_description() | truncate(100) }}',
+            title: '{{ product.get_name(current_language) }} - {{ SITE_NAME }}',
+            text: '{{ (product.get_short_description(current_language) if product.get_short_description is defined else product.get_short_description()) | truncate(100) }}',
             url: window.location.href
         });
     } else {
@@ -479,12 +688,12 @@ document.addEventListener('DOMContentLoaded', function() {
             this.style.transform = 'translateY(-5px)';
             this.style.transition = 'transform 0.3s ease';
         });
-        
+
         card.addEventListener('mouseleave', function() {
             this.style.transform = 'translateY(0)';
         });
     });
-    
+
     // Thumbnail hover effects
     const thumbnails = document.querySelectorAll('.thumbnail-image');
     thumbnails.forEach(thumb => {
@@ -493,7 +702,7 @@ document.addEventListener('DOMContentLoaded', function() {
             this.style.transform = 'scale(1.05)';
             this.style.transition = 'all 0.3s ease';
         });
-        
+
         thumb.addEventListener('mouseleave', function() {
             this.style.opacity = '1';
             this.style.transform = 'scale(1)';

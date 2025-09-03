@@ -9,12 +9,60 @@ class AdminDashboard {
     }
 
     init() {
+        // Ensure CSRF token gets attached to all POST forms and fetch requests
+        this.ensureCsrfOnForms();
+        this.ensureCsrfOnFetch();
+
         this.setupEventListeners();
         this.setupAnimations();
         this.setupLanguageToggle();
         this.setupSidebar();
         this.setupTooltips();
         this.setupConfirmations();
+    }
+
+    ensureCsrfOnForms() {
+        try {
+            const meta = document.querySelector('meta[name="csrf-token"]');
+            if (!meta) return;
+            const token = meta.getAttribute('content');
+            // Add hidden csrf_token to any POST form missing it
+            document.querySelectorAll('form').forEach(form => {
+                const method = (form.getAttribute('method') || 'GET').toUpperCase();
+                if (method === 'POST' && !form.querySelector('input[name="csrf_token"]')) {
+                    const input = document.createElement('input');
+                    input.type = 'hidden';
+                    input.name = 'csrf_token';
+                    input.value = token;
+                    form.appendChild(input);
+                }
+            });
+        } catch (e) {
+            console.warn('CSRF form enhancement failed:', e);
+        }
+    }
+
+    ensureCsrfOnFetch() {
+        try {
+            const meta = document.querySelector('meta[name="csrf-token"]');
+            if (!meta || !window.fetch) return;
+            const token = meta.getAttribute('content');
+            const originalFetch = window.fetch.bind(window);
+            window.fetch = (input, init = {}) => {
+                const method = (init.method || 'GET').toUpperCase();
+                if (method !== 'GET' && method !== 'HEAD') {
+                    // Normalize headers to a Headers instance
+                    const headers = new Headers(init.headers || {});
+                    if (!headers.has('X-CSRFToken')) {
+                        headers.set('X-CSRFToken', token);
+                    }
+                    init.headers = headers;
+                }
+                return originalFetch(input, init);
+            };
+        } catch (e) {
+            console.warn('CSRF fetch enhancement failed:', e);
+        }
     }
 
     setupEventListeners() {

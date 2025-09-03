@@ -274,17 +274,17 @@ Browse our complete range of premium Egyptian agricultural products including ci
 </p>
 
                         <!-- Product Features -->
-                        {% set specs = product.get_specifications() %}
+                        {% set specs = product.get_specifications_lang(current_language) %}
                         {% if specs %}
                         <div class="mb-3">
                             {% if specs.get('sizes') %}
-                            <small class="badge bg-light text-dark me-1">Multiple Sizes</small>
+                            <small class="badge bg-light text-dark me-1">{% if is_rtl %}مقاسات متعددة{% else %}{{ _('Multiple Sizes') }}{% endif %}</small>
                             {% endif %}
                             {% if specs.get('brix') %}
-                            <small class="badge bg-light text-dark me-1">{{ specs.brix }} Brix</small>
+                            <small class="badge bg-light text-dark me-1">{{ specs.brix }} {% if is_rtl %}درجة بريكس{% else %}{{ _('Brix') }}{% endif %}</small>
                             {% endif %}
                             {% if product.featured %}
-                            <small class="badge bg-warning text-dark">Featured</small>
+                            <small class="badge bg-warning text-dark">{% if is_rtl %}مميز{% else %}{{ _('Featured') }}{% endif %}</small>
                             {% endif %}
                         </div>
                         {% endif %}
