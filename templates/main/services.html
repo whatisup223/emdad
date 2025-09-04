@@ -5,26 +5,36 @@
 {% block meta_description %}Comprehensive export services including FOB & CIF shipping, cold chain logistics, custom packaging, and documentation support for Egyptian agricultural products.{% endblock %}
 
 {% block content %}
-<!-- Page Header -->
-<section class="py-5 bg-primary text-white">
+<!-- Page Header (styled like products hero) -->
+<section class="py-5 products-hero position-relative overflow-hidden" style="background:#689b8a;">
+    <style>
+      .products-hero { min-height: 420px; }
+      .products-hero .section-heading, .products-hero .lead { color:#fff !important; }
+      .products-hero .breadcrumb, .products-hero .breadcrumb * { color:rgba(255,255,255,0.85) !important; }
+      .products-hero .section-badge { background: var(--secondary-gradient) !important; color: var(--dark-color) !important; }
+      .products-hero .pattern-dots { color: rgba(255,255,255,.15); }
+      .products-hero .section-heading { color:#fff !important; }
+    </style>
     <div class="container">
         <div class="row align-items-center">
-            <div class="col-lg-8">
-                <nav aria-label="breadcrumb">
-                    <ol class="breadcrumb text-white-50">
-                        <li class="breadcrumb-item"><a href="{{ url_for('main.index') }}" class="text-white-50">Home</a></li>
-                        <li class="breadcrumb-item active text-white">Export Services</li>
-                    </ol>
-                </nav>
-                
-                <h1 class="display-5 fw-bold mb-3">Export Services</h1>
-                <p class="lead">Comprehensive solutions for your agricultural import needs</p>
+            <div class="col-lg-8" data-aos="fade-right">
+                <div class="mb-3">
+                    <div class="section-badge badge bg-gradient-primary text-white px-4 py-2 rounded-pill mb-3 fs-6 fw-semibold">
+                        <i class="fas fa-concierge-bell me-2"></i>{% if is_rtl %}خدماتنا{% else %}{{ _('Our Services') }}{% endif %}
+                    </div>
+                    <h1 class="section-heading {{ 'arabic-heading' if is_rtl else 'english-heading' }} mb-3">
+                        {% if is_rtl %}خدمات التصدير{% else %}{{ _('Export Services') }}{% endif %}
+                    </h1>
+                    <p class="lead {{ 'arabic-text' if is_rtl else 'english-text' }}">
+                        {% if is_rtl %}حلول شاملة من المزرعة إلى وجهتك{% else %}{{ _('Comprehensive solutions from farm to your destination') }}{% endif %}
+                    </p>
+                </div>
             </div>
-            <div class="col-lg-4 text-lg-end">
-                <div class="service-badge bg-white text-primary rounded-circle d-inline-flex align-items-center justify-content-center" style="width: 120px; height: 120px;">
+            <div class="col-lg-4 text-lg-end" data-aos="fade-left">
+                <div class="service-badge bg-white text-primary rounded-circle d-inline-flex align-items-center justify-content-center shadow" style="width: 120px; height: 120px;">
                     <div class="text-center">
                         <i class="fas fa-shipping-fast fa-2x mb-2"></i>
-                        <div class="small fw-bold">FULL<br>SERVICE</div>
+                        <div class="small fw-bold">{% if is_rtl %}خدمة<br>متكاملة{% else %}FULL<br>SERVICE{% endif %}</div>
                     </div>
                 </div>
             </div>
@@ -32,124 +42,110 @@
     </div>
 </section>
 
-<!-- Services Overview -->
+<!-- Services Overview (aligned with About/Certifications style) -->
 <section class="py-5">
     <div class="container">
         <div class="row align-items-center">
             <div class="col-lg-6 mb-4">
-                <h2 class="mb-4">Complete Export Solutions</h2>
-                <p class="lead text-primary mb-3">From Farm to Your Destination</p>
-                <p>Emdad Global provides end-to-end export services designed to make your agricultural sourcing experience seamless and efficient. Our comprehensive service portfolio covers every aspect of the export process.</p>
-                <p>With decades of experience in international trade, we understand the complexities of global agricultural commerce and provide tailored solutions to meet your specific requirements.</p>
-                <p>Our integrated approach ensures quality, reliability, and cost-effectiveness throughout the entire supply chain.</p>
+                <h2 class="mb-4 {{ 'arabic-heading' if is_rtl else 'english-heading' }}">{% if is_rtl %}حلول تصدير متكاملة{% else %}{{ _('Complete Export Solutions') }}{% endif %}</h2>
+                <p class="lead text-primary mb-3 {{ 'arabic-text' if is_rtl else 'english-text' }}">{% if is_rtl %}من المزرعة إلى وجهتك{% else %}{{ _('From Farm to Your Destination') }}{% endif %}</p>
+                <p class="{{ 'arabic-text' if is_rtl else 'english-text' }}">{% if is_rtl %}توفر إمداد جلوبال خدمات تصدير متكاملة تجعل تجربة التوريد الزراعي سلسة وفعّالة، وتشمل كافة مراحل العملية.{% else %}Emdad Global provides end-to-end export services to make your agricultural sourcing seamless and efficient, covering every step of the process.{% endif %}</p>
+                <p class="{{ 'arabic-text' if is_rtl else 'english-text' }}">{% if is_rtl %}بخبرة تمتد لعقود في التجارة الدولية، نقدم حلولاً مصممة خصيصًا لاحتياجاتك.{% else %}With decades of experience in international trade, we provide tailored solutions to meet your specific requirements.{% endif %}</p>
+                <p class="{{ 'arabic-text' if is_rtl else 'english-text' }}">{% if is_rtl %}نضمن الجودة والموثوقية والكفاءة عبر سلسلة الإمداد بالكامل.{% else %}We ensure quality, reliability, and cost-effectiveness throughout the entire supply chain.{% endif %}</p>
             </div>
             <div class="col-lg-6">
-                <img src="{{ url_for('static', filename='images/export-services.jpg') }}" 
+                <img src="{{ url_for('static', filename='images/export-services.jpg') }}"
                      alt="Export Services" class="img-fluid rounded shadow">
             </div>
         </div>
     </div>
 </section>
 
-<!-- Main Services -->
-<section class="py-5 bg-light">
-    <div class="container">
-        <div class="text-center mb-5">
-            <h2 class="mb-3">Our Core Services</h2>
-            <p class="lead text-muted">Professional export services tailored to your business needs</p>
-        </div>
-        
-        <div class="row">
-            {% if services %}
-                {% for service in services %}
-                <div class="col-lg-6 mb-4">
-                    <div class="card h-100 border-0 shadow-sm service-card">
-                        <div class="card-body p-4">
-                            <div class="d-flex align-items-start">
-                                <div class="service-icon bg-primary text-white rounded-circle d-flex align-items-center justify-content-center me-4" style="width: 60px; height: 60px; flex-shrink: 0;">
-                                    {% if service.icon %}
-                                    <i class="{{ service.icon }} fa-lg"></i>
-                                    {% else %}
-                                    <i class="fas fa-cog fa-lg"></i>
-                                    {% endif %}
-                                </div>
-                                <div>
-                                    <h5 class="card-title">{{ service.get_title() }}</h5>
-                                    <p class="card-text text-muted">{{ service.get_description() }}</p>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                {% endfor %}
-            {% else %}
-                <!-- Default services if none in database -->
-                <div class="col-lg-6 mb-4">
-                    <div class="card h-100 border-0 shadow-sm service-card">
-                        <div class="card-body p-4">
-                            <div class="d-flex align-items-start">
-                                <div class="service-icon bg-primary text-white rounded-circle d-flex align-items-center justify-content-center me-4" style="width: 60px; height: 60px; flex-shrink: 0;">
-                                    <i class="fas fa-ship fa-lg"></i>
-                                </div>
-                                <div>
-                                    <h5 class="card-title">FOB & CIF Shipping</h5>
-                                    <p class="card-text text-muted">Flexible shipping terms including Free on Board (FOB) and Cost, Insurance, and Freight (CIF) options to suit your business requirements and budget.</p>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                
-                <div class="col-lg-6 mb-4">
-                    <div class="card h-100 border-0 shadow-sm service-card">
-                        <div class="card-body p-4">
-                            <div class="d-flex align-items-start">
-                                <div class="service-icon bg-success text-white rounded-circle d-flex align-items-center justify-content-center me-4" style="width: 60px; height: 60px; flex-shrink: 0;">
-                                    <i class="fas fa-thermometer-half fa-lg"></i>
-                                </div>
-                                <div>
-                                    <h5 class="card-title">Cold Chain Logistics</h5>
-                                    <p class="card-text text-muted">Temperature-controlled storage and transportation systems to maintain product quality and freshness from harvest to delivery.</p>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                
-                <div class="col-lg-6 mb-4">
-                    <div class="card h-100 border-0 shadow-sm service-card">
-                        <div class="card-body p-4">
-                            <div class="d-flex align-items-start">
-                                <div class="service-icon bg-info text-white rounded-circle d-flex align-items-center justify-content-center me-4" style="width: 60px; height: 60px; flex-shrink: 0;">
-                                    <i class="fas fa-box fa-lg"></i>
-                                </div>
-                                <div>
-                                    <h5 class="card-title">Custom Packaging</h5>
-                                    <p class="card-text text-muted">Tailored packaging solutions including private labeling, custom sizes, and specialized packaging materials to meet your market requirements.</p>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                
-                <div class="col-lg-6 mb-4">
-                    <div class="card h-100 border-0 shadow-sm service-card">
-                        <div class="card-body p-4">
-                            <div class="d-flex align-items-start">
-                                <div class="service-icon bg-warning text-white rounded-circle d-flex align-items-center justify-content-center me-4" style="width: 60px; height: 60px; flex-shrink: 0;">
-                                    <i class="fas fa-file-alt fa-lg"></i>
-                                </div>
-                                <div>
-                                    <h5 class="card-title">Documentation & Compliance</h5>
-                                    <p class="card-text text-muted">Complete documentation support including certificates of origin, phytosanitary certificates, and regulatory compliance assistance.</p>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            {% endif %}
-        </div>
+<!-- Main Services (cards like Certifications) -->
+<section class="py-5 bg-light services-grid">
+  <style>
+    .services-grid .service-card { transition: transform .2s ease, box-shadow .2s ease; }
+    .services-grid .service-card:hover { transform: translateY(-6px); box-shadow: 0 12px 28px rgba(0,0,0,.08); }
+    .services-grid .service-icon { background: var(--primary-gradient); }
+  </style>
+  <div class="container">
+    <div class="text-center mb-5" data-aos="fade-up">
+      <div class="section-badge badge bg-gradient-primary text-white px-4 py-2 rounded-pill mb-3 fs-6 fw-semibold">
+        <i class="fas fa-cogs me-2"></i>{% if is_rtl %}خدماتنا الأساسية{% else %}{{ _('Our Core Services') }}{% endif %}
+      </div>
+      <h2 class="mb-3 {{ 'arabic-heading' if is_rtl else 'english-heading' }}">{% if is_rtl %}حلول احترافية تناسب عملك{% else %}{{ _('Professional services tailored to your business') }}{% endif %}</h2>
+      <p class="lead text-muted {{ 'arabic-text' if is_rtl else 'english-text' }}">{% if is_rtl %}نقدم باقة متكاملة من خدمات التصدير.{% else %}We provide a comprehensive suite of export services.{% endif %}</p>
     </div>
+
+    <div class="row">
+      {% if services %}
+        {% for service in services %}
+        <div class="col-lg-6 mb-4">
+          <div class="card h-100 border-0 shadow-sm service-card">
+            <div class="card-body p-4 d-flex">
+              <div class="service-icon text-white rounded-circle d-flex align-items-center justify-content-center me-4" style="width: 60px; height: 60px; flex-shrink: 0;">
+                {% if service.icon %}<i class="{{ service.icon }} fa-lg"></i>{% else %}<i class="fas fa-cog fa-lg"></i>{% endif %}
+              </div>
+              <div>
+                <h5 class="card-title">{{ service.get_title() }}</h5>
+                <p class="card-text text-muted">{{ service.get_description() }}</p>
+              </div>
+            </div>
+          </div>
+        </div>
+        {% endfor %}
+      {% else %}
+        <!-- Default services if none in database -->
+        <div class="col-lg-6 mb-4">
+          <div class="card h-100 border-0 shadow-sm service-card">
+            <div class="card-body p-4 d-flex">
+              <div class="service-icon text-white rounded-circle d-flex align-items-center justify-content-center me-4" style="width: 60px; height: 60px; flex-shrink: 0;"><i class="fas fa-ship fa-lg"></i></div>
+              <div>
+                <h5 class="card-title">{% if is_rtl %}شحن FOB وCIF{% else %}FOB & CIF Shipping{% endif %}</h5>
+                <p class="card-text text-muted">{% if is_rtl %}شروط شحن مرنة تشمل FOB وCIF لتناسب احتياجاتك وميزانيتك.{% else %}Flexible shipping terms including FOB and CIF options to suit your requirements and budget.{% endif %}</p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="col-lg-6 mb-4">
+          <div class="card h-100 border-0 shadow-sm service-card">
+            <div class="card-body p-4 d-flex">
+              <div class="service-icon text-white rounded-circle d-flex align-items-center justify-content-center me-4" style="width: 60px; height: 60px; flex-shrink: 0;"><i class="fas fa-thermometer-half fa-lg"></i></div>
+              <div>
+                <h5 class="card-title">{% if is_rtl %}سلسلة تبريد{% else %}Cold Chain Logistics{% endif %}</h5>
+                <p class="card-text text-muted">{% if is_rtl %}أنظمة تخزين ونقل بدرجة حرارة مضبوطة للحفاظ على الجودة.{% else %}Temperature-controlled storage and transportation to maintain product quality and freshness.{% endif %}</p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="col-lg-6 mb-4">
+          <div class="card h-100 border-0 shadow-sm service-card">
+            <div class="card-body p-4 d-flex">
+              <div class="service-icon text-white rounded-circle d-flex align-items-center justify-content-center me-4" style="width: 60px; height: 60px; flex-shrink: 0;"><i class="fas fa-box fa-lg"></i></div>
+              <div>
+                <h5 class="card-title">{% if is_rtl %}تعبئة مخصصة{% else %}Custom Packaging{% endif %}</h5>
+                <p class="card-text text-muted">{% if is_rtl %}حلول تعبئة مخصصة تشمل العلامة الخاصة والأحجام المتنوعة.{% else %}Tailored packaging solutions including private labeling and custom sizes.{% endif %}</p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="col-lg-6 mb-4">
+          <div class="card h-100 border-0 shadow-sm service-card">
+            <div class="card-body p-4 d-flex">
+              <div class="service-icon text-white rounded-circle d-flex align-items-center justify-content-center me-4" style="width: 60px; height: 60px; flex-shrink: 0;"><i class="fas fa-file-alt fa-lg"></i></div>
+              <div>
+                <h5 class="card-title">{% if is_rtl %}مستندات وامتثال{% else %}Documentation & Compliance{% endif %}</h5>
+                <p class="card-text text-muted">{% if is_rtl %}دعم كامل للمستندات والشهادات ومتطلبات الجهات الرقابية.{% else %}Complete documentation support including certificates and regulatory compliance.{% endif %}</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      {% endif %}
+    </div>
+  </div>
 </section>
 
 <!-- Shipping Terms -->
@@ -370,21 +366,20 @@
     </div>
 </section>
 
-<!-- Call to Action -->
-<section class="py-5 bg-primary text-white">
-    <div class="container">
-        <div class="row align-items-center">
-            <div class="col-lg-8">
-                <h3 class="mb-2">Ready to Streamline Your Imports?</h3>
-                <p class="mb-0">Let our experienced team handle all aspects of your agricultural product sourcing and logistics.</p>
-            </div>
-            <div class="col-lg-4 text-lg-end">
-                <a href="{{ url_for('main.contact') }}" class="btn btn-light btn-lg">
-                    <i class="fas fa-envelope me-2"></i>Get Started Today
-                </a>
-            </div>
+<!-- CTA (like About/Certifications) -->
+<section class="py-5 bg-gradient-light">
+  <div class="container">
+    <div class="row align-items-center text-center">
+      <div class="col-lg-8 mx-auto" data-aos="fade-up">
+        <h2 class="display-6 english-heading mb-3">{% if is_rtl %}جاهز للتعاون معنا؟{% else %}{{ _('Ready to Partner with Us?') }}{% endif %}</h2>
+        <p class="lead text-muted mb-4">{% if is_rtl %}دع فريقنا يتولى كل تفاصيل التوريد واللوجستيات.{% else %}{{ _('Let our team handle all sourcing and logistics details for you.') }}{% endif %}</p>
+        <div class="d-flex flex-wrap justify-content-center gap-3">
+          <a href="{{ url_for('main.contact') }}" class="btn btn-primary btn-lg px-5 py-3 hover-lift"><i class="fas fa-envelope me-2"></i>{% if is_rtl %}تواصل الآن{% else %}{{ _('Contact Us') }}{% endif %}</a>
+          <a href="{{ url_for('main.products') }}" class="btn btn-outline-primary btn-lg px-5 py-3 hover-lift"><i class="fas fa-leaf me-2"></i>{% if is_rtl %}تصفح المنتجات{% else %}{{ _('View Products') }}{% endif %}</a>
         </div>
+      </div>
     </div>
+  </div>
 </section>
 {% endblock %}
 
