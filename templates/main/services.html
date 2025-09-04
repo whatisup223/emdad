@@ -173,8 +173,8 @@
                 {% if service.icon %}<i class="{{ service.icon }} fa-2x"></i>{% else %}<i class="fas fa-cog fa-2x"></i>{% endif %}
                 <div class="icon-glow position-absolute top-0 start-0 w-100 h-100 rounded-circle"></div>
               </div>
-              <h5 class="card-title">{{ service.get_title() }}</h5>
-              <p class="card-text text-muted">{{ service.get_description() }}</p>
+              <h5 class="card-title">{{ service.get_title(current_language) }}</h5>
+              <p class="card-text text-muted">{{ service.get_description(current_language) }}</p>
             </div>
           </div>
         </div>

@@ -289,6 +289,69 @@ def create_products(db):
     else:
         print("✅ Products already exist")
 
+
+
+def create_services(db):
+    """Create default services (bilingual, production-ready)"""
+    from app.models import Service
+
+    if Service.query.count() == 0:
+        print("Creating default services...")
+        services_data = [
+            {
+                'title_en': 'FOB & CIF Shipping',
+                'title_ar': 'شحن FOB و CIF',
+                'description_en': 'Flexible shipping terms with FOB and CIF options to suit your budget and logistics preferences.',
+                'description_ar': 'شروط شحن مرنة بخياري FOB و CIF لتناسب ميزانيتك وتفضيلاتك اللوجستية.',
+                'icon': 'fas fa-ship',
+                'sort_order': 1,
+                'is_active': True
+            },
+            {
+                'title_en': 'Cold Chain Logistics',
+                'title_ar': 'سلسلة تبريد',
+                'description_en': 'Temperature-controlled storage and transport to keep your products fresh throughout the journey.',
+                'description_ar': 'تخزين ونقل بدرجة حرارة مضبوطة للحفاظ على نضارة منتجاتك طوال الرحلة.',
+                'icon': 'fas fa-thermometer-half',
+                'sort_order': 2,
+                'is_active': True
+            },
+            {
+                'title_en': 'Custom Packaging',
+                'title_ar': 'تعبئة مخصصة',
+                'description_en': 'Private labeling and tailored packaging formats to meet your market requirements.',
+                'description_ar': 'علامة خاصة وتعبئة مخصصة لتلبية متطلبات أسواقك.',
+                'icon': 'fas fa-box',
+                'sort_order': 3,
+                'is_active': True
+            },
+            {
+                'title_en': 'Documentation & Compliance',
+                'title_ar': 'مستندات وامتثال',
+                'description_en': 'Full documentation support including certificates and regulatory compliance.',
+                'description_ar': 'دعم كامل للمستندات بما في ذلك الشهادات والامتثال للجهات الرقابية.',
+                'icon': 'fas fa-file-alt',
+                'sort_order': 4,
+                'is_active': True
+            }
+        ]
+
+        for s in services_data:
+            service = Service(
+                title_en=s['title_en'],
+                title_ar=s['title_ar'],
+                description_en=s['description_en'],
+                description_ar=s['description_ar'],
+                icon=s['icon'],
+                sort_order=s['sort_order'],
+                is_active=s['is_active']
+            )
+            db.session.add(service)
+
+        print("✅ Default services created successfully!")
+    else:
+        print("✅ Services already exist")
+
 def create_news(db):
     """Create sample news articles"""
     from app.models import News
@@ -658,6 +721,10 @@ def init_database():
 
                 # Create products
                 create_products(db)
+                db.session.commit()
+
+                # Create default services
+                create_services(db)
                 db.session.commit()
 
                 # Create news articles
