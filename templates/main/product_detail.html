@@ -516,18 +516,30 @@
                                 </div>
 
                                 <style>
-                                  .cert-icons-row { display:flex; gap:1rem; justify-content:center; align-items:center; flex-wrap:wrap; margin: 0.5rem 0 1.25rem; }
-                                  .cert-icon-circle { width:72px; height:72px; border-radius:50%; border:2px solid var(--brand-green, #689b8a); color: var(--brand-green, #689b8a); background: rgba(104,155,138,.08); display:flex; align-items:center; justify-content:center; position:relative; transition: transform .2s ease, box-shadow .2s ease, background .2s ease, color .2s ease, border-color .2s ease; }
-                                  .cert-icon-circle:hover { background: var(--secondary-gradient); color: var(--dark-color); border-color: transparent; transform: translateY(-3px); box-shadow: 0 8px 18px rgba(249,203,153,.35); }
-                                  @media (max-width: 575.98px){ .cert-icon-circle{ width:64px; height:64px; } }
+                                  .cert-icons-row { display:flex; gap:1.25rem; justify-content:center; align-items:center; flex-wrap:wrap; margin: 0.5rem 0 1.25rem; }
+                                  .cert-icon-tile { background: #ffffff; border-radius: 16px; box-shadow: 0 8px 24px rgba(0,0,0,.06); padding: 18px 22px; display:flex; align-items:center; justify-content:center; flex-direction: column; transition: transform .2s ease, box-shadow .2s ease; }
+                                  .cert-circle { width:72px; height:72px; border-radius:50%; background: var(--primary-color); color:#fff; display:flex; align-items:center; justify-content:center; }
+                                  .cert-icon-tile:hover { transform: translateY(-4px); box-shadow: 0 12px 28px rgba(0,0,0,.08); }
+                                  .cert-icon-tile:hover .cert-circle { background: var(--secondary-color); color: var(--dark-color); }
+                                  .cert-label { font-size:.875rem; font-weight:600; color: var(--gray-700); }
                                 </style>
                                 <div class="cert-icons-row" data-aos="zoom-in">
-                                  <div class="cert-icon-circle" title="ISO 22000"><i class="fas fa-certificate"></i></div>
-                                  <div class="cert-icon-circle" title="GlobalG.A.P"><i class="fas fa-seedling"></i></div>
-                                  <div class="cert-icon-circle" title="HACCP"><i class="fas fa-shield-alt"></i></div>
-                                  <div class="cert-icon-circle" title="BRC"><i class="fas fa-award"></i></div>
-                                  <div class="cert-icon-circle" title="FDA"><i class="fas fa-check-circle"></i></div>
-                                  <div class="cert-icon-circle" title="Halal"><i class="fas fa-leaf"></i></div>
+                                  <div class="cert-icon-tile">
+                                    <div class="cert-circle"><i class="fas fa-globe"></i></div>
+                                    <div class="cert-label mt-2">{% if is_rtl %}جلوبال جاب{% else %}GlobalG.A.P{% endif %}</div>
+                                  </div>
+                                  <div class="cert-icon-tile">
+                                    <div class="cert-circle"><i class="fas fa-shield-alt"></i></div>
+                                    <div class="cert-label mt-2">{% if is_rtl %}هاسب{% else %}HACCP{% endif %}</div>
+                                  </div>
+                                  <div class="cert-icon-tile">
+                                    <div class="cert-circle"><i class="fas fa-moon"></i></div>
+                                    <div class="cert-label mt-2">{% if is_rtl %}حلال{% else %}Halal{% endif %}</div>
+                                  </div>
+                                  <div class="cert-icon-tile">
+                                    <div class="cert-circle"><i class="fas fa-certificate"></i></div>
+                                    <div class="cert-label mt-2">{% if is_rtl %}ضمان الجودة{% else %}Quality Assurance{% endif %}</div>
+                                  </div>
                                 </div>
 
                                 {% if product.certifications %}

@@ -12,38 +12,119 @@
 
 {% block content %}
 <!-- Hero Section (same look-and-feel as homepage) -->
-<section class="hero-section about-hero dark-overlay-medium position-relative overflow-hidden d-flex align-items-center" style="min-height: 70vh;">
-    <!-- Pattern and floating icons to match homepage style -->
-    <div class="agricultural-pattern"></div>
-    <div class="floating-agricultural-icons">
-        <i class="fas fa-leaf simple-agri-icon icon-leaf-1"></i>
-        <i class="fas fa-seedling simple-agri-icon icon-seedling-1"></i>
-        <i class="fas fa-apple-alt simple-agri-icon icon-fruit-1"></i>
-        <i class="fas fa-wheat simple-agri-icon icon-wheat-1"></i>
-        <i class="fas fa-carrot simple-agri-icon icon-veg-1"></i>
-    </div>
+<!-- Page Header (styled like products hero) -->
+<section class="py-5 products-hero position-relative overflow-hidden" style="background:#689b8a;">
+  <style>
+    .products-hero { min-height: 420px; }
+    .products-hero .section-heading, .products-hero .lead { color:#fff !important; }
+    .products-hero .breadcrumb, .products-hero .breadcrumb * { color:rgba(255,255,255,0.85) !important; }
+    .products-hero .section-badge { background: var(--secondary-gradient) !important; color: var(--dark-color) !important; }
+    .products-hero .pattern-dots { color: rgba(255,255,255,.15); }
+    .products-hero .section-heading { color:#fff !important; }
+  </style>
 
-    <div class="container position-relative z-index-2">
-        <div class="row align-items-center">
-            <div class="col-lg-8 mx-auto" data-aos="fade-up" data-aos-duration="1000">
-                <div class="hero-content text-center">
-                    <div class="badge px-4 py-2 rounded-pill mb-4 fs-6 fw-semibold">
-                        <i class="fas fa-star me-2"></i>{% if is_rtl %}خبرة منذ 1999{% else %}Excellence Since 1999{% endif %}
-                    </div>
-                    <h1 class="hero-title mb-3">
-                        {% if is_rtl %}حول إمداد جلوبال{% else %}About Emdad Global{% endif %}
-                    </h1>
-                    <p class="lead mb-4">
-                        {% if is_rtl %}
-                            الشركة المصرية الرائدة في تصدير الحمضيات والفاكهة والخضروات والمنتجات المجمدة بمعايير جودة دولية ولوجستيات موثوقة.
-                        {% else %}
-                            Egypt's trusted exporter of citrus, fresh produce and IQF products, delivering international quality with reliable logistics.
-                        {% endif %}
-                    </p>
-                </div>
-            </div>
+  <!-- Background Elements -->
+  <div class="position-absolute top-0 start-0 w-100 h-100">
+    <div class="pattern-dots opacity-25"></div>
+  </div>
+
+  <!-- START_PRODUCTS_ANIMATIONS -->
+  <style>
+    .hero-animated-bg { position:absolute; inset:0; z-index:0; pointer-events:none; }
+    .hero-bubble { position:absolute; border-radius:50%; background: rgba(255,255,255,.18); filter: blur(.4px); animation: heroFloat 10s ease-in-out infinite; }
+    .hero-bubble.b1 { width:90px; height:90px; top:12%; left:10%; animation-duration: 12s; }
+    .hero-bubble.b2 { width:140px; height:140px; bottom:10%; right:12%; animation-duration: 14s; animation-direction: reverse; }
+    .hero-bubble.b3 { width:70px; height:70px; top:35%; right:28%; animation-duration: 11s; }
+    .hero-bubble.b4 { width:110px; height:110px; bottom:20%; left:22%; animation-duration: 13s; }
+    @keyframes heroFloat { 0%,100%{ transform: translateY(0);} 50%{ transform: translateY(-14px);} }
+
+    .grid-animated-bg { position:absolute; inset:0; z-index:0; pointer-events:none; }
+    .leaf { position:absolute; color: rgba(249,203,153,.55); font-size: 1rem; animation: leafDrift 18s linear infinite; }
+    .leaf.l1 { top:10%; left:-40px; animation-duration: 18s; }
+    .leaf.l2 { top:40%; left:-60px; animation-duration: 20s; animation-delay: 3s; }
+    .leaf.l3 { top:70%; left:-50px; animation-duration: 22s; animation-delay: 6s; }
+    @keyframes leafDrift { 0%{ transform: translateX(0) rotate(0deg);} 50%{ transform: translateX(50vw) rotate(10deg);} 100%{ transform: translateX(100vw) rotate(0deg);} }
+
+    @media (prefers-reduced-motion: reduce) { .hero-bubble, .leaf { animation: none !important; } }
+  </style>
+
+  <!-- Animated layer in hero -->
+  <div class="hero-animated-bg" aria-hidden="true">
+    <span class="hero-bubble b1"></span>
+    <span class="hero-bubble b2"></span>
+    <span class="hero-bubble b3"></span>
+    <span class="hero-bubble b4"></span>
+  </div>
+  <!-- Leaves layer -->
+  <div class="grid-animated-bg" aria-hidden="true" id="aboutHeroLeaves"></div>
+  <!-- END_PRODUCTS_ANIMATIONS -->
+
+  <style>
+    @keyframes leafDriftReverse { 0%{ transform: translateX(0) rotate(0deg);} 50%{ transform: translateX(-50vw) rotate(-10deg);} 100%{ transform: translateX(-100vw) rotate(0deg);} }
+  </style>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', function(){
+      const container = document.getElementById('aboutHeroLeaves');
+      if(!container) return;
+      const prefersReduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+      if (prefersReduced) return;
+      const COUNT = 12; // reduced slightly
+      for (let i = 0; i < COUNT; i++) {
+        const leaf = document.createElement('i');
+        leaf.className = 'fas fa-leaf leaf';
+        const top = (Math.random() * 92) + 2; // 2..94%
+        leaf.style.top = top.toFixed(2) + '%';
+        const fromLeft = Math.random() < 0.5;
+        const offset = -30 - Math.random() * 70; // -30..-100px
+        if (fromLeft) { leaf.style.left = offset.toFixed(0) + 'px'; leaf.style.animationName = 'leafDrift'; }
+        else { leaf.style.right = offset.toFixed(0) + 'px'; leaf.style.animationName = 'leafDriftReverse'; }
+        const duration = 16 + Math.random() * 12; // 16..28s
+        leaf.style.animationDuration = duration.toFixed(2) + 's';
+        const delay = Math.random() * 10; // 0..10s
+        leaf.style.animationDelay = delay.toFixed(2) + 's';
+        const size = 0.8 + Math.random() * 0.9; // 0.8..1.7rem
+        leaf.style.fontSize = size.toFixed(2) + 'rem';
+        container.appendChild(leaf);
+      }
+    });
+  </script>
+
+  <style>
+    /* Mobile fixes for animated layers */
+    @media (max-width: 767.98px) {
+      .hero-animated-bg { display: none !important; }
+      .grid-animated-bg { display: none !important; }
+      .products-hero { padding-top: 2.25rem !important; padding-bottom: 2.25rem !important; min-height: 300px; }
+    }
+  </style>
+
+  <div class="container position-relative">
+    <div class="row align-items-center g-4">
+      <div class="col-lg-8" data-aos="fade-right">
+        <div class="mb-3">
+          <div class="section-badge badge bg-gradient-primary text-white px-4 py-2 rounded-pill mb-3 fs-6 fw-semibold">
+            <i class="fas fa-users me-2"></i>{% if is_rtl %}من نحن{% else %}{{ _('About Us') }}{% endif %}
+          </div>
+          <h1 class="section-heading {{ 'arabic-heading' if is_rtl else 'english-heading' }} mb-3">
+            {% if is_rtl %}حول إمداد جلوبال{% else %}About Emdad Global{% endif %}
+          </h1>
+          <p class="lead {{ 'arabic-text' if is_rtl else 'english-text' }} text-white-75">
+            {% if is_rtl %}
+              الشركة المصرية الرائدة في تصدير الحمضيات والفاكهة والخضروات والمنتجات المجمدة بمعايير جودة دولية ولوجستيات موثوقة.
+            {% else %}
+              Egypt's trusted exporter of citrus, fresh produce and IQF products, delivering international quality with reliable logistics.
+            {% endif %}
+          </p>
         </div>
+      </div>
+      <div class="col-lg-4 text-lg-end" data-aos="fade-left">
+        <a href="{{ url_for('main.contact') }}" class="btn btn-primary btn-lg px-4 py-3 hover-lift" style="border-radius: 12px;">
+          <i class="fas fa-envelope me-2"></i>{% if is_rtl %}تواصل معنا{% else %}{{ _('Contact Us') }}{% endif %}
+        </a>
+      </div>
     </div>
+  </div>
 </section>
 
     <!-- Subtle animated lines overlay -->

@@ -1,32 +1,118 @@
 {% extends "base.html" %}
 
-{% block title %}Certifications & Quality - {{ SITE_NAME }}{% endblock %}
+{% block title %}{% if is_rtl %}الشهادات والجودة - {{ SITE_NAME }}{% else %}{{ _('Certifications & Quality') }} - {{ SITE_NAME }}{% endif %}{% endblock %}
 
-{% block meta_description %}Emdad Global maintains the highest quality standards with international certifications including GlobalG.A.P., HACCP, ISO 22000, Halal, and Kosher.{% endblock %}
+{% block meta_description %}{% if is_rtl %}تحافظ إمداد جلوبال على أعلى معايير الجودة مع شهادات دولية تشمل جلوبال جاب، الهاسب، ISO 22000، الحلال، والكوشر.{% else %}Emdad Global maintains the highest quality standards with international certifications including GlobalG.A.P., HACCP, ISO 22000, Halal, and Kosher.{% endif %}{% endblock %}
 
 {% block content %}
-<!-- Page Header -->
-<section class="py-5 bg-primary text-white">
-    <div class="container">
-        <div class="row align-items-center">
-            <div class="col-lg-8">
-                <nav aria-label="breadcrumb">
-                    <ol class="breadcrumb text-white-50">
-                        <li class="breadcrumb-item"><a href="{{ url_for('main.index') }}" class="text-white-50">Home</a></li>
-                        <li class="breadcrumb-item active text-white">Certifications & Quality</li>
-                    </ol>
-                </nav>
-                
-                <h1 class="display-5 fw-bold mb-3">Certifications & Quality</h1>
-                <p class="lead">International standards ensuring the highest quality and safety</p>
-            </div>
-            <div class="col-lg-4 text-lg-end">
-                <div class="quality-badge bg-white text-primary rounded-circle d-inline-flex align-items-center justify-content-center" style="width: 120px; height: 120px;">
-                    <div class="text-center">
-                        <i class="fas fa-certificate fa-2x mb-2"></i>
-                        <div class="small fw-bold">CERTIFIED<br>QUALITY</div>
+<!-- Page Header (styled like products hero) -->
+<section class="py-5 products-hero position-relative overflow-hidden" style="background:#689b8a;">
+    <style>
+      .products-hero { min-height: 420px; }
+      .products-hero .section-heading, .products-hero .lead { color:#fff !important; }
+      .products-hero .breadcrumb, .products-hero .breadcrumb * { color:rgba(255,255,255,0.85) !important; }
+      .products-hero .section-badge { background: var(--secondary-gradient) !important; color: var(--dark-color) !important; }
+      .products-hero .pattern-dots { color: rgba(255,255,255,.15); }
+      .products-hero .section-heading { color:#fff !important; }
+    </style>
+
+    <!-- Background Elements -->
+    <div class="position-absolute top-0 start-0 w-100 h-100">
+        <div class="pattern-dots opacity-25"></div>
+    </div>
+
+    <!-- START_PRODUCTS_ANIMATIONS (copied for identical look) -->
+    <style>
+      .hero-animated-bg { position:absolute; inset:0; z-index:0; pointer-events:none; }
+      .hero-bubble { position:absolute; border-radius:50%; background: rgba(255,255,255,.18); filter: blur(.4px); animation: heroFloat 10s ease-in-out infinite; }
+      .hero-bubble.b1 { width:90px; height:90px; top:12%; left:10%; animation-duration: 12s; }
+      .hero-bubble.b2 { width:140px; height:140px; bottom:10%; right:12%; animation-duration: 14s; animation-direction: reverse; }
+      .hero-bubble.b3 { width:70px; height:70px; top:35%; right:28%; animation-duration: 11s; }
+      .hero-bubble.b4 { width:110px; height:110px; bottom:20%; left:22%; animation-duration: 13s; }
+      @keyframes heroFloat { 0%,100%{ transform: translateY(0);} 50%{ transform: translateY(-14px);} }
+
+      .grid-animated-bg { position:absolute; inset:0; z-index:0; pointer-events:none; }
+      .leaf { position:absolute; color: rgba(249,203,153,.55); font-size: 1rem; animation: leafDrift 18s linear infinite; }
+      .leaf.l1 { top:10%; left:-40px; animation-duration: 18s; }
+      .leaf.l2 { top:40%; left:-60px; animation-duration: 20s; animation-delay: 3s; }
+      .leaf.l3 { top:70%; left:-50px; animation-duration: 22s; animation-delay: 6s; }
+      @keyframes leafDrift { 0%{ transform: translateX(0) rotate(0deg);} 50%{ transform: translateX(50vw) rotate(10deg);} 100%{ transform: translateX(100vw) rotate(0deg);} }
+
+      @media (prefers-reduced-motion: reduce) {
+        .hero-bubble, .leaf { animation: none !important; }
+      }
+    </style>
+
+    <!-- Animated layer in hero -->
+    <div class="hero-animated-bg" aria-hidden="true">
+      <span class="hero-bubble b1"></span>
+      <span class="hero-bubble b2"></span>
+      <span class="hero-bubble b3"></span>
+      <span class="hero-bubble b4"></span>
+    </div>
+    <!-- Leaves layer -->
+    <div class="grid-animated-bg" aria-hidden="true" id="certsHeroLeaves"></div>
+    <!-- END_PRODUCTS_ANIMATIONS -->
+
+    <style>
+      @keyframes leafDriftReverse { 0%{ transform: translateX(0) rotate(0deg);} 50%{ transform: translateX(-50vw) rotate(-10deg);} 100%{ transform: translateX(-100vw) rotate(0deg);} }
+    </style>
+
+    <script>
+      document.addEventListener('DOMContentLoaded', function(){
+        const container = document.getElementById('certsHeroLeaves');
+        if(!container) return;
+        const prefersReduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+        if (prefersReduced) return;
+        const COUNT = 12; // reduced slightly
+        for (let i = 0; i < COUNT; i++) {
+          const leaf = document.createElement('i');
+          leaf.className = 'fas fa-leaf leaf';
+          const top = (Math.random() * 92) + 2; // 2..94%
+          leaf.style.top = top.toFixed(2) + '%';
+          const fromLeft = Math.random() < 0.5;
+          const offset = -30 - Math.random() * 70; // -30..-100px
+          if (fromLeft) { leaf.style.left = offset.toFixed(0) + 'px'; leaf.style.animationName = 'leafDrift'; }
+          else { leaf.style.right = offset.toFixed(0) + 'px'; leaf.style.animationName = 'leafDriftReverse'; }
+          const duration = 16 + Math.random() * 12; // 16..28s
+          leaf.style.animationDuration = duration.toFixed(2) + 's';
+          const delay = Math.random() * 10; // 0..10s
+          leaf.style.animationDelay = delay.toFixed(2) + 's';
+          const size = 0.8 + Math.random() * 0.9; // 0.8..1.7rem
+          leaf.style.fontSize = size.toFixed(2) + 'rem';
+          container.appendChild(leaf);
+        }
+      });
+    </script>
+
+    <style>
+      /* Mobile fixes for animated layers */
+      @media (max-width: 767.98px) {
+        .hero-animated-bg { display: none !important; }
+        .grid-animated-bg { display: none !important; }
+        .products-hero { padding-top: 2.25rem !important; padding-bottom: 2.25rem !important; min-height: 300px; }
+      }
+    </style>
+
+    <div class="container position-relative">
+        <div class="row align-items-center g-4">
+            <div class="col-lg-8" data-aos="fade-right">
+                <div class="mb-3">
+                    <div class="section-badge badge bg-gradient-primary text-white px-4 py-2 rounded-pill mb-3 fs-6 fw-semibold">
+                        <i class="fas fa-award me-2"></i>{% if is_rtl %}شهاداتنا{% else %}{{ _('Our Certifications') }}{% endif %}
                     </div>
+                    <h1 class="section-heading {{ 'arabic-heading' if is_rtl else 'english-heading' }} mb-3">
+                        {% if is_rtl %}الشهادات والجودة{% else %}{{ _('Certifications & Quality') }}{% endif %}
+                    </h1>
+                    <p class="lead {{ 'arabic-text' if is_rtl else 'english-text' }} text-white-75">
+                        {% if is_rtl %}نلتزم بتطبيق أعلى معايير الجودة والسلامة الغذائية وفقاً لأفضل الشهادات العالمية{% else %}We uphold the highest international standards of quality and food safety across our operations{% endif %}
+                    </p>
                 </div>
+            </div>
+            <div class="col-lg-4 text-lg-end" data-aos="fade-left">
+                <a href="{{ url_for('main.contact') }}" class="btn btn-primary btn-lg px-4 py-3 hover-lift" style="border-radius: 12px;">
+                    <i class="fas fa-envelope me-2"></i>{% if is_rtl %}اطلب معلومات{% else %}{{ _('Request Information') }}{% endif %}
+                </a>
             </div>
         </div>
     </div>
@@ -34,329 +120,519 @@
 
 <!-- Quality Commitment -->
 <section class="py-5">
+    <!-- Reuse homepage Our Introduction image animations -->
+    <style>
+      .export-animations { position: absolute; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; z-index: 3; }
+      .plane { position: absolute; color: #f9cb99; font-size: 1.5rem; opacity: 0.8; }
+      .plane-1 { top: 20%; left: -50px; animation: flyAcross1 8s infinite linear; }
+      .plane-2 { top: 60%; right: -50px; animation: flyAcross2 10s infinite linear; animation-delay: 4s; }
+      .globe { position: absolute; top: 15%; right: 15%; color: #f9cb99; font-size: 2rem; opacity: 0.9; }
+      .globe i { animation: rotate 20s infinite linear; }
+      .pulse-ring { position: absolute; top: 50%; left: 50%; width: 40px; height: 40px; border: 2px solid #f9cb99; border-radius: 50%; transform: translate(-50%, -50%); animation: pulse 3s infinite; opacity: 0.6; }
+      @keyframes flyAcross1 { 0% { left: -50px; transform: rotate(0deg);} 50% { left: 50%; transform: rotate(5deg);} 100% { left: calc(100% + 50px); transform: rotate(0deg);} }
+      @keyframes flyAcross2 { 0% { right: -50px; transform: rotate(180deg);} 50% { right: 50%; transform: rotate(175deg);} 100% { right: calc(100% + 50px); transform: rotate(180deg);} }
+      @keyframes rotate { 0% { transform: rotate(0deg);} 100% { transform: rotate(360deg);} }
+      @keyframes pulse { 0% { transform: translate(-50%, -50%) scale(1); opacity: 0.6;} 50% { transform: translate(-50%, -50%) scale(1.5); opacity: 0.3;} 100% { transform: translate(-50%, -50%) scale(2); opacity: 0;} }
+      .single-image-wrapper { position: relative; z-index: 1; }
+    </style>
     <div class="container">
         <div class="row align-items-center">
             <div class="col-lg-6 mb-4">
-                <h2 class="mb-4">Our Quality Commitment</h2>
-                <p class="lead text-primary mb-3">Excellence in Every Step</p>
-                <p>At Emdad Global, quality is not just a goal—it's our foundation. We maintain rigorous quality control processes throughout our entire supply chain, from farm to final delivery.</p>
-                <p>Our comprehensive certification portfolio demonstrates our commitment to international standards and provides our customers with the confidence they need when sourcing Egyptian agricultural products.</p>
-                <p>Every product that bears the Emdad Global name has been carefully inspected, tested, and verified to meet or exceed the highest international quality and safety standards.</p>
-                
+                <h2 class="mb-4 {{ 'arabic-heading' if is_rtl else 'english-heading' }}">{% if is_rtl %}التزامنا بالجودة{% else %}{{ _('Our Quality Commitment') }}{% endif %}</h2>
+                <p class="lead text-primary mb-3 {{ 'arabic-text' if is_rtl else 'english-text' }}">{% if is_rtl %}التميز في كل خطوة{% else %}{{ _('Excellence in Every Step') }}{% endif %}</p>
+                <p class="{{ 'arabic-text' if is_rtl else 'english-text' }}">{% if is_rtl %}في إمداد جلوبال، الجودة ليست هدفاً فحسب بل هي أساس عملنا. نطبق إجراءات صارمة لمراقبة الجودة عبر سلسلة التوريد كاملة من المزرعة حتى التسليم النهائي.{% else %}At Emdad Global, quality is not just a goal—it's our foundation. We maintain rigorous quality control processes throughout our entire supply chain, from farm to final delivery.{% endif %}</p>
+                <p class="{{ 'arabic-text' if is_rtl else 'english-text' }}">{% if is_rtl %}تعكس مجموعة شهاداتنا المعتمدة التزامنا بالمعايير الدولية وتمنح عملاءنا الثقة اللازمة عند اختيار المنتجات الزراعية المصرية.{% else %}Our comprehensive certification portfolio demonstrates our commitment to international standards and provides our customers with the confidence they need when sourcing Egyptian agricultural products.{% endif %}</p>
+                <p class="{{ 'arabic-text' if is_rtl else 'english-text' }}">{% if is_rtl %}كل منتج يحمل اسم إمداد جلوبال يتم فحصه واختباره بعناية ليتوافق مع أعلى معايير الجودة والسلامة الدولية أو يتجاوزها.{% else %}Every product that bears the Emdad Global name has been carefully inspected, tested, and verified to meet or exceed the highest international quality and safety standards.{% endif %}</p>
+
                 <div class="row mt-4">
                     <div class="col-6">
                         <div class="d-flex align-items-center mb-3">
                             <i class="fas fa-check-circle text-success me-3 fa-lg"></i>
-                            <span>Farm-to-Fork Traceability</span>
+                            <span>{% if is_rtl %}تتبع السلسلة من المزرعة إلى المائدة{% else %}Farm-to-Fork Traceability{% endif %}</span>
                         </div>
                         <div class="d-flex align-items-center mb-3">
                             <i class="fas fa-check-circle text-success me-3 fa-lg"></i>
-                            <span>Regular Quality Audits</span>
+                            <span>{% if is_rtl %}مراجعات جودة منتظمة{% else %}Regular Quality Audits{% endif %}</span>
                         </div>
                     </div>
                     <div class="col-6">
                         <div class="d-flex align-items-center mb-3">
                             <i class="fas fa-check-circle text-success me-3 fa-lg"></i>
-                            <span>Laboratory Testing</span>
+                            <span>{% if is_rtl %}اختبارات معملية{% else %}Laboratory Testing{% endif %}</span>
                         </div>
                         <div class="d-flex align-items-center mb-3">
                             <i class="fas fa-check-circle text-success me-3 fa-lg"></i>
-                            <span>Cold Chain Management</span>
+                            <span>{% if is_rtl %}إدارة سلسلة التبريد{% else %}Cold Chain Management{% endif %}</span>
                         </div>
                     </div>
                 </div>
             </div>
-            <div class="col-lg-6">
-                <img src="{{ url_for('static', filename='images/quality-control.jpg') }}" 
-                     alt="Quality Control Process" class="img-fluid rounded shadow">
+            <div class="col-lg-6" data-aos="fade-left" data-aos-duration="1000" data-aos-delay="200">
+                <div class="about-single-image">
+                    <div class="single-image-wrapper">
+                        <img src="{{ url_for('static', filename='images/aboutimg.webp') }}" alt="About Emdad Global" class="single-about-image">
+                        <div class="export-animations">
+                            <div class="plane plane-1"><i class="fas fa-plane"></i></div>
+                            <div class="plane plane-2"><i class="fas fa-plane"></i></div>
+                            <div class="globe globe-1">
+                                <i class="fas fa-globe-americas"></i>
+                                <div class="pulse-ring"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
 </section>
 
 <!-- Certifications Grid -->
-<section class="py-5 bg-light">
+    <style>
+      /* Center text for Arabic in certifications grid and add peach hover */
+      .certifications-grid .card .card-body { text-align: center; display: flex; flex-direction: column; }
+      html[lang="ar"] .certifications-grid .card .card-body,
+      .rtl .certifications-grid .card .card-body { text-align: center !important; }
+      .certifications-grid .certification-card { transition: transform .2s ease, box-shadow .2s ease; }
+      .certifications-grid .certification-card:hover { transform: translateY(-6px); box-shadow: 0 12px 28px rgba(0,0,0,.08); }
+      .certifications-grid .feature-icon { transition: background .2s ease, color .2s ease, box-shadow .2s ease; background: var(--primary-gradient); margin-left: auto; margin-right: auto; }
+      .certifications-grid .certification-card:hover .feature-icon { background: var(--secondary-gradient) !important; color: var(--dark-color) !important; box-shadow: 0 10px 24px rgba(249,203,153,.35); }
+      .certifications-grid .card-title, .certifications-grid .card-text { margin-left: auto; margin-right: auto; }
+      /* Center Arabic headings inside centered blocks */
+      .certifications-grid .text-center .arabic-heading,
+      .certifications-grid .text-center h2 { text-align: center !important; margin-left: auto; margin-right: auto; }
+
+      .certifications-grid .card .card-body { display: flex; flex-direction: column; }
+      .certifications-grid .text-center .arabic-text { text-align: center !important; }
+    </style>
+<section class="py-5 bg-light certifications-grid">
     <div class="container">
-        <div class="text-center mb-5">
-            <h2 class="mb-3">Our Certifications</h2>
-            <p class="lead text-muted">Internationally recognized standards for quality and safety</p>
+        <div class="text-center mb-5" data-aos="fade-up">
+            <div class="section-badge badge bg-gradient-primary text-white px-4 py-2 rounded-pill mb-3 fs-6 fw-semibold">
+                <i class="fas fa-award me-2"></i>{% if is_rtl %}شهاداتنا{% else %}{{ _('Our Certifications') }}{% endif %}
+            </div>
+            <h2 class="mb-3 {{ 'arabic-heading' if is_rtl else 'english-heading' }}">{% if is_rtl %}معايير معترف بها دولياً{% else %}{{ _('Internationally Recognized Standards') }}{% endif %}</h2>
+            <p class="lead text-muted {{ 'arabic-text' if is_rtl else 'english-text' }}">{% if is_rtl %}نلتزم بأعلى معايير الجودة والسلامة الغذائية لضمان الثقة والتميز{% else %}We adhere to the highest quality and food safety standards to ensure trust and excellence{% endif %}</p>
         </div>
-        
+
         <div class="row">
             {% if certifications %}
                 {% for certification in certifications %}
-                <div class="col-lg-4 col-md-6 mb-4">
-                    <div class="card h-100 border-0 shadow-sm certification-card">
+                <div class="col-lg-3 col-md-6 mb-4">
+                    <div class="card h-100 border-0 shadow-lg hover-lift position-relative overflow-hidden certification-card">
                         <div class="card-body text-center p-4">
                             {% if certification.logo_path %}
-                            <img src="{{ url_for('static', filename='uploads/certifications/' + certification.logo_path) }}" 
-                                 alt="{{ certification.get_name() }}" class="certification-logo mb-3" style="max-height: 80px;">
+                            <img src="{{ url_for('main.uploaded_file', filename='certifications/' + certification.logo_path) }}"
+                                 alt="{{ certification.get_name(current_language) }}" class="certification-logo mb-3" style="max-height: 84px; object-fit: contain;">
                             {% else %}
-                            <div class="certification-icon bg-primary text-white rounded-circle d-inline-flex align-items-center justify-content-center mb-3" style="width: 80px; height: 80px;">
-                                <i class="fas fa-certificate fa-2x"></i>
+                            <div class="feature-icon bg-gradient-primary text-white rounded-circle d-inline-flex align-items-center justify-content-center position-relative mb-3" style="width: 90px; height: 90px;">
+                                <i class="fas fa-award fa-2x"></i>
+                                <div class="icon-glow position-absolute top-0 start-0 w-100 h-100 rounded-circle"></div>
                             </div>
                             {% endif %}
-                            
-                            <h5 class="card-title">{{ certification.get_name() }}</h5>
-                            <p class="card-text text-muted">{{ certification.get_description() }}</p>
-                            
-                            {% if certification.website_url %}
-                            <a href="{{ certification.website_url }}" target="_blank" class="btn btn-outline-primary btn-sm">
-                                <i class="fas fa-external-link-alt me-1"></i>Learn More
-                            </a>
-                            {% endif %}
+
+                            <h5 class="card-title">{{ certification.get_name(current_language) }}</h5>
+                            <p class="card-text text-muted {{ 'arabic-text' if is_rtl else 'english-text' }}">{{ certification.get_description(current_language) }}</p>
+
+
                         </div>
                     </div>
                 </div>
                 {% endfor %}
             {% else %}
                 <!-- Default certifications if none in database -->
-                <div class="col-lg-4 col-md-6 mb-4">
-                    <div class="card h-100 border-0 shadow-sm certification-card">
+                <div class="col-lg-3 col-md-6 mb-4">
+                    <div class="card h-100 border-0 shadow-lg hover-lift position-relative overflow-hidden certification-card">
                         <div class="card-body text-center p-4">
-                            <div class="certification-icon bg-success text-white rounded-circle d-inline-flex align-items-center justify-content-center mb-3" style="width: 80px; height: 80px;">
+                            <div class="feature-icon bg-gradient-primary text-white rounded-circle d-inline-flex align-items-center justify-content-center position-relative mb-3" style="width: 90px; height: 90px;">
                                 <i class="fas fa-globe fa-2x"></i>
+                                <div class="icon-glow position-absolute top-0 start-0 w-100 h-100 rounded-circle"></div>
                             </div>
-                            <h5 class="card-title">GlobalG.A.P.</h5>
-                            <p class="card-text text-muted">Good Agricultural Practices certification ensuring food safety and sustainability throughout the production process.</p>
-                            <a href="https://www.globalgap.org" target="_blank" class="btn btn-outline-primary btn-sm">
-                                <i class="fas fa-external-link-alt me-1"></i>Learn More
-                            </a>
+                            <h5 class="card-title">{% if is_rtl %}جلوبال جاب{% else %}GlobalG.A.P.{% endif %}</h5>
+                            <p class="card-text text-muted {{ 'arabic-text' if is_rtl else 'english-text' }}">{% if is_rtl %}شهادة الممارسات الزراعية الجيدة التي تضمن سلامة الغذاء والاستدامة طوال عملية الإنتاج.{% else %}Good Agricultural Practices certification ensuring food safety and sustainability throughout the production process.{% endif %}</p>
+
                         </div>
                     </div>
                 </div>
-                
-                <div class="col-lg-4 col-md-6 mb-4">
-                    <div class="card h-100 border-0 shadow-sm certification-card">
+
+                <div class="col-lg-3 col-md-6 mb-4">
+                    <div class="card h-100 border-0 shadow-lg hover-lift position-relative overflow-hidden certification-card">
                         <div class="card-body text-center p-4">
-                            <div class="certification-icon bg-danger text-white rounded-circle d-inline-flex align-items-center justify-content-center mb-3" style="width: 80px; height: 80px;">
+                            <div class="feature-icon bg-gradient-primary text-white rounded-circle d-inline-flex align-items-center justify-content-center position-relative mb-3" style="width: 90px; height: 90px;">
                                 <i class="fas fa-shield-alt fa-2x"></i>
+                                <div class="icon-glow position-absolute top-0 start-0 w-100 h-100 rounded-circle"></div>
                             </div>
-                            <h5 class="card-title">HACCP</h5>
-                            <p class="card-text text-muted">Hazard Analysis and Critical Control Points system for identifying and preventing food safety hazards.</p>
+                            <h5 class="card-title">{% if is_rtl %}هاسب{% else %}HACCP{% endif %}</h5>
+                            <p class="card-text text-muted {{ 'arabic-text' if is_rtl else 'english-text' }}">{% if is_rtl %}نظام تحليل المخاطر ونقاط التحكم الحرجة لتحديد مخاطر سلامة الغذاء والوقاية منها.{% else %}Hazard Analysis and Critical Control Points system for identifying and preventing food safety hazards.{% endif %}</p>
                         </div>
                     </div>
                 </div>
-                
-                <div class="col-lg-4 col-md-6 mb-4">
-                    <div class="card h-100 border-0 shadow-sm certification-card">
+
+
+
+                <div class="col-lg-3 col_md-6 mb-4">
+                    <div class="card h-100 border-0 shadow-lg hover-lift position-relative overflow-hidden certification-card">
                         <div class="card-body text-center p-4">
-                            <div class="certification-icon bg-info text-white rounded-circle d-inline-flex align-items-center justify-content-center mb-3" style="width: 80px; height: 80px;">
-                                <i class="fas fa-award fa-2x"></i>
-                            </div>
-                            <h5 class="card-title">ISO 22000</h5>
-                            <p class="card-text text-muted">Food Safety Management System certification ensuring systematic approach to food safety.</p>
-                        </div>
-                    </div>
-                </div>
-                
-                <div class="col-lg-4 col-md-6 mb-4">
-                    <div class="card h-100 border-0 shadow-sm certification-card">
-                        <div class="card-body text-center p-4">
-                            <div class="certification-icon bg-success text-white rounded-circle d-inline-flex align-items-center justify-content-center mb-3" style="width: 80px; height: 80px;">
+                            <div class="feature-icon bg-gradient-primary text-white rounded-circle d-inline-flex align-items-center justify-content-center position-relative mb-3" style="width: 90px; height: 90px;">
                                 <i class="fas fa-moon fa-2x"></i>
+                                <div class="icon-glow position-absolute top-0 start-0 w-100 h-100 rounded-circle"></div>
                             </div>
-                            <h5 class="card-title">Halal Certification</h5>
-                            <p class="card-text text-muted">Islamic dietary law compliance certification for Muslim markets worldwide.</p>
+                            <h5 class="card-title">{% if is_rtl %}شهادة حلال{% else %}Halal Certification{% endif %}</h5>
+                            <p class="card-text text-muted {{ 'arabic-text' if is_rtl else 'english-text' }}">{% if is_rtl %}شهادة مطابقة للشريعة الإسلامية للأسواق الإسلامية حول العالم.{% else %}Islamic dietary law compliance certification for Muslim markets worldwide.{% endif %}</p>
                         </div>
                     </div>
                 </div>
-                
-                <div class="col-lg-4 col-md-6 mb-4">
-                    <div class="card h-100 border-0 shadow-sm certification-card">
+
+                <!-- Added generic quality card to keep four cards in one row -->
+                <div class="col-lg-3 col-md-6 mb-4">
+                    <div class="card h-100 border-0 shadow-lg hover-lift position-relative overflow-hidden certification-card">
                         <div class="card-body text-center p-4">
-                            <div class="certification-icon bg-primary text-white rounded-circle d-inline-flex align-items-center justify-content-center mb-3" style="width: 80px; height: 80px;">
-                                <i class="fas fa-star fa-2x"></i>
+                            <div class="feature-icon bg-gradient-primary text-white rounded-circle d-inline-flex align-items-center justify-content-center position-relative mb-3" style="width: 90px; height: 90px;">
+                                <i class="fas fa-certificate fa-2x"></i>
+                                <div class="icon-glow position-absolute top-0 start-0 w-100 h-100 rounded-circle"></div>
                             </div>
-                            <h5 class="card-title">Kosher Certification</h5>
-                            <p class="card-text text-muted">Jewish dietary law compliance certification ensuring products meet kosher requirements.</p>
+                            <h5 class="card-title">{% if is_rtl %}ضمان الجودة{% else %}Quality Assurance{% endif %}</h5>
+                            <p class="card-text text-muted {{ 'arabic-text' if is_rtl else 'english-text' }}">{% if is_rtl %}ملتزمون بإجراءات صارمة لضمان الجودة والسلامة في كل مرحلة.{% else %}Committed to rigorous procedures ensuring quality and safety at every stage.{% endif %}</p>
                         </div>
                     </div>
                 </div>
-                
-                <div class="col-lg-4 col-md-6 mb-4">
-                    <div class="card h-100 border-0 shadow-sm certification-card">
-                        <div class="card-body text-center p-4">
-                            <div class="certification-icon bg-warning text-white rounded-circle d-inline-flex align-items-center justify-content-center mb-3" style="width: 80px; height: 80px;">
-                                <i class="fas fa-leaf fa-2x"></i>
-                            </div>
-                            <h5 class="card-title">Organic Certification</h5>
-                            <p class="card-text text-muted">Organic farming standards certification for environmentally sustainable agricultural practices.</p>
-                        </div>
-                    </div>
-                </div>
+
+
+
+
             {% endif %}
         </div>
     </div>
+    <style>
+      /* Center headings and lead in Quality Process as requested */
+      .quality-process .text-center .arabic-heading,
+      .quality-process .text-center .arabic-text,
+      .quality-process .text-center h2,
+      .quality-process .text-center p { text-align: center !important; margin-left: auto; margin-right: auto; }
+    </style>
 </section>
 
 <!-- Quality Process -->
-<section class="py-5">
+    <style>
+      /* Peach hover effect for process step numbers */
+      .quality-process .step-number { transition: background .2s ease, color .2s ease, box-shadow .2s ease, transform .2s ease; }
+      .quality-process .process-step:hover .step-number {
+        background: var(--secondary-gradient) !important; color: var(--dark-color) !important;
+        box-shadow: 0 10px 24px rgba(249,203,153,.35); transform: translateY(-3px);
+      }
+    </style>
+<section class="py-5 quality-process">
     <div class="container">
         <div class="text-center mb-5">
-            <h2 class="mb-3">Our Quality Process</h2>
-            <p class="lead text-muted">From farm to your table - ensuring excellence at every step</p>
+            <div class="section-badge badge bg-gradient-primary text-white px-4 py-2 rounded-pill mb-3 fs-6 fw-semibold">
+                <i class="fas fa-tasks me-2"></i>{% if is_rtl %}عملية الجودة{% else %}{{ _('Quality Process') }}{% endif %}
+            </div>
+            <h2 class="mb-3 {{ 'arabic-heading' if is_rtl else 'english-heading' }}">{% if is_rtl %}من المزرعة إلى مائدتكم{% else %}{{ _('From Farm to Your Table') }}{% endif %}</h2>
+            <p class="lead text-muted {{ 'arabic-text' if is_rtl else 'english-text' }}">{% if is_rtl %}نضمن التميز في كل خطوة من سلسلة الإمداد{% else %}We ensure excellence at every step of the supply chain{% endif %}</p>
         </div>
-        
+
         <div class="row">
             <div class="col-lg-3 col-md-6 mb-4">
                 <div class="process-step text-center">
-                    <div class="step-number bg-primary text-white rounded-circle d-inline-flex align-items-center justify-content-center mb-3" style="width: 60px; height: 60px;">
+                    <div class="step-number bg-gradient-primary text-white rounded-circle d-inline-flex align-items-center justify-content-center mb-3" style="width: 60px; height: 60px;">
                         <span class="fw-bold">1</span>
                     </div>
-                    <h5>Farm Selection</h5>
-                    <p class="text-muted">Carefully selected partner farms meeting our strict quality criteria</p>
+                    <h5 class="{{ 'arabic-heading' if is_rtl else 'english-heading' }}">{% if is_rtl %}اختيار المزارع{% else %}{{ _('Farm Selection') }}{% endif %}</h5>
+                    <p class="text-muted {{ 'arabic-text' if is_rtl else 'english-text' }}">{% if is_rtl %}نختار شركاءنا من المزارع بعناية وفق معايير جودة صارمة{% else %}Carefully selected partner farms meeting our strict quality criteria{% endif %}</p>
                 </div>
             </div>
-            
+
             <div class="col-lg-3 col-md-6 mb-4">
                 <div class="process-step text-center">
-                    <div class="step-number bg-success text-white rounded-circle d-inline-flex align-items-center justify-content-center mb-3" style="width: 60px; height: 60px;">
+                    <div class="step-number bg-gradient-primary text-white rounded-circle d-inline-flex align-items-center justify-content-center mb-3" style="width: 60px; height: 60px;">
                         <span class="fw-bold">2</span>
                     </div>
-                    <h5>Harvest Control</h5>
-                    <p class="text-muted">Optimal timing and methods to ensure peak quality and freshness</p>
+                    <h5 class="{{ 'arabic-heading' if is_rtl else 'english-heading' }}">{% if is_rtl %}التحكم في الحصاد{% else %}{{ _('Harvest Control') }}{% endif %}</h5>
+                    <p class="text-muted {{ 'arabic-text' if is_rtl else 'english-text' }}">{% if is_rtl %}تحديد التوقيت والأساليب المثلى لضمان الجودة والنضارة{% else %}Optimal timing and methods to ensure peak quality and freshness{% endif %}</p>
                 </div>
             </div>
-            
+
             <div class="col-lg-3 col-md-6 mb-4">
                 <div class="process-step text-center">
-                    <div class="step-number bg-info text-white rounded-circle d-inline-flex align-items-center justify-content-center mb-3" style="width: 60px; height: 60px;">
+                    <div class="step-number bg-gradient-primary text-white rounded-circle d-inline-flex align-items-center justify-content-center mb-3" style="width: 60px; height: 60px;">
                         <span class="fw-bold">3</span>
                     </div>
-                    <h5>Processing & Packing</h5>
-                    <p class="text-muted">State-of-the-art facilities with rigorous hygiene and quality standards</p>
+                    <h5 class="{{ 'arabic-heading' if is_rtl else 'english-heading' }}">{% if is_rtl %}التجهيز والتعبئة{% else %}{{ _('Processing & Packing') }}{% endif %}</h5>
+                    <p class="text-muted {{ 'arabic-text' if is_rtl else 'english-text' }}">{% if is_rtl %}منشآت حديثة مع معايير صارمة للنظافة والجودة{% else %}State-of-the-art facilities with rigorous hygiene and quality standards{% endif %}</p>
                 </div>
             </div>
-            
+
             <div class="col-lg-3 col-md-6 mb-4">
                 <div class="process-step text-center">
-                    <div class="step-number bg-warning text-white rounded-circle d-inline-flex align-items-center justify-content-center mb-3" style="width: 60px; height: 60px;">
+                    <div class="step-number bg-gradient-primary text-white rounded-circle d-inline-flex align-items-center justify-content-center mb-3" style="width: 60px; height: 60px;">
                         <span class="fw-bold">4</span>
                     </div>
-                    <h5>Cold Chain Delivery</h5>
-                    <p class="text-muted">Temperature-controlled logistics maintaining product integrity</p>
+                    <h5 class="{{ 'arabic-heading' if is_rtl else 'english-heading' }}">{% if is_rtl %}التبريد أثناء النقل{% else %}{{ _('Cold Chain Delivery') }}{% endif %}</h5>
+                    <p class="text-muted {{ 'arabic-text' if is_rtl else 'english-text' }}">{% if is_rtl %}نقل مبرد للحفاظ على جودة المنتج وسلامته{% else %}Temperature-controlled logistics maintaining product integrity{% endif %}</p>
                 </div>
             </div>
         </div>
     </div>
 </section>
 
+    <style>
+      /* Testing & Laboratory: match Certifications grid styles */
+      .testing-lab .card .card-body { text-align: center; display: flex; flex-direction: column; }
+      .testing-lab .certification-card { transition: transform .2s ease, box-shadow .2s ease; }
+      .testing-lab .certification-card:hover { transform: translateY(-6px); box-shadow: 0 12px 28px rgba(0,0,0,.08); }
+      .testing-lab .feature-icon { transition: background .2s ease, color .2s ease, box-shadow .2s ease; background: var(--primary-gradient); margin-left: auto; margin-right: auto; }
+      .testing-lab .certification-card:hover .feature-icon { background: var(--secondary-gradient) !important; color: var(--dark-color) !important; box-shadow: 0 10px 24px rgba(249,203,153,.35); }
+      .testing-lab .card-title, .testing-lab .card-text { margin-left: auto; margin-right: auto; }
+      .testing-lab .text-center .arabic-heading,
+      .testing-lab .text-center .arabic-text,
+      .testing-lab .text-center h2 { text-align: center !important; margin-left: auto; margin-right: auto; }
+    </style>
 <!-- Testing & Laboratory -->
-<section class="py-5 bg-light">
+<section class="py-5 bg-light testing-lab">
     <div class="container">
-        <div class="row align-items-center">
-            <div class="col-lg-6">
-                <img src="{{ url_for('static', filename='images/laboratory-testing.jpg') }}" 
-                     alt="Laboratory Testing" class="img-fluid rounded shadow">
+        <div class="text-center mb-5">
+            <h2 class="mb-3 {{ 'arabic-heading' if is_rtl else 'english-heading' }}">{% if is_rtl %}اختبارات وتحاليل متقدمة{% else %}{{ _('Advanced Testing & Analysis') }}{% endif %}</h2>
+            <p class="lead text-muted {{ 'arabic-text' if is_rtl else 'english-text' }}">{% if is_rtl %}دقة علمية لضمان جودة وسلامة منتجاتنا{% else %}Scientific precision ensuring the quality and safety of our products{% endif %}</p>
+        </div>
+        <div class="row">
+            <div class="col-lg-3 col-md-6 mb-4">
+                <div class="card h-100 border-0 shadow-lg hover-lift position-relative overflow-hidden certification-card">
+                    <div class="card-body text-center p-4">
+                        <div class="feature-icon bg-gradient-primary text-white rounded-circle d-inline-flex align-items-center justify-content-center position-relative mb-3" style="width: 90px; height: 90px;">
+                            <i class="fas fa-microscope fa-2x"></i>
+                            <div class="icon-glow position-absolute top-0 start-0 w-100 h-100 rounded-circle"></div>
+                        </div>
+                        <h5 class="card-title">{% if is_rtl %}اختبارات ميكروبيولوجية{% else %}{{ _('Microbiological Testing') }}{% endif %}</h5>
+                        <p class="card-text text-muted {{ 'arabic-text' if is_rtl else 'english-text' }}">{% if is_rtl %}كشف مسببات الأمراض والتحقق من السلامة{% else %}Pathogen detection and safety verification{% endif %}</p>
+                    </div>
+                </div>
             </div>
-            <div class="col-lg-6">
-                <h2 class="mb-4">Advanced Testing & Analysis</h2>
-                <p class="lead text-primary mb-3">Scientific Precision</p>
-                <p>Our state-of-the-art laboratory facilities conduct comprehensive testing to ensure every product meets international standards for safety, quality, and nutritional value.</p>
-                
-                <div class="row">
-                    <div class="col-md-6 mb-3">
-                        <div class="d-flex align-items-center">
-                            <i class="fas fa-microscope text-primary me-3"></i>
+            <div class="col-lg-3 col-md-6 mb-4">
+                <div class="card h-100 border-0 shadow-lg hover-lift position-relative overflow-hidden certification-card">
+                    <div class="card-body text-center p-4">
+                        <div class="feature-icon bg-gradient-primary text-white rounded-circle d-inline-flex align-items-center justify-content-center position-relative mb-3" style="width: 90px; height: 90px;">
+                            <i class="fas fa-flask fa-2x"></i>
+                            <div class="icon-glow position-absolute top-0 start-0 w-100 h-100 rounded-circle"></div>
+                        </div>
+                        <h5 class="card-title">{% if is_rtl %}تحليل كيميائي{% else %}{{ _('Chemical Analysis') }}{% endif %}</h5>
+                        <p class="card-text text-muted {{ 'arabic-text' if is_rtl else 'english-text' }}">{% if is_rtl %}اختبار بقايا المبيدات والتلوث{% else %}Pesticide residue and contamination testing{% endif %}</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-3 col-md-6 mb-4">
+                <div class="card h-100 border-0 shadow-lg hover-lift position-relative overflow-hidden certification-card">
+                    <div class="card-body text-center p-4">
+                        <div class="feature-icon bg-gradient-primary text-white rounded-circle d-inline-flex align-items-center justify-content-center position-relative mb-3" style="width: 90px; height: 90px;">
+                            <i class="fas fa-chart-line fa-2x"></i>
+                            <div class="icon-glow position-absolute top-0 start-0 w-100 h-100 rounded-circle"></div>
+                        </div>
+                        <h5 class="card-title">{% if is_rtl %}تحليل غذائي{% else %}{{ _('Nutritional Analysis') }}{% endif %}</h5>
+                        <p class="card-text text-muted {{ 'arabic-text' if is_rtl else 'english-text' }}">{% if is_rtl %}محتوى الفيتامينات والمعادن والعناصر الغذائية{% else %}Vitamin, mineral, and nutrient content{% endif %}</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-3 col-md-6 mb-4">
+                <div class="card h-100 border-0 shadow-lg hover-lift position-relative overflow-hidden certification-card">
+                    <div class="card-body text-center p-4">
+                        <div class="feature-icon bg-gradient-primary text-white rounded-circle d-inline-flex align-items-center justify-content-center position-relative mb-3" style="width: 90px; height: 90px;">
+                            <i class="fas fa-eye fa-2x"></i>
+                            <div class="icon-glow position-absolute top-0 start-0 w-100 h-100 rounded-circle"></div>
+                        </div>
+                        <h5 class="card-title">{% if is_rtl %}تقييم حسي{% else %}{{ _('Sensory Evaluation') }}{% endif %}</h5>
+                        <p class="card-text text-muted {{ 'arabic-text' if is_rtl else 'english-text' }}">{% if is_rtl %}تقييم المذاق والقوام والمظهر{% else %}Taste, texture, and appearance assessment{% endif %}</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+<!-- Our Achievements (imported from About page) -->
+<section class="py-5 bg-gradient-primary text-white position-relative overflow-hidden">
+    <style>
+      .achievements-bg { position:absolute; inset:0; background:url('{{ url_for('static', filename='images/b.png') }}') center/cover no-repeat; opacity:.18; z-index:0; }
+      @media (max-width: 576px){ .achievements-bg { opacity:.22; background-position:center top; } }
+    </style>
+
+    <div class="achievements-bg"></div>
+
+    <div class="position-absolute top-0 start-0 w-100 h-100">
+        <div class="stats-pattern opacity-10"></div>
+    </div>
+
+    <div class="container position-relative">
+        <div class="row align-items-center">
+            <div class="col-lg-6" data-aos="fade-right">
+                <div class="stats-content">
+                    <div class="section-badge badge bg-gradient-secondary text-dark px-4 py-2 rounded-pill mb-3 fs-6 fw-semibold">
+                        <i class="fas fa-chart-line me-2"></i>{% if is_rtl %}إنجازاتنا{% else %}{{ _('Our Achievements') }}{% endif %}
+                    </div>
+
+                    <h2 class="section-heading english-heading text-shadow" style="color: #ffffff;">
+                        {% if is_rtl %}موثوقون من{% else %}{{ _('Trusted by') }}{% endif %} {% if is_rtl %}عملاء{% else %}{{ _('Customers') }}{% endif %}
+                        <span style="color: #f9cb99;">{% if is_rtl %}حول العالم{% else %}{{ _('Worldwide') }}{% endif %}</span>
+                    </h2>
+
+                    <p class="lead english-text mb-4 text-shadow-sm">
+                        {% if is_rtl %}
+                            أكثر من عقدين من التميز في الصادرات الزراعية المصرية، نخدم عملاء في أكثر من 50 دولة بجودة وموثوقية ثابتة.
+                        {% else %}
+                            Over two decades of excellence in Egyptian agricultural exports, serving customers across 50+ countries with unwavering quality and reliability.
+                        {% endif %}
+                    </p>
+
+                    <div class="achievements-list">
+                        <div class="achievement-item d-flex align-items-center mb-3">
+                            <div class="achievement-icon bg-gradient-secondary text-dark rounded-circle d-flex align-items-center justify-content-center me-3" style="width: 50px; height: 50px;">
+                                <i class="fas fa-award fs-5"></i>
+                            </div>
                             <div>
-                                <h6 class="mb-1">Microbiological Testing</h6>
-                                <small class="text-muted">Pathogen detection and safety verification</small>
+                                <h6 class="mb-1 fw-bold english-heading" style="color: #ffffff;">{% if is_rtl %}معتمد ISO 22000{% else %}ISO 22000 Certified{% endif %}</h6>
+                                <small class="opacity-75 english-text">{% if is_rtl %}نظام إدارة سلامة الغذاء{% else %}Food Safety Management System{% endif %}</small>
+                            </div>
+                        </div>
+
+                        <div class="achievement-item d-flex align-items-center mb-3">
+                            <div class="achievement-icon bg-gradient-secondary text-dark rounded-circle d-flex align-items-center justify-content-center me-3" style="width: 50px; height: 50px;">
+                                <i class="fas fa-globe fs-5"></i>
+                            </div>
+                            <div>
+                                <h6 class="mb-1 fw-bold {{ 'arabic-heading' if session.get('language') == 'ar' else 'english-heading' }}" style="color: #ffffff;">
+                                    {% if session.get('language') == 'ar' %}
+                                        معتمد الممارسات الزراعية الجيدة
+                                    {% else %}
+                                        GlobalG.A.P. Certified
+                                    {% endif %}
+                                </h6>
+                                <small class="opacity-75 {{ 'arabic-text' if session.get('language') == 'ar' else 'english-text' }}">
+                                    {% if session.get('language') == 'ar' %}
+                                        الممارسات الزراعية الجيدة
+                                    {% else %}
+                                        Good Agricultural Practices
+                                    {% endif %}
+                                </small>
+                            </div>
+                        </div>
+
+                        <div class="achievement-item d-flex align-items-center">
+                            <div class="achievement-icon bg-gradient-secondary text-dark rounded-circle d-flex align-items-center justify-content-center me-3" style="width: 50px; height: 50px;">
+                                <i class="fas fa-shipping-fast fs-5"></i>
+                            </div>
+                            <div>
+                                <h6 class="mb-1 fw-bold english-heading" style="color: #ffffff;">{% if is_rtl %}امتياز سلسلة التبريد{% else %}Cold Chain Excellence{% endif %}</h6>
+                                <small class="opacity-75 english-text">{% if is_rtl %}لوجستيات ذات تحكم حراري{% else %}Temperature-controlled logistics{% endif %}</small>
                             </div>
                         </div>
                     </div>
-                    <div class="col-md-6 mb-3">
-                        <div class="d-flex align-items-center">
-                            <i class="fas fa-flask text-success me-3"></i>
-                            <div>
-                                <h6 class="mb-1">Chemical Analysis</h6>
-                                <small class="text-muted">Pesticide residue and contamination testing</small>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-md-6 mb-3">
-                        <div class="d-flex align-items-center">
-                            <i class="fas fa-chart-line text-info me-3"></i>
-                            <div>
-                                <h6 class="mb-1">Nutritional Analysis</h6>
-                                <small class="text-muted">Vitamin, mineral, and nutrient content</small>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-md-6 mb-3">
-                        <div class="d-flex align-items-center">
-                            <i class="fas fa-eye text-warning me-3"></i>
-                            <div>
-                                <h6 class="mb-1">Sensory Evaluation</h6>
-                                <small class="text-muted">Taste, texture, and appearance assessment</small>
-                            </div>
-                        </div>
-                    </div>
+                </div>
+            </div>
+
+            <div class="col-lg-6" data-aos="fade-left" data-aos-delay="200">
+                <style>
+                  .coverage-map { position: relative; min-height: 360px; border-radius: 20px; overflow: hidden; }
+                  .coverage-map .map-grid { position:absolute; inset:0; z-index:0; background:
+                    linear-gradient(transparent 49%, rgba(255,255,255,.08) 50%, transparent 51%) 0 0 / 100% 36px,
+                    linear-gradient(90deg, transparent 49%, rgba(255,255,255,.08) 50%, transparent 51%) 0 0 / 36px 100%,
+                    radial-gradient(circle at 20% 30%, rgba(255,255,255,.08), transparent 45%),
+                    radial-gradient(circle at 80% 70%, rgba(255,255,255,.08), transparent 45%);
+                  }
+                  .coverage-map .coverage-svg { position:absolute; inset:0; z-index:1; }
+                  .coverage-map .arc { stroke:#f9cb99; stroke-width:2; fill:none; stroke-dasharray:6 8; opacity:.9; animation: dashMove 6s linear infinite; }
+                  .coverage-map .arc.arc-2 { animation-duration: 8s; opacity:.8; }
+                  .coverage-map .arc.arc-3 { animation-duration: 10s; opacity:.7; }
+                  @keyframes dashMove { to { stroke-dashoffset: -1000; } }
+                  .coverage-map .map-pin { position:absolute; width:10px; height:10px; border-radius:50%; background:#f9cb99; box-shadow:0 0 0 2px rgba(249,203,153,.35); z-index:2; }
+                  .coverage-map .map-pin .pulse { content:""; position:absolute; inset:-10px; border-radius:50%; border:2px solid rgba(249,203,153,.4); animation:pulse 2.8s ease-out infinite; }
+                  .coverage-map .map-pin .dot { position:absolute; inset:0; border-radius:50%; background:#f9cb99; }
+                  @keyframes pulse { 0%{ transform:scale(.6); opacity:.8;} 80%{ transform:scale(1.6); opacity:0;} 100%{ opacity:0;} }
+                  .coverage-map .pin-eg { left:46%; top:50%; }
+                  .coverage-map .pin-eu { left:48%; top:38%; }
+                  .coverage-map .pin-gcc{ left:52.5%; top:55%; }
+                  .coverage-map .pin-asia{ left:64%; top:47%; }
+                  .coverage-map .map-legend { z-index:2; }
+
+                  .map-export-animations { position: absolute !important; top: 0 !important; left: 0 !important; width: 100% !important; height: 100% !important; pointer-events: none !important; z-index: 1000 !important; }
+                  .map-plane { position: absolute; color: #f9cb99; font-size: 1.2rem; opacity: 0.8; text-shadow: 0 0 10px rgba(249, 203, 153, 0.8); }
+                  .map-plane-1 { top: 10%; left: -30px; animation: mapPlaneMove1 20s linear infinite; }
+                  .map-plane-2 { top: 40%; left: -50px; animation: mapPlaneMove2 22s linear infinite; }
+                  .map-plane-3 { top: 70%; left: -70px; animation: mapPlaneMove3 25s linear infinite; }
+                  @keyframes mapPlaneMove1 { 0%{ left:-30px; transform: translateY(0) rotate(15deg);} 50%{ transform: translateY(-10px) rotate(15deg);} 100%{ left: calc(100% + 30px); transform: translateY(0) rotate(15deg);} }
+                  @keyframes mapPlaneMove2 { 0%{ left:-50px; transform: translateY(0) rotate(15deg);} 50%{ transform: translateY(10px) rotate(15deg);} 100%{ left: calc(100% + 50px); transform: translateY(0) rotate(15deg);} }
+                  @keyframes mapPlaneMove3 { 0%{ left:-70px; transform: translateY(0) rotate(15deg);} 50%{ transform: translateY(-5px) rotate(15deg);} 100%{ left: calc(100% + 70px); transform: translateY(0) rotate(15deg);} }
+                </style>
+
+                <div class="coverage-map card border-0 shadow-lg p-4 glass-effect" style="position: relative;">
+                  <div id="coverageMap" style="height: 360px; width:100%; position: relative;"></div>
+
+                  <div class="map-export-animations">
+                    <div class="map-plane map-plane-1"><i class="fas fa-plane"></i></div>
+                    <div class="map-plane map-plane-2"><i class="fas fa-plane"></i></div>
+                    <div class="map-plane map-plane-3"><i class="fas fa-plane"></i></div>
+                  </div>
+                  <div class="map-legend badge bg-gradient-secondary text-dark px-3 py-2 rounded-pill position-absolute end-0 bottom-0 m-3 fs-6 fw-semibold">
+                    {% if session.get('language') == 'ar' %} تغطية خريطتنا {% else %} {{ _('Map Coverage') }} {% endif %}
+                  </div>
                 </div>
             </div>
         </div>
     </div>
 </section>
 
-<!-- Call to Action -->
-<section class="py-5 bg-primary text-white">
+<!-- CTA imported from About page -->
+<section class="py-5 bg-gradient-light">
     <div class="container">
-        <div class="row align-items-center">
-            <div class="col-lg-8">
-                <h3 class="mb-2">Quality You Can Trust</h3>
-                <p class="mb-0">Experience the difference that certified quality makes in your agricultural sourcing.</p>
-            </div>
-            <div class="col-lg-4 text-lg-end">
-                <a href="{{ url_for('main.contact') }}" class="btn btn-light btn-lg">
-                    <i class="fas fa-envelope me-2"></i>Request Information
-                </a>
+        <div class="row align-items-center text-center">
+            <div class="col-lg-8 mx-auto" data-aos="fade-up">
+                <h2 class="display-6 english-heading mb-3">{% if is_rtl %}جاهز للتعاون معنا؟{% else %}{{ _('Ready to Partner with Us?') }}{% endif %}</h2>
+                <p class="lead text-muted mb-4">{% if is_rtl %}تواصل معنا الآن واكتشف حلول التوريد الموثوقة لأسواقك العالمية.{% else %}{{ _('Get in touch and discover reliable sourcing solutions for your markets.') }}{% endif %}</p>
+                <div class="d-flex flex-wrap justify-content-center gap-3">
+                    <a href="{{ url_for('main.contact') }}" class="btn btn-primary btn-lg px-5 py-3 hover-lift"><i class="fas fa-envelope me-2"></i>{% if is_rtl %}تواصل الآن{% else %}{{ _('Contact Us') }}{% endif %}</a>
+                    <a href="{{ url_for('main.products') }}" class="btn btn-outline-primary btn-lg px-5 py-3 hover-lift"><i class="fas fa-leaf me-2"></i>{% if is_rtl %}تصفح المنتجات{% else %}{{ _('View Products') }}{% endif %}</a>
+                </div>
             </div>
         </div>
     </div>
 </section>
+
+</section>
+
+
 {% endblock %}
 
 {% block extra_scripts %}
+<script src="https://cdn.jsdelivr.net/npm/jsvectormap@latest/dist/js/jsvectormap.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/jsvectormap@latest/dist/maps/world.js"></script>
 <script>
+// Init map (copied from About)
+function initCoverageMap(){
+  var el = document.getElementById('coverageMap');
+  if(!el) return;
+  var map = new jsVectorMap({ selector: '#coverageMap', map: 'world', backgroundColor: 'transparent', zoomButtons: true, zoomOnScroll: false, regionStyle: { initial: { fill: '#e8efeccc', stroke: 'rgba(0,0,0,0.05)' }, hover: { cursor: 'pointer', stroke: 'rgba(0,0,0,0.15)' }, selected: { fill: '#f9cb99' } }, selectedRegions: ['US','AU','CA','GB','DE','SE','RU','LY','IQ','MA','BR','AE','SA'] });
+  setTimeout(function(){ var eg = document.querySelector('[data-code="EG"]'); if(eg){ eg.style.fill = '#90EE90'; } },100);
+}
+
 document.addEventListener('DOMContentLoaded', function() {
-    // Add hover effects to certification cards
-    const certCards = document.querySelectorAll('.certification-card');
-    certCards.forEach(card => {
-        card.addEventListener('mouseenter', function() {
-            this.style.transform = 'translateY(-10px)';
-            this.style.transition = 'transform 0.3s ease';
-        });
-        
-        card.addEventListener('mouseleave', function() {
-            this.style.transform = 'translateY(0)';
-        });
+  initCoverageMap();
+
+  // Hover effects for certification cards
+  const certCards = document.querySelectorAll('.certification-card');
+  certCards.forEach(card => {
+    card.addEventListener('mouseenter', function() {
+      this.style.transform = 'translateY(-10px)';
+      this.style.transition = 'transform 0.3s ease';
     });
-    
-    // Animate process steps on scroll
-    const processSteps = document.querySelectorAll('.process-step');
-    
-    const animateSteps = (entries, observer) => {
-        entries.forEach((entry, index) => {
-            if (entry.isIntersecting) {
-                setTimeout(() => {
-                    entry.target.style.opacity = '1';
-                    entry.target.style.transform = 'translateY(0)';
-                }, index * 200);
-                observer.unobserve(entry.target);
-            }
-        });
-    };
-    
-    const observer = new IntersectionObserver(animateSteps, {
-        threshold: 0.3
+    card.addEventListener('mouseleave', function() { this.style.transform = 'translateY(0)'; });
+  });
+
+  // Animate process steps on scroll
+  const processSteps = document.querySelectorAll('.process-step');
+  const animateSteps = (entries, observer) => {
+    entries.forEach((entry, index) => {
+      if (entry.isIntersecting) {
+        setTimeout(() => { entry.target.style.opacity = '1'; entry.target.style.transform = 'translateY(0)'; }, index * 200);
+        observer.unobserve(entry.target);
+      }
     });
-    
-    processSteps.forEach(step => {
-        step.style.opacity = '0';
-        step.style.transform = 'translateY(30px)';
-        step.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
-        observer.observe(step);
-    });
+  };
+  const observer = new IntersectionObserver(animateSteps, { threshold: 0.3 });
+  processSteps.forEach(step => { step.style.opacity = '0'; step.style.transform = 'translateY(30px)'; step.style.transition = 'opacity 0.6s ease, transform 0.6s ease'; observer.observe(step); });
 });
 </script>
 {% endblock %}

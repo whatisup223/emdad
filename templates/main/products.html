@@ -20,6 +20,7 @@ Browse our complete range of premium Egyptian agricultural products including ci
 <!-- Page Header (styled like site sections) -->
 <section class="py-5 products-hero position-relative overflow-hidden" style="background:#689b8a;">
     <style>
+      .products-hero { min-height: 420px; }
       .products-hero .section-heading, .products-hero .lead { color:#fff !important; }
       .products-hero .breadcrumb, .products-hero .breadcrumb * { color:rgba(255,255,255,0.85) !important; }
       .products-hero .section-badge { background: var(--secondary-gradient) !important; color: var(--dark-color) !important; }
@@ -93,7 +94,45 @@ Browse our complete range of premium Egyptian agricultural products including ci
       <span class="hero-bubble b3"></span>
       <span class="hero-bubble b4"></span>
     </div>
+    <!-- Leaves layer -->
+    <div class="grid-animated-bg" aria-hidden="true" id="productsHeroLeaves"></div>
     <!-- END_PRODUCTS_ANIMATIONS -->
+
+    <!-- Reverse drift keyframes for right-to-left movement -->
+    <style>
+      @keyframes leafDriftReverse { 0%{ transform: translateX(0) rotate(0deg);} 50%{ transform: translateX(-50vw) rotate(-10deg);} 100%{ transform: translateX(-100vw) rotate(0deg);} }
+    </style>
+
+    <script>
+      document.addEventListener('DOMContentLoaded', function(){
+        const container = document.getElementById('productsHeroLeaves');
+        if(!container) return;
+        const prefersReduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+        if (prefersReduced) return;
+        const COUNT = 12; // reduced slightly, still lively
+        for (let i = 0; i < COUNT; i++) {
+          const leaf = document.createElement('i');
+          leaf.className = 'fas fa-leaf leaf';
+          // random vertical position
+          const top = (Math.random() * 92) + 2; // 2%..94%
+          leaf.style.top = top.toFixed(2) + '%';
+          // random side and drift direction
+          const fromLeft = Math.random() < 0.5;
+          const offset = -30 - Math.random() * 70; // -30..-100px
+          if (fromLeft) { leaf.style.left = offset.toFixed(0) + 'px'; leaf.style.animationName = 'leafDrift'; }
+          else { leaf.style.right = offset.toFixed(0) + 'px'; leaf.style.animationName = 'leafDriftReverse'; }
+          // random speed and delay
+          const duration = 16 + Math.random() * 12; // 16..28s
+          leaf.style.animationDuration = duration.toFixed(2) + 's';
+          const delay = Math.random() * 10; // 0..10s
+          leaf.style.animationDelay = delay.toFixed(2) + 's';
+          // random size
+          const size = 0.8 + Math.random() * 0.9; // 0.8..1.7rem
+          leaf.style.fontSize = size.toFixed(2) + 'rem';
+          container.appendChild(leaf);
+        }
+      });
+    </script>
 
 
 
@@ -102,7 +141,7 @@ Browse our complete range of premium Egyptian agricultural products including ci
   @media (max-width: 767.98px) {
     .hero-animated-bg { display: none !important; }
     .grid-animated-bg { display: none !important; }
-    .products-hero { padding-top: 2.25rem !important; padding-bottom: 2.25rem !important; }
+    .products-hero { padding-top: 2.25rem !important; padding-bottom: 2.25rem !important; min-height: 300px; }
   }
 </style>
 
