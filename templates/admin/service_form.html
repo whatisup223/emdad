@@ -2,6 +2,17 @@
 
 {% block title %}{{ title }}{% endblock %}
 
+{% block extra_css %}
+<style>
+  /* Icon Picker visibility and contrast */
+  #iconPickerModal .modal-content{ background:#fff; }
+  #iconGrid .btn{ background:#fff; border:1px solid #e9ecef; }
+  #iconGrid .btn i{ color: var(--bs-primary); opacity:1; filter: drop-shadow(0 2px 6px rgba(0,0,0,.12)); transition: transform .15s ease, color .15s ease; }
+  #iconGrid .btn:hover{ background:#f8f9fa; }
+  #iconGrid .btn:hover i{ color: var(--bs-dark); transform: translateY(-2px); }
+</style>
+{% endblock %}
+
 {% block content %}
 <div class="container-fluid">
     <div class="row">
@@ -16,7 +27,7 @@
                 <div class="card-body">
                     <form method="POST">
                         {{ form.hidden_tag() }}
-                        
+
                         <div class="row">
                             <div class="col-md-6">
                                 <div class="mb-3">
@@ -51,7 +62,11 @@
                             <div class="col-md-4">
                                 <div class="mb-3">
                                     {{ form.icon.label(class="form-label") }}
-                                    {{ form.icon(class="form-control") }}
+                                    <div class="input-group">
+                                        <span class="input-group-text"><i id="iconPreview" class="{{ form.icon.data or 'fas fa-cog' }}"></i></span>
+                                        {{ form.icon(class="form-control", id="iconInput") }}
+                                        <button type="button" class="btn btn-outline-primary" data-bs-toggle="modal" data-bs-target="#iconPickerModal"><i class="fas fa-icons me-1"></i>{{ _('Pick Icon') }}</button>
+                                    </div>
                                     <div class="form-text">{{ _('FontAwesome icon class (e.g., fas fa-shipping-fast)') }}</div>
                                 </div>
                             </div>
@@ -73,6 +88,9 @@
                         </div>
 
                         <div class="d-flex justify-content-between">
+
+
+
                             <a href="{{ url_for('admin.services') }}" class="btn btn-secondary">{{ _('Cancel') }}</a>
                             <button type="submit" class="btn btn-primary">{{ _('Save') }}</button>
                         </div>
@@ -83,3 +101,82 @@
     </div>
 </div>
 {% endblock %}
+
+{% block extra_js %}
+<!-- Icon Picker Modal moved to extra_js to avoid z-index/overlay issues -->
+<div class="modal fade" id="iconPickerModal" tabindex="-1" aria-labelledby="iconPickerLabel" aria-hidden="true" data-bs-theme="light">
+  <div class="modal-dialog modal-lg modal-dialog-scrollable">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="iconPickerLabel"><i class="fas fa-icons me-2"></i>{{ _('Choose an Icon') }}</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <div class="mb-3">
+          <input type="text" class="form-control" id="iconSearch" placeholder="{{ _('Search icons...') }}">
+          <div class="form-text">{{ _('Type to filter Font Awesome icons by name') }}</div>
+        </div>
+        <div id="iconGrid" class="row row-cols-2 row-cols-sm-3 row-cols-md-4 row-cols-lg-6 g-3"></div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">{{ _('Close') }}</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+(function(){
+  const ICONS = [
+    // Logistics / Export
+    'fas fa-ship','fas fa-truck','fas fa-truck-fast','fas fa-plane-departure','fas fa-plane','fas fa-box','fas fa-box-open','fas fa-boxes-stacked','fas fa-warehouse','fas fa-pallet','fas fa-anchor','fas fa-briefcase','fas fa-globe','fas fa-earth-africa','fas fa-file-invoice','fas fa-file-signature','fas fa-clipboard-list','fas fa-clipboard-check','fas fa-scale-balanced','fas fa-shield-halved',
+    // Cold chain / temperature
+    'fas fa-thermometer-half','fas fa-temperature-low','fas fa-temperature-high','fas fa-snowflake',
+    // Agriculture
+    'fas fa-tractor','fas fa-seedling','fas fa-wheat-awn','fas fa-apple-whole','fas fa-carrot','fas fa-lemon','fas fa-pepper-hot','fas fa-leaf',
+    // Misc
+    'fas fa-certificate','fas fa-tags','fas fa-ruler-combined','fas fa-recycle','fas fa-cog'
+  ];
+  const iconInput = document.getElementById('iconInput');
+  const iconPreview = document.getElementById('iconPreview');
+  const iconGrid = document.getElementById('iconGrid');
+  const iconSearch = document.getElementById('iconSearch');
+  if(!iconInput || !iconPreview) return;
+
+  function renderIcons(filter=''){
+    if(!iconGrid) return;
+    iconGrid.innerHTML = '';
+    const q = (filter||'').trim().toLowerCase();
+    ICONS.filter(cls => cls.includes(q)).forEach(cls => {
+      const col = document.createElement('div');
+      col.className = 'col';
+      const btn = document.createElement('button');
+      btn.type = 'button';
+      btn.className = 'btn w-100 d-flex align-items-center justify-content-center';
+      btn.innerHTML = `<i class=\"${cls} fa-2x text-primary\"></i>`;
+      btn.title = cls;
+      btn.addEventListener('click', () => {
+        iconInput.value = cls;
+        iconPreview.className = cls;
+        const modalEl = document.getElementById('iconPickerModal');
+        const modal = bootstrap.Modal.getInstance(modalEl);
+        if(modal) modal.hide();
+      });
+      col.appendChild(btn);
+      iconGrid.appendChild(col);
+    });
+  }
+
+  // Initialize when modal opens to ensure elements exist
+  const modalEl = document.getElementById('iconPickerModal');
+  modalEl?.addEventListener('shown.bs.modal', () => {
+    renderIcons();
+    iconSearch?.focus();
+  });
+
+  iconSearch?.addEventListener('input', (e) => renderIcons(e.target.value));
+  iconInput?.addEventListener('input', (e) => { iconPreview.className = e.target.value || 'fas fa-cog'; });
+})();
+</script>
+{% endblock %}
+
