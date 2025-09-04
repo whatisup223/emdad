@@ -1,8 +1,8 @@
 {% extends "base.html" %}
 
-{% block title %}Export Services - {{ SITE_NAME }}{% endblock %}
+{% block title %}{% if is_rtl %}خدمات التصدير - {{ SITE_NAME }}{% else %}Export Services - {{ SITE_NAME }}{% endif %}{% endblock %}
 
-{% block meta_description %}Comprehensive export services including FOB & CIF shipping, cold chain logistics, custom packaging, and documentation support for Egyptian agricultural products.{% endblock %}
+{% block meta_description %}{% if is_rtl %}خدمات تصدير شاملة تشمل شحن FOB وCIF وسلسلة تبريد وتعبئة مخصصة ودعم المستندات للمنتجات الزراعية المصرية.{% else %}Comprehensive export services including FOB & CIF shipping, cold chain logistics, custom packaging, and documentation support for Egyptian agricultural products.{% endif %}{% endblock %}
 
 {% block content %}
 <!-- Page Header (styled like products hero) -->
@@ -148,119 +148,124 @@
   </div>
 </section>
 
-<!-- Shipping Terms -->
-<section class="py-5">
-    <div class="container">
-        <div class="text-center mb-5">
-            <h2 class="mb-3">Shipping Terms & Options</h2>
-            <p class="lead text-muted">Flexible terms to meet your business needs</p>
-        </div>
-        
-        <div class="row">
-            <div class="col-lg-6 mb-4">
-                <div class="card border-0 shadow-sm h-100">
-                    <div class="card-body p-4">
-                        <div class="d-flex align-items-center mb-3">
-                            <div class="shipping-icon bg-primary text-white rounded-circle d-flex align-items-center justify-content-center me-3" style="width: 50px; height: 50px;">
-                                <i class="fas fa-anchor"></i>
-                            </div>
-                            <h4 class="mb-0">FOB (Free on Board)</h4>
-                        </div>
-                        <p class="text-muted mb-3">Goods delivered to the port of shipment. You arrange and pay for international shipping, insurance, and import duties.</p>
-                        
-                        <h6 class="text-primary mb-2">Includes:</h6>
-                        <ul class="list-unstyled">
-                            <li class="mb-1"><i class="fas fa-check text-success me-2"></i>Product cost</li>
-                            <li class="mb-1"><i class="fas fa-check text-success me-2"></i>Local transportation to port</li>
-                            <li class="mb-1"><i class="fas fa-check text-success me-2"></i>Export documentation</li>
-                            <li class="mb-1"><i class="fas fa-check text-success me-2"></i>Loading charges</li>
-                        </ul>
-                        
-                        <div class="mt-3">
-                            <span class="badge bg-primary">Best for experienced importers</span>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            
-            <div class="col-lg-6 mb-4">
-                <div class="card border-0 shadow-sm h-100">
-                    <div class="card-body p-4">
-                        <div class="d-flex align-items-center mb-3">
-                            <div class="shipping-icon bg-success text-white rounded-circle d-flex align-items-center justify-content-center me-3" style="width: 50px; height: 50px;">
-                                <i class="fas fa-globe"></i>
-                            </div>
-                            <h4 class="mb-0">CIF (Cost, Insurance & Freight)</h4>
-                        </div>
-                        <p class="text-muted mb-3">Complete delivery to your destination port including shipping and insurance. You handle import duties and local delivery.</p>
-                        
-                        <h6 class="text-success mb-2">Includes:</h6>
-                        <ul class="list-unstyled">
-                            <li class="mb-1"><i class="fas fa-check text-success me-2"></i>All FOB services</li>
-                            <li class="mb-1"><i class="fas fa-check text-success me-2"></i>International shipping</li>
-                            <li class="mb-1"><i class="fas fa-check text-success me-2"></i>Marine insurance</li>
-                            <li class="mb-1"><i class="fas fa-check text-success me-2"></i>Destination port charges</li>
-                        </ul>
-                        
-                        <div class="mt-3">
-                            <span class="badge bg-success">Recommended for new importers</span>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
+<!-- Shipping Terms (styled like Certifications) -->
+<section class="py-5 shipping-terms">
+  <style>
+    .shipping-terms .card { transition: transform .2s ease, box-shadow .2s ease; }
+    .shipping-terms .card:hover { transform: translateY(-6px); box-shadow: 0 12px 28px rgba(0,0,0,.08); }
+    .shipping-terms .shipping-icon{ background: var(--primary-gradient) !important; }
+    .shipping-terms .text-center .arabic-heading,
+    .shipping-terms .text-center h2 { text-align:center !important; margin-inline:auto; }
+  </style>
+  <div class="container">
+    <div class="text-center mb-5" data-aos="fade-up">
+      <div class="section-badge badge bg-gradient-primary text-white px-4 py-2 rounded-pill mb-3 fs-6 fw-semibold">
+        <i class="fas fa-briefcase me-2"></i>{% if is_rtl %}شروط الشحن والخيارات{% else %}{{ _('Shipping Terms & Options') }}{% endif %}
+      </div>
+      <h2 class="mb-3 {{ 'arabic-heading' if is_rtl else 'english-heading' }}">{% if is_rtl %}مرونة تلبّي احتياجات عملك{% else %}{{ _('Flexible terms to meet your business needs') }}{% endif %}</h2>
     </div>
+
+    <div class="row">
+      <div class="col-lg-6 mb-4">
+        <div class="card border-0 shadow-sm h-100 shipping-card" data-aos="fade-right">
+          <div class="card-body p-4">
+            <div class="d-flex align-items-center mb-3">
+              <div class="shipping-icon text-white rounded-circle d-flex align-items-center justify-content-center me-3" style="width: 50px; height: 50px;">
+                <i class="fas fa-anchor"></i>
+              </div>
+              <h4 class="mb-0">FOB (Free on Board)</h4>
+            </div>
+            <p class="text-muted mb-3">{% if is_rtl %}تسليم البضائع إلى ميناء الشحن، وتتولى أنت الشحن والتأمين والرسوم.{% else %}Goods delivered to the port of shipment. You arrange and pay for international shipping, insurance, and import duties.{% endif %}</p>
+            <h6 class="text-primary mb-2">{% if is_rtl %}يشمل:{% else %}Includes:{% endif %}</h6>
+            <ul class="list-unstyled">
+              <li class="mb-1"><i class="fas fa-check text-success me-2"></i>{% if is_rtl %}تكلفة المنتج{% else %}Product cost{% endif %}</li>
+              <li class="mb-1"><i class="fas fa-check text-success me-2"></i>{% if is_rtl %}النقل المحلي إلى الميناء{% else %}Local transportation to port{% endif %}</li>
+              <li class="mb-1"><i class="fas fa-check text-success me-2"></i>{% if is_rtl %}مستندات التصدير{% else %}Export documentation{% endif %}</li>
+              <li class="mb-1"><i class="fas fa-check text-success me-2"></i>{% if is_rtl %}رسوم التحميل{% else %}Loading charges{% endif %}</li>
+            </ul>
+            <div class="mt-3">
+              <span class="badge bg-primary">{% if is_rtl %}الأفضل للمستوردين ذوي الخبرة{% else %}Best for experienced importers{% endif %}</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="col-lg-6 mb-4">
+        <div class="card border-0 shadow-sm h-100 shipping-card" data-aos="fade-left">
+          <div class="card-body p-4">
+            <div class="d-flex align-items-center mb-3">
+              <div class="shipping-icon text-white rounded-circle d-flex align-items-center justify-content-center me-3" style="width: 50px; height: 50px;">
+                <i class="fas fa-globe"></i>
+              </div>
+              <h4 class="mb-0">CIF (Cost, Insurance & Freight)</h4>
+            </div>
+            <p class="text-muted mb-3">{% if is_rtl %}تسليم كامل إلى ميناء الوصول، بما في ذلك الشحن والتأمين. تتولى أنت الرسوم المحلية والجمارك.{% else %}Complete delivery to your destination port including shipping and insurance. You handle import duties and local delivery.{% endif %}</p>
+            <h6 class="text-success mb-2">{% if is_rtl %}يشمل:{% else %}Includes:{% endif %}</h6>
+            <ul class="list-unstyled">
+              <li class="mb-1"><i class="fas fa-check text-success me-2"></i>{% if is_rtl %}كل خدمات FOB{% else %}All FOB services{% endif %}</li>
+              <li class="mb-1"><i class="fas fa-check text-success me-2"></i>{% if is_rtl %}الشحن الدولي{% else %}International shipping{% endif %}</li>
+              <li class="mb-1"><i class="fas fa-check text-success me-2"></i>{% if is_rtl %}التأمين البحري{% else %}Marine insurance{% endif %}</li>
+              <li class="mb-1"><i class="fas fa-check text-success me-2"></i>{% if is_rtl %}رسوم ميناء الوجهة{% else %}Destination port charges{% endif %}</li>
+            </ul>
+            <div class="mt-3">
+              <span class="badge bg-success">{% if is_rtl %}موصى به للمستوردين الجدد{% else %}Recommended for new importers{% endif %}</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
 </section>
 
 <!-- Cold Chain Process -->
 <section class="py-5 bg-light">
     <div class="container">
         <div class="text-center mb-5">
-            <h2 class="mb-3">Cold Chain Management</h2>
-            <p class="lead text-muted">Maintaining optimal temperature throughout the journey</p>
+            <h2 class="mb-3 {{ 'arabic-heading' if is_rtl else 'english-heading' }}">{% if is_rtl %}إدارة سلسلة التبريد{% else %}{{ _('Cold Chain Management') }}{% endif %}</h2>
+            <p class="lead text-muted {{ 'arabic-text' if is_rtl else 'english-text' }}">{% if is_rtl %}الحفاظ على درجات الحرارة المثلى طوال الرحلة{% else %}{{ _('Maintaining optimal temperature throughout the journey') }}{% endif %}</p>
         </div>
-        
+
         <div class="row">
             <div class="col-lg-3 col-md-6 mb-4">
                 <div class="cold-chain-step text-center">
                     <div class="step-icon bg-info text-white rounded-circle d-inline-flex align-items-center justify-content-center mb-3" style="width: 80px; height: 80px;">
                         <i class="fas fa-thermometer-quarter fa-2x"></i>
                     </div>
-                    <h5>Pre-cooling</h5>
-                    <p class="text-muted">Rapid cooling immediately after harvest to remove field heat</p>
+                    <h5>{% if is_rtl %}التبريد الأولي{% else %}Pre-cooling{% endif %}</h5>
+                    <p class="text-muted">{% if is_rtl %}تبريد سريع بعد الحصاد لإزالة حرارة الحقل{% else %}Rapid cooling immediately after harvest to remove field heat{% endif %}</p>
                     <div class="temperature-badge bg-info text-white rounded px-2 py-1 small">0-4°C</div>
                 </div>
             </div>
-            
+
             <div class="col-lg-3 col-md-6 mb-4">
                 <div class="cold-chain-step text-center">
                     <div class="step-icon bg-primary text-white rounded-circle d-inline-flex align-items-center justify-content-center mb-3" style="width: 80px; height: 80px;">
                         <i class="fas fa-warehouse fa-2x"></i>
                     </div>
-                    <h5>Cold Storage</h5>
-                    <p class="text-muted">Temperature-controlled storage facilities with humidity control</p>
+                    <h5>{% if is_rtl %}التخزين المبرد{% else %}Cold Storage{% endif %}</h5>
+                    <p class="text-muted">{% if is_rtl %}منشآت تخزين بدرجات حرارة ورطوبة مضبوطة{% else %}Temperature-controlled storage facilities with humidity control{% endif %}</p>
                     <div class="temperature-badge bg-primary text-white rounded px-2 py-1 small">2-8°C</div>
                 </div>
             </div>
-            
+
             <div class="col-lg-3 col-md-6 mb-4">
                 <div class="cold-chain-step text-center">
                     <div class="step-icon bg-success text-white rounded-circle d-inline-flex align-items-center justify-content-center mb-3" style="width: 80px; height: 80px;">
                         <i class="fas fa-truck fa-2x"></i>
                     </div>
-                    <h5>Refrigerated Transport</h5>
-                    <p class="text-muted">Insulated vehicles maintaining consistent temperature to port</p>
+                    <h5>{% if is_rtl %}نقل مبرد{% else %}Refrigerated Transport{% endif %}</h5>
+                    <p class="text-muted">{% if is_rtl %}مركبات معزولة تحافظ على درجة الحرارة حتى الميناء{% else %}Insulated vehicles maintaining consistent temperature to port{% endif %}</p>
                     <div class="temperature-badge bg-success text-white rounded px-2 py-1 small">2-8°C</div>
                 </div>
             </div>
-            
+
             <div class="col-lg-3 col-md-6 mb-4">
                 <div class="cold-chain-step text-center">
                     <div class="step-icon bg-warning text-white rounded-circle d-inline-flex align-items-center justify-content-center mb-3" style="width: 80px; height: 80px;">
                         <i class="fas fa-ship fa-2x"></i>
                     </div>
-                    <h5>Reefer Container</h5>
-                    <p class="text-muted">Refrigerated containers for ocean transport with monitoring</p>
+                    <h5>{% if is_rtl %}حاوية مبردة{% else %}Reefer Container{% endif %}</h5>
+                    <p class="text-muted">{% if is_rtl %}حاويات مبردة للنقل البحري مع مراقبة مستمرة{% else %}Refrigerated containers for ocean transport with monitoring{% endif %}</p>
                     <div class="temperature-badge bg-warning text-white rounded px-2 py-1 small">2-8°C</div>
                 </div>
             </div>
@@ -276,7 +281,7 @@
                 <h2 class="mb-4">Documentation & Compliance</h2>
                 <p class="lead text-primary mb-3">Seamless Paperwork</p>
                 <p>Our experienced documentation team handles all the complex paperwork required for international agricultural trade, ensuring compliance with both Egyptian export regulations and your country's import requirements.</p>
-                
+
                 <div class="row">
                     <div class="col-md-6 mb-3">
                         <div class="d-flex align-items-center">
@@ -317,53 +322,98 @@
                 </div>
             </div>
             <div class="col-lg-6">
-                <img src="{{ url_for('static', filename='images/documentation.jpg') }}" 
+                <img src="{{ url_for('static', filename='images/documentation.jpg') }}"
                      alt="Documentation Services" class="img-fluid rounded shadow">
             </div>
         </div>
+<!-- Our Achievements (imported design) -->
+<section class="py-5 bg-gradient-primary text-white position-relative overflow-hidden">
+  <div class="achievements-bg" style="position:absolute; inset:0; background:url('{{ url_for('static', filename='images/b.png') }}') center/cover no-repeat; opacity:.18; z-index:0;"></div>
+  <div class="position-absolute top-0 start-0 w-100 h-100"><div class="stats-pattern opacity-10"></div></div>
+  <div class="container position-relative">
+    <div class="row align-items-center">
+      <div class="col-lg-6" data-aos="fade-right">
+        <div class="stats-content">
+          <div class="section-badge badge bg-gradient-secondary text-dark px-4 py-2 rounded-pill mb-3 fs-6 fw-semibold">
+            <i class="fas fa-chart-line me-2"></i>{% if is_rtl %}إنجازاتنا{% else %}{{ _('Our Achievements') }}{% endif %}
+          </div>
+          <h2 class="section-heading english-heading text-shadow" style="color: #ffffff;">{% if is_rtl %}موثوقون من{% else %}{{ _('Trusted by') }}{% endif %} {% if is_rtl %}عملاء{% else %}{{ _('Customers') }}{% endif %} <span style="color: #f9cb99;">{% if is_rtl %}حول العالم{% else %}{{ _('Worldwide') }}{% endif %}</span></h2>
+          <p class="lead english-text mb-4 text-shadow-sm">{% if is_rtl %}عقدان من التميز في الخدمات اللوجستية الزراعية.{% else %}Two decades of excellence in agricultural export services.{% endif %}</p>
+          <div class="achievements-list">
+            <div class="achievement-item d-flex align-items-center mb-3">
+              <div class="achievement-icon bg-gradient-secondary text-dark rounded-circle d-flex align-items-center justify-content-center me-3" style="width: 50px; height: 50px;"><i class="fas fa-award fs-5"></i></div>
+              <div><h6 class="mb-1 fw-bold english-heading" style="color:#fff;">{% if is_rtl %}اعتمادات دولية{% else %}International Accreditations{% endif %}</h6><small class="opacity-75 english-text">ISO, GlobalG.A.P., HACCP</small></div>
+            </div>
+            <div class="achievement-item d-flex align-items-center mb-3">
+              <div class="achievement-icon bg-gradient-secondary text-dark rounded-circle d-flex align-items-center justify-content-center me-3" style="width: 50px; height: 50px;"><i class="fas fa-globe fs-5"></i></div>
+              <div><h6 class="mb-1 fw-bold english-heading" style="color:#fff;">{% if is_rtl %}تغطية عالمية{% else %}Global Reach{% endif %}</h6><small class="opacity-75 english-text">50+ countries</small></div>
+            </div>
+            <div class="achievement-item d-flex align-items-center">
+              <div class="achievement-icon bg-gradient-secondary text-dark rounded-circle d-flex align-items-center justify-content-center me-3" style="width: 50px; height: 50px;"><i class="fas fa-shipping-fast fs-5"></i></div>
+              <div><h6 class="mb-1 fw-bold english-heading" style="color:#fff;">{% if is_rtl %}سلاسل تبريد ممتازة{% else %}Cold Chain Excellence{% endif %}</h6><small class="opacity-75 english-text">Temperature-controlled logistics</small></div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="col-lg-6" data-aos="fade-left" data-aos-delay="200">
+        <div class="coverage-map card border-0 shadow-lg p-4 glass-effect" style="position: relative; min-height:360px; border-radius:20px; overflow:hidden;">
+          <div id="coverageMapServices" style="height: 360px; width:100%; position: relative;"></div>
+          <div class="map-export-animations"><div class="map-plane map-plane-1"><i class="fas fa-plane"></i></div><div class="map-plane map-plane-2"><i class="fas fa-plane"></i></div><div class="map-plane map-plane-3"><i class="fas fa-plane"></i></div></div>
+          <div class="map-legend badge bg-gradient-secondary text-dark px-3 py-2 rounded-pill position-absolute end-0 bottom-0 m-3 fs-6 fw-semibold">{% if is_rtl %}تغطية خريطتنا{% else %}{{ _('Map Coverage') }}{% endif %}</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
     </div>
 </section>
 
-<!-- Custom Packaging -->
-<section class="py-5 bg-light">
-    <div class="container">
-        <div class="text-center mb-5">
-            <h2 class="mb-3">Custom Packaging Solutions</h2>
-            <p class="lead text-muted">Tailored packaging to meet your market requirements</p>
-        </div>
-        
-        <div class="row">
-            <div class="col-lg-4 mb-4">
-                <div class="card border-0 shadow-sm h-100">
-                    <div class="card-body text-center p-4">
-                        <i class="fas fa-tags fa-3x text-primary mb-3"></i>
-                        <h5>Private Labeling</h5>
-                        <p class="text-muted">Custom labels with your brand, logo, and product information in multiple languages.</p>
-                    </div>
-                </div>
-            </div>
-            
-            <div class="col-lg-4 mb-4">
-                <div class="card border-0 shadow-sm h-100">
-                    <div class="card-body text-center p-4">
-                        <i class="fas fa-ruler-combined fa-3x text-success mb-3"></i>
-                        <h5>Custom Sizes</h5>
-                        <p class="text-muted">Flexible packaging sizes from bulk containers to retail-ready packages.</p>
-                    </div>
-                </div>
-            </div>
-            
-            <div class="col-lg-4 mb-4">
-                <div class="card border-0 shadow-sm h-100">
-                    <div class="card-body text-center p-4">
-                        <i class="fas fa-recycle fa-3x text-info mb-3"></i>
-                        <h5>Eco-Friendly Options</h5>
-                        <p class="text-muted">Sustainable packaging materials including biodegradable and recyclable options.</p>
-                    </div>
-                </div>
-            </div>
-        </div>
+<!-- Custom Packaging (with RTL/EN texts and hover) -->
+<section class="py-5 bg-light packaging">
+  <style>
+    .packaging .card { transition: transform .2s ease, box-shadow .2s ease; }
+    .packaging .card:hover { transform: translateY(-6px); box-shadow: 0 12px 28px rgba(0,0,0,.08); }
+  </style>
+  <div class="container">
+    <div class="text-center mb-5" data-aos="fade-up">
+      <div class="section-badge badge bg-gradient-primary text-white px-4 py-2 rounded-pill mb-3 fs-6 fw-semibold">
+        <i class="fas fa-box-open me-2"></i>{% if is_rtl %}حلول التعبئة المخصصة{% else %}{{ _('Custom Packaging Solutions') }}{% endif %}
+      </div>
+      <p class="lead text-muted {{ 'arabic-text' if is_rtl else 'english-text' }}">{% if is_rtl %}تعبئة مصممة لتلبية متطلبات أسواقك{% else %}{{ _('Tailored packaging to meet your market requirements') }}{% endif %}</p>
     </div>
+
+    <div class="row">
+      <div class="col-lg-4 mb-4">
+        <div class="card border-0 shadow-sm h-100" data-aos="fade-up">
+          <div class="card-body text-center p-4">
+            <i class="fas fa-tags fa-3x text-primary mb-3"></i>
+            <h5>{% if is_rtl %}علامة خاصة{% else %}Private Labeling{% endif %}</h5>
+            <p class="text-muted">{% if is_rtl %}ملصقات مخصصة بعلامتك وشعارك ومعلومات المنتج بلغات متعددة.{% else %}Custom labels with your brand, logo, and product information in multiple languages.{% endif %}</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="col-lg-4 mb-4">
+        <div class="card border-0 shadow-sm h-100" data-aos="fade-up" data-aos-delay="100">
+          <div class="card-body text-center p-4">
+            <i class="fas fa-ruler-combined fa-3x text-success mb-3"></i>
+            <h5>{% if is_rtl %}أحجام مخصصة{% else %}Custom Sizes{% endif %}</h5>
+            <p class="text-muted">{% if is_rtl %}أحجام مرنة من الحاويات الضخمة حتى العبوات الجاهزة للبيع.{% else %}Flexible packaging sizes from bulk containers to retail-ready packages.{% endif %}</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="col-lg-4 mb-4">
+        <div class="card border-0 shadow-sm h-100" data-aos="fade-up" data-aos-delay="200">
+          <div class="card-body text-center p-4">
+            <i class="fas fa-recycle fa-3x text-info mb-3"></i>
+            <h5>{% if is_rtl %}خيارات صديقة للبيئة{% else %}Eco-Friendly Options{% endif %}</h5>
+            <p class="text-muted">{% if is_rtl %}مواد تعبئة مستدامة تشمل القابلة للتحلل وإعادة التدوير.{% else %}Sustainable packaging materials including biodegradable and recyclable options.{% endif %}</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
 </section>
 
 <!-- CTA (like About/Certifications) -->
@@ -375,6 +425,7 @@
         <p class="lead text-muted mb-4">{% if is_rtl %}دع فريقنا يتولى كل تفاصيل التوريد واللوجستيات.{% else %}{{ _('Let our team handle all sourcing and logistics details for you.') }}{% endif %}</p>
         <div class="d-flex flex-wrap justify-content-center gap-3">
           <a href="{{ url_for('main.contact') }}" class="btn btn-primary btn-lg px-5 py-3 hover-lift"><i class="fas fa-envelope me-2"></i>{% if is_rtl %}تواصل الآن{% else %}{{ _('Contact Us') }}{% endif %}</a>
+
           <a href="{{ url_for('main.products') }}" class="btn btn-outline-primary btn-lg px-5 py-3 hover-lift"><i class="fas fa-leaf me-2"></i>{% if is_rtl %}تصفح المنتجات{% else %}{{ _('View Products') }}{% endif %}</a>
         </div>
       </div>
@@ -393,15 +444,15 @@ document.addEventListener('DOMContentLoaded', function() {
             this.style.transform = 'translateY(-5px)';
             this.style.transition = 'transform 0.3s ease';
         });
-        
+
         card.addEventListener('mouseleave', function() {
             this.style.transform = 'translateY(0)';
         });
     });
-    
+
     // Animate cold chain steps
     const coldChainSteps = document.querySelectorAll('.cold-chain-step');
-    
+
     const animateSteps = (entries, observer) => {
         entries.forEach((entry, index) => {
             if (entry.isIntersecting) {
@@ -413,11 +464,11 @@ document.addEventListener('DOMContentLoaded', function() {
             }
         });
     };
-    
+
     const observer = new IntersectionObserver(animateSteps, {
         threshold: 0.3
     });
-    
+
     coldChainSteps.forEach(step => {
         step.style.opacity = '0';
         step.style.transform = 'translateY(30px)';
