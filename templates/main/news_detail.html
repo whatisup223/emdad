@@ -85,7 +85,7 @@
 
         <div class="d-flex flex-wrap align-items-center gap-2 text-white-75">
           {% set rt = article.get_reading_time(current_language) %}
-          <small><i class="fas fa-calendar-alt me-1"></i>{{ format_date(article.publish_at, format='long') }}</small>
+          <small><i class="fas fa-calendar-alt me-1"></i>{% if is_rtl %}{{ article.publish_at.strftime('%d %B %Y') }}{% else %}{{ article.publish_at.strftime('%B %d, %Y') }}{% endif %}</small>
           <span class="opacity-50">•</span>
           <small><i class="fas fa-clock me-1"></i>{% if is_rtl %}وقت القراءة: {{ rt }} {{ 'دقيقة' if rt == 1 else 'دقائق' }}{% else %}{{ _('Reading time') }}: {{ rt }} {{ _('minutes') }}{% endif %}</small>
           {% if article.featured %}
@@ -201,7 +201,7 @@
                 <span class="badge bg-gradient-secondary text-dark fw-semibold me-2"><i class="fas fa-tag me-1"></i>{{ _('News') }}</span>
                 {% if article.featured %}<span class="badge bg-warning text-dark fw-semibold"><i class="fas fa-star me-1"></i>{{ _('Featured') }}</span>{% endif %}
               </div>
-              <div class="d-flex align-items-center text-muted mb-2"><i class="fas fa-calendar-alt me-2 text-primary-custom"></i>{{ format_date(article.publish_at, format='long') }}</div>
+              <div class="d-flex align-items-center text-muted mb-2"><i class="fas fa-calendar-alt me-2 text-primary-custom"></i>{% if is_rtl %}{{ article.publish_at.strftime('%d %B %Y') }}{% else %}{{ article.publish_at.strftime('%B %d, %Y') }}{% endif %}</div>
               {% set rt = article.get_reading_time(current_language) %}
               <div class="d-flex align-items-center text-muted"><i class="fas fa-clock me-2 text-primary-custom"></i>{% if is_rtl %}وقت القراءة: {{ rt }} {{ 'دقيقة' if rt == 1 else 'دقائق' }}{% else %}{{ _('Reading time') }}: {{ rt }} {{ _('minutes') }}{% endif %}</div>
             </div>
