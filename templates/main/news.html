@@ -1,295 +1,379 @@
 {% extends "base.html" %}
 
-{% block title %}News & Updates - {{ SITE_NAME }}{% endblock %}
+{% block title %}{% if is_rtl %}الأخبار والتحديثات - {{ SITE_NAME }}{% else %}News & Updates - {{ SITE_NAME }}{% endif %}{% endblock %}
 
-{% block meta_description %}Stay updated with the latest news, industry insights, and developments from Emdad Global, Egypt's leading agricultural export company.{% endblock %}
+{% block meta_description %}{% if is_rtl %}تابع آخر الأخبار والرؤى الصناعية والتطورات من إمداد جلوبال.{% else %}Stay updated with the latest news, industry insights, and developments from Emdad Global.{% endif %}{% endblock %}
 
 {% block content %}
-<!-- Page Header -->
-<section class="py-5 bg-primary text-white">
-    <div class="container">
-        <div class="row align-items-center">
-            <div class="col-lg-8">
-                <nav aria-label="breadcrumb">
-                    <ol class="breadcrumb text-white-50">
-                        <li class="breadcrumb-item"><a href="{{ url_for('main.index') }}" class="text-white-50">Home</a></li>
-                        <li class="breadcrumb-item active text-white">News & Updates</li>
-                    </ol>
-                </nav>
-                
-                <h1 class="display-5 fw-bold mb-3">News & Updates</h1>
-                <p class="lead">Latest developments and industry insights</p>
-            </div>
-            <div class="col-lg-4 text-lg-end">
-                <div class="news-badge bg-white text-primary rounded-circle d-inline-flex align-items-center justify-content-center" style="width: 120px; height: 120px;">
-                    <div class="text-center">
-                        <i class="fas fa-newspaper fa-2x mb-2"></i>
-                        <div class="small fw-bold">LATEST<br>NEWS</div>
-                    </div>
-                </div>
-            </div>
-        </div>
+<!-- Hero (matches site identity) -->
+<section class="py-5 products-hero position-relative overflow-hidden" style="background: linear-gradient(160deg, #689b8a 0%, #5a8e7d 35%, #3f6f61 100%);">
+  <style>
+    .products-hero .section-heading, .products-hero .lead { color:#fff !important; }
+    .products-hero .breadcrumb, .products-hero .breadcrumb * { color:rgba(255,255,255,0.85) !important; }
+    .products-hero .section-badge { background: var(--secondary-gradient) !important; color: var(--dark-color) !important; }
+  </style>
+  <style>
+    /* Animated hero bubbles (same as About/others) */
+    .hero-animated-bg { position:absolute; inset:0; z-index:0; pointer-events:none; }
+    .hero-bubble { position:absolute; border-radius:50%; background: rgba(255,255,255,.18); filter: blur(.4px); animation: heroFloat 10s ease-in-out infinite; }
+    .hero-bubble.b1 { width:90px; height:90px; top:12%; left:10%; animation-duration: 12s; }
+    .hero-bubble.b2 { width:140px; height:140px; bottom:10%; right:12%; animation-duration: 14s; animation-direction: reverse; }
+    .hero-bubble.b3 { width:70px; height:70px; top:35%; right:28%; animation-duration: 11s; }
+    .hero-bubble.b4 { width:110px; height:110px; bottom:20%; left:22%; animation-duration: 13s; }
+    @keyframes heroFloat { 0%,100%{ transform: translateY(0);} 50%{ transform: translateY(-14px);} }
+
+    /* Floating news icons (peach color) */
+    .news-hero-animated { position:absolute; inset:0; z-index:0; pointer-events:none; }
+
+    .news-float { position:absolute; color: rgba(249,203,153,.55); font-size: 1.15rem; animation: newsDrift 16s linear infinite; }
+    .news-float.n1 { top:12%; left:-40px; animation-duration: 16s; }
+    .news-float.n2 { top:42%; left:-60px; animation-duration: 18s; animation-delay: 3s; }
+    .news-float.n3 { top:72%; left:-50px; animation-duration: 20s; animation-delay: 6s; }
+    .news-float.n4 { bottom:18%; right:-50px; animation-duration: 17s; animation-direction: reverse; }
+    .news-float.n5 { top:28%; right:-40px; animation-duration: 19s; }
+    @keyframes newsDrift { 0%{ transform: translateX(0) rotate(0deg);} 50%{ transform: translateX(50vw) rotate(8deg);} 100%{ transform: translateX(100vw) rotate(0deg);} }
+
+    /* Mobile: reduce motion */
+    @media (max-width: 767.98px) { .hero-animated-bg, .news-hero-animated { display:none !important; } }
+  </style>
+  <!-- Background Elements -->
+  <div class="position-absolute top-0 start-0 w-100 h-100" aria-hidden="true">
+    <div class="pattern-dots position-absolute" style="top: -40px; left: -40px; font-size: 140px; opacity: .08; color:#ffffff;">•••••<br>•••••<br>•••••</div>
+    <div class="pattern-dots position-absolute" style="bottom: -30px; right: -30px; font-size: 120px; opacity: .08; color:#ffffff;">•••••<br>•••••<br>•••••</div>
+    <!-- Floating news icons instead of leaves -->
+    <div class="news-hero-animated" aria-hidden="true">
+      <i class="fas fa-newspaper news-float n1"></i>
+      <i class="fas fa-bullhorn news-float n2"></i>
+      <i class="fas fa-calendar-alt news-float n3"></i>
+      <i class="fas fa-bell news-float n4"></i>
+      <i class="fas fa-bolt news-float n5"></i>
     </div>
+  </div>
+
+  <div class="container position-relative">
+    <div class="row align-items-center g-4">
+      <div class="col-lg-8" data-aos="fade-right">
+        <div class="mb-3">
+          <div class="section-badge badge bg-gradient-primary text-white px-4 py-2 rounded-pill mb-3 fs-6 fw-semibold">
+            <i class="fas fa-newspaper me-2"></i>{% if is_rtl %}الأخبار{% else %}{{ _('News') }}{% endif %}
+          </div>
+          <h1 class="section-heading {{ 'arabic-heading' if is_rtl else 'english-heading' }} mb-3">
+            {% if is_rtl %}الأخبار والتحديثات{% else %}{{ _('News & Updates') }}{% endif %}
+          </h1>
+          <p class="lead {{ 'arabic-text' if is_rtl else 'english-text' }} text-white-75">
+            {% if is_rtl %}آخر الأخبار والرؤى الصناعية والتطورات لدينا{% else %}Latest news, industry insights, and company developments{% endif %}
+          </p>
+        </div>
+      </div>
+      <div class="col-lg-4 text-lg-end" data-aos="fade-left">
+        <a href="{{ url_for('main.contact') }}" class="btn btn-primary btn-lg px-4 py-3 hover-lift" style="border-radius: 12px;">
+          <i class="fas fa-envelope me-2"></i>{% if is_rtl %}تواصل معنا{% else %}{{ _('Contact Us') }}{% endif %}
+        </a>
+      </div>
+    </div>
+  </div>
 </section>
 
 <!-- Featured News -->
 {% if featured_news %}
 <section class="py-5 bg-light">
-    <div class="container">
-        <div class="text-center mb-5">
-            <h2 class="mb-3">Featured Stories</h2>
-            <p class="lead text-muted">Our most important updates and announcements</p>
-        </div>
-        
-        <div class="row">
-            {% for article in featured_news %}
-            <div class="col-lg-4 mb-4">
-                <div class="card h-100 border-0 shadow-sm news-card featured-news">
-                    {% if article.cover_image %}
-                    <img src="{{ url_for('main.uploaded_file', filename='news/' + article.cover_image) }}"
-                         class="card-img-top" alt="{{ article.get_title() }}" style="height: 200px; object-fit: cover;">
-                    {% else %}
-                    <div class="card-img-top bg-primary d-flex align-items-center justify-content-center" style="height: 200px;">
-                        <i class="fas fa-newspaper fa-3x text-white"></i>
-                    </div>
-                    {% endif %}
-                    
-                    <div class="card-body d-flex flex-column">
-                        <div class="mb-2">
-                            <span class="badge bg-warning text-dark">Featured</span>
-                            <small class="text-muted ms-2">{{ article.publish_at.strftime('%B %d, %Y') }}</small>
-                        </div>
-                        
-                        <h5 class="card-title">{{ article.get_title(current_language) }}</h5>
-                        <p class="card-text text-muted flex-grow-1">{{ article.get_excerpt(current_language) | truncate(120) }}</p>
-                        {% if article.tags %}
-                        <div class="mb-2">
-                            {% for tag in article.tags.split(',') %}
-                                <span class="badge bg-light text-dark me-1">#{{ tag.strip() }}</span>
-                            {% endfor %}
-                        </div>
-                        {% endif %}
-                        
-                        <div class="mt-auto">
-                            <a href="{{ url_for('main.news_detail', slug=article.slug) }}" class="btn btn-outline-primary">
-                                Read More <i class="fas fa-arrow-right ms-1"></i>
-                            </a>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            {% endfor %}
-        </div>
+  <div class="container">
+    <div class="text-center mb-5" data-aos="fade-up">
+      <div class="section-badge badge bg-gradient-primary text-white px-4 py-2 rounded-pill mb-3 fs-6 fw-semibold">
+        <i class="fas fa-star me-2"></i>{% if is_rtl %}مختارات{% else %}{{ _('Featured') }}{% endif %}
+      </div>
+      <h2 class="mb-3 {{ 'arabic-heading' if is_rtl else 'english-heading' }}">{% if is_rtl %}قصص مختارة{% else %}{{ _('Featured Stories') }}{% endif %}</h2>
+      <p class="lead text-muted {{ 'arabic-text' if is_rtl else 'english-text' }}">{% if is_rtl %}أهم تحديثاتنا وإعلاناتنا{% else %}{{ _('Our most important updates and announcements') }}{% endif %}</p>
     </div>
+
+    <div class="row">
+      {% for article in featured_news %}
+      <div class="col-lg-4" data-aos="fade-up" data-aos-delay="{{ loop.index0 * 100 }}">
+        <article class="news-card card h-100 border-0 shadow-lg hover-lift position-relative overflow-hidden">
+          <!-- News Image -->
+          <div class="news-image-wrapper position-relative overflow-hidden">
+            {% if article.cover_image %}
+            <img src="{{ url_for('main.uploaded_file', filename='news/' + article.cover_image) }}" class="card-img-top news-image" alt="{{ article.get_title(current_language) }}" style="height: 250px; object-fit: cover;">
+            {% else %}
+            <div class="card-img-top bg-gradient-primary d-flex align-items-center justify-content-center" style="height: 250px;">
+              <i class="fas fa-newspaper fa-4x text-white opacity-75"></i>
+            </div>
+            {% endif %}
+
+            <!-- Date Badge -->
+            <div class="position-absolute top-0 start-0 p-3">
+              <div class="date-badge bg-white text-dark rounded-pill px-3 py-2 shadow-sm">
+                <i class="fas fa-calendar-alt me-2 text-primary-custom"></i>
+                <small class="fw-semibold">{{ article.publish_at.strftime('%b %d') }}</small>
+              </div>
+            </div>
+          </div>
+
+          <!-- News Content -->
+          <div class="card-body p-4">
+            <div class="news-meta mb-3">
+              <span class="badge bg-light text-primary-custom fw-semibold">
+                <i class="fas fa-tag me-1"></i>{{ _('News') }}
+              </span>
+              {% if article.featured %}
+              <span class="badge bg-gradient-secondary text-dark fw-semibold ms-2">
+                <i class="fas fa-star me-1"></i>{{ _('Featured') }}
+              </span>
+              {% endif %}
+            </div>
+
+            <h5 class="card-heading {{ 'arabic-heading' if is_rtl else 'english-heading' }} mb-3">{{ article.get_title(current_language) }}</h5>
+            <p class="card-text text-muted mb-4 {{ 'arabic-text' if is_rtl else 'english-text' }}">{{ article.get_excerpt(current_language) | truncate(120) if article.get_excerpt(current_language) else _('Stay updated with the latest news and developments from Emdad Global.') }}</p>
+
+            {% if article.tags %}
+            <div class="mb-3">
+              {% for tag in article.get_tags_list()[:3] %}
+              <span class="badge bg-light text-primary me-1">#{{ tag }}</span>
+              {% endfor %}
+            </div>
+            {% endif %}
+
+            <!-- Article Footer -->
+            <div class="d-flex justify-content-between align-items-center mt-auto">
+              <small class="text-muted">
+                <i class="fas fa-clock me-1"></i>{{ article.publish_at.strftime('%B %d, %Y') }}
+              </small>
+              <a href="{{ url_for('main.news_detail', slug=article.slug) }}" class="btn btn-outline-primary btn-sm hover-lift">
+                <i class="fas fa-arrow-right me-1"></i>{{ _('Read More') }}
+              </a>
+            </div>
+          </div>
+        <!-- Match homepage Latest Updates button hover effect -->
+        <style>
+          .news-card .btn-outline-primary:hover,
+          .news-card .btn-outline-primary:focus,
+          .news-card .btn-outline-primary:active,
+          .news-card .btn-outline-primary:focus-visible {
+            background: #f9cb99 !important;
+            border-color: #f9cb99 !important;
+            color: #103d24 !important;
+            transform: translateY(-5px);
+            box-shadow: 0 8px 25px rgba(249, 203, 153, 0.4);
+          }
+          .news-card .btn-outline-primary:hover i,
+          .news-card .btn-outline-primary:focus i,
+          .news-card .btn-outline-primary:active i,
+          .news-card .btn-outline-primary:focus-visible i {
+            color: #103d24 !important;
+          }
+        </style>
+        </article>
+      </div>
+      {% endfor %}
+    </div>
+  </div>
 </section>
 {% endif %}
 
 <!-- All News -->
 <section class="py-5">
-    <div class="container">
-        <div class="row">
-            <!-- News Articles -->
-            <div class="col-lg-8">
-                {% if news_items and news_items.items %}
-                    {% for article in news_items.items %}
-                    <article class="card border-0 shadow-sm mb-4 news-card">
-                        <div class="row g-0">
-                            <div class="col-md-4">
-                                {% if article.cover_image %}
-                                <img src="{{ url_for('main.uploaded_file', filename='news/' + article.cover_image) }}"
-                                     class="img-fluid rounded-start h-100" alt="{{ article.get_title() }}" style="object-fit: cover;">
-                                {% else %}
-                                <div class="bg-light d-flex align-items-center justify-content-center h-100 rounded-start">
-                                    <i class="fas fa-newspaper fa-3x text-muted"></i>
-                                </div>
-                                {% endif %}
-                            </div>
-                            <div class="col-md-8">
-                                <div class="card-body h-100 d-flex flex-column">
-                                    <div class="news-meta mb-2">
-                                        <small class="text-primary">{{ article.publish_at.strftime('%B %d, %Y') }}</small>
-                                        {% if article.featured %}
-                                        <span class="badge bg-warning text-dark ms-2">Featured</span>
-                                        {% endif %}
-                                    </div>
-                                    
-                                    <h5 class="card-title">
-                                        <a href="{{ url_for('main.news_detail', slug=article.slug) }}" class="text-decoration-none text-dark">
-                                            {{ article.get_title(current_language) }}
-                                        </a>
-                                    </h5>
-                                    
-                                    <p class="card-text text-muted flex-grow-1">{{ article.get_excerpt(current_language) | truncate(150) }}</p>
-                                    
-                                    {% if article.get_tags_list() %}
-                                    <div class="mb-3">
-                                        {% for tag in article.get_tags_list()[:3] %}
-                                        <span class="badge bg-light text-dark me-1">#{{ tag }}</span>
-                                        {% endfor %}
-                                    </div>
-                                    {% endif %}
-                                    
-                                    <div class="mt-auto">
-                                        <a href="{{ url_for('main.news_detail', slug=article.slug) }}" class="btn btn-outline-primary btn-sm">
-                                            Read Full Article <i class="fas fa-arrow-right ms-1"></i>
-                                        </a>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </article>
-                    {% endfor %}
-                    
-                    <!-- Pagination -->
-                    {% if news_items.pages > 1 %}
-                    <nav aria-label="News pagination" class="mt-4">
-                        <ul class="pagination justify-content-center">
-                            {% if news_items.has_prev %}
-                            <li class="page-item">
-                                <a class="page-link" href="{{ url_for('main.news', page=news_items.prev_num) }}">
-                                    <i class="fas fa-chevron-left"></i> Previous
-                                </a>
-                            </li>
-                            {% endif %}
-                            
-                            {% for page_num in news_items.iter_pages() %}
-                                {% if page_num %}
-                                    {% if page_num != news_items.page %}
-                                    <li class="page-item">
-                                        <a class="page-link" href="{{ url_for('main.news', page=page_num) }}">{{ page_num }}</a>
-                                    </li>
-                                    {% else %}
-                                    <li class="page-item active">
-                                        <span class="page-link">{{ page_num }}</span>
-                                    </li>
-                                    {% endif %}
-                                {% else %}
-                                <li class="page-item disabled">
-                                    <span class="page-link">...</span>
-                                </li>
-                                {% endif %}
-                            {% endfor %}
-                            
-                            {% if news_items.has_next %}
-                            <li class="page-item">
-                                <a class="page-link" href="{{ url_for('main.news', page=news_items.next_num) }}">
-                                    Next <i class="fas fa-chevron-right"></i>
-                                </a>
-                            </li>
-                            {% endif %}
-                        </ul>
-                    </nav>
-                    {% endif %}
-                    
+  <div class="container">
+    <div class="row">
+      <!-- News Articles -->
+      <div class="col-lg-8">
+        {% if news_items and news_items.items %}
+          {% for article in news_items.items %}
+          <article class="card border-0 shadow-lg hover-lift mb-4 news-card" data-aos="fade-up" data-aos-delay="{{ loop.index0 * 100 }}">
+            <div class="row g-0">
+              <div class="col-md-4">
+                {% if article.cover_image %}
+                <img src="{{ url_for('main.uploaded_file', filename='news/' + article.cover_image) }}" class="img-fluid rounded-start h-100" alt="{{ article.get_title(current_language) }}" style="object-fit: cover;">
                 {% else %}
-                    <!-- No News Available -->
-                    <div class="text-center py-5">
-                        <i class="fas fa-newspaper fa-4x text-muted mb-4"></i>
-                        <h3 class="mb-3">No News Available</h3>
-                        <p class="text-muted mb-4">We'll be sharing updates and industry insights soon. Check back later!</p>
-                        <a href="{{ url_for('main.index') }}" class="btn btn-primary">
-                            <i class="fas fa-home me-2"></i>Back to Homepage
-                        </a>
-                    </div>
+                <div class="d-flex align-items-center justify-content-center h-100 rounded-start" style="background: var(--primary-gradient); color:#fff;">
+                  <i class="fas fa-newspaper fa-3x"></i>
+                </div>
                 {% endif %}
+              </div>
+              <div class="col-md-8">
+                <div class="card-body h-100 d-flex flex-column">
+                  <div class="news-meta mb-2">
+                    <small class="text-primary-custom">{{ article.publish_at.strftime('%B %d, %Y') }}</small>
+                    {% if article.featured %}
+                    <span class="badge bg-warning text-dark ms-2">{% if is_rtl %}مميز{% else %}{{ _('Featured') }}{% endif %}</span>
+                    {% endif %}
+                  </div>
+
+                  <h5 class="card-title {{ 'arabic-heading' if is_rtl else 'english-heading' }}">
+                    <a href="{{ url_for('main.news_detail', slug=article.slug) }}" class="text-decoration-none">
+                      {{ article.get_title(current_language) }}
+                    </a>
+                  </h5>
+
+                  <p class="card-text text-muted flex-grow-1 {{ 'arabic-text' if is_rtl else 'english-text' }}">{{ article.get_excerpt(current_language) | truncate(150) }}</p>
+
+                  {% if article.get_tags_list() %}
+                  <div class="mb-3">
+                    {% for tag in article.get_tags_list()[:3] %}
+                    <span class="badge bg-light text-dark me-1">#{{ tag }}</span>
+                    {% endfor %}
+                  </div>
+                  {% endif %}
+
+                  <div class="mt-auto d-flex gap-2">
+                    <a href="{{ url_for('main.news_detail', slug=article.slug) }}" class="btn btn-outline-primary btn-sm hover-lift">
+                      <i class="fas fa-arrow-right me-1"></i>{% if is_rtl %}قراءة المقال{% else %}{{ _('Read Article') }}{% endif %}
+                    </a>
+                    <a href="{{ url_for('main.contact') }}" class="btn btn-primary hover-lift"><i class="fas fa-envelope"></i></a>
+                  </div>
+                </div>
+              </div>
             </div>
-            
-            <!-- Sidebar -->
-            <div class="col-lg-4">
-                <!-- Newsletter Signup -->
-                <div class="card border-0 shadow-sm mb-4">
-                    <div class="card-body">
-                        <h5 class="card-title">
-                            <i class="fas fa-envelope text-primary me-2"></i>Stay Updated
-                        </h5>
-                        <p class="card-text text-muted">Subscribe to our newsletter for the latest updates and industry insights.</p>
-                        <form class="newsletter-form">
-                            <div class="input-group mb-3">
-                                <input type="email" class="form-control" placeholder="Your email address" required>
-                                <button class="btn btn-primary" type="submit">
-                                    <i class="fas fa-paper-plane"></i>
-                                </button>
-                            </div>
-                        </form>
-                    </div>
-                </div>
-                
-                <!-- Quick Links -->
-                <div class="card border-0 shadow-sm mb-4">
-                    <div class="card-body">
-                        <h5 class="card-title">
-                            <i class="fas fa-link text-primary me-2"></i>Quick Links
-                        </h5>
-                        <ul class="list-unstyled">
-                            <li class="mb-2">
-                                <a href="{{ url_for('main.products') }}" class="text-decoration-none">
-                                    <i class="fas fa-leaf text-success me-2"></i>Our Products
-                                </a>
-                            </li>
-                            <li class="mb-2">
-                                <a href="{{ url_for('main.certifications') }}" class="text-decoration-none">
-                                    <i class="fas fa-certificate text-warning me-2"></i>Certifications
-                                </a>
-                            </li>
-                            <li class="mb-2">
-                                <a href="{{ url_for('main.services') }}" class="text-decoration-none">
-                                    <i class="fas fa-shipping-fast text-info me-2"></i>Export Services
-                                </a>
-                            </li>
-                            <li class="mb-2">
-                                <a href="{{ url_for('main.gallery') }}" class="text-decoration-none">
-                                    <i class="fas fa-images text-primary me-2"></i>Gallery
-                                </a>
-                            </li>
-                            <li class="mb-2">
-                                <a href="{{ url_for('main.contact') }}" class="text-decoration-none">
-                                    <i class="fas fa-envelope text-danger me-2"></i>Contact Us
-                                </a>
-                            </li>
-                        </ul>
-                    </div>
-                </div>
-                
-                <!-- Industry Insights -->
-                <div class="card border-0 shadow-sm mb-4">
-                    <div class="card-body">
-                        <h5 class="card-title">
-                            <i class="fas fa-chart-line text-primary me-2"></i>Industry Insights
-                        </h5>
-                        <div class="insight-item mb-3">
-                            <h6 class="mb-1">Egyptian Agricultural Exports</h6>
-                            <p class="text-muted small mb-2">Egypt ranks among the top global exporters of citrus fruits and fresh vegetables.</p>
-                            <small class="text-primary">Learn more about our market position</small>
-                        </div>
-                        
-                        <div class="insight-item mb-3">
-                            <h6 class="mb-1">Quality Standards</h6>
-                            <p class="text-muted small mb-2">International certifications ensure our products meet global quality requirements.</p>
-                            <small class="text-primary">Discover our certifications</small>
-                        </div>
-                        
-                        <div class="insight-item">
-                            <h6 class="mb-1">Sustainable Practices</h6>
-                            <p class="text-muted small mb-2">Environmental responsibility in modern agricultural production.</p>
-                            <small class="text-primary">Read about our sustainability</small>
-                        </div>
-                    </div>
-                </div>
-                
-                <!-- Contact CTA -->
-                <div class="card border-0 shadow-sm bg-primary text-white">
-                    <div class="card-body text-center">
-                        <h5 class="card-title">Ready to Partner?</h5>
-                        <p class="card-text">Get in touch with our team for personalized agricultural sourcing solutions.</p>
-                        <a href="{{ url_for('main.contact') }}" class="btn btn-light">
-                            <i class="fas fa-envelope me-2"></i>Contact Us
-                        </a>
-                    </div>
-                </div>
-            </div>
+          </article>
+          {% endfor %}
+
+          <!-- Pagination -->
+          {% if news_items.pages > 1 %}
+          <nav aria-label="News pagination" class="mt-4">
+            <ul class="pagination justify-content-center">
+              {% if news_items.has_prev %}
+              <li class="page-item">
+                <a class="page-link" href="{{ url_for('main.news', page=news_items.prev_num) }}">
+                  <i class="fas fa-chevron-left"></i> {% if is_rtl %}السابق{% else %}{{ _('Previous') }}{% endif %}
+                </a>
+              </li>
+              {% endif %}
+
+              {% for page_num in news_items.iter_pages() %}
+                {% if page_num %}
+                  {% if page_num != news_items.page %}
+                  <li class="page-item"><a class="page-link" href="{{ url_for('main.news', page=page_num) }}">{{ page_num }}</a></li>
+                  {% else %}
+                  <li class="page-item active"><span class="page-link">{{ page_num }}</span></li>
+                  {% endif %}
+                {% else %}
+                  <li class="page-item disabled"><span class="page-link">…</span></li>
+                {% endif %}
+              {% endfor %}
+
+              {% if news_items.has_next %}
+              <li class="page-item">
+                <a class="page-link" href="{{ url_for('main.news', page=news_items.next_num) }}">
+                  {% if is_rtl %}التالي{% else %}{{ _('Next') }}{% endif %} <i class="fas fa-chevron-right"></i>
+                </a>
+              </li>
+              {% endif %}
+            </ul>
+          </nav>
+          {% endif %}
+
+        {% else %}
+          <!-- No News Available -->
+          <div class="text-center py-5">
+            <i class="fas fa-newspaper fa-4x text-muted mb-4"></i>
+            <h3 class="mb-3 {{ 'arabic-heading' if is_rtl else 'english-heading' }}">{% if is_rtl %}لا توجد أخبار متاحة{% else %}{{ _('No News Available') }}{% endif %}</h3>
+            <p class="text-muted mb-4 {{ 'arabic-text' if is_rtl else 'english-text' }}">{% if is_rtl %}سنشارك قريباً آخر الأخبار والرؤى. يرجى العودة لاحقاً.{% else %}{{ _('We will share updates and insights soon. Please check back later!') }}{% endif %}</p>
+            <a href="{{ url_for('main.index') }}" class="btn btn-primary hover-lift"><i class="fas fa-home me-2"></i>{% if is_rtl %}العودة للصفحة الرئيسية{% else %}{{ _('Back to Homepage') }}{% endif %}</a>
+          </div>
+        {% endif %}
+      </div>
+
+      <!-- Sidebar -->
+      <div class="col-lg-4">
+        <!-- Newsletter Signup -->
+        <div class="card border-0 shadow-lg hover-lift mb-4">
+          <div class="card-body">
+            <h5 class="card-title {{ 'arabic-heading' if is_rtl else 'english-heading' }}">
+              <i class="fas fa-envelope text-primary me-2"></i>{% if is_rtl %}ابق على اطلاع{% else %}{{ _('Stay Updated') }}{% endif %}
+            </h5>
+            <p class="card-text text-muted {{ 'arabic-text' if is_rtl else 'english-text' }}">{% if is_rtl %}اشترك في نشرتنا البريدية لتحصل على آخر الأخبار والرؤى.{% else %}{{ _('Subscribe to our newsletter for the latest updates and insights.') }}{% endif %}</p>
+            <form class="newsletter-form">
+              <div class="input-group mb-3">
+                <input type="email" class="form-control" placeholder="{% if is_rtl %}بريدك الإلكتروني{% else %}Your email address{% endif %}" required>
+                <button class="btn btn-primary" type="submit"><i class="fas fa-paper-plane"></i></button>
+              </div>
+            </form>
+          </div>
         </div>
+
+        <!-- Scoped styles for Quick Links and Partner CTA -->
+        <style>
+          .quick-links-card .ql-item { display:flex; align-items:center; justify-content:space-between; padding:.6rem .8rem; border-radius:12px; transition:transform .2s ease, background .2s ease, box-shadow .2s ease; }
+          .quick-links-card .ql-item:hover { background: rgba(104,155,138,.08); transform: translateX(4px); box-shadow: 0 6px 16px rgba(0,0,0,.06); }
+          .quick-links-card .ql-item .ql-left { display:flex; align-items:center; gap:.5rem; }
+          .quick-links-card .ql-item i { color: #689b8a !important; }
+          .quick-links-card .ql-arrow { color:#689b8a; opacity:.7; }
+          .quick-links-card .ql-item:hover .ql-arrow { opacity:1; }
+
+          .partner-cta { background: linear-gradient(135deg, #689b8a, #5a8e7d); border-radius:16px; }
+          .partner-cta .card-title, .partner-cta .card-text { color:#ffffff !important; }
+          .partner-cta .cta-btn { background:#f9cb99; border-color:#f9cb99; color:#103d24; font-weight:700; }
+          .partner-cta .cta-btn:hover { box-shadow: 0 10px 24px rgba(249,203,153,.4); transform: translateY(-3px); }
+        </style>
+        <!-- Quick Links -->
+        <div class="card border-0 shadow-lg hover-lift mb-4 quick-links-card">
+          <div class="card-body">
+            <h5 class="card-title {{ 'arabic-heading' if is_rtl else 'english-heading' }}">
+              <i class="fas fa-link me-2" style="color:#689b8a;"></i>{% if is_rtl %}روابط سريعة{% else %}{{ _('Quick Links') }}{% endif %}
+            </h5>
+            <ul class="list-unstyled {{ 'arabic-text' if is_rtl else 'english-text' }} mb-0">
+              <li class="mb-2">
+                <a href="{{ url_for('main.products') }}" class="text-decoration-none ql-item">
+                  <span class="ql-left"><i class="fas fa-leaf"></i>{% if is_rtl %}منتجاتنا{% else %}{{ _('Our Products') }}{% endif %}</span>
+                  <i class="fas fa-chevron-{{ 'left' if is_rtl else 'right' }} ql-arrow"></i>
+                </a>
+              </li>
+              <li class="mb-2">
+                <a href="{{ url_for('main.certifications') }}" class="text-decoration-none ql-item">
+                  <span class="ql-left"><i class="fas fa-certificate"></i>{% if is_rtl %}الشهادات{% else %}{{ _('Certifications') }}{% endif %}</span>
+                  <i class="fas fa-chevron-{{ 'left' if is_rtl else 'right' }} ql-arrow"></i>
+                </a>
+              </li>
+              <li class="mb-2">
+                <a href="{{ url_for('main.services') }}" class="text-decoration-none ql-item">
+                  <span class="ql-left"><i class="fas fa-shipping-fast"></i>{% if is_rtl %}خدمات التصدير{% else %}{{ _('Export Services') }}{% endif %}</span>
+                  <i class="fas fa-chevron-{{ 'left' if is_rtl else 'right' }} ql-arrow"></i>
+                </a>
+              </li>
+              <li class="mb-2">
+                <a href="{{ url_for('main.gallery') }}" class="text-decoration-none ql-item">
+                  <span class="ql-left"><i class="fas fa-images"></i>{% if is_rtl %}المعرض{% else %}{{ _('Gallery') }}{% endif %}</span>
+                  <i class="fas fa-chevron-{{ 'left' if is_rtl else 'right' }} ql-arrow"></i>
+                </a>
+              </li>
+              <li>
+                <a href="{{ url_for('main.contact') }}" class="text-decoration-none ql-item">
+                  <span class="ql-left"><i class="fas fa-envelope"></i>{% if is_rtl %}تواصل معنا{% else %}{{ _('Contact Us') }}{% endif %}</span>
+                  <i class="fas fa-chevron-{{ 'left' if is_rtl else 'right' }} ql-arrow"></i>
+                </a>
+              </li>
+            </ul>
+          </div>
+        </div>
+
+        <!-- Contact CTA -->
+        <div class="card border-0 shadow-lg partner-cta">
+          <div class="card-body text-center">
+            <h5 class="card-title {{ 'arabic-heading' if is_rtl else 'english-heading' }}">{% if is_rtl %}جاهز للتعاون؟{% else %}{{ _('Ready to Partner?') }}{% endif %}</h5>
+            <p class="card-text {{ 'arabic-text' if is_rtl else 'english-text' }}">{% if is_rtl %}تواصل مع فريقنا لحلول توريد مخصصة.{% else %}{{ _('Get in touch with our team for tailored sourcing solutions.') }}{% endif %}</p>
+            <a href="{{ url_for('main.contact') }}" class="btn btn-light cta-btn hover-lift"><i class="fas fa-envelope me-2"></i>{% if is_rtl %}تواصل الآن{% else %}{{ _('Contact Us') }}{% endif %}</a>
+          </div>
+        </div>
+      </div>
     </div>
+  </div>
 </section>
+
+<!-- CTA (copied from About page) -->
+<section class="py-5 bg-gradient-light">
+  <div class="container">
+    <div class="row align-items-center text-center">
+      <div class="col-lg-8 mx-auto" data-aos="fade-up">
+        <h2 class="display-6 english-heading mb-3">{% if is_rtl %}جاهز للتعاون معنا؟{% else %}Ready to Partner with Us?{% endif %}</h2>
+        <p class="lead text-muted mb-4">{% if is_rtl %}تواصل معنا الآن واكتشف حلول التوريد الموثوقة لأسواقك العالمية.{% else %}Get in touch and discover reliable sourcing solutions for your markets.{% endif %}</p>
+        <div class="d-flex flex-wrap justify-content-center gap-3">
+          <a href="{{ url_for('main.contact') }}" class="btn btn-primary btn-lg px-5 py-3 hover-lift"><i class="fas fa-envelope me-2"></i>{% if is_rtl %}تواصل الآن{% else %}Contact Us{% endif %}</a>
+          <a href="{{ url_for('main.products') }}" class="btn btn-outline-primary btn-lg px-5 py-3 hover-lift"><i class="fas fa-leaf me-2"></i>{% if is_rtl %}تصفح المنتجات{% else %}View Products{% endif %}</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
 {% endblock %}
 
 {% block extra_scripts %}
@@ -303,27 +387,27 @@ document.addEventListener('DOMContentLoaded', function() {
             this.style.transition = 'transform 0.3s ease, box-shadow 0.3s ease';
             this.style.boxShadow = '0 0.75rem 1.5rem rgba(0, 0, 0, 0.15)';
         });
-        
+
         card.addEventListener('mouseleave', function() {
             this.style.transform = 'translateY(0)';
             this.style.boxShadow = '';
         });
     });
-    
+
     // Newsletter form submission
     const newsletterForm = document.querySelector('.newsletter-form');
     if (newsletterForm) {
         newsletterForm.addEventListener('submit', function(e) {
             e.preventDefault();
             const email = this.querySelector('input[type="email"]').value;
-            
+
             // Show success message (in real implementation, this would send to server)
             const button = this.querySelector('button');
             const originalContent = button.innerHTML;
             button.innerHTML = '<i class="fas fa-check"></i>';
             button.classList.remove('btn-primary');
             button.classList.add('btn-success');
-            
+
             setTimeout(() => {
                 button.innerHTML = originalContent;
                 button.classList.remove('btn-success');
@@ -332,10 +416,10 @@ document.addEventListener('DOMContentLoaded', function() {
             }, 2000);
         });
     }
-    
+
     // Animate featured news cards on scroll
     const featuredCards = document.querySelectorAll('.featured-news');
-    
+
     const animateCards = (entries, observer) => {
         entries.forEach((entry, index) => {
             if (entry.isIntersecting) {
@@ -347,11 +431,11 @@ document.addEventListener('DOMContentLoaded', function() {
             }
         });
     };
-    
+
     const observer = new IntersectionObserver(animateCards, {
         threshold: 0.3
     });
-    
+
     featuredCards.forEach(card => {
         card.style.opacity = '0';
         card.style.transform = 'translateY(30px)';
