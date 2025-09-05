@@ -1,4 +1,20 @@
 {% extends "base.html" %}
+{% block extra_head %}
+<style>
+  /* Reuse quick-links/partner styles from News */
+  .quick-links-card .ql-item { display:flex; align-items:center; justify-content:space-between; padding:.6rem .8rem; border-radius:12px; transition:transform .2s ease, background .2s ease, box-shadow .2s ease; }
+  .quick-links-card .ql-item:hover { background: rgba(104,155,138,.08); transform: translateX(4px); box-shadow: 0 6px 16px rgba(0,0,0,.06); }
+  .quick-links-card .ql-item .ql-left { display:flex; align-items:center; gap:.5rem; }
+  .quick-links-card .ql-item i { color: #689b8a !important; }
+  .quick-links-card .ql-arrow { color:#689b8a; opacity:.7; }
+  .quick-links-card .ql-item:hover .ql-arrow { opacity:1; }
+
+  .partner-cta { background: linear-gradient(135deg, #689b8a, #5a8e7d); border-radius:16px; }
+  .partner-cta .card-title, .partner-cta .card-text { color:#ffffff !important; }
+  .partner-cta .cta-btn { background:#f9cb99; border-color:#f9cb99; color:#103d24; font-weight:700; }
+  .partner-cta .cta-btn:hover { box-shadow: 0 10px 24px rgba(249,203,153,.4); transform: translateY(-3px); }
+</style>
+{% endblock %}
 
 {% block title %}
 {% if current_language == 'ar' and article.seo_title_ar %}
@@ -31,213 +47,237 @@
 {% endblock %}
 
 {% block content %}
-<!-- Article Header -->
-<section class="py-5 bg-light">
-    <div class="container">
-        <div class="row">
-            <div class="col-lg-8 mx-auto">
-                <nav aria-label="breadcrumb">
-                    <ol class="breadcrumb">
-                        <li class="breadcrumb-item"><a href="{{ url_for('main.index') }}">Home</a></li>
-                        <li class="breadcrumb-item"><a href="{{ url_for('main.news') }}">News</a></li>
-                        <li class="breadcrumb-item active">{{ article.get_title() | truncate(50) }}</li>
-                    </ol>
-                </nav>
-                
-                <div class="article-meta mb-3">
-                    <span class="text-primary">{{ article.publish_at.strftime('%B %d, %Y') }}</span>
-                    {% if article.featured %}
-                    <span class="badge bg-warning text-dark ms-2">Featured</span>
-                    {% endif %}
-                </div>
-                
-                <h1 class="display-6 fw-bold mb-4">{{ article.get_title(current_language) }}</h1>
+<!-- Article Hero (unified with site identity) -->
+<section class="py-5 products-hero position-relative overflow-hidden" style="background: linear-gradient(160deg, #689b8a 0%, #5a8e7d 35%, #3f6f61 100%);">
+  <style>
+    .products-hero { min-height: 360px; }
+    .products-hero .section-heading, .products-hero .lead { color:#fff !important; }
+    .products-hero .breadcrumb, .products-hero .breadcrumb * { color:rgba(255,255,255,0.85) !important; }
+    .products-hero .section-badge { background: var(--secondary-gradient) !important; color: var(--dark-color) !important; }
+    .products-hero .pattern-dots { color: rgba(255,255,255,.15); }
+  </style>
+  <!-- Background Elements -->
+  <div class="position-absolute top-0 start-0 w-100 h-100" aria-hidden="true">
+    <div class="pattern-dots position-absolute" style="top: -40px; left: -40px; font-size: 140px; opacity: .08; color:#ffffff;">•••••<br>•••••<br>•••••</div>
+    <div class="pattern-dots position-absolute" style="bottom: -30px; right: -30px; font-size: 120px; opacity: .08; color:#ffffff;">•••••<br>•••••<br>•••••</div>
+  </div>
 
-                {% if article.get_excerpt(current_language) %}
-                <p class="lead text-muted mb-4">{{ article.get_excerpt(current_language) }}</p>
-                {% endif %}
+  <div class="container position-relative">
+    <div class="row align-items-center g-4">
+      <div class="col-lg-8" data-aos="fade-right">
+        <nav aria-label="breadcrumb" class="mb-2">
+          <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="{{ url_for('main.index') }}">{{ _('Home') }}</a></li>
+            <li class="breadcrumb-item"><a href="{{ url_for('main.news') }}">{{ _('News') }}</a></li>
+            <li class="breadcrumb-item active text-white">{{ article.get_title(current_language) | truncate(48) }}</li>
+          </ol>
+        </nav>
 
-                <!-- Article Tags -->
-                {% if article.tags %}
-                <div class="mb-3">
-                    {% for tag in article.get_tags_list() %}
-                        <span class="badge bg-light text-primary me-1">#{{ tag }}</span>
-                    {% endfor %}
-                </div>
-                {% endif %}
-
-                <!-- Reading Time -->
-                <div class="mb-4">
-                    <small class="text-muted">
-                        <i class="fas fa-clock me-1"></i>
-                        {{ _('Reading time') }}: {{ article.get_reading_time(current_language) }} {{ _('minutes') }}
-                    </small>
-                </div>
-                
-                <!-- Social Share Buttons -->
-                <div class="d-flex gap-2 mb-4">
-                    <button class="btn btn-outline-primary btn-sm" onclick="shareArticle('facebook')">
-                        <i class="fab fa-facebook-f me-1"></i>Share
-                    </button>
-                    <button class="btn btn-outline-info btn-sm" onclick="shareArticle('twitter')">
-                        <i class="fab fa-twitter me-1"></i>Tweet
-                    </button>
-                    <button class="btn btn-outline-success btn-sm" onclick="shareArticle('whatsapp')">
-                        <i class="fab fa-whatsapp me-1"></i>WhatsApp
-                    </button>
-                    <button class="btn btn-outline-secondary btn-sm" onclick="shareArticle('copy')">
-                        <i class="fas fa-link me-1"></i>Copy Link
-                    </button>
-                </div>
-            </div>
+        <div class="mb-3">
+          <div class="section-badge badge bg-gradient-primary text-white px-4 py-2 rounded-pill mb-3 fs-6 fw-semibold">
+            <i class="fas fa-newspaper me-2"></i>{% if is_rtl %}الأخبار{% else %}{{ _('News') }}{% endif %}
+          </div>
+          <h1 class="section-heading {{ 'arabic-heading' if is_rtl else 'english-heading' }} mb-3">{{ article.get_title(current_language) }}</h1>
+          {% if article.get_excerpt(current_language) %}
+          <p class="lead {{ 'arabic-text' if is_rtl else 'english-text' }} text-white-75">{{ article.get_excerpt(current_language) }}</p>
+          {% endif %}
         </div>
+
+        <div class="d-flex flex-wrap align-items-center gap-2 text-white-75">
+          <small><i class="fas fa-calendar-alt me-1"></i>{{ article.publish_at.strftime('%B %d, %Y') }}</small>
+          <span class="opacity-50">•</span>
+          <small><i class="fas fa-clock me-1"></i>{{ _('Reading time') }}: {{ article.get_reading_time(current_language) }} {{ _('minutes') }}</small>
+          {% if article.featured %}
+          <span class="badge bg-warning text-dark ms-2">{{ _('Featured') }}</span>
+          {% endif %}
+        </div>
+      </div>
+      <div class="col-lg-4 text-lg-end" data-aos="fade-left">
+        <a href="{{ url_for('main.contact') }}" class="btn btn-primary btn-lg px-4 py-3 hover-lift" style="border-radius: 12px;">
+          <i class="fas fa-envelope me-2"></i>{% if is_rtl %}تواصل معنا{% else %}{{ _('Contact Us') }}{% endif %}
+        </a>
+      </div>
     </div>
+  </div>
 </section>
 
-<!-- Article Content -->
+<!-- Article Content (two-column layout with sticky sidebar) -->
 <section class="py-5">
-    <div class="container">
-        <div class="row">
-            <div class="col-lg-8 mx-auto">
-                <!-- Cover Image -->
-                {% if article.cover_image %}
-                <div class="mb-5">
-                    <img src="{{ url_for('main.uploaded_file', filename='news/' + article.cover_image) }}"
-                         alt="{{ article.get_title(current_language) }}"
-                         class="img-fluid rounded shadow">
-                </div>
-                {% endif %}
-                
-                <!-- Article Body -->
-                <div class="article-content">
-                    {% if article.get_content(current_language) %}
-                        {{ article.get_content(current_language) | safe }}
-                    {% else %}
-                        <p>{{ article.get_excerpt() }}</p>
-                        <p>This is a sample news article for Emdad Global. In a real implementation, this would contain the full article content from the database.</p>
-                        
-                        <h3>Key Highlights</h3>
-                        <ul>
-                            <li>Expansion into new international markets</li>
-                            <li>Enhanced quality control processes</li>
-                            <li>Sustainable agricultural practices</li>
-                            <li>Strengthened partnerships with global distributors</li>
-                        </ul>
-                        
-                        <p>Emdad Global continues to lead the Egyptian agricultural export industry with innovative solutions and unwavering commitment to quality. Our team works tirelessly to ensure that Egyptian agricultural products reach global markets with the highest standards of freshness and quality.</p>
-                        
-                        <blockquote class="blockquote border-start border-primary border-4 ps-4 my-4">
-                            <p class="mb-0">"Quality is not just our goal—it's our foundation. Every product that bears the Emdad Global name represents our commitment to excellence."</p>
-                            <footer class="blockquote-footer mt-2">Emdad Global Management Team</footer>
-                        </blockquote>
-                        
-                        <p>For more information about our products and services, please don't hesitate to contact our team. We're always ready to discuss how we can meet your agricultural sourcing needs.</p>
-                    {% endif %}
-                </div>
-                
-                <!-- Tags -->
-                {% if article.get_tags_list() %}
-                <div class="mt-5 pt-4 border-top">
-                    <h6 class="mb-3">Tags:</h6>
-                    <div class="d-flex flex-wrap gap-2">
-                        {% for tag in article.get_tags_list() %}
-                        <span class="badge bg-light text-dark">#{{ tag }}</span>
-                        {% endfor %}
-                    </div>
-                </div>
-                {% endif %}
-                
-                <!-- Share Again -->
-                <div class="mt-5 pt-4 border-top">
-                    <h6 class="mb-3">Share this article:</h6>
-                    <div class="d-flex gap-2">
-                        <button class="btn btn-primary btn-sm" onclick="shareArticle('facebook')">
-                            <i class="fab fa-facebook-f me-1"></i>Facebook
-                        </button>
-                        <button class="btn btn-info btn-sm" onclick="shareArticle('twitter')">
-                            <i class="fab fa-twitter me-1"></i>Twitter
-                        </button>
-                        <button class="btn btn-success btn-sm" onclick="shareArticle('whatsapp')">
-                            <i class="fab fa-whatsapp me-1"></i>WhatsApp
-                        </button>
-                        <button class="btn btn-secondary btn-sm" onclick="shareArticle('copy')">
-                            <i class="fas fa-link me-1"></i>Copy Link
-                        </button>
-                    </div>
-                </div>
-            </div>
+  <div class="container">
+    <div class="row g-4">
+      <!-- Main Content -->
+      <div class="col-lg-8">
+        <!-- Cover Image -->
+        {% if article.cover_image %}
+        <div class="mb-4">
+          <img src="{{ url_for('main.uploaded_file', filename='news/' + article.cover_image) }}" alt="{{ article.get_title(current_language) }}" class="img-fluid rounded-3 shadow-sm" style="max-height: 460px; object-fit: cover; width: 100%;">
         </div>
+        {% endif %}
+
+        <!-- Article Body -->
+        <article class="article-content card border-0 shadow-lg p-4">
+          {% if article.get_content(current_language) %}
+            {{ article.get_content(current_language) | safe }}
+          {% else %}
+            <p>{{ article.get_excerpt() }}</p>
+            <p>This is a sample news article for Emdad Global. In a real implementation, this would contain the full article content from the database.</p>
+            <h3>Key Highlights</h3>
+            <ul>
+              <li>Expansion into new international markets</li>
+              <li>Enhanced quality control processes</li>
+              <li>Sustainable agricultural practices</li>
+              <li>Strengthened partnerships with global distributors</li>
+            </ul>
+            <blockquote class="blockquote border-start border-4 ps-4 my-4" style="border-color:#f9cb99 !important;">
+              <p class="mb-0">"Quality is not just our goal—it's our foundation. Every product that bears the Emdad Global name represents our commitment to excellence."</p>
+              <footer class="blockquote-footer mt-2">Emdad Global Management Team</footer>
+            </blockquote>
+            <p>For more information about our products and services, please don't hesitate to contact our team. We're always ready to discuss how we can meet your agricultural sourcing needs.</p>
+          {% endif %}
+        </article>
+
+        <!-- Tags -->
+        {% if article.get_tags_list() %}
+        <div class="mt-4">
+          <h6 class="mb-2">{{ _('Tags') }}:</h6>
+          <div class="d-flex flex-wrap gap-2">
+            {% for tag in article.get_tags_list() %}
+            <span class="badge bg-light text-dark">#{{ tag }}</span>
+            {% endfor %}
+          </div>
+        </div>
+        {% endif %}
+
+        <!-- Share Again -->
+        <div class="mt-4">
+          <h6 class="mb-2">{{ _('Share this article') }}:</h6>
+          <div class="d-flex gap-2 flex-wrap">
+            <button class="btn btn-outline-primary btn-sm hover-lift" onclick="shareArticle('facebook')"><i class="fab fa-facebook-f me-1"></i>Facebook</button>
+            <button class="btn btn-outline-info btn-sm hover-lift" onclick="shareArticle('twitter')"><i class="fab fa-twitter me-1"></i>Twitter</button>
+            <button class="btn btn-outline-success btn-sm hover-lift" onclick="shareArticle('whatsapp')"><i class="fab fa-whatsapp me-1"></i>WhatsApp</button>
+            <button class="btn btn-outline-secondary btn-sm hover-lift" onclick="shareArticle('copy')"><i class="fas fa-link me-1"></i>Copy Link</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Sidebar -->
+      <div class="col-lg-4">
+        <div class="position-sticky" style="top: 90px;">
+          <!-- Article Info -->
+          <div class="card border-0 shadow-lg mb-4">
+            <div class="card-body">
+              <div class="d-flex align-items-center mb-3">
+                <span class="badge bg-gradient-secondary text-dark fw-semibold me-2"><i class="fas fa-tag me-1"></i>{{ _('News') }}</span>
+                {% if article.featured %}<span class="badge bg-warning text-dark fw-semibold"><i class="fas fa-star me-1"></i>{{ _('Featured') }}</span>{% endif %}
+              </div>
+              <div class="d-flex align-items-center text-muted mb-2"><i class="fas fa-calendar-alt me-2 text-primary-custom"></i>{{ article.publish_at.strftime('%B %d, %Y') }}</div>
+              <div class="d-flex align-items-center text-muted"><i class="fas fa-clock me-2 text-primary-custom"></i>{{ _('Reading time') }}: {{ article.get_reading_time(current_language) }} {{ _('minutes') }}</div>
+            </div>
+          </div>
+
+          <!-- Quick Links Side -->
+          <div class="card border-0 shadow-lg mb-4 quick-links-card">
+            <div class="card-body">
+              <h6 class="card-title mb-3"><i class="fas fa-link me-2" style="color:#689b8a;"></i>{{ _('Quick Links') }}</h6>
+              <ul class="list-unstyled mb-0">
+                <li class="mb-2"><a class="text-decoration-none ql-item" href="{{ url_for('main.products') }}"><span class="ql-left"><i class="fas fa-leaf"></i>{{ _('Products') }}</span><i class="fas fa-chevron-right ql-arrow"></i></a></li>
+                <li class="mb-2"><a class="text-decoration-none ql-item" href="{{ url_for('main.certifications') }}"><span class="ql-left"><i class="fas fa-certificate"></i>{{ _('Certifications') }}</span><i class="fas fa-chevron-right ql-arrow"></i></a></li>
+                <li class="mb-2"><a class="text-decoration-none ql-item" href="{{ url_for('main.services') }}"><span class="ql-left"><i class="fas fa-shipping-fast"></i>{{ _('Export Services') }}</span><i class="fas fa-chevron-right ql-arrow"></i></a></li>
+                <li><a class="text-decoration-none ql-item" href="{{ url_for('main.contact') }}"><span class="ql-left"><i class="fas fa-envelope"></i>{{ _('Contact Us') }}</span><i class="fas fa-chevron-right ql-arrow"></i></a></li>
+              </ul>
+            </div>
+          </div>
+
+          <!-- CTA Side -->
+          <div class="card border-0 shadow-lg partner-cta">
+            <div class="card-body text-center">
+              <h5 class="card-title">{% if is_rtl %}جاهز للتعاون؟{% else %}{{ _('Ready to Partner?') }}{% endif %}</h5>
+              <p class="card-text">{% if is_rtl %}تواصل مع فريقنا لحلول توريد مخصصة.{% else %}{{ _('Get in touch with our team for tailored sourcing solutions.') }}{% endif %}</p>
+              <a href="{{ url_for('main.contact') }}" class="btn btn-light cta-btn hover-lift"><i class="fas fa-envelope me-2"></i>{% if is_rtl %}تواصل الآن{% else %}{{ _('Contact Us') }}{% endif %}</a>
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
+  </div>
 </section>
 
-<!-- Related Articles -->
+<!-- Related Articles (match homepage Latest Updates style) -->
 {% if related_articles %}
-<section class="py-5 bg-light">
-    <div class="container">
-        <div class="text-center mb-5">
-            <h2 class="mb-3">Related Articles</h2>
-            <p class="lead text-muted">More news and updates from Emdad Global</p>
-        </div>
-        
-        <div class="row">
-            {% for related in related_articles %}
-            <div class="col-lg-4 mb-4">
-                <div class="card h-100 border-0 shadow-sm news-card">
-                    {% if related.cover_image %}
-                    <img src="{{ url_for('main.uploaded_file', filename='news/' + related.cover_image) }}"
-                         class="card-img-top" alt="{{ related.get_title() }}" style="height: 200px; object-fit: cover;">
-                    {% else %}
-                    <div class="card-img-top bg-primary d-flex align-items-center justify-content-center" style="height: 200px;">
-                        <i class="fas fa-newspaper fa-3x text-white"></i>
-                    </div>
-                    {% endif %}
-                    
-                    <div class="card-body d-flex flex-column">
-                        <div class="mb-2">
-                            <small class="text-muted">{{ related.publish_at.strftime('%B %d, %Y') }}</small>
-                            {% if related.featured %}
-                            <span class="badge bg-warning text-dark ms-2">Featured</span>
-                            {% endif %}
-                        </div>
-                        
-                        <h6 class="card-title">{{ related.get_title() }}</h6>
-                        <p class="card-text text-muted flex-grow-1">{{ related.get_excerpt() | truncate(100) }}</p>
-                        
-                        <div class="mt-auto">
-                            <a href="{{ url_for('main.news_detail', slug=related.slug) }}" class="btn btn-outline-primary btn-sm">
-                                Read More <i class="fas fa-arrow-right ms-1"></i>
-                            </a>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            {% endfor %}
-        </div>
-        
-        <div class="text-center mt-4">
-            <a href="{{ url_for('main.news') }}" class="btn btn-primary">
-                <i class="fas fa-newspaper me-2"></i>View All News
-            </a>
-        </div>
+<section class="py-5 bg-gradient-light position-relative overflow-hidden">
+  <div class="container position-relative">
+    <div class="text-center mb-5" data-aos="fade-up">
+      <div class="section-badge badge bg-gradient-secondary text-dark px-4 py-2 rounded-pill mb-3 fs-6 fw-semibold">
+        <i class="fas fa-newspaper me-2"></i>{{ _('Related Articles') }}
+      </div>
+      <h2 class="section-heading english-heading gradient-text">{{ _('More News & Updates') }}</h2>
+      <p class="lead text-muted col-lg-8 mx-auto">{{ _('Explore more developments and insights from Emdad Global') }}</p>
     </div>
+
+    <div class="row g-4">
+      {% for related in related_articles %}
+      <div class="col-lg-4 col-md-6" data-aos="fade-up" data-aos-delay="{{ loop.index0 * 100 }}">
+        <article class="news-card card h-100 border-0 shadow-lg hover-lift position-relative overflow-hidden">
+          <div class="news-image-wrapper position-relative overflow-hidden">
+            {% if related.cover_image %}
+            <img src="{{ url_for('main.uploaded_file', filename='news/' + related.cover_image) }}" class="card-img-top news-image" alt="{{ related.get_title(current_language) }}" style="height: 250px; object-fit: cover;">
+            {% else %}
+            <div class="card-img-top bg-gradient-primary d-flex align-items-center justify-content-center" style="height: 250px;">
+              <i class="fas fa-newspaper fa-4x text-white opacity-75"></i>
+            </div>
+            {% endif %}
+
+            <!-- Date Badge -->
+            <div class="position-absolute top-0 start-0 p-3">
+              <div class="date-badge bg-white text-dark rounded-pill px-3 py-2 shadow-sm">
+                <i class="fas fa-calendar-alt me-2 text-primary-custom"></i>
+                <small class="fw-semibold">{{ related.publish_at.strftime('%b %d') }}</small>
+              </div>
+            </div>
+          </div>
+
+          <div class="card-body p-4">
+            <div class="news-meta mb-3">
+              <span class="badge bg-light text-primary-custom fw-semibold"><i class="fas fa-tag me-1"></i>{{ _('News') }}</span>
+              {% if related.featured %}
+              <span class="badge bg-gradient-secondary text-dark fw-semibold ms-2"><i class="fas fa-star me-1"></i>{{ _('Featured') }}</span>
+              {% endif %}
+            </div>
+
+            <h5 class="card-heading english-heading mb-3">{{ related.get_title(current_language) }}</h5>
+            <p class="card-text text-muted mb-4">{{ related.get_excerpt(current_language) | truncate(120) if related.get_excerpt(current_language) else _('Stay updated with the latest news and developments from Emdad Global.') }}</p>
+
+            <div class="d-flex justify-content-between align-items-center mt-auto">
+              <small class="text-muted"><i class="fas fa-clock me-1"></i>{{ related.publish_at.strftime('%B %d, %Y') }}</small>
+              <a href="{{ url_for('main.news_detail', slug=related.slug) }}" class="btn btn-outline-primary btn-sm hover-lift"><i class="fas fa-arrow-right me-1"></i>{{ _('Read More') }}</a>
+            </div>
+          </div>
+        </article>
+      </div>
+      {% endfor %}
+    </div>
+
+    <div class="text-center mt-4" data-aos="fade-up" data-aos-delay="400">
+      <a href="{{ url_for('main.news') }}" class="btn btn-primary btn-lg px-5 py-3 hover-lift"><i class="fas fa-newspaper me-2"></i>{{ _('View All News') }}</a>
+    </div>
+  </div>
 </section>
 {% endif %}
 
-<!-- Call to Action -->
-<section class="py-5 bg-primary text-white">
-    <div class="container">
-        <div class="row align-items-center">
-            <div class="col-lg-8">
-                <h3 class="mb-2">Stay Connected</h3>
-                <p class="mb-0">Subscribe to our newsletter for the latest updates and industry insights.</p>
-            </div>
-            <div class="col-lg-4 text-lg-end">
-                <a href="{{ url_for('main.contact') }}" class="btn btn-light btn-lg">
-                    <i class="fas fa-envelope me-2"></i>Contact Us
-                </a>
-            </div>
+<!-- Global CTA (same as News page bottom) -->
+<section class="py-5 bg-gradient-light">
+  <div class="container">
+    <div class="row align-items-center text-center">
+      <div class="col-lg-8 mx-auto" data-aos="fade-up">
+        <h2 class="display-6 english-heading mb-3">{% if is_rtl %}جاهز للتعاون معنا؟{% else %}{{ _('Ready to Partner with Us?') }}{% endif %}</h2>
+        <p class="lead text-muted mb-4">{% if is_rtl %}تواصل معنا الآن واكتشف حلول التوريد الموثوقة لأسواقك العالمية.{% else %}{{ _('Get in touch and discover reliable sourcing solutions for your markets.') }}{% endif %}</p>
+        <div class="d-flex flex-wrap justify-content-center gap-3">
+          <a href="{{ url_for('main.contact') }}" class="btn btn-primary btn-lg px-5 py-3 hover-lift"><i class="fas fa-envelope me-2"></i>{% if is_rtl %}تواصل الآن{% else %}{{ _('Contact Us') }}{% endif %}</a>
+          <a href="{{ url_for('main.products') }}" class="btn btn-outline-primary btn-lg px-5 py-3 hover-lift"><i class="fas fa-leaf me-2"></i>{% if is_rtl %}تصفح المنتجات{% else %}{{ _('View Products') }}{% endif %}</a>
         </div>
+      </div>
     </div>
+  </div>
 </section>
 {% endblock %}
 
@@ -248,9 +288,9 @@ function shareArticle(platform) {
     const url = encodeURIComponent(window.location.href);
     const title = encodeURIComponent(document.title);
     const text = encodeURIComponent('{{ article.get_excerpt() | truncate(100) }}');
-    
+
     let shareUrl = '';
-    
+
     switch(platform) {
         case 'facebook':
             shareUrl = `https://www.facebook.com/sharer/sharer.php?u=${url}`;
@@ -269,7 +309,7 @@ function shareArticle(platform) {
                 button.innerHTML = '<i class="fas fa-check me-1"></i>Copied!';
                 button.classList.add('btn-success');
                 button.classList.remove('btn-outline-secondary', 'btn-secondary');
-                
+
                 setTimeout(() => {
                     button.innerHTML = originalContent;
                     button.classList.remove('btn-success');
@@ -278,7 +318,7 @@ function shareArticle(platform) {
             });
             return;
     }
-    
+
     if (shareUrl) {
         window.open(shareUrl, '_blank', 'width=600,height=400');
     }
@@ -292,12 +332,12 @@ document.addEventListener('DOMContentLoaded', function() {
             this.style.transform = 'translateY(-5px)';
             this.style.transition = 'transform 0.3s ease';
         });
-        
+
         card.addEventListener('mouseleave', function() {
             this.style.transform = 'translateY(0)';
         });
     });
-    
+
     // Smooth scrolling for internal links
     const articleContent = document.querySelector('.article-content');
     if (articleContent) {
@@ -315,7 +355,7 @@ document.addEventListener('DOMContentLoaded', function() {
             });
         });
     }
-    
+
     // Reading progress indicator
     const article = document.querySelector('.article-content');
     if (article) {
@@ -331,18 +371,18 @@ document.addEventListener('DOMContentLoaded', function() {
             transition: width 0.3s ease;
         `;
         document.body.appendChild(progressBar);
-        
+
         window.addEventListener('scroll', function() {
             const articleTop = article.offsetTop;
             const articleHeight = article.offsetHeight;
             const windowHeight = window.innerHeight;
             const scrollTop = window.pageYOffset;
-            
+
             const progress = Math.min(
                 Math.max((scrollTop - articleTop + windowHeight) / articleHeight, 0),
                 1
             );
-            
+
             progressBar.style.width = (progress * 100) + '%';
         });
     }
