@@ -139,7 +139,7 @@
         <!-- Tags -->
         {% if article.get_tags_list() %}
         <div class="mt-4">
-          <h6 class="mb-2">{{ _('Tags') }}:</h6>
+          <h6 class="mb-2">{% if is_rtl %}الوسوم:{% else %}{{ _('Tags:') }}{% endif %}</h6>
           <div class="d-flex flex-wrap gap-2">
             {% for tag in article.get_tags_list() %}
             <span class="badge bg-light text-dark">#{{ tag }}</span>
@@ -148,14 +148,26 @@
         </div>
         {% endif %}
 
+        <style>
+          /* Share buttons styling to match site identity */
+          .share-btn { border-width:2px; }
+          .share-btn[data-platform="facebook"] { border-color:#3b5998; color:#3b5998; }
+          .share-btn[data-platform="facebook"]:hover { background:#3b5998; color:#fff; }
+          .share-btn[data-platform="twitter"] { border-color:#1da1f2; color:#1da1f2; }
+          .share-btn[data-platform="twitter"]:hover { background:#1da1f2; color:#fff; }
+          .share-btn[data-platform="whatsapp"] { border-color:#25D366; color:#25D366; }
+          .share-btn[data-platform="whatsapp"]:hover { background:#25D366; color:#103d24; }
+          .share-btn[data-platform="copy"] { border-color:#689b8a; color:#689b8a; }
+          .share-btn[data-platform="copy"]:hover { background:#689b8a; color:#103d24; }
+        </style>
         <!-- Share Again -->
         <div class="mt-4">
-          <h6 class="mb-2">{{ _('Share this article') }}:</h6>
+          <h6 class="mb-2">{% if is_rtl %}شارك هذا المقال:{% else %}{{ _('Share this article:') }}{% endif %}</h6>
           <div class="d-flex gap-2 flex-wrap">
-            <button class="btn btn-outline-primary btn-sm hover-lift" onclick="shareArticle('facebook')"><i class="fab fa-facebook-f me-1"></i>Facebook</button>
-            <button class="btn btn-outline-info btn-sm hover-lift" onclick="shareArticle('twitter')"><i class="fab fa-twitter me-1"></i>Twitter</button>
-            <button class="btn btn-outline-success btn-sm hover-lift" onclick="shareArticle('whatsapp')"><i class="fab fa-whatsapp me-1"></i>WhatsApp</button>
-            <button class="btn btn-outline-secondary btn-sm hover-lift" onclick="shareArticle('copy')"><i class="fas fa-link me-1"></i>Copy Link</button>
+            <button class="btn btn-outline-primary btn-sm hover-lift share-btn" data-platform="facebook"><i class="fab fa-facebook-f me-1"></i>Facebook</button>
+            <button class="btn btn-outline-info btn-sm hover-lift share-btn" data-platform="twitter"><i class="fab fa-twitter me-1"></i>Twitter</button>
+            <button class="btn btn-outline-success btn-sm hover-lift share-btn" data-platform="whatsapp"><i class="fab fa-whatsapp me-1"></i>WhatsApp</button>
+            <button class="btn btn-outline-secondary btn-sm hover-lift share-btn" data-platform="copy"><i class="fas fa-link me-1"></i>{% if is_rtl %}نسخ الرابط{% else %}Copy Link{% endif %}</button>
           </div>
         </div>
       </div>
@@ -178,12 +190,12 @@
           <!-- Quick Links Side -->
           <div class="card border-0 shadow-lg mb-4 quick-links-card">
             <div class="card-body">
-              <h6 class="card-title mb-3"><i class="fas fa-link me-2" style="color:#689b8a;"></i>{{ _('Quick Links') }}</h6>
-              <ul class="list-unstyled mb-0">
-                <li class="mb-2"><a class="text-decoration-none ql-item" href="{{ url_for('main.products') }}"><span class="ql-left"><i class="fas fa-leaf"></i>{{ _('Products') }}</span><i class="fas fa-chevron-right ql-arrow"></i></a></li>
-                <li class="mb-2"><a class="text-decoration-none ql-item" href="{{ url_for('main.certifications') }}"><span class="ql-left"><i class="fas fa-certificate"></i>{{ _('Certifications') }}</span><i class="fas fa-chevron-right ql-arrow"></i></a></li>
-                <li class="mb-2"><a class="text-decoration-none ql-item" href="{{ url_for('main.services') }}"><span class="ql-left"><i class="fas fa-shipping-fast"></i>{{ _('Export Services') }}</span><i class="fas fa-chevron-right ql-arrow"></i></a></li>
-                <li><a class="text-decoration-none ql-item" href="{{ url_for('main.contact') }}"><span class="ql-left"><i class="fas fa-envelope"></i>{{ _('Contact Us') }}</span><i class="fas fa-chevron-right ql-arrow"></i></a></li>
+              <h6 class="card-title mb-3"><i class="fas fa-link me-2" style="color:#689b8a;"></i>{% if is_rtl %}روابط سريعة{% else %}{{ _('Quick Links') }}{% endif %}</h6>
+              <ul class="list-unstyled mb-0 {{ 'arabic-text' if is_rtl else 'english-text' }}">
+                <li class="mb-2"><a class="text-decoration-none ql-item" href="{{ url_for('main.products') }}"><span class="ql-left"><i class="fas fa-leaf"></i>{% if is_rtl %}المنتجات{% else %}{{ _('Products') }}{% endif %}</span><i class="fas fa-chevron-{{ 'left' if is_rtl else 'right' }} ql-arrow"></i></a></li>
+                <li class="mb-2"><a class="text-decoration-none ql-item" href="{{ url_for('main.certifications') }}"><span class="ql-left"><i class="fas fa-certificate"></i>{% if is_rtl %}الشهادات{% else %}{{ _('Certifications') }}{% endif %}</span><i class="fas fa-chevron-{{ 'left' if is_rtl else 'right' }} ql-arrow"></i></a></li>
+                <li class="mb-2"><a class="text-decoration-none ql-item" href="{{ url_for('main.services') }}"><span class="ql-left"><i class="fas fa-shipping-fast"></i>{% if is_rtl %}خدمات التصدير{% else %}{{ _('Export Services') }}{% endif %}</span><i class="fas fa-chevron-{{ 'left' if is_rtl else 'right' }} ql-arrow"></i></a></li>
+                <li><a class="text-decoration-none ql-item" href="{{ url_for('main.contact') }}"><span class="ql-left"><i class="fas fa-envelope"></i>{% if is_rtl %}تواصل معنا{% else %}{{ _('Contact Us') }}{% endif %}</span><i class="fas fa-chevron-{{ 'left' if is_rtl else 'right' }} ql-arrow"></i></a></li>
               </ul>
             </div>
           </div>
@@ -208,10 +220,10 @@
   <div class="container position-relative">
     <div class="text-center mb-5" data-aos="fade-up">
       <div class="section-badge badge bg-gradient-secondary text-dark px-4 py-2 rounded-pill mb-3 fs-6 fw-semibold">
-        <i class="fas fa-newspaper me-2"></i>{{ _('Related Articles') }}
+        <i class="fas fa-newspaper me-2"></i>{% if is_rtl %}مقالات ذات صلة{% else %}{{ _('Related Articles') }}{% endif %}
       </div>
-      <h2 class="section-heading english-heading gradient-text">{{ _('More News & Updates') }}</h2>
-      <p class="lead text-muted col-lg-8 mx-auto">{{ _('Explore more developments and insights from Emdad Global') }}</p>
+      <h2 class="section-heading {{ 'arabic-heading' if is_rtl else 'english-heading' }} gradient-text">{% if is_rtl %}المزيد من الأخبار والتحديثات{% else %}{{ _('More News & Updates') }}{% endif %}</h2>
+      <p class="lead text-muted {{ 'arabic-text' if is_rtl else 'english-text' }} col-lg-8 mx-auto">{% if is_rtl %}اكتشف المزيد من التطورات والرؤى من إمداد جلوبال{% else %}{{ _('Explore more developments and insights from Emdad Global') }}{% endif %}</p>
     </div>
 
     <div class="row g-4">
@@ -273,7 +285,7 @@
         <p class="lead text-muted mb-4">{% if is_rtl %}تواصل معنا الآن واكتشف حلول التوريد الموثوقة لأسواقك العالمية.{% else %}{{ _('Get in touch and discover reliable sourcing solutions for your markets.') }}{% endif %}</p>
         <div class="d-flex flex-wrap justify-content-center gap-3">
           <a href="{{ url_for('main.contact') }}" class="btn btn-primary btn-lg px-5 py-3 hover-lift"><i class="fas fa-envelope me-2"></i>{% if is_rtl %}تواصل الآن{% else %}{{ _('Contact Us') }}{% endif %}</a>
-          <a href="{{ url_for('main.products') }}" class="btn btn-outline-primary btn-lg px-5 py-3 hover-lift"><i class="fas fa-leaf me-2"></i>{% if is_rtl %}تصفح المنتجات{% else %}{{ _('View Products') }}{% endif %}</a>
+          <a href="{{ url_for('main.products') }}" class="btn btn-outline-primary btn-lg px-5 py-3 hover-lift btn-text"><i class="fas fa-leaf me-2"></i>{% if is_rtl %}تصفح المنتجات{% else %}{{ _('View Products') }}{% endif %}</a>
         </div>
       </div>
     </div>
