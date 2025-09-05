@@ -76,7 +76,18 @@
 
 <!-- Featured News -->
 {% if featured_news %}
-<section class="py-5 bg-light">
+<section class="py-5 bg-light featured-news-section">
+  <style>
+    /* Center Arabic featured section heading and lead */
+    .featured-news-section .arabic-heading,
+    .featured-news-section .arabic-text {
+      text-align: center !important;
+      margin-left: auto !important;
+      margin-right: auto !important;
+      display: block;
+      width: 100%;
+    }
+  </style>
   <div class="container">
     <div class="text-center mb-5" data-aos="fade-up">
       <div class="section-badge badge bg-gradient-primary text-white px-4 py-2 rounded-pill mb-3 fs-6 fw-semibold">
