@@ -22,8 +22,16 @@
     .grid-animated-bg { position:absolute; inset:0; z-index:0; pointer-events:none; }
     .leaf { position:absolute; color: rgba(249,203,153,.55); font-size: 1rem; animation: leafDrift 18s linear infinite; }
     @keyframes leafDrift { 0%{ transform: translateX(0) rotate(0deg);} 50%{ transform: translateX(50vw) rotate(10deg);} 100%{ transform: translateX(100vw) rotate(0deg);} }
+.btn-peach-hover { border: 2px solid var(--secondary-color); background: var(--secondary-gradient); color: var(--dark-color); transition: transform .2s ease, box-shadow .2s ease, background .2s ease, color .2s ease, border-color .2s ease; }
+.btn-peach-hover:hover, .btn-peach-hover:focus { background: var(--primary-gradient); border-color: var(--primary-color); color: #fff; box-shadow: 0 10px 24px rgba(104,155,138,.35); transform: translateY(-2px); }
+
     @media (prefers-reduced-motion: reduce) { .hero-bubble, .leaf { animation: none !important; } }
     @media (max-width: 767.98px) { .hero-animated-bg, .grid-animated-bg { display: none !important; } .products-hero { min-height: 300px; } }
+    /* Footer-like contact icons */
+    .contact-list .icon-wrap { width:56px; height:56px; border-radius:50%; display:inline-flex; align-items:center; justify-content:center; background: rgba(255,255,255,0.08); color:#f9cb99; border:1px solid rgba(255,255,255,0.2); transition: transform .2s ease, box-shadow .2s ease, background-color .2s ease, color .2s ease, border-color .2s ease; }
+    .contact-list .icon-wrap:hover,
+    .contact-list .icon-wrap:focus,
+    .contact-list .icon-wrap:active { background: var(--primary-gradient); color:#ffffff; border-color: var(--primary-color); transform: translateY(-1px); box-shadow: 0 10px 24px rgba(104,155,138,.35); }
   </style>
   <div class="hero-animated-bg" aria-hidden="true">
     <span class="hero-bubble b1"></span>
@@ -40,27 +48,30 @@
         </div>
         <h1 class="display-5 mb-3 text-white {{ 'arabic-heading' if is_rtl else 'english-heading' }} text-center" style="color:#fff !important;">{% if is_rtl %}نحن هنا لخدمتك{% else %}We're Here to Help{% endif %}</h1>
         <p class="lead text-center" style="opacity:.95; color:#fff;">{% if is_rtl %}راسلنا لطلب عرض أسعار، استفسارات، أو فرص شراكة.{% else %}Reach out for quotes, inquiries, or partnership opportunities.{% endif %}</p>
-        <a href="#rfq-form" class="btn btn-dark btn-lg px-5 py-3 mt-3 hover-lift" style="border-radius:12px;">
+        <a href="#rfq-form" class="btn btn-peach-hover btn-lg px-5 py-3 mt-3 hover-lift" style="border-radius:12px; background: var(--secondary-gradient); color: var(--dark-color); border: 2px solid var(--secondary-color);">
           <i class="fas fa-paper-plane me-2"></i>{% if is_rtl %}أرسل طلبك{% else %}Send Request{% endif %}
         </a>
       </div>
     </div>
   </div>
+  <style>@keyframes leafDriftReverse { 0%{ transform: translateX(0) rotate(0deg);} 50%{ transform: translateX(-50vw) rotate(-10deg);} 100%{ transform: translateX(-100vw) rotate(0deg);} }</style>
   <script>
     document.addEventListener('DOMContentLoaded', function(){
       const container = document.getElementById('contactHeroLeaves');
       if(!container) return;
       const prefersReduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches; if (prefersReduced) return;
-      const COUNT = 12;
+      const COUNT = 12; // match other sections
       for(let i=0;i<COUNT;i++){
-        const s = document.createElement('span');
-        s.className = 'leaf';
-        s.style.top = Math.random()*90 + '%';
-        s.style.left = (-40 + Math.random()*20) + 'px';
-        s.style.animationDuration = (16 + Math.random()*8) + 's';
-        s.style.fontSize = (0.9 + Math.random()*1.2) + 'rem';
-        s.innerHTML = '<i class="fas fa-leaf"></i>';
-        container.appendChild(s);
+        const leaf = document.createElement('i');
+        leaf.className = 'fas fa-leaf leaf';
+        const top = (Math.random()*92) + 2; leaf.style.top = top.toFixed(2) + '%';
+        const fromLeft = Math.random() < 0.5; const offset = -30 - Math.random()*70;
+        if (fromLeft) { leaf.style.left = offset.toFixed(0)+'px'; leaf.style.animationName = 'leafDrift'; }
+        else { leaf.style.right = offset.toFixed(0)+'px'; leaf.style.animationName = 'leafDriftReverse'; }
+        const duration = 16 + Math.random()*12; leaf.style.animationDuration = duration.toFixed(2)+'s';
+        const delay = Math.random()*10; leaf.style.animationDelay = delay.toFixed(2)+'s';
+        const size = 0.8 + Math.random()*0.9; leaf.style.fontSize = size.toFixed(2)+'rem';
+        container.appendChild(leaf);
       }
     });
   </script>
@@ -76,9 +87,9 @@
           <div class="card-body p-4">
             <h4 class="card-title mb-4 {{ 'arabic-heading' if is_rtl else 'english-heading' }}">{% if is_rtl %}معلومات التواصل{% else %}Get in Touch{% endif %}</h4>
 
-            <div class="contact-item mb-4" data-aos="fade-up" data-aos-delay="50">
+            <div class="contact-item mb-4 contact-list" data-aos="fade-up" data-aos-delay="50">
               <div class="d-flex align-items-start">
-                <div class="contact-icon bg-gradient-primary text-white rounded-circle d-inline-flex align-items-center justify-content-center me-3 hover-lift" style="width: 56px; height: 56px;">
+                <div class="icon-wrap me-3">
                   <i class="fas fa-envelope"></i>
                 </div>
                 <div>
@@ -88,9 +99,9 @@
               </div>
             </div>
 
-            <div class="contact-item mb-4" data-aos="fade-up" data-aos-delay="100">
+            <div class="contact-item mb-4 contact-list" data-aos="fade-up" data-aos-delay="100">
               <div class="d-flex align-items-start">
-                <div class="contact-icon bg-gradient-secondary text-dark rounded-circle d-inline-flex align-items-center justify-content-center me-3 hover-lift" style="width: 56px; height: 56px;">
+                <div class="icon-wrap me-3">
                   <i class="fas fa-phone"></i>
                 </div>
                 <div>
@@ -100,9 +111,9 @@
               </div>
             </div>
 
-            <div class="contact-item mb-4" data-aos="fade-up" data-aos-delay="150">
+            <div class="contact-item mb-4 contact-list" data-aos="fade-up" data-aos-delay="150">
               <div class="d-flex align-items-start">
-                <div class="contact-icon bg-success text-white rounded-circle d-inline-flex align-items-center justify-content-center me-3 hover-lift" style="width: 56px; height: 56px;">
+                <div class="icon-wrap me-3">
                   <i class="fab fa-whatsapp"></i>
                 </div>
                 <div>
@@ -112,9 +123,9 @@
               </div>
             </div>
 
-            <div class="contact-item mb-4" data-aos="fade-up" data-aos-delay="200">
+            <div class="contact-item mb-4 contact-list" data-aos="fade-up" data-aos-delay="200">
               <div class="d-flex align-items-start">
-                <div class="contact-icon bg-gradient-primary text-white rounded-circle d-inline-flex align-items-center justify-content-center me-3 hover-lift" style="width: 56px; height: 56px;">
+                <div class="icon-wrap me-3">
                   <i class="fas fa-map-marker-alt"></i>
                 </div>
                 <div>
@@ -128,8 +139,8 @@
             <div class="mt-4" data-aos="fade-up" data-aos-delay="250">
               <h6 class="mb-3">{% if is_rtl %}ساعات العمل{% else %}Business Hours{% endif %}</h6>
               <div class="text-muted small">
-                <div class="d-flex justify-content-between mb-1"><span>{% if is_rtl %}الأحد - الخميس:{% else %}Sunday - Thursday:{% endif %}</span><span>9:00 - 18:00</span></div>
-                <div class="d-flex justify-content-between mb-1"><span>{% if is_rtl %}الجمعة:{% else %}Friday:{% endif %}</span><span>9:00 - 14:00</span></div>
+                <div class="d-flex justify-content-between mb-1"><span>{% if is_rtl %}الأحد - الخميس:{% else %}Sunday - Thursday:{% endif %}</span><span>{% if is_rtl %}9:00 ص - 6:00 م{% else %}9:00 AM - 6:00 PM{% endif %}</span></div>
+                <div class="d-flex justify-content-between mb-1"><span>{% if is_rtl %}الجمعة:{% else %}Friday:{% endif %}</span><span>{% if is_rtl %}9:00 ص - 2:00 م{% else %}9:00 AM - 2:00 PM{% endif %}</span></div>
                 <div class="d-flex justify-content-between"><span>{% if is_rtl %}السبت:{% else %}Saturday:{% endif %}</span><span>{% if is_rtl %}مغلق{% else %}Closed{% endif %}</span></div>
               </div>
             </div>
@@ -149,12 +160,12 @@
 
               <div class="row">
                 <div class="col-md-6 mb-3">
-                  {{ form.name.label(class="form-label fw-semibold") }}
+                  {{ form.name.label(class="form-label fw-semibold") if not is_rtl else '<label class="form-label fw-semibold">الاسم الكامل</label>'|safe }}
                   {{ form.name(class="form-control") }}
                   {% if form.name.errors %}<div class="invalid-feedback d-block">{% for error in form.name.errors %}{{ error }}{% endfor %}</div>{% endif %}
                 </div>
                 <div class="col-md-6 mb-3">
-                  {{ form.email.label(class="form-label fw-semibold") }}
+                  {{ form.email.label(class="form-label fw-semibold") if not is_rtl else '<label class="form-label fw-semibold">البريد الإلكتروني</label>'|safe }}
                   {{ form.email(class="form-control") }}
                   {% if form.email.errors %}<div class="invalid-feedback d-block">{% for error in form.email.errors %}{{ error }}{% endfor %}</div>{% endif %}
                 </div>
@@ -162,12 +173,12 @@
 
               <div class="row">
                 <div class="col-md-6 mb-3">
-                  {{ form.phone.label(class="form-label fw-semibold") }}
+                  {{ form.phone.label(class="form-label fw-semibold") if not is_rtl else '<label class="form-label fw-semibold">رقم الهاتف</label>'|safe }}
                   {{ form.phone(class="form-control") }}
                   {% if form.phone.errors %}<div class="invalid-feedback d-block">{% for error in form.phone.errors %}{{ error }}{% endfor %}</div>{% endif %}
                 </div>
                 <div class="col-md-6 mb-3">
-                  {{ form.company.label(class="form-label fw-semibold") }}
+                  {{ form.company.label(class="form-label fw-semibold") if not is_rtl else '<label class="form-label fw-semibold">اسم الشركة</label>'|safe }}
                   {{ form.company(class="form-control") }}
                   {% if form.company.errors %}<div class="invalid-feedback d-block">{% for error in form.company.errors %}{{ error }}{% endfor %}</div>{% endif %}
                 </div>
@@ -175,12 +186,12 @@
 
               <div class="row">
                 <div class="col-md-6 mb-3">
-                  {{ form.country.label(class="form-label fw-semibold") }}
+                  {{ form.country.label(class="form-label fw-semibold") if not is_rtl else '<label class="form-label fw-semibold">الدولة</label>'|safe }}
                   {{ form.country(class="form-control") }}
                   {% if form.country.errors %}<div class="invalid-feedback d-block">{% for error in form.country.errors %}{{ error }}{% endfor %}</div>{% endif %}
                 </div>
                 <div class="col-md-6 mb-3">
-                  {{ form.category_key.label(class="form-label fw-semibold") }}
+                  {{ form.category_key.label(class="form-label fw-semibold") if not is_rtl else '<label class="form-label fw-semibold">فئة المنتج</label>'|safe }}
                   {{ form.category_key(class="form-select") }}
                   {% if form.category_key.errors %}<div class="invalid-feedback d-block">{% for error in form.category_key.errors %}{{ error }}{% endfor %}</div>{% endif %}
                 </div>
@@ -188,39 +199,44 @@
 
               <div class="row">
                 <div class="col-md-6 mb-3">
-                  {{ form.product_name.label(class="form-label fw-semibold") }}
-                  {{ form.product_name(class="form-control", placeholder=("اختر التصنيف أولاً..." if is_rtl else "Select a category first...")) }}
+                  {{ form.product_name.label(class="form-label fw-semibold") if not is_rtl else '<label class="form-label fw-semibold">اسم المنتج</label>'|safe }}
+                  {{ form.product_name(class="form-select") }}
+                  <div class="form-text">{% if is_rtl %}سيتم تحميل المنتجات المتاحة فور اختيار فئة المنتج{% else %}Products will load after selecting a category{% endif %}</div>
                   {% if form.product_name.errors %}<div class="invalid-feedback d-block">{% for error in form.product_name.errors %}{{ error }}{% endfor %}</div>{% endif %}
                 </div>
                 <div class="col-md-6 mb-3">
-                  {{ form.quantity.label(class="form-label fw-semibold") }}
+                  {{ form.quantity.label(class="form-label fw-semibold") if not is_rtl else '<label class="form-label fw-semibold">الكمية المطلوبة</label>'|safe }}
                   {{ form.quantity(class="form-control", placeholder=("مثال: 20 طن، 1000 كرتونة" if is_rtl else "e.g., 20 tons, 1000 cartons")) }}
                   {% if form.quantity.errors %}<div class="invalid-feedback d-block">{% for error in form.quantity.errors %}{{ error }}{% endfor %}</div>{% endif %}
                 </div>
               </div>
 
               <div class="mb-3">
-                {{ form.packaging_preference.label(class="form-label fw-semibold") }}
+                {{ form.packaging_preference.label(class="form-label fw-semibold") if not is_rtl else '<label class="form-label fw-semibold">تفضيل التغليف</label>'|safe }}
                 {{ form.packaging_preference(class="form-control", placeholder=("مثال: كراتين 15كجم، أكياس 1كجم" if is_rtl else "e.g., 15kg cartons, 1kg retail bags")) }}
                 {% if form.packaging_preference.errors %}<div class="invalid-feedback d-block">{% for error in form.packaging_preference.errors %}{{ error }}{% endfor %}</div>{% endif %}
               </div>
 
               <div class="mb-3">
-                {{ form.message.label(class="form-label fw-semibold") }}
+                {{ form.message.label(class="form-label fw-semibold") if not is_rtl else '<label class="form-label fw-semibold">تفاصيل الطلب</label>'|safe }}
                 {{ form.message(class="form-control", rows="4", placeholder=("اذكر المواصفات المطلوبة، الوجهة، الزمن، وأي معايير جودة..." if is_rtl else "Please provide details about your requirements, destination, timeline, and any quality standards...")) }}
                 {% if form.message.errors %}<div class="invalid-feedback d-block">{% for error in form.message.errors %}{{ error }}{% endfor %}</div>{% endif %}
               </div>
 
               <div class="mb-4">
-                {{ form.attachment.label(class="form-label fw-semibold") }}
-                {{ form.attachment(class="form-control") }}
+                {{ form.attachment.label(class="form-label fw-semibold") if not is_rtl else '<label class="form-label fw-semibold">مرفقات (اختياري)</label>'|safe }}
+                <div class="input-group">
+                  <button class="btn btn-peach-hover" type="button" id="chooseFileBtn"><i class="fas fa-paperclip me-1"></i>{% if is_rtl %}اختر ملفاً{% else %}Choose File{% endif %}</button>
+                  <span class="input-group-text flex-grow-1 text-truncate" id="fileNameText" style="background:#fff;">{% if is_rtl %}لم يتم اختيار ملف{% else %}No file chosen{% endif %}</span>
+                </div>
+                {{ form.attachment(class="form-control d-none", id="attachment") }}
                 <div class="form-text">{% if is_rtl %}اختياري: أرفق المواصفات أو المستندات ذات الصلة (PDF/DOC/صور){% else %}Optional: Upload specs or documents (PDF, DOC, images){% endif %}</div>
                 <div class="file-preview d-none text-muted small mt-2"></div>
                 {% if form.attachment.errors %}<div class="invalid-feedback d-block">{% for error in form.attachment.errors %}{{ error }}{% endfor %}</div>{% endif %}
               </div>
 
               <div class="d-grid">
-                <button type="submit" class="btn btn-primary btn-lg px-5 py-3 hover-lift" style="border-radius:12px;">
+                <button type="submit" class="btn btn-peach-hover btn-lg px-5 py-3 hover-lift" style="border-radius:12px; border:2px solid var(--secondary-color); background: var(--secondary-gradient); color: var(--dark-color);">
                   <i class="fas fa-paper-plane me-2"></i>{% if is_rtl %}إرسال الطلب{% else %}Send Request{% endif %}
                 </button>
               </div>
@@ -237,7 +253,13 @@
   <div class="container">
     <div class="row">
       <div class="col-lg-10 mx-auto text-center">
-        <h3 class="mb-4 {{ 'arabic-heading' if is_rtl else 'english-heading' }}">{% if is_rtl %}لماذا تطلب عرض أسعار من إمداد جلوبال؟{% else %}Why Request a Quote from Emdad Global?{% endif %}</h3>
+
+        <div class="card border-0 shadow-lg mb-4" style="border-radius:16px;">
+          <div class="card-body p-4 text-center">
+            <h3 class="m-0 text-center {{ 'arabic-heading' if is_rtl else 'english-heading' }}" style="text-align:center !important;">{% if is_rtl %}لماذا تطلب عرض أسعار من إمداد جلوبال؟{% else %}Why Request a Quote from Emdad Global?{% endif %}</h3>
+          </div>
+        </div>
+
         <div class="row g-4">
           <div class="col-md-4" data-aos="fade-up" data-aos-delay="50">
             <div class="card h-100 border-0 shadow-lg p-4 hover-lift" style="border-radius:16px;">
@@ -270,56 +292,88 @@
 {% block extra_scripts %}
 <script>
 document.addEventListener('DOMContentLoaded', function() {
-    // Dynamic product loading based on category selection
-    const categorySelect = document.getElementById('category_key');
-    const productInput = document.getElementById('product_name');
-    
-    if (categorySelect && productInput) {
-        // Initially disable product input
-        productInput.disabled = !categorySelect.value;
-        
-        categorySelect.addEventListener('change', function() {
-            const categoryKey = this.value;
-            
-            if (categoryKey) {
-                productInput.placeholder = 'Loading products...';
-                productInput.disabled = true;
-                
-                fetch(`/api/products/${categoryKey}`)
-                    .then(response => response.json())
-                    .then(products => {
-                        // Create or update datalist
-                        let datalist = document.getElementById('product-list');
-                        if (!datalist) {
-                            datalist = document.createElement('datalist');
-                            datalist.id = 'product-list';
-                            productInput.parentNode.appendChild(datalist);
-                        }
-                        
-                        datalist.innerHTML = '';
-                        products.forEach(product => {
-                            const option = document.createElement('option');
-                            option.value = product.name;
-                            datalist.appendChild(option);
-                        });
-                        
-                        productInput.setAttribute('list', 'product-list');
-                        productInput.placeholder = {% if is_rtl %}'اكتب أو اختر منتجاً...'{% else %}'Type or select a product...'{% endif %};
-                        productInput.disabled = false;
-                        productInput.focus();
-                    })
-                    .catch(error => {
-                        console.error('Error loading products:', error);
-                        productInput.placeholder = {% if is_rtl %}'اكتب اسم المنتج...'{% else %}'Enter product name...'{% endif %};
-                        productInput.disabled = false;
-                    });
-            } else {
-                productInput.placeholder = {% if is_rtl %}'اختر التصنيف أولاً...'{% else %}'Select a category first...'{% endif %};
-                productInput.disabled = true;
-                productInput.removeAttribute('list');
-            }
+  const isRTL = {{ 'true' if is_rtl else 'false' }};
+  // Elements
+  const categorySelect = document.getElementById('category_key');
+  const productSelect = document.getElementById('product_name');
+  const attachmentInput = document.getElementById('attachment');
+  const chooseFileBtn = document.getElementById('chooseFileBtn');
+  const fileNameText = document.getElementById('fileNameText');
+
+  // Helper to reset product select
+  function resetProductSelect(message) {
+    if (!productSelect) return;
+    productSelect.innerHTML = '';
+    const opt = document.createElement('option');
+    opt.value = '';
+    opt.disabled = true;
+    opt.selected = true;
+    opt.textContent = message;
+    productSelect.appendChild(opt);
+  }
+
+  // Initialize product select state
+  if (productSelect) {
+    resetProductSelect(isRTL ? 'اختر التصنيف أولاً...' : 'Select a category first...');
+    productSelect.disabled = !categorySelect || !categorySelect.value;
+  }
+
+  // Wire up category change -> load products
+  if (categorySelect && productSelect) {
+    categorySelect.addEventListener('change', function() {
+      const key = this.value;
+      if (!key) {
+        resetProductSelect(isRTL ? 'اختر التصنيف أولاً...' : 'Select a category first...');
+        productSelect.disabled = true;
+        return;
+      }
+
+      resetProductSelect(isRTL ? 'جارٍ تحميل المنتجات...' : 'Loading products...');
+      productSelect.disabled = true;
+
+      fetch(`/api/products/${key}`)
+        .then(r => r.json())
+        .then(products => {
+          productSelect.innerHTML = '';
+          const placeholder = document.createElement('option');
+          placeholder.value = '';
+          placeholder.disabled = true;
+          placeholder.selected = true;
+          placeholder.textContent = isRTL ? 'اختر المنتج...' : 'Select a product...';
+          productSelect.appendChild(placeholder);
+          (products || []).forEach(p => {
+            const label = isRTL ? (p.name_ar || p.name_en) : (p.name_en || p.name_ar);
+            const opt = document.createElement('option');
+            opt.value = label;
+            opt.textContent = label;
+            productSelect.appendChild(opt);
+          });
+          productSelect.disabled = false;
+          productSelect.focus();
+        })
+        .catch(err => {
+          console.error('Error loading products', err);
+          resetProductSelect(isRTL ? 'تعذر تحميل المنتجات' : 'Could not load products');
+          productSelect.disabled = false;
         });
+    });
+
+    // Trigger initial load if a category is preselected
+    if (categorySelect.value) {
+      const event = new Event('change');
+      categorySelect.dispatchEvent(event);
     }
+  }
+
+  // Custom file input translations and interaction
+  if (chooseFileBtn && attachmentInput && fileNameText) {
+    fileNameText.textContent = isRTL ? 'لم يتم اختيار ملف' : 'No file chosen';
+    chooseFileBtn.addEventListener('click', function(){ attachmentInput.click(); });
+    attachmentInput.addEventListener('change', function(){
+      const name = this.files && this.files.length ? this.files[0].name : '';
+      fileNameText.textContent = name || (isRTL ? 'لم يتم اختيار ملف' : 'No file chosen');
+    });
+  }
 });
 </script>
 {% endblock %}

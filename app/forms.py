@@ -5,6 +5,7 @@ from wtforms.validators import DataRequired, Email, Length, Optional, Validation
 from wtforms.widgets import TextArea
 from app.models import User, Category
 from flask_babel import lazy_gettext as _l
+from flask import session
 
 class RFQForm(FlaskForm):
     """Request for Quote form."""
@@ -15,7 +16,8 @@ class RFQForm(FlaskForm):
     country = StringField('Country', validators=[DataRequired(), Length(max=100)])
 
     category_key = SelectField('Product Category', validators=[DataRequired()], choices=[])
-    product_name = StringField('Specific Product', validators=[Optional(), Length(max=200)])
+    # Switch product_name to SelectField to be a real dropdown; will be populated dynamically on the page
+    product_name = SelectField('Specific Product', validators=[Optional(), Length(max=200)], choices=[])
     quantity = StringField('Required Quantity', validators=[Optional(), Length(max=100)])
     packaging_preference = StringField('Packaging Preference', validators=[Optional(), Length(max=200)])
 
@@ -26,10 +28,18 @@ class RFQForm(FlaskForm):
 
     def __init__(self, *args, **kwargs):
         super(RFQForm, self).__init__(*args, **kwargs)
-        # Populate category choices
-        self.category_key.choices = [('', 'Select a category')] + [
-            (cat.key, cat.name_en) for cat in Category.query.filter_by(is_active=True).order_by(Category.sort_order)
+        # Determine language from session, default to 'en'
+        lang = session.get('language', 'en')
+        # Populate localized category choices using admin-provided translations
+        categories = Category.query.filter_by(is_active=True).order_by(Category.sort_order).all()
+        self.category_key.choices = [
+            ('', 'اختر الفئة' if lang == 'ar' else 'Select a category')
+        ] + [
+            (cat.key, (cat.name_ar or cat.name_en) if lang == 'ar' else (cat.name_en or cat.name_ar))
+            for cat in categories
         ]
+        # Initialize product_name with a placeholder option; will be filled dynamically client-side
+        self.product_name.choices = [('', 'اختر التصنيف أولاً' if lang == 'ar' else 'Select a category first')]
 
 class LoginForm(FlaskForm):
     """Admin login form."""

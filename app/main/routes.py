@@ -341,10 +341,13 @@ def api_products_by_category(category_key):
     products = Product.query.filter_by(
         category_id=category.id,
         status='active'
-    ).order_by(Product.name_en).all()
+    ).order_by(Product.sort_order, Product.name_en).all()
 
+    # Return both languages so the client can display based on current language
     return jsonify([{
         'id': product.id,
-        'name': product.name_en,
+        'name': product.name_en,  # backward compat
+        'name_en': product.name_en,
+        'name_ar': product.name_ar,
         'slug': product.slug
     } for product in products])
