@@ -2,7 +2,7 @@ from flask import render_template, request, redirect, url_for, flash, current_ap
 from flask_login import login_user, logout_user, login_required, current_user
 from werkzeug.utils import secure_filename
 from app.admin import bp
-from app.models import User, Category, Product, Certification, Service, News, Gallery, RFQ, CompanyInfo, AuditLog
+from app.models import User, Category, Product, Certification, Service, News, Gallery, RFQ, CompanyInfo, AuditLog, GalleryCategory
 from app.forms import LoginForm, UserForm, CategoryForm, ProductForm, CertificationForm, ServiceForm, NewsForm, GalleryForm, CompanyInfoForm
 from app import db
 import os
@@ -35,15 +35,15 @@ def login():
     """Admin login."""
     if current_user.is_authenticated:
         return redirect(url_for('admin.dashboard'))
-    
+
     form = LoginForm()
     if form.validate_on_submit():
         user = User.query.filter_by(email=form.email.data, is_active=True).first()
-        
+
         if user and user.check_password(form.password.data):
             login_user(user, remember=form.remember_me.data)
             user.last_login = datetime.utcnow()
-            
+
             # Log the login
             audit_log = AuditLog(
                 user_id=user.id,
@@ -53,14 +53,14 @@ def login():
             )
             db.session.add(audit_log)
             db.session.commit()
-            
+
             next_page = request.args.get('next')
             if not next_page or not next_page.startswith('/'):
                 next_page = url_for('admin.dashboard')
             return redirect(next_page)
-        
+
         flash('Invalid email or password.', 'error')
-    
+
     return render_template('admin/login.html', form=form)
 
 @bp.route('/logout')
@@ -76,7 +76,7 @@ def logout():
     )
     db.session.add(audit_log)
     db.session.commit()
-    
+
     logout_user()
     flash('You have been logged out.', 'info')
     return redirect(url_for('admin.login'))
@@ -95,13 +95,13 @@ def dashboard():
         'published_news': News.query.filter_by(status='published').count(),
         'gallery_images': Gallery.query.filter_by(is_active=True).count()
     }
-    
+
     # Get recent RFQs
     recent_rfqs = RFQ.query.order_by(RFQ.created_at.desc()).limit(5).all()
-    
+
     # Get recent audit logs
     recent_logs = AuditLog.query.order_by(AuditLog.created_at.desc()).limit(10).all()
-    
+
     return render_template('admin/dashboard.html',
                          stats=stats,
                          recent_rfqs=recent_rfqs,
@@ -139,7 +139,7 @@ def category_new():
             is_active=form.is_active.data,
             show_on_homepage=form.show_on_homepage.data
         )
-        
+
         # Handle image upload
         if form.image.data and hasattr(form.image.data, 'filename') and form.image.data.filename:
             filename = secure_filename(form.image.data.filename)
@@ -152,7 +152,7 @@ def category_new():
             os.makedirs(os.path.dirname(upload_path), exist_ok=True)
             form.image.data.save(upload_path)
             category.image_path = filename
-        
+
             db.session.add(category)
             db.session.commit()
 
@@ -188,7 +188,7 @@ def category_edit(id):
     # Load parent category choices (exclude current category to prevent circular reference)
     categories = Category.query.filter(Category.is_active == True, Category.id != id).all()
     form.parent_id.choices = [('', 'No Parent')] + [(str(cat.id), cat.name_en) for cat in categories]
-    
+
     if form.validate_on_submit():
         category.key = form.key.data
         category.name_en = form.name_en.data
@@ -201,7 +201,7 @@ def category_edit(id):
         category.is_active = form.is_active.data
         category.show_on_homepage = form.show_on_homepage.data
         category.updated_at = datetime.utcnow()
-        
+
         # Handle image upload
         if form.image.data and hasattr(form.image.data, 'filename') and form.image.data.filename:
             filename = secure_filename(form.image.data.filename)
@@ -214,9 +214,9 @@ def category_edit(id):
             os.makedirs(os.path.dirname(upload_path), exist_ok=True)
             form.image.data.save(upload_path)
             category.image_path = filename
-        
+
         db.session.commit()
-        
+
         # Log the action
         audit_log = AuditLog(
             user_id=current_user.id,
@@ -227,10 +227,10 @@ def category_edit(id):
         )
         db.session.add(audit_log)
         db.session.commit()
-        
+
         flash('Category updated successfully.', 'success')
         return redirect(url_for('admin.categories'))
-    
+
     return render_template('admin/category_form.html', form=form, category=category, title='Edit Category')
 
 @bp.route('/categories/<int:id>/delete', methods=['POST'])
@@ -238,20 +238,20 @@ def category_edit(id):
 def category_delete(id):
     """Delete category."""
     category = Category.query.get_or_404(id)
-    
+
     # Check if category has products
     if category.products.count() > 0:
         flash('Cannot delete category with products. Move products first.', 'error')
         return redirect(url_for('admin.categories'))
-    
+
     # Check if category has subcategories
     if category.children:
         flash('Cannot delete category with subcategories. Delete subcategories first.', 'error')
         return redirect(url_for('admin.categories'))
-    
+
     db.session.delete(category)
     db.session.commit()
-    
+
     # Log the action
     audit_log = AuditLog(
         user_id=current_user.id,
@@ -262,7 +262,7 @@ def category_delete(id):
     )
     db.session.add(audit_log)
     db.session.commit()
-    
+
     flash('Category deleted successfully.', 'success')
     return redirect(url_for('admin.categories'))
 
@@ -283,30 +283,30 @@ def products():
 
     status = request.args.get('status', 'all')
     search = request.args.get('search', '')
-    
+
     # Base query
     query = Product.query
-    
+
     # Apply filters
     if category_id:
         query = query.filter_by(category_id=category_id)
-    
+
     if status != 'all':
         query = query.filter_by(status=status)
-    
+
     if search:
         query = query.filter(Product.name_en.contains(search))
-    
+
     # Paginate
     products = query.order_by(Product.updated_at.desc()).paginate(
         page=page,
         per_page=20,
         error_out=False
     )
-    
+
     # Get categories for filter
     categories = Category.query.filter_by(is_active=True).order_by(Category.name_en).all()
-    
+
     return render_template('admin/products.html',
                          products=products,
                          categories=categories,
@@ -506,21 +506,21 @@ def rfqs():
         page = 1
 
     status = request.args.get('status', 'all')
-    
+
     # Base query
     query = RFQ.query
-    
+
     # Apply status filter
     if status != 'all':
         query = query.filter_by(status=status)
-    
+
     # Paginate
     rfqs = query.order_by(RFQ.created_at.desc()).paginate(
         page=page,
         per_page=20,
         error_out=False
     )
-    
+
     return render_template('admin/rfqs.html', rfqs=rfqs, current_status=status)
 
 @bp.route('/rfqs/<int:id>')
@@ -825,13 +825,46 @@ def gallery_new():
     """Upload new gallery image."""
     form = GalleryForm()
 
+    # Extend category choices with any existing categories found in DB (keep fixed first)
+    try:
+        existing = db.session.query(Gallery.category).distinct().all()
+        existing_cats = [c[0] for c in existing if c[0]]
+    except Exception:
+        existing_cats = []
+    default_keys = ['farms','packing','storage','exports']
+    defaults = [('farms','Farms'),('packing','Packing Houses'),('storage','Cold Storage'),('exports','Exports')]
+    extras = [(c, c) for c in sorted(existing_cats) if c not in default_keys]
+    form.category.choices = defaults + extras
+
     if form.validate_on_submit():
+        # Allow admin to add a new custom category on the fly while preserving fixed options
+        selected_category = form.category.data
+        if form.new_category.data:
+            selected_category = form.new_category.data.strip()
+            # Persist metadata for category with optional Arabic name and icon
+            icon = request.form.get('new_category_icon', 'fa-tags').strip() or 'fa-tags'
+            key = selected_category.lower().replace(' ', '-')[:50]
+            name_ar = (form.new_category_ar.data or selected_category).strip()
+            existing = GalleryCategory.query.filter_by(key=key).first()
+            if not existing:
+                db.session.add(GalleryCategory(key=key, name_en=selected_category.title(), name_ar=name_ar, icon_class=icon, is_active=True))
+            else:
+                # Update Arabic name/icon if provided
+                updated = False
+                if form.new_category_ar.data:
+                    existing.name_ar = name_ar; updated = True
+                if icon:
+                    existing.icon_class = icon; updated = True
+                if updated:
+                    db.session.add(existing)
+            selected_category = key
+
         gallery_item = Gallery(
             title_en=form.title_en.data,
             title_ar=form.title_ar.data,
             description_en=form.description_en.data,
             description_ar=form.description_ar.data,
-            category=form.category.data
+            category=selected_category
         )
 
         # Handle image upload
@@ -853,7 +886,161 @@ def gallery_new():
         flash('Gallery image uploaded successfully.', 'success')
         return redirect(url_for('admin.gallery'))
 
-    return render_template('admin/gallery_form.html', form=form, title='Upload New Image')
+
+    # GET request: render form with custom categories list for deletion section
+    try:
+        custom_cats = GalleryCategory.query.filter_by(is_active=True).order_by(GalleryCategory.sort_order).all()
+    except Exception:
+        custom_cats = []
+    return render_template('admin/gallery_form.html', form=form, title='Upload New Image', custom_cats=custom_cats)
+
+@bp.route('/gallery/category/delete', methods=['POST'])
+@editor_required
+def gallery_category_delete():
+    """Delete a gallery category and ALL its images (always cascade)."""
+    key = request.form.get('key', '').strip()
+    if not key:
+        return jsonify({'ok': False, 'error': 'Missing key'}), 400
+
+    # Always cascade delete images then metadata
+    images = Gallery.query.filter_by(category=key).all()
+    for img in images:
+        try:
+            if img.image_path:
+                upload_path = os.path.join(current_app.instance_path, current_app.config['UPLOAD_FOLDER'], 'gallery', img.image_path)
+                if os.path.exists(upload_path):
+                    os.remove(upload_path)
+        except Exception:
+            pass
+        db.session.delete(img)
+
+    cat = GalleryCategory.query.filter_by(key=key).first()
+    if cat:
+        db.session.delete(cat)
+
+    db.session.commit()
+    return jsonify({'ok': True, 'deleted_images': len(images)})
+
+@bp.route('/gallery/<int:id>/edit', methods=['GET', 'POST'])
+@editor_required
+def gallery_edit(id):
+    """Use the same form and template as creation, with minor differences (image optional)."""
+    item = Gallery.query.get_or_404(id)
+    form = GalleryForm(obj=item)
+
+    # Extend category choices similar to gallery_new
+    try:
+        existing = db.session.query(Gallery.category).distinct().all()
+        existing_cats = [c[0] for c in existing if c[0]]
+    except Exception:
+        existing_cats = []
+    default_keys = ['farms','packing','storage','exports']
+    defaults = [('farms','Farms'),('packing','Packing Houses'),('storage','Cold Storage'),('exports','Exports')]
+    extras = [(c, c) for c in sorted(existing_cats) if c not in default_keys]
+    form.category.choices = defaults + extras
+
+    # In edit mode, image upload should be optional (unlike creation)
+    try:
+        from wtforms.validators import Optional as WTOptional
+        form.image.validators = [WTOptional()]
+    except Exception:
+        form.image.validators = []
+
+    if form.validate_on_submit():
+        item.title_en = form.title_en.data or item.title_en
+        item.title_ar = form.title_ar.data or item.title_ar
+        item.description_en = form.description_en.data or item.description_en
+        item.description_ar = form.description_ar.data or item.description_ar
+
+        # Allow changing/creating category like in gallery_new
+        selected_category = form.category.data or item.category
+        if form.new_category.data:
+            selected_category = form.new_category.data.strip()
+            icon = request.form.get('new_category_icon', 'fa-tags').strip() or 'fa-tags'
+            key = selected_category.lower().replace(' ', '-')[:50]
+            name_ar = (form.new_category_ar.data or selected_category).strip()
+            existing_meta = GalleryCategory.query.filter_by(key=key).first()
+            if not existing_meta:
+                db.session.add(GalleryCategory(key=key, name_en=selected_category.title(), name_ar=name_ar, icon_class=icon, is_active=True))
+            else:
+                updated = False
+                if form.new_category_ar.data:
+                    existing_meta.name_ar = name_ar; updated = True
+                if icon:
+                    existing_meta.icon_class = icon; updated = True
+                if updated:
+                    db.session.add(existing_meta)
+            selected_category = key
+        item.category = selected_category
+
+        item.sort_order = form.sort_order.data if form.sort_order.data is not None else item.sort_order
+        item.is_active = form.is_active.data
+
+        # handle replacing image (optional)
+        if form.image.data and hasattr(form.image.data, 'filename') and form.image.data.filename:
+            try:
+                if item.image_path:
+                    old_path = os.path.join(current_app.instance_path, current_app.config['UPLOAD_FOLDER'], 'gallery', item.image_path)
+                    if os.path.exists(old_path):
+                        os.remove(old_path)
+            except Exception:
+                pass
+            filename = secure_filename(form.image.data.filename)
+            timestamp = datetime.now().strftime('%Y%m%d_%H%M%S_')
+            filename = timestamp + filename
+            upload_path = os.path.join(current_app.instance_path, current_app.config['UPLOAD_FOLDER'], 'gallery', filename)
+            os.makedirs(os.path.dirname(upload_path), exist_ok=True)
+            form.image.data.save(upload_path)
+            item.image_path = filename
+
+        db.session.commit()
+        flash('Gallery image updated successfully.', 'success')
+        return redirect(url_for('admin.gallery'))
+
+    # Reuse the same template as "new" but change the title
+    try:
+        custom_cats = GalleryCategory.query.filter_by(is_active=True).order_by(GalleryCategory.sort_order).all()
+    except Exception:
+        custom_cats = []
+    return render_template('admin/gallery_form.html', form=form, title='Edit Gallery Image', custom_cats=custom_cats)
+
+    # Allow deleting any category key, including previously default ones
+
+    if cascade:
+        # delete all images in this category (DB + files)
+        images = Gallery.query.filter_by(category=key).all()
+        for img in images:
+            # try remove file
+            try:
+                if img.image_path:
+                    upload_path = os.path.join(current_app.instance_path, current_app.config['UPLOAD_FOLDER'], 'gallery', img.image_path)
+                    if os.path.exists(upload_path):
+                        os.remove(upload_path)
+            except Exception:
+                pass
+            db.session.delete(img)
+        # delete metadata if exists
+        cat = GalleryCategory.query.filter_by(key=key).first()
+        if cat:
+            db.session.delete(cat)
+        db.session.commit()
+        return jsonify({'ok': True, 'deleted_images': len(images)})
+    else:
+        used = Gallery.query.filter_by(category=key).count()
+        if used > 0:
+            return jsonify({'ok': False, 'error': 'Category is used by gallery items'}), 400
+        cat = GalleryCategory.query.filter_by(key=key).first()
+        if cat:
+            db.session.delete(cat)
+            db.session.commit()
+        return jsonify({'ok': True})
+
+    # Load custom categories (metadata) to allow deletion in UI
+    try:
+        custom_cats = GalleryCategory.query.filter_by(is_active=True).order_by(GalleryCategory.sort_order).all()
+    except Exception:
+        custom_cats = []
+    return render_template('admin/gallery_form.html', form=form, title='Upload New Image', custom_cats=custom_cats)
 
 @bp.route('/gallery/<int:id>/delete', methods=['POST'])
 @admin_required

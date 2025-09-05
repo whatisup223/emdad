@@ -65,6 +65,33 @@ def create_app(config_name=None):
     os.makedirs(os.path.join(upload_dir, 'rfq'), exist_ok=True)
     os.makedirs(os.path.join(upload_dir, 'editor'), exist_ok=True)
 
+    # Ensure critical DB tables exist (no manual migration needed for essential new tables)
+    try:
+        with app.app_context():
+            from sqlalchemy import inspect
+            insp = inspect(db.engine)
+            from app.models import GalleryCategory
+            if not insp.has_table('gallery_category'):
+                # Create only the missing table to avoid touching existing schema
+                GalleryCategory.__table__.create(db.engine)
+            # Seed default categories if not present
+            defaults = [
+                ('farms','Farms','المزارع','fa-seedling'),
+                ('packing','Packing Houses','بيوت التعبئة','fa-industry'),
+                ('storage','Cold Storage','التخزين البارد','fa-warehouse'),
+                ('exports','Exports','التصدير','fa-ship')
+            ]
+            created_any = False
+            for key, en, ar, icon in defaults:
+                if not GalleryCategory.query.filter_by(key=key).first():
+                    db.session.add(GalleryCategory(key=key, name_en=en, name_ar=ar, icon_class=icon, is_active=True))
+                    created_any = True
+            if created_any:
+                db.session.commit()
+    except Exception as e:
+        app.logger.warning(f"DB ensure/seed failed (gallery_category): {e}")
+
+
     # Language selector function
     def get_locale():
         from flask import request, session, g

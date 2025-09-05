@@ -2,7 +2,7 @@ from flask import render_template, request, redirect, url_for, flash, current_ap
 from flask_mail import Message
 from werkzeug.utils import secure_filename
 from app.main import bp
-from app.models import Category, Product, Certification, Service, News, Gallery, RFQ, CompanyInfo
+from app.models import Category, Product, Certification, Service, News, Gallery, RFQ, CompanyInfo, GalleryCategory
 from app.forms import RFQForm
 from app import db, mail
 import os
@@ -130,13 +130,39 @@ def gallery():
 
     gallery_items = query.order_by(Gallery.sort_order).all()
 
-    # Get available categories
+    # Get available categories (include seeded defaults if used in DB)
     categories = db.session.query(Gallery.category).filter_by(is_active=True).distinct().all()
     categories = [cat[0] for cat in categories if cat[0]]
+
+    # Ensure default categories appear if they exist in GalleryCategory (seeded) even لو لم توجد صور بعد
+    try:
+        defaults = ['farms','packing','storage','exports']
+        default_rows = GalleryCategory.query.filter(GalleryCategory.key.in_(defaults), GalleryCategory.is_active == True).all()
+        for row in default_rows:
+            if row.key not in categories:
+                categories.append(row.key)
+    except Exception:
+        pass
+
+    # Map icons
+    try:
+        icon_rows = GalleryCategory.query.filter(GalleryCategory.key.in_(categories)).all()
+        category_icons = {row.key: row.icon_class for row in icon_rows}
+    except Exception:
+        category_icons = {}
+
+    # Map localized names (en, ar) for categories if available
+    try:
+        name_rows = GalleryCategory.query.filter(GalleryCategory.key.in_(categories)).all()
+        category_names = {row.key: (row.name_en, row.name_ar) for row in name_rows}
+    except Exception:
+        category_names = {}
 
     return render_template('main/gallery.html',
                          gallery_items=gallery_items,
                          categories=categories,
+                         category_icons=category_icons,
+                         category_names=category_names,
                          selected_category=category)
 
 @bp.route('/news')

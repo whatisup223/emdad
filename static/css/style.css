@@ -2764,6 +2764,44 @@ section.bg-gradient-light .btn-outline-primary:hover::before {
 }
 
 /* Gallery Styles */
+
+/* Gallery Filter Buttons - remove blue focus outline */
+.gallery-filters .btn:focus,
+.gallery-filters .btn:focus-visible,
+.gallery-filters .btn:active {
+  box-shadow: none !important;
+  outline: none !important;
+}
+
+/* Stronger overrides to remove Bootstrap blue focus ring for gallery filters */
+.gallery-filters .btn,
+.gallery-filters .btn:focus,
+.gallery-filters .btn:active,
+.gallery-filters .btn:focus-visible,
+.gallery-filters .btn-primary:focus,
+.gallery-filters .btn-primary:active,
+.gallery-filters .btn-primary:focus-visible,
+.gallery-filters .btn-outline-primary:focus,
+.gallery-filters .btn-outline-primary:active,
+.gallery-filters .btn-outline-primary:focus-visible,
+.gallery-filters .btn-check:focus + .btn,
+.gallery-filters .btn-check:checked + .btn:focus {
+  box-shadow: none !important;
+  outline: none !important;
+}
+
+/* Keep borders consistent with theme when active */
+.gallery-filters .btn-outline-primary.active,
+.gallery-filters .btn-outline-primary:active {
+  border-color: var(--primary-color) !important;
+  color: var(--primary-color) !important;
+}
+.gallery-filters .btn-primary.active,
+.gallery-filters .btn-primary:active {
+  border-color: var(--primary-dark) !important;
+}
+
+
 .gallery-item {
     position: relative;
     overflow: hidden;
@@ -4540,6 +4578,58 @@ footer h6 {
 }
 
 
+
+/* FINAL OVERRIDE: remove any blue focus/active ring for gallery filter buttons */
+.gallery-filters .btn,
+.gallery-filters .btn:focus,
+.gallery-filters .btn:active,
+.gallery-filters .btn:focus-visible,
+.gallery-filters .btn-primary:focus,
+.gallery-filters .btn-primary:active,
+.gallery-filters .btn-primary:focus-visible,
+.gallery-filters .btn-outline-primary:focus,
+.gallery-filters .btn-outline-primary:active,
+.gallery-filters .btn-outline-primary:focus-visible,
+.gallery-filters .btn-check:focus + .btn,
+.gallery-filters .btn-check:checked + .btn:focus,
+.gallery-filters .btn-check:checked + .btn:focus-visible {
+  box-shadow: none !important;
+  outline: none !important;
+  --bs-btn-focus-shadow-rgb: 0,0,0 !important;
+}
+
+
+/* Eliminate blue flash by overriding active/background states to theme colors */
+.gallery-filters .btn { -webkit-tap-highlight-color: transparent; }
+
+.gallery-filters .btn-primary,
+.gallery-filters .btn-primary:active,
+.gallery-filters .btn-primary.active,
+.gallery-filters .btn-primary:focus,
+.gallery-filters .btn-primary:focus-visible {
+  background: var(--primary-gradient) !important;
+  color: #fff !important;
+  border-color: var(--primary-dark) !important;
+  box-shadow: none !important;
+  --bs-btn-active-bg: transparent !important; /* neutralize bootstrap blue var */
+  --bs-btn-active-border-color: var(--primary-dark) !important;
+  --bs-btn-active-color: #fff !important;
+}
+
+.gallery-filters .btn-outline-primary,
+.gallery-filters .btn-outline-primary:active,
+.gallery-filters .btn-outline-primary.active,
+.gallery-filters .btn-outline-primary:focus,
+.gallery-filters .btn-outline-primary:focus-visible {
+  background: transparent !important;
+  color: var(--primary-color) !important;
+  border-color: var(--primary-color) !important;
+  box-shadow: none !important;
+  --bs-btn-active-bg: transparent !important;
+  --bs-btn-active-border-color: var(--primary-color) !important;
+  --bs-btn-active-color: var(--primary-color) !important;
+}
+
 /* Center icons inside Mission & Vision cards on About page */
 .about-hero ~ section.bg-gradient-light .feature-card .card-body {
   display: flex;
@@ -4567,3 +4657,13 @@ footer h6 {
   align-items: center;
   justify-content: center;
 }
+
+/* Force center icons in Mission & Vision cards regardless of other rules */
+.mission-vision .feature-card .card-body{
+  display:flex !important; flex-direction:column; align-items:center; justify-content:flex-start;
+}
+.mission-vision .feature-card .feature-icon{
+  display:flex !important; align-items:center; justify-content:center;
+  margin-left:auto !important; margin-right:auto !important;
+}
+

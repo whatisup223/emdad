@@ -27,7 +27,7 @@
 
                     <form method="POST" enctype="multipart/form-data">
                         {{ form.hidden_tag() }}
-                        
+
                         <!-- Image Upload -->
                         <div class="mb-4">
                             {{ form.image.label(class="form-label") }}
@@ -105,6 +105,80 @@
                                     {% endif %}
                                 </div>
                             </div>
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    {{ form.new_category.label(class="form-label") }}
+                                    {{ form.new_category(class="form-control", placeholder="Optional: Add new category (e.g., machinery)", id="new_category_input") }}
+                                    <div class="form-text">إذا أدخلت فئة جديدة هنا سيتم إضافتها تلقائياً إلى القائمة وسيتم استخدامها لهذا العنصر.</div>
+                                    <div class="mt-3" dir="rtl">
+                                        <label class="form-label">Icon Class</label>
+                                        <div class="input-group">
+                                            <span class="input-group-text d-inline-flex align-items-center justify-content-center" style="min-width:3rem;"><i id="iconPreviewCat" class="fas fa-tags"></i></span>
+                                            <input type="text" class="form-control" name="new_category_icon" id="new_category_icon" placeholder="fas fa-tags">
+                                            <button type="button" class="btn btn-outline-primary" data-bs-toggle="modal" data-bs-target="#iconPickerModalCat">
+                                                <i class="fas fa-icons me-1"></i> Pick Icon
+                                            </button>
+                                        </div>
+                                        <div class="form-text">اختر أيقونة Font Awesome (مثال: fas fa-apple-whole)</div>
+
+                                        <div class="mt-3">
+                                            <label class="form-label">اسم الفئة بالعربية (اختياري)</label>
+                                            {{ form.new_category_ar(class="form-control", id="new_category_ar", placeholder="مثال: المزارع", dir="rtl") }}
+                                            <div class="form-text">إن تركته فارغًا سيتم استخدام اسم الفئة الإنجليزي عند الحاجة.</div>
+                                        </div>
+
+                        {% if custom_cats %}
+                        <div class="mb-3">
+                          <label class="form-label">الفئات المضافة (حذف)</label>
+                          <div class="d-flex flex-wrap gap-2">
+                            {% for c in custom_cats %}
+                              <div class="badge bg-light text-dark border p-2 d-flex align-items-center" data-key="{{ c.key }}">
+                                <i class="fas {{ c.icon_class }} me-2"></i>{{ c.key }}
+                                <button type="button" class="btn btn-sm btn-outline-danger ms-2" onclick="deleteGalleryCat('{{ c.key }}')">
+                                  <i class="fas fa-trash"></i>
+                                </button>
+                              </div>
+                            {% endfor %}
+                          </div>
+                          <div class="form-text">لا يمكن حذف الفئات الافتراضية، ولا يمكن حذف فئة مستخدمة في صور.</div>
+                        </div>
+                        {% endif %}
+
+<script>
+async function deleteSelectedGalleryCategory(){
+  const sel = document.getElementById('{{ form.category.id }}');
+  if(!sel) return;
+  const key = sel.value;
+  if(['farms','packing','storage','exports','all',''].includes(key)){
+    alert('لا يمكن حذف الفئات الافتراضية.');
+    return;
+  }
+  if(!confirm('سيتم حذف الفئة وجميع صورها. هل أنت متأكد؟')) return;
+  try {
+    const formData = new FormData(); formData.append('key', key); formData.append('cascade', '1');
+    const res = await fetch('{{ url_for('admin.gallery_category_delete') }}', { method:'POST', body: formData });
+    const data = await res.json();
+    if(data.ok){ location.reload(); }
+    else { alert(data.error || 'حدث خطأ أثناء الحذف'); }
+  } catch(err){ alert('فشل الطلب'); }
+}
+</script>
+
+
+                        <script>
+                          async function deleteGalleryCat(key){
+                            if(!confirm('هل تريد حذف هذه الفئة؟')) return;
+                            const formData = new FormData(); formData.append('key', key);
+                            const res = await fetch('{{ url_for('admin.gallery_category_delete') }}', { method:'POST', body: formData });
+                            const data = await res.json();
+                            if(data.ok){ location.reload(); }
+                            else { alert(data.error || 'Failed to delete category'); }
+                          }
+                        </script>
+
+                                    </div>
+                                </div>
+                            </div>
                         </div>
 
                         <div class="d-flex justify-content-between">
@@ -123,30 +197,78 @@
 <!-- Image Preview Script -->
 <script>
 document.getElementById('image').addEventListener('change', function(e) {
-    const file = e.target.files[0];
-    if (file) {
-        const reader = new FileReader();
-        reader.onload = function(e) {
-            // Create preview if doesn't exist
-            let preview = document.getElementById('image-preview');
-            if (!preview) {
-                preview = document.createElement('div');
-                preview.id = 'image-preview';
-                preview.className = 'mt-3';
-                e.target.parentNode.appendChild(preview);
-            }
-            
-            preview.innerHTML = `
-                <div class="card" style="max-width: 300px;">
-                    <img src="${e.target.result}" class="card-img-top" alt="Preview" style="height: 200px; object-fit: cover;">
-                    <div class="card-body">
-                        <small class="text-muted">{{ _('Preview') }}</small>
-                    </div>
-                </div>
-            `;
-        };
-        reader.readAsDataURL(file);
-    }
+  const file = e.target.files[0];
+  if (file) {
+    const reader = new FileReader();
+    reader.onload = function(ev) {
+      let preview = document.getElementById('image-preview');
+      if (!preview) {
+        preview = document.createElement('div');
+        preview.id = 'image-preview';
+        preview.className = 'mt-3';
+        e.target.parentNode.appendChild(preview);
+      }
+      preview.innerHTML = '<div class="card" style="max-width: 300px;"><img src="'+ev.target.result+'" class="card-img-top" alt="Preview" style="height: 200px; object-fit: cover;"><div class="card-body"><small class="text-muted">Preview</small></div></div>';
+    };
+    reader.readAsDataURL(file);
+  }
 });
+</script>
+{% endblock %}
+
+{% block extra_js %}
+<!-- Icon Picker Modal (reused from services) -->
+<div class="modal fade" id="iconPickerModalCat" tabindex="-1" aria-labelledby="iconPickerLabel" aria-hidden="true" data-bs-theme="light">
+  <div class="modal-dialog modal-lg modal-dialog-scrollable">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="iconPickerLabel"><i class="fas fa-icons me-2"></i>Choose an Icon</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <div class="mb-3">
+          <input type="text" class="form-control" id="iconSearchCat" placeholder="Search icons...">
+          <div class="form-text">Type to filter Font Awesome icons by name</div>
+        </div>
+        <div id="iconGridCat" class="row row-cols-2 row-cols-sm-3 row-cols-md-4 row-cols-lg-6 g-3"></div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+(function(){
+  const ICONS = [
+    'fas fa-ship','fas fa-truck','fas fa-truck-fast','fas fa-plane-departure','fas fa-plane','fas fa-box','fas fa-box-open','fas fa-boxes-stacked','fas fa-warehouse','fas fa-pallet','fas fa-anchor','fas fa-briefcase','fas fa-globe','fas fa-earth-africa','fas fa-file-invoice','fas fa-file-signature','fas fa-clipboard-list','fas fa-clipboard-check','fas fa-scale-balanced','fas fa-shield-halved',
+    'fas fa-thermometer-half','fas fa-temperature-low','fas fa-temperature-high','fas fa-snowflake',
+    'fas fa-tractor','fas fa-seedling','fas fa-wheat-awn','fas fa-apple-whole','fas fa-carrot','fas fa-lemon','fas fa-pepper-hot','fas fa-leaf',
+    'fas fa-certificate','fas fa-tags','fas fa-ruler-combined','fas fa-recycle','fas fa-cog'
+  ];
+  const iconInput = document.getElementById('new_category_icon');
+  const iconPreview = document.getElementById('iconPreviewCat');
+  const iconGrid = document.getElementById('iconGridCat');
+  const iconSearch = document.getElementById('iconSearchCat');
+
+  function renderIcons(filter=''){
+    if(!iconGrid) return;
+    iconGrid.innerHTML='';
+    const q=(filter||'').trim().toLowerCase();
+    ICONS.filter(cls=>cls.includes(q)).forEach(cls=>{
+      const col=document.createElement('div'); col.className='col';
+      const btn=document.createElement('button'); btn.type='button'; btn.className='btn w-100 d-flex align-items-center justify-content-center';
+      btn.innerHTML=`<i class="${cls} fa-2x text-primary"></i>`; btn.title=cls;
+      btn.addEventListener('click',()=>{ iconInput.value=cls; iconPreview.className=cls; const modal=bootstrap.Modal.getInstance(document.getElementById('iconPickerModalCat')); if(modal) modal.hide(); });
+      col.appendChild(btn); iconGrid.appendChild(col);
+    });
+  }
+
+  const modalEl=document.getElementById('iconPickerModalCat');
+  modalEl?.addEventListener('shown.bs.modal', ()=>{ renderIcons(); iconSearch?.focus(); });
+  iconSearch?.addEventListener('input', (e)=>renderIcons(e.target.value));
+  iconInput?.addEventListener('input', (e)=>{ iconPreview.className=e.target.value||'fas fa-tags'; });
+})();
 </script>
 {% endblock %}

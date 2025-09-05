@@ -1,0 +1,100 @@
+{% extends "admin/base.html" %}
+
+{% block title %}{{ title }}{% endblock %}
+
+{% block content %}
+<div class="container-fluid">
+  <div class="row">
+    <div class="col-12">
+      <div class="card">
+        <div class="card-header d-flex justify-content-between align-items-center">
+          <h3 class="card-title">{{ title }}</h3>
+          <a href="{{ url_for('admin.gallery') }}" class="btn btn-secondary"><i class="fas fa-arrow-left"></i> {{ _('Back to Gallery') }}</a>
+        </div>
+        <div class="card-body">
+          <form method="POST" enctype="multipart/form-data">
+            {{ form.hidden_tag() }}
+
+            <div class="row">
+              <div class="col-md-6">
+                <div class="mb-3">
+                  {{ form.title_en.label(class="form-label") }}
+                  {{ form.title_en(class="form-control", value=item.title_en) }}
+                </div>
+              </div>
+              <div class="col-md-6">
+                <div class="mb-3">
+                  {{ form.title_ar.label(class="form-label") }}
+                  {{ form.title_ar(class="form-control", value=item.title_ar, dir="rtl") }}
+                </div>
+              </div>
+            </div>
+
+            <div class="row">
+              <div class="col-md-6">
+                <div class="mb-3">
+                  {{ form.description_en.label(class="form-label") }}
+                  {{ form.description_en(class="form-control", rows="4") }}
+                </div>
+              </div>
+              <div class="col-md-6">
+                <div class="mb-3">
+                  {{ form.description_ar.label(class="form-label") }}
+                  {{ form.description_ar(class="form-control", rows="4", dir="rtl") }}
+                </div>
+              </div>
+            </div>
+
+            <div class="row">
+              <div class="col-md-4">
+                <div class="mb-3">
+                  {{ form.category.label(class="form-label") }}
+                  {{ form.category(class="form-select", value=item.category) }}
+                </div>
+              </div>
+              <div class="col-md-4">
+                <div class="mb-3">
+                  {{ form.sort_order.label(class="form-label") }}
+                  {{ form.sort_order(class="form-control", value=item.sort_order) }}
+                </div>
+              </div>
+              <div class="col-md-4">
+                <div class="form-check mt-4">
+                  {{ form.is_active(class="form-check-input", checked=item.is_active) }}
+                  {{ form.is_active.label(class="form-check-label") }}
+                </div>
+              </div>
+            </div>
+
+            <div class="row">
+              <div class="col-md-6">
+                <div class="mb-3">
+                  <label class="form-label">{{ _('Current Image') }}</label>
+                  {% if item.image_path %}
+                    <img src="{{ url_for('main.uploaded_file', filename='gallery/' + item.image_path) }}" class="img-fluid rounded border" style="max-height:260px; object-fit:cover;" />
+                  {% else %}
+                    <div class="text-muted">{{ _('No image') }}</div>
+                  {% endif %}
+                </div>
+              </div>
+              <div class="col-md-6">
+                <div class="mb-3">
+                  {{ form.image.label(class="form-label") }}
+                  {{ form.image(class="form-control") }}
+                  <div class="form-text">{{ _('Upload to replace the current image (optional)') }}</div>
+                </div>
+              </div>
+            </div>
+
+            <div class="d-flex justify-content-between">
+              <a href="{{ url_for('admin.gallery') }}" class="btn btn-secondary">{{ _('Cancel') }}</a>
+              <button type="submit" class="btn btn-primary"><i class="fas fa-save"></i> {{ _('Save Changes') }}</button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}
+

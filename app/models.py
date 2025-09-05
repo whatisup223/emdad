@@ -21,19 +21,19 @@ class User(UserMixin, db.Model):
     is_active = db.Column(db.Boolean, default=True)
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
     last_login = db.Column(db.DateTime)
-    
+
     # Relationships
     assigned_rfqs = db.relationship('RFQ', backref='assigned_user', lazy='dynamic')
     audit_logs = db.relationship('AuditLog', backref='user', lazy='dynamic')
-    
+
     def set_password(self, password):
         """Set password hash."""
         self.password_hash = generate_password_hash(password)
-    
+
     def check_password(self, password):
         """Check password against hash."""
         return check_password_hash(self.password_hash, password)
-    
+
     def has_permission(self, permission):
         """Check if user has specific permission."""
         permissions = {
@@ -42,7 +42,7 @@ class User(UserMixin, db.Model):
             'viewer': ['read']
         }
         return permission in permissions.get(self.role, [])
-    
+
     def __repr__(self):
         return f'<User {self.email}>'
 
@@ -62,21 +62,21 @@ class Category(db.Model):
     image_path = db.Column(db.String(255))
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
     updated_at = db.Column(db.DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
-    
+
     # Self-referential relationship for subcategories
     children = db.relationship('Category', backref=db.backref('parent', remote_side=[id]))
-    
+
     # Relationship with products
     products = db.relationship('Product', backref='category', lazy='dynamic')
-    
+
     def get_name(self, language='en'):
         """Get category name in specified language."""
         return getattr(self, f'name_{language}', self.name_en)
-    
+
     def get_description(self, language='en'):
         """Get category description in specified language."""
         return getattr(self, f'description_{language}', self.description_en)
-    
+
     def __repr__(self):
         return f'<Category {self.key}>'
 
@@ -87,24 +87,24 @@ class Product(db.Model):
     name_ar = db.Column(db.String(200))
     slug = db.Column(db.String(200), unique=True, nullable=False, index=True)
     category_id = db.Column(db.Integer, db.ForeignKey('category.id'), nullable=False)
-    
+
     # Content
     description_en = db.Column(db.Text)
     description_ar = db.Column(db.Text)
     short_description_en = db.Column(db.String(500))
     short_description_ar = db.Column(db.String(500))
-    
+
     # JSON fields for flexible data
     specifications = db.Column(db.Text)  # JSON string
     seasonality = db.Column(db.Text)     # JSON string
     packaging_options = db.Column(db.Text)  # JSON string
-    
+
     # SEO
     seo_title_en = db.Column(db.String(200))
     seo_title_ar = db.Column(db.String(200))
     seo_description_en = db.Column(db.String(300))
     seo_description_ar = db.Column(db.String(300))
-    
+
     # Status and ordering
     status = db.Column(db.String(20), default='active')  # active, inactive, draft
     featured = db.Column(db.Boolean, default=False)
@@ -117,23 +117,23 @@ class Product(db.Model):
     # Timestamps
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
     updated_at = db.Column(db.DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
-    
+
     # Relationships
     images = db.relationship('ProductImage', backref='product', lazy='dynamic', cascade='all, delete-orphan')
     certifications = db.relationship('Certification', secondary=product_certifications, backref='products')
-    
+
     def get_name(self, language='en'):
         """Get product name in specified language."""
         return getattr(self, f'name_{language}', self.name_en)
-    
+
     def get_description(self, language='en'):
         """Get product description in specified language."""
         return getattr(self, f'description_{language}', self.description_en)
-    
+
     def get_short_description(self, language='en'):
         """Get product short description in specified language."""
         return getattr(self, f'short_description_{language}', self.short_description_en)
-    
+
     def get_specifications(self):
         """Get raw specifications JSON as dictionary (may contain language keys)."""
         if self.specifications:
@@ -223,11 +223,11 @@ class Product(db.Model):
     def set_packaging_options(self, packaging_dict):
         """Set packaging options from dictionary."""
         self.packaging_options = json.dumps(packaging_dict) if packaging_dict else None
-    
+
     def get_main_image(self):
         """Get the main product image."""
         return self.images.filter_by(is_main=True).first() or self.images.first()
-    
+
     def __repr__(self):
         return f'<Product {self.slug}>'
 
@@ -421,8 +421,21 @@ class Gallery(db.Model):
         """Get gallery description in specified language."""
         return getattr(self, f'description_{language}', self.description_en)
 
+
+class GalleryCategory(db.Model):
+    """Optional metadata for gallery categories (for custom categories)."""
+    id = db.Column(db.Integer, primary_key=True)
+    key = db.Column(db.String(80), unique=True, nullable=False)
+    name_en = db.Column(db.String(200))
+    name_ar = db.Column(db.String(200))
+    icon_class = db.Column(db.String(80), default='fa-tags')
+    is_active = db.Column(db.Boolean, default=True)
+    sort_order = db.Column(db.Integer, default=0)
+    created_at = db.Column(db.DateTime, default=datetime.utcnow)
+    updated_at = db.Column(db.DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
+
     def __repr__(self):
-        return f'<Gallery {self.title_en}>'
+        return f'<GalleryCategory {self.key}>'
 
 class RFQ(db.Model):
     """Request for Quote model."""

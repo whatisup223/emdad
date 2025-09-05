@@ -13,17 +13,17 @@ class RFQForm(FlaskForm):
     phone = StringField('Phone Number', validators=[Optional(), Length(max=20)])
     company = StringField('Company Name', validators=[Optional(), Length(max=200)])
     country = StringField('Country', validators=[DataRequired(), Length(max=100)])
-    
+
     category_key = SelectField('Product Category', validators=[DataRequired()], choices=[])
     product_name = StringField('Specific Product', validators=[Optional(), Length(max=200)])
     quantity = StringField('Required Quantity', validators=[Optional(), Length(max=100)])
     packaging_preference = StringField('Packaging Preference', validators=[Optional(), Length(max=200)])
-    
+
     message = TextAreaField('Message/Requirements', validators=[DataRequired(), Length(min=10, max=2000)])
     attachment = FileField('Attachment (Optional)', validators=[
         FileAllowed(['pdf', 'doc', 'docx', 'jpg', 'jpeg', 'png'], 'Only PDF, DOC, DOCX, and image files allowed!')
     ])
-    
+
     def __init__(self, *args, **kwargs):
         super(RFQForm, self).__init__(*args, **kwargs)
         # Populate category choices
@@ -48,11 +48,11 @@ class UserForm(FlaskForm):
         ('admin', 'Admin')
     ])
     is_active = BooleanField('Active')
-    
+
     def __init__(self, user=None, *args, **kwargs):
         super(UserForm, self).__init__(*args, **kwargs)
         self.user = user
-    
+
     def validate_email(self, email):
         if self.user and self.user.email == email.data:
             return
@@ -75,7 +75,7 @@ class CategoryForm(FlaskForm):
     image = FileField('Category Image', validators=[
         FileAllowed(['jpg', 'jpeg', 'png', 'gif'], 'Only image files allowed!')
     ])
-    
+
     def __init__(self, category=None, *args, **kwargs):
         super(CategoryForm, self).__init__(*args, **kwargs)
         self.category = category
@@ -91,7 +91,7 @@ class ProductForm(FlaskForm):
     name_ar = StringField('Name (Arabic)', validators=[Optional(), Length(max=200)])
     slug = StringField('URL Slug', validators=[DataRequired(), Length(max=200)])
     category_id = SelectField('Category', validators=[DataRequired()], coerce=int, choices=[])
-    
+
     description_en = TextAreaField('Description (English)', validators=[Optional()])
     description_ar = TextAreaField('Description (Arabic)', validators=[Optional()])
     short_description_en = TextAreaField('Short Description (English)', validators=[Optional(), Length(max=500)])
@@ -116,7 +116,7 @@ class ProductForm(FlaskForm):
     image = FileField('Product Image', validators=[
         FileAllowed(['jpg', 'jpeg', 'png', 'gif'], 'Only image files allowed!')
     ])
-    
+
     def __init__(self, obj=None, *args, **kwargs):
         super(ProductForm, self).__init__(obj=obj, *args, **kwargs)
         # Populate category choices
@@ -155,7 +155,7 @@ class ServiceForm(FlaskForm):
     title_ar = StringField('Title (Arabic)', validators=[Optional(), Length(max=200)])
     description_en = TextAreaField('Description (English)', validators=[Optional()])
     description_ar = TextAreaField('Description (Arabic)', validators=[Optional()])
-    icon = StringField('Icon Class', validators=[Optional(), Length(max=100)], 
+    icon = StringField('Icon Class', validators=[Optional(), Length(max=100)],
                       render_kw={"placeholder": "e.g., fas fa-shipping-fast"})
     sort_order = IntegerField('Sort Order', validators=[Optional()], default=0)
     is_active = BooleanField('Active', default=True)
@@ -262,12 +262,25 @@ class GalleryForm(FlaskForm):
         ('storage', 'Cold Storage'),
         ('exports', 'Exports')
     ])
+    new_category = StringField('New Category (optional)', validators=[Optional(), Length(max=50)])
+    new_category_ar = StringField('اسم الفئة بالعربية (اختياري)', validators=[Optional(), Length(max=100)])
     sort_order = IntegerField('Sort Order', validators=[Optional()], default=0)
     is_active = BooleanField('Active', default=True)
     image = FileField('Image', validators=[
         DataRequired(),
         FileAllowed(['jpg', 'jpeg', 'png', 'gif'], 'Only image files allowed!')
     ])
+
+class GalleryEditForm(FlaskForm):
+    """Gallery edit form (image optional)."""
+    title_en = StringField('Title (English)', validators=[Optional(), Length(max=200)])
+    title_ar = StringField('Title (Arabic)', validators=[Optional(), Length(max=200)])
+    description_en = TextAreaField('Description (English)', validators=[Optional()])
+    description_ar = TextAreaField('Description (Arabic)', validators=[Optional()])
+    category = SelectField('Category', validators=[Optional()])
+    sort_order = IntegerField('Sort Order', validators=[Optional()], default=0)
+    is_active = BooleanField('Active', default=True)
+    image = FileField('Image', validators=[Optional(), FileAllowed(['jpg', 'jpeg', 'png', 'gif'], 'Only image files allowed!')])
 
 class CompanyInfoForm(FlaskForm):
     """Company information management form."""
