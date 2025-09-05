@@ -143,7 +143,7 @@
                     {% endfor %}
                 </div>
             </div>
-            
+
             <div class="col-lg-4 text-lg-end mt-3 mt-lg-0">
                 <span class="text-muted">
                     <span id="visible-count">{{ gallery_items|length }}</span> {% if is_rtl %}صور{% else %}images{% endif %}
@@ -156,6 +156,32 @@
         </div>
     </div>
 </section>
+
+<!-- Gallery Toolbar: Search + Sort -->
+<section class="py-3 bg-gradient-light">
+    <div class="container">
+        <div class="row g-2 align-items-center">
+            <div class="col-md-6">
+                <div class="input-group">
+                    <span class="input-group-text bg-white border-end-0"><i class="fas fa-search text-muted"></i></span>
+                    <input id="gallery-search" type="search" class="form-control border-start-0"
+                           placeholder="{% if is_rtl %}ابحث بالعنوان أو الوصف...{% else %}Search by title or description...{% endif %}">
+                </div>
+            </div>
+            <div class="col-md-6 text-md-end">
+                <div class="d-inline-flex align-items-center gap-2">
+                    <label for="gallery-sort" class="text-muted small mb-0">{% if is_rtl %}ترتيب{% else %}Sort{% endif %}:</label>
+                    <select id="gallery-sort" class="form-select form-select-sm" style="min-width: 180px;">
+                        <option value="relevance">{% if is_rtl %}الأكثر صلة{% else %}Most Relevant{% endif %}</option>
+                        <option value="title-asc">{% if is_rtl %}العنوان A→Z{% else %}Title A→Z{% endif %}</option>
+                        <option value="title-desc">{% if is_rtl %}العنوان Z→A{% else %}Title Z→A{% endif %}</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
 
 <!-- Gallery Grid -->
 <section class="py-5">
@@ -189,19 +215,19 @@
             </div>
             {% endfor %}
         </div>
-        
+
         {% else %}
         <!-- Default gallery items if none in database -->
         <div class="row gallery-grid" id="gallery-grid">
             <!-- Farms -->
             <div class="col-lg-4 col-md-6 mb-4 gallery-item fade-in" data-category="farms" data-aos="fade-up" data-aos-delay="100">
                 <div class="feature-card card h-100 border-0 shadow-lg hover-lift position-relative overflow-hidden">
-                    <img src="{{ url_for('static', filename='images/gallery/farm-1.jpg') }}" 
+                    <img src="{{ url_for('static', filename='images/gallery/farm-1.jpg') }}"
                          alt="{% if is_rtl %}بستان برتقال{% else %}Orange Grove{% endif %}"
                          class="img-fluid gallery-image"
                          style="width: 100%; height: 250px; object-fit: cover; cursor: pointer;"
                          onclick="openLightbox('{{ url_for('static', filename='images/gallery/farm-1.jpg') }}', '{% if is_rtl %}بستان برتقال{% else %}Orange Grove{% endif %}', '{% if is_rtl %}زراعة برتقال متميزة في دلتا النيل{% else %}Premium orange cultivation in the Nile Delta region{% endif %}')">
-                    
+
                     <div class="gallery-overlay position-absolute top-0 start-0 w-100 h-100 d-flex align-items-end p-3">
                         <div class="text-white">
                             <h6 class="mb-1">{% if is_rtl %}بستان برتقال{% else %}Orange Grove{% endif %}</h6>
@@ -213,16 +239,16 @@
                     </div>
                 </div>
             </div>
-            
+
             <!-- Packing Houses -->
             <div class="col-lg-4 col-md-6 mb-4 gallery-item fade-in" data-category="packing" data-aos="fade-up" data-aos-delay="200">
                 <div class="feature-card card h-100 border-0 shadow-lg hover-lift position-relative overflow-hidden">
-                    <img src="{{ url_for('static', filename='images/gallery/packing-1.jpg') }}" 
+                    <img src="{{ url_for('static', filename='images/gallery/packing-1.jpg') }}"
                          alt="{% if is_rtl %}خط تعبئة حديث{% else %}Modern Packing Line{% endif %}"
                          class="img-fluid gallery-image"
                          style="width: 100%; height: 250px; object-fit: cover; cursor: pointer;"
                          onclick="openLightbox('{{ url_for('static', filename='images/gallery/packing-1.jpg') }}', '{% if is_rtl %}خط تعبئة حديث{% else %}Modern Packing Line{% endif %}', '{% if is_rtl %}منشأة تعبئة آلية متطورة{% else %}State-of-the-art automated packing facility{% endif %}')">
-                    
+
                     <div class="gallery-overlay position-absolute top-0 start-0 w-100 h-100 d-flex align-items-end p-3">
                         <div class="text-white">
                             <h6 class="mb-1">{% if is_rtl %}خط تعبئة حديث{% else %}Modern Packing Line{% endif %}</h6>
@@ -234,16 +260,16 @@
                     </div>
                 </div>
             </div>
-            
+
             <!-- Cold Storage -->
             <div class="col-lg-4 col-md-6 mb-4 gallery-item fade-in" data-category="storage" data-aos="fade-up" data-aos-delay="300">
                 <div class="feature-card card h-100 border-0 shadow-lg hover-lift position-relative overflow-hidden">
-                    <img src="{{ url_for('static', filename='images/gallery/storage-1.jpg') }}" 
+                    <img src="{{ url_for('static', filename='images/gallery/storage-1.jpg') }}"
                          alt="{% if is_rtl %}منشأة تخزين بارد{% else %}Cold Storage Facility{% endif %}"
                          class="img-fluid gallery-image"
                          style="width: 100%; height: 250px; object-fit: cover; cursor: pointer;"
                          onclick="openLightbox('{{ url_for('static', filename='images/gallery/storage-1.jpg') }}', '{% if is_rtl %}منشأة تخزين بارد{% else %}Cold Storage Facility{% endif %}', '{% if is_rtl %}تخزين بدرجات حرارة مضبوطة للحفاظ على الطزاجة المثلى{% else %}Temperature-controlled storage maintaining optimal freshness{% endif %}')">
-                    
+
                     <div class="gallery-overlay position-absolute top-0 start-0 w-100 h-100 d-flex align-items-end p-3">
                         <div class="text-white">
                             <h6 class="mb-1">{% if is_rtl %}منشأة تخزين بارد{% else %}Cold Storage Facility{% endif %}</h6>
@@ -255,16 +281,16 @@
                     </div>
                 </div>
             </div>
-            
+
             <!-- Exports -->
             <div class="col-lg-4 col-md-6 mb-4 gallery-item fade-in" data-category="exports" data-aos="fade-up" data-aos-delay="400">
                 <div class="feature-card card h-100 border-0 shadow-lg hover-lift position-relative overflow-hidden">
-                    <img src="{{ url_for('static', filename='images/gallery/export-1.jpg') }}" 
+                    <img src="{{ url_for('static', filename='images/gallery/export-1.jpg') }}"
                          alt="{% if is_rtl %}تحميل الحاويات{% else %}Container Loading{% endif %}"
                          class="img-fluid gallery-image"
                          style="width: 100%; height: 250px; object-fit: cover; cursor: pointer;"
                          onclick="openLightbox('{{ url_for('static', filename='images/gallery/export-1.jpg') }}', '{% if is_rtl %}تحميل الحاويات{% else %}Container Loading{% endif %}', '{% if is_rtl %}حاويات مبردة جاهزة للشحن الدولي{% else %}Refrigerated containers ready for international shipping{% endif %}')">
-                    
+
                     <div class="gallery-overlay position-absolute top-0 start-0 w-100 h-100 d-flex align-items-end p-3">
                         <div class="text-white">
                             <h6 class="mb-1">{% if is_rtl %}تحميل الحاويات{% else %}Container Loading{% endif %}</h6>
@@ -276,16 +302,16 @@
                     </div>
                 </div>
             </div>
-            
+
             <!-- More sample items -->
             <div class="col-lg-4 col-md-6 mb-4 gallery-item fade-in" data-category="farms" data-aos="fade-up" data-aos-delay="500">
                 <div class="feature-card card h-100 border-0 shadow-lg hover-lift position-relative overflow-hidden">
-                    <img src="{{ url_for('static', filename='images/gallery/farm-2.jpg') }}" 
+                    <img src="{{ url_for('static', filename='images/gallery/farm-2.jpg') }}"
                          alt="{% if is_rtl %}كروم العنب{% else %}Grape Vineyard{% endif %}"
                          class="img-fluid gallery-image"
                          style="width: 100%; height: 250px; object-fit: cover; cursor: pointer;"
                          onclick="openLightbox('{{ url_for('static', filename='images/gallery/farm-2.jpg') }}', '{% if is_rtl %}كروم العنب{% else %}Grape Vineyard{% endif %}', '{% if is_rtl %}زراعة عنب مائدة متميزة{% else %}Premium table grape cultivation{% endif %}')">
-                    
+
                     <div class="gallery-overlay position-absolute top-0 start-0 w-100 h-100 d-flex align-items-end p-3">
                         <div class="text-white">
                             <h6 class="mb-1">{% if is_rtl %}كروم العنب{% else %}Grape Vineyard{% endif %}</h6>
@@ -297,15 +323,15 @@
                     </div>
                 </div>
             </div>
-            
+
             <div class="col-lg-4 col-md-6 mb-4 gallery-item fade-in" data-category="packing" data-aos="fade-up" data-aos-delay="600">
                 <div class="feature-card card h-100 border-0 shadow-lg hover-lift position-relative overflow-hidden">
-                    <img src="{{ url_for('static', filename='images/gallery/packing-2.jpg') }}" 
+                    <img src="{{ url_for('static', filename='images/gallery/packing-2.jpg') }}"
                          alt="{% if is_rtl %}مراقبة الجودة{% else %}Quality Control{% endif %}"
                          class="img-fluid gallery-image"
                          style="width: 100%; height: 250px; object-fit: cover; cursor: pointer;"
                          onclick="openLightbox('{{ url_for('static', filename='images/gallery/packing-2.jpg') }}', '{% if is_rtl %}مراقبة الجودة{% else %}Quality Control{% endif %}', '{% if is_rtl %}عملية تفتيش جودة صارمة{% else %}Rigorous quality inspection process{% endif %}')">
-                    
+
                     <div class="gallery-overlay position-absolute top-0 start-0 w-100 h-100 d-flex align-items-end p-3">
                         <div class="text-white">
                             <h6 class="mb-1">{% if is_rtl %}مراقبة الجودة{% else %}Quality Control{% endif %}</h6>
@@ -319,7 +345,7 @@
             </div>
         </div>
         {% endif %}
-        
+
         <!-- No Results Message -->
         <div id="no-results" class="text-center py-5" style="display: none;">
             <i class="fas fa-search fa-4x text-muted mb-4"></i>
@@ -338,12 +364,22 @@
         <div class="modal-content bg-dark">
             <div class="modal-header border-0">
                 <h5 class="modal-title text-white" id="lightboxTitle"></h5>
-                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+                <div class="d-flex align-items-center gap-2 ms-auto">
+                    <button type="button" class="btn btn-sm btn-outline-light" id="lightboxPrev" title="{% if is_rtl %}السابق{% else %}Previous{% endif %}"><i class="fas fa-chevron-left"></i></button>
+                    <button type="button" class="btn btn-sm btn-outline-light" id="lightboxNext" title="{% if is_rtl %}التالي{% else %}Next{% endif %}"><i class="fas fa-chevron-right"></i></button>
+                    <button type="button" class="btn btn-sm btn-outline-light" id="lightboxShare" title="{% if is_rtl %}مشاركة{% else %}Share{% endif %}"><i class="fas fa-share-alt"></i></button>
+                    <button type="button" class="btn btn-sm btn-outline-light" id="lightboxCopy" title="{% if is_rtl %}نسخ الرابط{% else %}Copy Link{% endif %}"><i class="fas fa-link"></i></button>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+                </div>
             </div>
-            <div class="modal-body text-center p-0">
+            <div class="modal-body text-center p-0 position-relative">
                 <img id="lightboxImage" src="" alt="" class="img-fluid" style="max-height: 80vh;">
             </div>
-            <div class="modal-footer border-0">
+            <div class="modal-footer border-0 d-flex justify-content-between align-items-center">
+                <div>
+                    <span class="badge bg-primary me-2" id="lightboxCategory" style="display:none;"></span>
+                    <span class="text-white-50 small" id="lightboxIndex" style="display:none;"></span>
+                </div>
                 <p class="text-white-50 mb-0" id="lightboxDescription"></p>
             </div>
         </div>
@@ -374,18 +410,18 @@ document.addEventListener('DOMContentLoaded', function() {
     const galleryItems = document.querySelectorAll('.gallery-item');
     const visibleCount = document.getElementById('visible-count');
     const noResults = document.getElementById('no-results');
-    
+
     // Gallery filtering
     galleryFilters.forEach(filter => {
         filter.addEventListener('click', function() {
             const filterValue = this.dataset.filter;
-            
+
             // Update active filter
             galleryFilters.forEach(f => f.classList.remove('active', 'btn-primary'));
             galleryFilters.forEach(f => f.classList.add('btn-outline-primary'));
             this.classList.remove('btn-outline-primary');
             this.classList.add('active', 'btn-primary');
-            
+
             // Filter items
             let visibleItemsCount = 0;
             galleryItems.forEach(item => {
@@ -397,7 +433,7 @@ document.addEventListener('DOMContentLoaded', function() {
                     item.style.display = 'none';
                 }
             });
-            
+
             // Update count and show/hide no results
             visibleCount.textContent = visibleItemsCount;
             if (visibleItemsCount === 0) {
@@ -407,26 +443,26 @@ document.addEventListener('DOMContentLoaded', function() {
             }
         });
     });
-    
+
     // Gallery hover effects
     const galleryCards = document.querySelectorAll('.gallery-card');
     galleryCards.forEach(card => {
         const overlay = card.querySelector('.gallery-overlay');
         const image = card.querySelector('.gallery-image');
-        
+
         card.addEventListener('mouseenter', function() {
             image.style.transform = 'scale(1.1)';
             image.style.transition = 'transform 0.3s ease';
             overlay.style.background = 'linear-gradient(to top, rgba(0,0,0,0.8), rgba(0,0,0,0.2))';
             overlay.style.transition = 'background 0.3s ease';
         });
-        
+
         card.addEventListener('mouseleave', function() {
             image.style.transform = 'scale(1)';
             overlay.style.background = 'linear-gradient(to top, rgba(0,0,0,0.6), transparent)';
         });
     });
-    
+
     // Initialize overlay styles
     galleryCards.forEach(card => {
         const overlay = card.querySelector('.gallery-overlay');
@@ -435,11 +471,32 @@ document.addEventListener('DOMContentLoaded', function() {
 });
 
 // Lightbox functionality
-function openLightbox(imageSrc, title, description) {
+function openLightbox(imageSrc, title, description, meta={}) {
+    // Set content
     document.getElementById('lightboxImage').src = imageSrc;
     document.getElementById('lightboxTitle').textContent = title;
     document.getElementById('lightboxDescription').textContent = description || '';
-    
+
+    // Meta: category and index
+    const categoryEl = document.getElementById('lightboxCategory');
+    const indexEl = document.getElementById('lightboxIndex');
+    if (meta.category) {
+        categoryEl.style.display = '';
+        categoryEl.textContent = meta.category;
+    } else {
+        categoryEl.style.display = 'none';
+    }
+    if (typeof meta.index === 'number' && typeof meta.total === 'number') {
+        indexEl.style.display = '';
+        indexEl.textContent = `${meta.index + 1} / ${meta.total}`;
+    } else {
+        indexEl.style.display = 'none';
+    }
+
+    // Remember current index for navigation
+    window.__lbState = { index: meta.index || 0 };
+
+    // Show modal
     const modal = new bootstrap.Modal(document.getElementById('lightboxModal'));
     modal.show();
 }
@@ -450,8 +507,142 @@ document.addEventListener('keydown', function(e) {
     if (modal.classList.contains('show')) {
         if (e.key === 'Escape') {
             bootstrap.Modal.getInstance(modal).hide();
+        } else if (e.key === 'ArrowRight') {
+            document.getElementById('lightboxNext')?.click();
+        } else if (e.key === 'ArrowLeft') {
+            document.getElementById('lightboxPrev')?.click();
         }
     }
 });
+
+// Toolbar: search and sort
+(function(){
+    const searchInput = document.getElementById('gallery-search');
+    const sortSelect = document.getElementById('gallery-sort');
+    const items = Array.from(document.querySelectorAll('.gallery-item'));
+    const titleFromCard = (card) => (card.querySelector('h6')?.textContent || '').trim().toLowerCase();
+    const descFromCard = (card) => (card.querySelector('.gallery-overlay p')?.textContent || '').trim().toLowerCase();
+
+    function applySearchAndSort() {
+        const q = (searchInput?.value || '').trim().toLowerCase();
+        // Filter by existing filter visibility status
+        let visible = 0;
+        items.forEach(it => {
+            if (it.style.display === 'none') return; // filtered out by category
+            const t = titleFromCard(it);
+            const d = descFromCard(it);
+            const match = !q || t.includes(q) || d.includes(q);
+            it.dataset.searchMatch = match ? '1' : '0';
+            it.style.opacity = match ? '1' : '0.15';
+            it.style.pointerEvents = match ? '' : 'none';
+            if (match) visible++;
+        });
+        const visibleCountEl = document.getElementById('visible-count');
+        if (visibleCountEl) visibleCountEl.textContent = visible.toString();
+    }
+
+    function applySort() {
+        const mode = sortSelect?.value || 'relevance';
+        if (mode === 'relevance') return; // keep DOM order
+        const grid = document.getElementById('gallery-grid');
+        if (!grid) return;
+        const sorted = items.slice().sort((a,b)=>{
+            const ta = titleFromCard(a).localeCompare(titleFromCard(b));
+            if (mode === 'title-asc') return ta;
+            if (mode === 'title-desc') return -ta;
+            return 0;
+        });
+        sorted.forEach(el => grid.appendChild(el));
+    }
+
+    searchInput?.addEventListener('input', ()=>{
+        applySearchAndSort();
+    });
+    sortSelect?.addEventListener('change', ()=>{
+        applySort();
+    });
+
+    // initialize
+    applySearchAndSort();
+})();
+
+// Lightbox: navigation and share/copy
+(function(){
+    const modalEl = document.getElementById('lightboxModal');
+    const prevBtn = document.getElementById('lightboxPrev');
+    const nextBtn = document.getElementById('lightboxNext');
+    const shareBtn = document.getElementById('lightboxShare');
+    const copyBtn = document.getElementById('lightboxCopy');
+
+    // Build a flat list of entries from current DOM order
+    function getEntries() {
+        const cards = Array.from(document.querySelectorAll('.gallery-item'))
+            .filter(it => it.style.display !== 'none' && it.dataset.searchMatch !== '0');
+        return cards.map((it, idx) => {
+            const img = it.querySelector('.gallery-image');
+            const title = it.querySelector('h6')?.textContent?.trim() || '';
+            const desc = it.querySelector('.gallery-overlay p')?.textContent?.trim() || '';
+            const src = img?.getAttribute('src');
+            const cat = it.dataset.category || '';
+            return { src, title, desc, cat, idx };
+        }).filter(e => !!e.src);
+    }
+
+    function openAt(index) {
+        const entries = getEntries();
+        if (!entries.length) return;
+        const i = Math.max(0, Math.min(index, entries.length-1));
+        const e = entries[i];
+        openLightbox(e.src, e.title, e.desc, { category: e.cat, index: i, total: entries.length });
+    }
+
+    prevBtn?.addEventListener('click', ()=>{
+        const state = window.__lbState || { index: 0 };
+        openAt((state.index || 0) - 1);
+    });
+    nextBtn?.addEventListener('click', ()=>{
+        const state = window.__lbState || { index: 0 };
+        openAt((state.index || 0) + 1);
+    });
+
+    shareBtn?.addEventListener('click', async ()=>{
+        try {
+            const url = document.getElementById('lightboxImage')?.src;
+            if (navigator.share && url) {
+                await navigator.share({ title: document.title, url });
+            } else if (url) {
+                await navigator.clipboard.writeText(url);
+                copyBtn?.classList.add('btn-success');
+                setTimeout(()=>copyBtn?.classList.remove('btn-success'), 900);
+            }
+        } catch(e) { /* no-op */ }
+    });
+
+    copyBtn?.addEventListener('click', async ()=>{
+        const url = document.getElementById('lightboxImage')?.src;
+        if (url) {
+            await navigator.clipboard.writeText(url);
+            copyBtn.classList.add('btn-success');
+            setTimeout(()=>copyBtn.classList.remove('btn-success'), 900);
+        }
+    });
+
+    // Sync current index when modal opens (works with existing inline onclick)
+    modalEl?.addEventListener('shown.bs.modal', ()=>{
+        const src = document.getElementById('lightboxImage')?.src;
+        const entries = (function(){
+            const cards = Array.from(document.querySelectorAll('.gallery-item'))
+                .filter(it => it.style.display !== 'none' && it.dataset.searchMatch !== '0');
+            return cards.map((it) => {
+                const img = it.querySelector('.gallery-image');
+                return img?.getAttribute('src');
+            }).filter(Boolean);
+        })();
+        const idx = entries.indexOf(src);
+        if (idx >= 0) window.__lbState = { index: idx };
+    });
+
+})();
+
 </script>
 {% endblock %}
