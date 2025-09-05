@@ -163,12 +163,30 @@
         <!-- Share Again -->
         <div class="mt-4">
           <h6 class="mb-2">{% if is_rtl %}شارك هذا المقال:{% else %}{{ _('Share this article:') }}{% endif %}</h6>
+          <!-- SVG icon versions with green outline + peach hover -->
           <div class="d-flex gap-2 flex-wrap">
-            <button class="btn btn-outline-primary btn-sm hover-lift share-btn" data-platform="facebook"><i class="fab fa-facebook-f me-1"></i>Facebook</button>
-            <button class="btn btn-outline-info btn-sm hover-lift share-btn" data-platform="twitter"><i class="fab fa-twitter me-1"></i>Twitter</button>
-            <button class="btn btn-outline-success btn-sm hover-lift share-btn" data-platform="whatsapp"><i class="fab fa-whatsapp me-1"></i>WhatsApp</button>
-            <button class="btn btn-outline-secondary btn-sm hover-lift share-btn" data-platform="copy"><i class="fas fa-link me-1"></i>{% if is_rtl %}نسخ الرابط{% else %}Copy Link{% endif %}</button>
+            <button class="btn btn-outline-primary btn-sm hover-lift share-btn" data-platform="facebook" aria-label="Facebook">
+              <span class="me-1" aria-hidden="true" style="line-height:0; color:#3b5998;">
+                <svg viewBox="0 0 24 24" width="16" height="16" fill="currentColor"><path d="M22 12a10 10 0 10-11.6 9.9v-7h-2.4V12h2.4V9.7c0-2.4 1.4-3.7 3.6-3.7 1 0 2 .2 2 .2v2.3h-1.1c-1.1 0-1.5.7-1.5 1.5V12h2.6l-.4 2.9h-2.2v7A10 10 0 0022 12z"/></svg>
+              </span>Facebook
+            </button>
+            <button class="btn btn-outline-primary btn-sm hover-lift share-btn" data-platform="twitter" aria-label="Twitter" style="border-color:#1da1f2; color:#1da1f2;">
+              <span class="me-1" aria-hidden="true" style="line-height:0; color:#1da1f2;">
+                <svg viewBox="0 0 24 24" width="16" height="16" fill="currentColor"><path d="M22 5.9c-.7.3-1.5.6-2.3.7.8-.5 1.4-1.2 1.7-2.1-.8.5-1.7.9-2.6 1.1A4.2 4.2 0 0015.3 4c-2.4 0-4.3 1.9-4.3 4.3 0 .3 0 .6.1.9-3.6-.2-6.9-1.9-9-4.5-.4.6-.6 1.3-.6 2 0 1.5.8 2.8 2 3.6-.7 0-1.3-.2-1.9-.5 0 2.1 1.5 3.8 3.5 4.2-.4.1-.8.2-1.3.2-.3 0-.6 0-.9-.1.6 1.9 2.4 3.2 4.5 3.2A8.5 8.5 0 012 19.5 12 12 0 008.6 21c7.2 0 11.2-6 11.2-11.2v-.5c.8-.6 1.5-1.3 2.1-2.1z"/></svg>
+              </span>Twitter
+            </button>
+            <button class="btn btn-outline-primary btn-sm hover-lift share-btn" data-platform="whatsapp" aria-label="WhatsApp" style="border-color:#25D366; color:#25D366;">
+              <span class="me-1" aria-hidden="true" style="line-height:0; color:#25D366;">
+                <svg viewBox="0 0 24 24" width="16" height="16" fill="currentColor"><path d="M20.5 3.5A10 10 0 003.7 18.3L3 21l2.8-.7A10 10 0 1020.5 3.5zm-8.4 16a8 8 0 01-4.1-1.1l-.3-.2-2.4.6.6-2.3-.2-.3a8 8 0 117.8 3.3zm4.4-5.3c-.2-.1-1.3-.6-1.4-.6-.2-.1-.3-.1-.5.1l-.4.5c-.1.1-.2.1-.4 0-.2-.1-.8-.3-1.5-1-.6-.5-1-1.2-1.1-1.3-.1-.2 0-.3.1-.4l.3-.3c.1-.1.1-.2.1-.3l-.5-1.2c-.1-.3-.2-.3-.4-.3h-.3c-.1 0-.3.1-.5.3-.2.2-.7.7-.7 1.7s.7 1.9.8 2.1c.1.2 1.4 2.2 3.4 3 .5.2.8.3 1.1.4.5.2 1 .2 1.3.1.4-.1 1.3-.5 1.5-1 .2-.5.2-.9.2-1 0-.1-.1-.2-.3-.3z"/></svg>
+              </span>WhatsApp
+            </button>
+            <button class="btn btn-outline-primary btn-sm hover-lift share-btn" data-platform="copy" aria-label="Copy Link" style="border-color:#689b8a; color:#689b8a;">
+              <span class="me-1" aria-hidden="true" style="line-height:0; color:#689b8a;">
+                <svg viewBox="0 0 24 24" width="16" height="16" fill="currentColor"><path d="M16 1H6a2 2 0 00-2 2v11h2V3h10V1zm3 4H10a2 2 0 00-2 2v11a2 2 0 002 2h9a2 2 0 002-2V7a2 2 0 00-2-2zm0 13H10V7h9v11z"/></svg>
+              </span>{% if is_rtl %}نسخ الرابط{% else %}Copy Link{% endif %}
+            </button>
           </div>
+
         </div>
       </div>
 
@@ -216,7 +234,7 @@
 
 <!-- Related Articles (match homepage Latest Updates style) -->
 {% if related_articles %}
-<section class="py-5 bg-gradient-light position-relative overflow-hidden">
+<section class="py-5 bg-gradient-light position-relative overflow-hidden related-section">
   <div class="container position-relative">
     <div class="text-center mb-5" data-aos="fade-up">
       <div class="section-badge badge bg-gradient-secondary text-dark px-4 py-2 rounded-pill mb-3 fs-6 fw-semibold">
@@ -241,6 +259,14 @@
 
             <!-- Date Badge -->
             <div class="position-absolute top-0 start-0 p-3">
+        <style>
+          /* Center Arabic heading + lead in Related section explicitly */
+          .related-section .arabic-heading,
+          .related-section .arabic-text { text-align:center !important; margin-left:auto !important; margin-right:auto !important; display:block; }
+          /* Green buttons with peach hover for Read More */
+          .related-section .btn-outline-primary { border-color:#689b8a !important; color:#689b8a !important; }
+          .related-section .btn-outline-primary:hover { background:#f9cb99 !important; border-color:#f9cb99 !important; color:#103d24 !important; }
+        </style>
               <div class="date-badge bg-white text-dark rounded-pill px-3 py-2 shadow-sm">
                 <i class="fas fa-calendar-alt me-2 text-primary-custom"></i>
                 <small class="fw-semibold">{{ related.publish_at.strftime('%b %d') }}</small>
