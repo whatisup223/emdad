@@ -83,11 +83,11 @@
           {% endif %}
         </div>
 
-        <div class="d-flex flex-wrap align-items-center gap-2 text-white-75">
+        <div class="d-flex flex-wrap align-items-center gap-2" style="color:#fff;">
           {% set rt = article.get_reading_time(current_language) %}
-          <small><i class="fas fa-calendar-alt me-1"></i>{% if is_rtl %}{{ article.publish_at.strftime('%d %B %Y') }}{% else %}{{ article.publish_at.strftime('%B %d, %Y') }}{% endif %}</small>
-          <span class="opacity-50">•</span>
-          <small><i class="fas fa-clock me-1"></i>{% if is_rtl %}وقت القراءة: {{ rt }} {{ 'دقيقة' if rt == 1 else 'دقائق' }}{% else %}{{ _('Reading time') }}: {{ rt }} {{ _('minutes') }}{% endif %}</small>
+          <small class="text-white"><i class="fas fa-calendar-alt me-1"></i>{% if is_rtl %}{{ article.publish_at.strftime('%d %B %Y') }}{% else %}{{ article.publish_at.strftime('%B %d, %Y') }}{% endif %}</small>
+          <span class="opacity-75" style="color:#fff;">•</span>
+          <small class="text-white"><i class="fas fa-clock me-1"></i>{% if is_rtl %}وقت القراءة: {{ rt }} {{ 'دقيقة' if rt == 1 else 'دقائق' }}{% else %}{{ _('Reading time') }}: {{ rt }} {{ _('minutes') }}{% endif %}</small>
           {% if article.featured %}
           <span class="badge bg-warning text-dark ms-2">{{ _('Featured') }}</span>
           {% endif %}
