@@ -34,6 +34,29 @@ def create_app(config_name=None):
     mail.init_app(app)
     limiter.init_app(app)
     csrf.init_app(app)
+    # Auto-create missing RFQ columns in non-migrated environments (safe fallback)
+    # Flask 3 removed before_first_request; run once at startup inside app context
+    try:
+        from sqlalchemy import inspect, text
+        with app.app_context():
+            inspector = inspect(db.engine)
+            cols = {c['name'] for c in inspector.get_columns('rfq')}
+            # Add columns if missing (SQLite/Postgres compatible SQL)
+            if 'delivery_date' not in cols:
+                try:
+                    db.session.execute(text('ALTER TABLE rfq ADD COLUMN delivery_date DATE'))
+                except Exception:
+                    pass
+            if 'budget' not in cols:
+                try:
+                    db.session.execute(text('ALTER TABLE rfq ADD COLUMN budget VARCHAR(100)'))
+                except Exception:
+                    pass
+            db.session.commit()
+    except Exception:
+        # Ignore if inspection fails; rely on proper migrations
+        pass
+
 
     # Configure Flask-Login
     login_manager.login_view = 'admin.login'

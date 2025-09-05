@@ -1,4 +1,4 @@
-from flask import render_template, request, redirect, url_for, flash, current_app, jsonify, session
+from flask import render_template, request, redirect, url_for, flash, current_app, jsonify, session, send_from_directory, abort
 from flask_login import login_user, logout_user, login_required, current_user
 from werkzeug.utils import secure_filename
 from app.admin import bp
@@ -529,6 +529,17 @@ def rfq_detail(id):
     """RFQ detail view."""
     rfq = RFQ.query.get_or_404(id)
     return render_template('admin/rfq_detail.html', rfq=rfq)
+@bp.route('/rfqs/<int:id>/attachment')
+@login_required
+def rfq_download_attachment(id):
+    """Download RFQ attachment if exists."""
+    rfq = RFQ.query.get_or_404(id)
+    if not rfq.attachment_path:
+        abort(404)
+    # Build path under instance/uploads/rfq
+    base_dir = os.path.join(current_app.instance_path, current_app.config['UPLOAD_FOLDER'], 'rfq')
+    return send_from_directory(base_dir, rfq.attachment_path, as_attachment=True)
+
 
 @bp.route('/rfqs/<int:id>/status', methods=['POST'])
 @editor_required

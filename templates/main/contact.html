@@ -152,9 +152,43 @@
       <div class="col-lg-8">
         <div class="card border-0 shadow-lg" style="border-radius:16px;">
           <div class="card-body p-4">
+            {% if request.args.get('submitted') %}
+            <style>
+              /* Extra guard: hide any RFQ form and submit button on success view */
+              form.needs-validation { display: none !important; }
+              form.needs-validation button[type="submit"] { display: none !important; }
+            </style>
+            {% endif %}
+
+            {% if request.args.get('submitted') %}
+              <div class="text-center py-5">
+                <div class="d-inline-flex align-items-center justify-content-center mb-3" style="width:96px;height:96px;border-radius:50%;background:var(--secondary-gradient);border:2px solid var(--secondary-color); box-shadow: 0 8px 18px rgba(104,155,138,.25);">
+                  <i class="fas fa-check-circle" style="font-size:2.8rem;color: var(--primary-color);"></i>
+                </div>
+                <h4 class="m-0 text-center {{ 'arabic-heading' if is_rtl else 'english-heading' }}" style="color:var(--primary-color);">{% if is_rtl %}تم استلام طلبك بنجاح{% else %}Your Request Was Sent Successfully{% endif %}</h4>
+                <p class="text-muted mt-3">{% if is_rtl %}شكرًا لتواصلك معنا. سنتواصل معك خلال 24 ساعة.{% else %}Thank you for your inquiry! We will contact you within 24 hours.{% endif %}</p>
+              </div>
+                <div class="mt-4 d-flex flex-column flex-sm-row justify-content-center gap-2">
+                  <!-- زر أخضر أساسي + تأثير خوخي عند التحويم -->
+                  <a href="{{ url_for('main.contact') }}#rfq-form" class="btn btn-primary btn-lg px-4 hover-lift btn-green-peach" style="border-radius:12px;">
+                    <i class="fas fa-plus-circle me-2"></i>{% if is_rtl %}إرسال طلب جديد{% else %}Send New Request{% endif %}
+                  </a>
+                  <!-- زر خوخي أساسي + تأثير أخضر عند التحويم -->
+                  <a href="{{ url_for('main.index') }}" class="btn btn-peach btn-lg px-4 hover-lift btn-peach-green" style="border-radius:12px;">
+                    <i class="fas fa-home me-2"></i>{% if is_rtl %}العودة للصفحة الرئيسية{% else %}Back to Home{% endif %}
+                  </a>
+                </div>
+                <style>
+                  /* أخضر النظام كأساس */
+                  .btn-green-peach { background: var(--primary-gradient); color:#fff; border:2px solid var(--primary-color); }
+                  .btn-green-peach:hover, .btn-green-peach:focus { background: var(--secondary-gradient); color: var(--dark-color); border-color: var(--secondary-color); box-shadow: 0 10px 24px rgba(249,203,153,.35); }
+                  /* خوخي كأساس */
+                  .btn-peach { background: var(--secondary-gradient); color: var(--dark-color); border:2px solid var(--secondary-color); }
+                  .btn-peach-green:hover, .btn-peach-green:focus { background: var(--primary-gradient); color:#fff; border-color: var(--primary-color); box-shadow: 0 10px 24px rgba(104,155,138,.35); }
+                </style>
+            {% else %}
             <h4 id="rfq-form" class="card-title mb-2 {{ 'arabic-heading' if is_rtl else 'english-heading' }}">{% if is_rtl %}طلب عرض أسعار{% else %}Request a Quote{% endif %}</h4>
             <p class="text-muted mb-4">{% if is_rtl %}املأ النموذج وسيقوم فريقنا بالرد خلال 24 ساعة.{% else %}Fill out the form and we will reply within 24 hours.{% endif %}</p>
-
             <form method="POST" enctype="multipart/form-data" class="needs-validation" novalidate>
               {{ form.hidden_tag() }}
 
@@ -217,6 +251,20 @@
                 {% if form.packaging_preference.errors %}<div class="invalid-feedback d-block">{% for error in form.packaging_preference.errors %}{{ error }}{% endfor %}</div>{% endif %}
               </div>
 
+	              <div class="row">
+	                <div class="col-md-6 mb-3">
+	                  <label class="form-label fw-semibold">{% if is_rtl %}تاريخ التسليم{% else %}Delivery Date{% endif %}</label>
+	                  {{ form.delivery_date(class="form-control", type="date") }}
+	                  {% if form.delivery_date.errors %}<div class="invalid-feedback d-block">{% for error in form.delivery_date.errors %}{{ error }}{% endfor %}</div>{% endif %}
+	                </div>
+	                <div class="col-md-6 mb-3">
+	                  <label class="form-label fw-semibold">{% if is_rtl %}الميزانية{% else %}Budget{% endif %}</label>
+	                  {{ form.budget(class="form-control", placeholder=("مثال: 10,000 USD" if is_rtl else "e.g., 10,000 USD")) }}
+	                  {% if form.budget.errors %}<div class="invalid-feedback d-block">{% for error in form.budget.errors %}{{ error }}{% endfor %}</div>{% endif %}
+	                </div>
+	              </div>
+
+
               <div class="mb-3">
                 {{ form.message.label(class="form-label fw-semibold") if not is_rtl else '<label class="form-label fw-semibold">تفاصيل الطلب</label>'|safe }}
                 {{ form.message(class="form-control", rows="4", placeholder=("اذكر المواصفات المطلوبة، الوجهة، الزمن، وأي معايير جودة..." if is_rtl else "Please provide details about your requirements, destination, timeline, and any quality standards...")) }}
@@ -229,8 +277,11 @@
                   <button class="btn btn-peach-hover" type="button" id="chooseFileBtn"><i class="fas fa-paperclip me-1"></i>{% if is_rtl %}اختر ملفاً{% else %}Choose File{% endif %}</button>
                   <span class="input-group-text flex-grow-1 text-truncate" id="fileNameText" style="background:#fff;">{% if is_rtl %}لم يتم اختيار ملف{% else %}No file chosen{% endif %}</span>
                 </div>
+
                 {{ form.attachment(class="form-control d-none", id="attachment") }}
+                {% if request.args.get('submitted') %}{% else %}
                 <div class="form-text">{% if is_rtl %}اختياري: أرفق المواصفات أو المستندات ذات الصلة (PDF/DOC/صور){% else %}Optional: Upload specs or documents (PDF, DOC, images){% endif %}</div>
+                {% endif %}
                 <div class="file-preview d-none text-muted small mt-2"></div>
                 {% if form.attachment.errors %}<div class="invalid-feedback d-block">{% for error in form.attachment.errors %}{{ error }}{% endfor %}</div>{% endif %}
               </div>
@@ -241,6 +292,7 @@
                 </button>
               </div>
             </form>
+            {% endif %}
           </div>
         </div>
       </div>

@@ -216,7 +216,7 @@ def contact():
     form = RFQForm()
 
     if form.validate_on_submit():
-        # Create RFQ record
+        # Create RFQ record (avoid passing fields not in DB to prevent constructor errors)
         rfq = RFQ(
             name=form.name.data,
             email=form.email.data,
@@ -229,6 +229,14 @@ def contact():
             packaging_preference=form.packaging_preference.data,
             message=form.message.data
         )
+        # Set optional fields if model supports them (forward-compatible without migrations)
+        try:
+            if hasattr(RFQ, 'delivery_date') and form.delivery_date.data:
+                rfq.delivery_date = form.delivery_date.data.date()
+            if hasattr(RFQ, 'budget') and form.budget.data:
+                rfq.budget = form.budget.data
+        except Exception:
+            pass
 
         # Handle file upload
         if form.attachment.data:
@@ -299,8 +307,7 @@ Emdad Global Team
         except Exception as e:
             current_app.logger.error(f'Failed to send RFQ emails: {e}')
 
-        flash('Thank you for your inquiry! We will contact you within 24 hours.', 'success')
-        return redirect(url_for('main.contact'))
+        return redirect(url_for('main.contact', submitted=1))
 
     return render_template('main/contact.html', form=form)
 

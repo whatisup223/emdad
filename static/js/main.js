@@ -226,9 +226,11 @@ function initLoadingStates() {
             const submitBtn = this.querySelector('button[type="submit"]');
             if (submitBtn) {
                 const originalText = submitBtn.innerHTML;
-                submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin me-2"></i>Processing...';
+                const isRTL = document.documentElement.dir === 'rtl' || document.documentElement.lang === 'ar';
+                const processingText = isRTL ? 'جاري المعالجة...' : 'Processing...';
+                submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin me-2"></i>' + processingText;
                 submitBtn.disabled = true;
-                
+
                 // Re-enable after 5 seconds (fallback)
                 setTimeout(() => {
                     submitBtn.innerHTML = originalText;

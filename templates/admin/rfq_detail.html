@@ -123,6 +123,27 @@
                         </div>
                     </div>
 
+                        <hr>
+
+                        <!-- Attachments -->
+                        <div class="row">
+                          <div class="col-12">
+                            <h5 class="mb-3">{{ _('Attachments') }}</h5>
+                            {% if rfq.attachment_path %}
+                              <div class="list-group">
+                                <a class="list-group-item list-group-item-action d-flex align-items-center" href="{{ url_for('admin.rfq_download_attachment', id=rfq.id) }}">
+                                  <i class="fas fa-paperclip me-2"></i>
+                                  <span class="me-2">{{ rfq.attachment_path }}</span>
+                                  <span class="badge bg-light text-dark ms-auto"><i class="fas fa-download me-1"></i>{{ _('Download') }}</span>
+                                </a>
+                              </div>
+                            {% else %}
+                              <p class="text-muted mb-0">{{ _('No attachments') }}</p>
+                            {% endif %}
+                          </div>
+                        </div>
+
+
                     <hr>
 
                     <!-- الرسالة -->
@@ -154,7 +175,7 @@
                                     <li><a class="dropdown-item" href="#" onclick="updateStatus('cancelled')">{{ _('Cancelled') }}</a></li>
                                 </ul>
                             </div>
-                            
+
                             <div class="btn-group me-2">
                                 <button type="button" class="btn btn-outline-secondary dropdown-toggle" data-bs-toggle="dropdown">
                                     {{ _('Change Priority') }}

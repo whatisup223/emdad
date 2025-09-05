@@ -16,10 +16,12 @@ class RFQForm(FlaskForm):
     country = StringField('Country', validators=[DataRequired(), Length(max=100)])
 
     category_key = SelectField('Product Category', validators=[DataRequired()], choices=[])
-    # Switch product_name to SelectField to be a real dropdown; will be populated dynamically on the page
-    product_name = SelectField('Specific Product', validators=[Optional(), Length(max=200)], choices=[])
+    # Keep as SelectField but allow values populated client-side (avoid "Not a valid choice")
+    product_name = SelectField('Specific Product', validators=[Optional(), Length(max=200)], choices=[], validate_choice=False)
     quantity = StringField('Required Quantity', validators=[Optional(), Length(max=100)])
     packaging_preference = StringField('Packaging Preference', validators=[Optional(), Length(max=200)])
+    delivery_date = DateTimeField('Delivery Date', format='%Y-%m-%d', validators=[Optional()])
+    budget = StringField('Budget', validators=[Optional(), Length(max=100)])
 
     message = TextAreaField('Message/Requirements', validators=[DataRequired(), Length(min=10, max=2000)])
     attachment = FileField('Attachment (Optional)', validators=[

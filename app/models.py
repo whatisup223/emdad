@@ -453,6 +453,9 @@ class RFQ(db.Model):
     product_name = db.Column(db.String(200))
     quantity = db.Column(db.String(100))
     packaging_preference = db.Column(db.String(200))
+    # Optional planning information
+    delivery_date = db.Column(db.Date, nullable=True)
+    budget = db.Column(db.String(100), nullable=True)
 
     # Message and attachments
     message = db.Column(db.Text, nullable=False)
