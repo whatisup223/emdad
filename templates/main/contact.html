@@ -1,278 +1,269 @@
 {% extends "base.html" %}
 
-{% block title %}Contact Us - {{ SITE_NAME }}{% endblock %}
+{% block title %}{% if is_rtl %}تواصل معنا - {{ SITE_NAME }}{% else %}Contact Us - {{ SITE_NAME }}{% endif %}{% endblock %}
 
-{% block meta_description %}Contact Emdad Global for premium Egyptian agricultural exports. Request a quote for citrus fruits, fresh produce, and frozen products.{% endblock %}
+{% block meta_description %}{% if is_rtl %}تواصل مع إمداد جلوبال لطلب عرض أسعار للحمضيات والمنتجات الطازجة والمجمّدة.{% else %}Contact Emdad Global for premium Egyptian agricultural exports. Request a quote for citrus fruits, fresh produce, and frozen products.{% endif %}{% endblock %}
 
 {% block content %}
 <!-- Page Header -->
-<section class="py-5 bg-primary text-white">
-    <div class="container">
-        <div class="row">
-            <div class="col-lg-8">
-                <h1 class="display-5 fw-bold mb-3">Contact Us</h1>
-                <p class="lead">Get in touch with our team for quotes, inquiries, or partnership opportunities.</p>
-            </div>
+<section class="py-5 products-hero position-relative overflow-hidden" style="background:#689b8a; color:#fff;">
+  <!-- Animated Background Elements (copied from About hero) -->
+  <style>
+    .products-hero { min-height: 420px; }
+    .products-hero .section-heading, .products-hero .lead { color:#fff !important; }
+    .products-hero .section-badge { background: var(--secondary-gradient) !important; color: var(--dark-color) !important; }
+    .hero-animated-bg { position:absolute; inset:0; z-index:0; pointer-events:none; }
+    .hero-bubble { position:absolute; border-radius:50%; background: rgba(255,255,255,.18); filter: blur(.4px); animation: heroFloat 10s ease-in-out infinite; }
+    .hero-bubble.b1 { width:90px; height:90px; top:12%; left:10%; animation-duration: 12s; }
+    .hero-bubble.b2 { width:140px; height:140px; bottom:10%; right:12%; animation-duration: 14s; animation-direction: reverse; }
+    .hero-bubble.b3 { width:70px; height:70px; top:35%; right:28%; animation-duration: 11s; }
+    .hero-bubble.b4 { width:110px; height:110px; bottom:20%; left:22%; animation-duration: 13s; }
+    @keyframes heroFloat { 0%,100%{ transform: translateY(0);} 50%{ transform: translateY(-14px);} }
+    .grid-animated-bg { position:absolute; inset:0; z-index:0; pointer-events:none; }
+    .leaf { position:absolute; color: rgba(249,203,153,.55); font-size: 1rem; animation: leafDrift 18s linear infinite; }
+    @keyframes leafDrift { 0%{ transform: translateX(0) rotate(0deg);} 50%{ transform: translateX(50vw) rotate(10deg);} 100%{ transform: translateX(100vw) rotate(0deg);} }
+    @media (prefers-reduced-motion: reduce) { .hero-bubble, .leaf { animation: none !important; } }
+    @media (max-width: 767.98px) { .hero-animated-bg, .grid-animated-bg { display: none !important; } .products-hero { min-height: 300px; } }
+  </style>
+  <div class="hero-animated-bg" aria-hidden="true">
+    <span class="hero-bubble b1"></span>
+    <span class="hero-bubble b2"></span>
+    <span class="hero-bubble b3"></span>
+    <span class="hero-bubble b4"></span>
+  </div>
+  <div class="grid-animated-bg" aria-hidden="true" id="contactHeroLeaves"></div>
+  <div class="container position-relative">
+    <div class="row align-items-center">
+      <div class="col-lg-8 mx-auto text-center" data-aos="fade-up">
+        <div class="section-badge badge bg-light text-dark px-4 py-2 rounded-pill mb-3 fs-6 fw-semibold">
+          <i class="fas fa-envelope me-2"></i>{% if is_rtl %}تواصل معنا{% else %}Contact Us{% endif %}
         </div>
+        <h1 class="display-5 mb-3 text-white {{ 'arabic-heading' if is_rtl else 'english-heading' }} text-center" style="color:#fff !important;">{% if is_rtl %}نحن هنا لخدمتك{% else %}We're Here to Help{% endif %}</h1>
+        <p class="lead text-center" style="opacity:.95; color:#fff;">{% if is_rtl %}راسلنا لطلب عرض أسعار، استفسارات، أو فرص شراكة.{% else %}Reach out for quotes, inquiries, or partnership opportunities.{% endif %}</p>
+        <a href="#rfq-form" class="btn btn-dark btn-lg px-5 py-3 mt-3 hover-lift" style="border-radius:12px;">
+          <i class="fas fa-paper-plane me-2"></i>{% if is_rtl %}أرسل طلبك{% else %}Send Request{% endif %}
+        </a>
+      </div>
     </div>
+  </div>
+  <script>
+    document.addEventListener('DOMContentLoaded', function(){
+      const container = document.getElementById('contactHeroLeaves');
+      if(!container) return;
+      const prefersReduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches; if (prefersReduced) return;
+      const COUNT = 12;
+      for(let i=0;i<COUNT;i++){
+        const s = document.createElement('span');
+        s.className = 'leaf';
+        s.style.top = Math.random()*90 + '%';
+        s.style.left = (-40 + Math.random()*20) + 'px';
+        s.style.animationDuration = (16 + Math.random()*8) + 's';
+        s.style.fontSize = (0.9 + Math.random()*1.2) + 'rem';
+        s.innerHTML = '<i class="fas fa-leaf"></i>';
+        container.appendChild(s);
+      }
+    });
+  </script>
 </section>
 
 <!-- Contact Content -->
-<section class="py-5">
-    <div class="container">
-        <div class="row">
-            <!-- Contact Information -->
-            <div class="col-lg-4 mb-5">
-                <div class="card border-0 shadow-sm h-100">
-                    <div class="card-body">
-                        <h4 class="card-title mb-4">Get in Touch</h4>
-                        
-                        <div class="contact-item mb-4">
-                            <div class="d-flex align-items-start">
-                                <div class="contact-icon bg-primary text-white rounded-circle d-flex align-items-center justify-content-center me-3" style="width: 50px; height: 50px;">
-                                    <i class="fas fa-envelope"></i>
-                                </div>
-                                <div>
-                                    <h6 class="mb-1">Email</h6>
-                                    <a href="mailto:{{ COMPANY_EMAIL }}" class="text-muted">{{ COMPANY_EMAIL }}</a>
-                                </div>
-                            </div>
-                        </div>
-                        
-                        <div class="contact-item mb-4">
-                            <div class="d-flex align-items-start">
-                                <div class="contact-icon bg-success text-white rounded-circle d-flex align-items-center justify-content-center me-3" style="width: 50px; height: 50px;">
-                                    <i class="fas fa-phone"></i>
-                                </div>
-                                <div>
-                                    <h6 class="mb-1">Phone</h6>
-                                    <a href="tel:{{ COMPANY_PHONE }}" class="text-muted">{{ COMPANY_PHONE }}</a>
-                                </div>
-                            </div>
-                        </div>
-                        
-                        <div class="contact-item mb-4">
-                            <div class="d-flex align-items-start">
-                                <div class="contact-icon bg-success text-white rounded-circle d-flex align-items-center justify-content-center me-3" style="width: 50px; height: 50px;">
-                                    <i class="fab fa-whatsapp"></i>
-                                </div>
-                                <div>
-                                    <h6 class="mb-1">WhatsApp</h6>
-                                    <a href="https://wa.me/{{ COMPANY_WHATSAPP.replace('+', '').replace('-', '') }}" 
-                                       target="_blank" class="text-muted">{{ COMPANY_WHATSAPP }}</a>
-                                </div>
-                            </div>
-                        </div>
-                        
-                        <div class="contact-item mb-4">
-                            <div class="d-flex align-items-start">
-                                <div class="contact-icon bg-info text-white rounded-circle d-flex align-items-center justify-content-center me-3" style="width: 50px; height: 50px;">
-                                    <i class="fas fa-map-marker-alt"></i>
-                                </div>
-                                <div>
-                                    <h6 class="mb-1">Address</h6>
-                                    <p class="text-muted mb-0">{{ COMPANY_ADDRESS }}</p>
-                                </div>
-                            </div>
-                        </div>
-                        
-                        <!-- Business Hours -->
-                        <div class="mt-4">
-                            <h6 class="mb-3">Business Hours</h6>
-                            <div class="text-muted small">
-                                <div class="d-flex justify-content-between mb-1">
-                                    <span>Sunday - Thursday:</span>
-                                    <span>9:00 AM - 6:00 PM</span>
-                                </div>
-                                <div class="d-flex justify-content-between mb-1">
-                                    <span>Friday:</span>
-                                    <span>9:00 AM - 2:00 PM</span>
-                                </div>
-                                <div class="d-flex justify-content-between">
-                                    <span>Saturday:</span>
-                                    <span>Closed</span>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
+<section class="py-5 position-relative overflow-hidden">
+  <div class="container">
+    <div class="row g-4 align-items-stretch">
+      <!-- Contact Information -->
+      <div class="col-lg-4">
+        <div class="card h-100 border-0 shadow-lg hover-lift" style="border-radius:16px;">
+          <div class="card-body p-4">
+            <h4 class="card-title mb-4 {{ 'arabic-heading' if is_rtl else 'english-heading' }}">{% if is_rtl %}معلومات التواصل{% else %}Get in Touch{% endif %}</h4>
+
+            <div class="contact-item mb-4" data-aos="fade-up" data-aos-delay="50">
+              <div class="d-flex align-items-start">
+                <div class="contact-icon bg-gradient-primary text-white rounded-circle d-inline-flex align-items-center justify-content-center me-3 hover-lift" style="width: 56px; height: 56px;">
+                  <i class="fas fa-envelope"></i>
                 </div>
-            </div>
-            
-            <!-- RFQ Form -->
-            <div class="col-lg-8">
-                <div class="card border-0 shadow-sm">
-                    <div class="card-body">
-                        <h4 class="card-title mb-4">Request a Quote</h4>
-                        <p class="text-muted mb-4">Fill out the form below and we'll get back to you within 24 hours with a detailed quote.</p>
-                        
-                        <form method="POST" enctype="multipart/form-data" class="needs-validation" novalidate>
-                            {{ form.hidden_tag() }}
-                            
-                            <div class="row">
-                                <div class="col-md-6 mb-3">
-                                    {{ form.name.label(class="form-label") }}
-                                    {{ form.name(class="form-control") }}
-                                    {% if form.name.errors %}
-                                        <div class="invalid-feedback d-block">
-                                            {% for error in form.name.errors %}{{ error }}{% endfor %}
-                                        </div>
-                                    {% endif %}
-                                </div>
-                                
-                                <div class="col-md-6 mb-3">
-                                    {{ form.email.label(class="form-label") }}
-                                    {{ form.email(class="form-control") }}
-                                    {% if form.email.errors %}
-                                        <div class="invalid-feedback d-block">
-                                            {% for error in form.email.errors %}{{ error }}{% endfor %}
-                                        </div>
-                                    {% endif %}
-                                </div>
-                            </div>
-                            
-                            <div class="row">
-                                <div class="col-md-6 mb-3">
-                                    {{ form.phone.label(class="form-label") }}
-                                    {{ form.phone(class="form-control") }}
-                                    {% if form.phone.errors %}
-                                        <div class="invalid-feedback d-block">
-                                            {% for error in form.phone.errors %}{{ error }}{% endfor %}
-                                        </div>
-                                    {% endif %}
-                                </div>
-                                
-                                <div class="col-md-6 mb-3">
-                                    {{ form.company.label(class="form-label") }}
-                                    {{ form.company(class="form-control") }}
-                                    {% if form.company.errors %}
-                                        <div class="invalid-feedback d-block">
-                                            {% for error in form.company.errors %}{{ error }}{% endfor %}
-                                        </div>
-                                    {% endif %}
-                                </div>
-                            </div>
-                            
-                            <div class="row">
-                                <div class="col-md-6 mb-3">
-                                    {{ form.country.label(class="form-label") }}
-                                    {{ form.country(class="form-control") }}
-                                    {% if form.country.errors %}
-                                        <div class="invalid-feedback d-block">
-                                            {% for error in form.country.errors %}{{ error }}{% endfor %}
-                                        </div>
-                                    {% endif %}
-                                </div>
-                                
-                                <div class="col-md-6 mb-3">
-                                    {{ form.category_key.label(class="form-label") }}
-                                    {{ form.category_key(class="form-select") }}
-                                    {% if form.category_key.errors %}
-                                        <div class="invalid-feedback d-block">
-                                            {% for error in form.category_key.errors %}{{ error }}{% endfor %}
-                                        </div>
-                                    {% endif %}
-                                </div>
-                            </div>
-                            
-                            <div class="row">
-                                <div class="col-md-6 mb-3">
-                                    {{ form.product_name.label(class="form-label") }}
-                                    {{ form.product_name(class="form-control", placeholder="Select a category first...") }}
-                                    {% if form.product_name.errors %}
-                                        <div class="invalid-feedback d-block">
-                                            {% for error in form.product_name.errors %}{{ error }}{% endfor %}
-                                        </div>
-                                    {% endif %}
-                                </div>
-                                
-                                <div class="col-md-6 mb-3">
-                                    {{ form.quantity.label(class="form-label") }}
-                                    {{ form.quantity(class="form-control", placeholder="e.g., 20 tons, 1000 cartons") }}
-                                    {% if form.quantity.errors %}
-                                        <div class="invalid-feedback d-block">
-                                            {% for error in form.quantity.errors %}{{ error }}{% endfor %}
-                                        </div>
-                                    {% endif %}
-                                </div>
-                            </div>
-                            
-                            <div class="mb-3">
-                                {{ form.packaging_preference.label(class="form-label") }}
-                                {{ form.packaging_preference(class="form-control", placeholder="e.g., 15kg cartons, 1kg retail bags") }}
-                                {% if form.packaging_preference.errors %}
-                                    <div class="invalid-feedback d-block">
-                                        {% for error in form.packaging_preference.errors %}{{ error }}{% endfor %}
-                                    </div>
-                                {% endif %}
-                            </div>
-                            
-                            <div class="mb-3">
-                                {{ form.message.label(class="form-label") }}
-                                {{ form.message(class="form-control", rows="4", placeholder="Please provide details about your requirements, delivery destination, timeline, and any specific quality standards...") }}
-                                {% if form.message.errors %}
-                                    <div class="invalid-feedback d-block">
-                                        {% for error in form.message.errors %}{{ error }}{% endfor %}
-                                    </div>
-                                {% endif %}
-                            </div>
-                            
-                            <div class="mb-4">
-                                {{ form.attachment.label(class="form-label") }}
-                                {{ form.attachment(class="form-control") }}
-                                <div class="form-text">Optional: Upload specifications, requirements, or other relevant documents (PDF, DOC, images)</div>
-                                <div class="file-preview d-none text-muted small mt-2"></div>
-                                {% if form.attachment.errors %}
-                                    <div class="invalid-feedback d-block">
-                                        {% for error in form.attachment.errors %}{{ error }}{% endfor %}
-                                    </div>
-                                {% endif %}
-                            </div>
-                            
-                            <div class="d-grid">
-                                <button type="submit" class="btn btn-primary btn-lg">
-                                    <i class="fas fa-paper-plane me-2"></i>Send Request
-                                </button>
-                            </div>
-                        </form>
-                    </div>
+                <div>
+                  <h6 class="mb-1">{% if is_rtl %}البريد الإلكتروني{% else %}Email{% endif %}</h6>
+                  <a href="mailto:{{ COMPANY_EMAIL }}" class="text-muted">{{ COMPANY_EMAIL }}</a>
                 </div>
+              </div>
             </div>
+
+            <div class="contact-item mb-4" data-aos="fade-up" data-aos-delay="100">
+              <div class="d-flex align-items-start">
+                <div class="contact-icon bg-gradient-secondary text-dark rounded-circle d-inline-flex align-items-center justify-content-center me-3 hover-lift" style="width: 56px; height: 56px;">
+                  <i class="fas fa-phone"></i>
+                </div>
+                <div>
+                  <h6 class="mb-1">{% if is_rtl %}الهاتف{% else %}Phone{% endif %}</h6>
+                  <a href="tel:{{ COMPANY_PHONE }}" class="text-muted">{{ COMPANY_PHONE }}</a>
+                </div>
+              </div>
+            </div>
+
+            <div class="contact-item mb-4" data-aos="fade-up" data-aos-delay="150">
+              <div class="d-flex align-items-start">
+                <div class="contact-icon bg-success text-white rounded-circle d-inline-flex align-items-center justify-content-center me-3 hover-lift" style="width: 56px; height: 56px;">
+                  <i class="fab fa-whatsapp"></i>
+                </div>
+                <div>
+                  <h6 class="mb-1">WhatsApp</h6>
+                  <a href="https://wa.me/{{ COMPANY_WHATSAPP.replace('+', '').replace('-', '') }}" target="_blank" class="text-muted">{{ COMPANY_WHATSAPP }}</a>
+                </div>
+              </div>
+            </div>
+
+            <div class="contact-item mb-4" data-aos="fade-up" data-aos-delay="200">
+              <div class="d-flex align-items-start">
+                <div class="contact-icon bg-gradient-primary text-white rounded-circle d-inline-flex align-items-center justify-content-center me-3 hover-lift" style="width: 56px; height: 56px;">
+                  <i class="fas fa-map-marker-alt"></i>
+                </div>
+                <div>
+                  <h6 class="mb-1">{% if is_rtl %}العنوان{% else %}Address{% endif %}</h6>
+                  <p class="text-muted mb-0">{{ COMPANY_ADDRESS }}</p>
+                </div>
+              </div>
+            </div>
+
+            <!-- Business Hours -->
+            <div class="mt-4" data-aos="fade-up" data-aos-delay="250">
+              <h6 class="mb-3">{% if is_rtl %}ساعات العمل{% else %}Business Hours{% endif %}</h6>
+              <div class="text-muted small">
+                <div class="d-flex justify-content-between mb-1"><span>{% if is_rtl %}الأحد - الخميس:{% else %}Sunday - Thursday:{% endif %}</span><span>9:00 - 18:00</span></div>
+                <div class="d-flex justify-content-between mb-1"><span>{% if is_rtl %}الجمعة:{% else %}Friday:{% endif %}</span><span>9:00 - 14:00</span></div>
+                <div class="d-flex justify-content-between"><span>{% if is_rtl %}السبت:{% else %}Saturday:{% endif %}</span><span>{% if is_rtl %}مغلق{% else %}Closed{% endif %}</span></div>
+              </div>
+            </div>
+          </div>
         </div>
+      </div>
+
+      <!-- RFQ Form -->
+      <div class="col-lg-8">
+        <div class="card border-0 shadow-lg" style="border-radius:16px;">
+          <div class="card-body p-4">
+            <h4 id="rfq-form" class="card-title mb-2 {{ 'arabic-heading' if is_rtl else 'english-heading' }}">{% if is_rtl %}طلب عرض أسعار{% else %}Request a Quote{% endif %}</h4>
+            <p class="text-muted mb-4">{% if is_rtl %}املأ النموذج وسيقوم فريقنا بالرد خلال 24 ساعة.{% else %}Fill out the form and we will reply within 24 hours.{% endif %}</p>
+
+            <form method="POST" enctype="multipart/form-data" class="needs-validation" novalidate>
+              {{ form.hidden_tag() }}
+
+              <div class="row">
+                <div class="col-md-6 mb-3">
+                  {{ form.name.label(class="form-label fw-semibold") }}
+                  {{ form.name(class="form-control") }}
+                  {% if form.name.errors %}<div class="invalid-feedback d-block">{% for error in form.name.errors %}{{ error }}{% endfor %}</div>{% endif %}
+                </div>
+                <div class="col-md-6 mb-3">
+                  {{ form.email.label(class="form-label fw-semibold") }}
+                  {{ form.email(class="form-control") }}
+                  {% if form.email.errors %}<div class="invalid-feedback d-block">{% for error in form.email.errors %}{{ error }}{% endfor %}</div>{% endif %}
+                </div>
+              </div>
+
+              <div class="row">
+                <div class="col-md-6 mb-3">
+                  {{ form.phone.label(class="form-label fw-semibold") }}
+                  {{ form.phone(class="form-control") }}
+                  {% if form.phone.errors %}<div class="invalid-feedback d-block">{% for error in form.phone.errors %}{{ error }}{% endfor %}</div>{% endif %}
+                </div>
+                <div class="col-md-6 mb-3">
+                  {{ form.company.label(class="form-label fw-semibold") }}
+                  {{ form.company(class="form-control") }}
+                  {% if form.company.errors %}<div class="invalid-feedback d-block">{% for error in form.company.errors %}{{ error }}{% endfor %}</div>{% endif %}
+                </div>
+              </div>
+
+              <div class="row">
+                <div class="col-md-6 mb-3">
+                  {{ form.country.label(class="form-label fw-semibold") }}
+                  {{ form.country(class="form-control") }}
+                  {% if form.country.errors %}<div class="invalid-feedback d-block">{% for error in form.country.errors %}{{ error }}{% endfor %}</div>{% endif %}
+                </div>
+                <div class="col-md-6 mb-3">
+                  {{ form.category_key.label(class="form-label fw-semibold") }}
+                  {{ form.category_key(class="form-select") }}
+                  {% if form.category_key.errors %}<div class="invalid-feedback d-block">{% for error in form.category_key.errors %}{{ error }}{% endfor %}</div>{% endif %}
+                </div>
+              </div>
+
+              <div class="row">
+                <div class="col-md-6 mb-3">
+                  {{ form.product_name.label(class="form-label fw-semibold") }}
+                  {{ form.product_name(class="form-control", placeholder=("اختر التصنيف أولاً..." if is_rtl else "Select a category first...")) }}
+                  {% if form.product_name.errors %}<div class="invalid-feedback d-block">{% for error in form.product_name.errors %}{{ error }}{% endfor %}</div>{% endif %}
+                </div>
+                <div class="col-md-6 mb-3">
+                  {{ form.quantity.label(class="form-label fw-semibold") }}
+                  {{ form.quantity(class="form-control", placeholder=("مثال: 20 طن، 1000 كرتونة" if is_rtl else "e.g., 20 tons, 1000 cartons")) }}
+                  {% if form.quantity.errors %}<div class="invalid-feedback d-block">{% for error in form.quantity.errors %}{{ error }}{% endfor %}</div>{% endif %}
+                </div>
+              </div>
+
+              <div class="mb-3">
+                {{ form.packaging_preference.label(class="form-label fw-semibold") }}
+                {{ form.packaging_preference(class="form-control", placeholder=("مثال: كراتين 15كجم، أكياس 1كجم" if is_rtl else "e.g., 15kg cartons, 1kg retail bags")) }}
+                {% if form.packaging_preference.errors %}<div class="invalid-feedback d-block">{% for error in form.packaging_preference.errors %}{{ error }}{% endfor %}</div>{% endif %}
+              </div>
+
+              <div class="mb-3">
+                {{ form.message.label(class="form-label fw-semibold") }}
+                {{ form.message(class="form-control", rows="4", placeholder=("اذكر المواصفات المطلوبة، الوجهة، الزمن، وأي معايير جودة..." if is_rtl else "Please provide details about your requirements, destination, timeline, and any quality standards...")) }}
+                {% if form.message.errors %}<div class="invalid-feedback d-block">{% for error in form.message.errors %}{{ error }}{% endfor %}</div>{% endif %}
+              </div>
+
+              <div class="mb-4">
+                {{ form.attachment.label(class="form-label fw-semibold") }}
+                {{ form.attachment(class="form-control") }}
+                <div class="form-text">{% if is_rtl %}اختياري: أرفق المواصفات أو المستندات ذات الصلة (PDF/DOC/صور){% else %}Optional: Upload specs or documents (PDF, DOC, images){% endif %}</div>
+                <div class="file-preview d-none text-muted small mt-2"></div>
+                {% if form.attachment.errors %}<div class="invalid-feedback d-block">{% for error in form.attachment.errors %}{{ error }}{% endfor %}</div>{% endif %}
+              </div>
+
+              <div class="d-grid">
+                <button type="submit" class="btn btn-primary btn-lg px-5 py-3 hover-lift" style="border-radius:12px;">
+                  <i class="fas fa-paper-plane me-2"></i>{% if is_rtl %}إرسال الطلب{% else %}Send Request{% endif %}
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
     </div>
+  </div>
 </section>
 
 <!-- Additional Information -->
-<section class="py-5 bg-light">
-    <div class="container">
-        <div class="row">
-            <div class="col-lg-8 mx-auto text-center">
-                <h3 class="mb-4">Why Request a Quote from Emdad Global?</h3>
-                <div class="row">
-                    <div class="col-md-4 mb-3">
-                        <div class="feature-item">
-                            <i class="fas fa-clock text-primary fa-2x mb-3"></i>
-                            <h6>Quick Response</h6>
-                            <p class="text-muted small">We respond to all inquiries within 24 hours</p>
-                        </div>
-                    </div>
-                    <div class="col-md-4 mb-3">
-                        <div class="feature-item">
-                            <i class="fas fa-calculator text-primary fa-2x mb-3"></i>
-                            <h6>Competitive Pricing</h6>
-                            <p class="text-muted small">Best prices for premium quality products</p>
-                        </div>
-                    </div>
-                    <div class="col-md-4 mb-3">
-                        <div class="feature-item">
-                            <i class="fas fa-handshake text-primary fa-2x mb-3"></i>
-                            <h6>Personalized Service</h6>
-                            <p class="text-muted small">Tailored solutions for your specific needs</p>
-                        </div>
-                    </div>
-                </div>
+<section class="py-5 bg-gradient-light">
+  <div class="container">
+    <div class="row">
+      <div class="col-lg-10 mx-auto text-center">
+        <h3 class="mb-4 {{ 'arabic-heading' if is_rtl else 'english-heading' }}">{% if is_rtl %}لماذا تطلب عرض أسعار من إمداد جلوبال؟{% else %}Why Request a Quote from Emdad Global?{% endif %}</h3>
+        <div class="row g-4">
+          <div class="col-md-4" data-aos="fade-up" data-aos-delay="50">
+            <div class="card h-100 border-0 shadow-lg p-4 hover-lift" style="border-radius:16px;">
+              <i class="fas fa-clock text-primary fa-2x mb-3"></i>
+              <h6 class="mb-1">{% if is_rtl %}استجابة سريعة{% else %}Quick Response{% endif %}</h6>
+              <p class="text-muted small mb-0">{% if is_rtl %}نرد على جميع الاستفسارات خلال 24 ساعة{% else %}We respond to all inquiries within 24 hours{% endif %}</p>
             </div>
+          </div>
+          <div class="col-md-4" data-aos="fade-up" data-aos-delay="120">
+            <div class="card h-100 border-0 shadow-lg p-4 hover-lift" style="border-radius:16px;">
+              <i class="fas fa-calculator text-primary fa-2x mb-3"></i>
+              <h6 class="mb-1">{% if is_rtl %}أسعار تنافسية{% else %}Competitive Pricing{% endif %}</h6>
+              <p class="text-muted small mb-0">{% if is_rtl %}أفضل الأسعار مع جودة متميزة{% else %}Best prices for premium quality products{% endif %}</p>
+            </div>
+          </div>
+          <div class="col-md-4" data-aos="fade-up" data-aos-delay="190">
+            <div class="card h-100 border-0 shadow-lg p-4 hover-lift" style="border-radius:16px;">
+              <i class="fas fa-handshake text-primary fa-2x mb-3"></i>
+              <h6 class="mb-1">{% if is_rtl %}خدمة مخصصة{% else %}Personalized Service{% endif %}</h6>
+              <p class="text-muted small mb-0">{% if is_rtl %}حلول مخصصة لاحتياجاتك{% else %}Tailored solutions for your specific needs{% endif %}</p>
+            </div>
+          </div>
         </div>
+      </div>
     </div>
+  </div>
 </section>
 {% endblock %}
 
@@ -313,17 +304,17 @@ document.addEventListener('DOMContentLoaded', function() {
                         });
                         
                         productInput.setAttribute('list', 'product-list');
-                        productInput.placeholder = 'Type or select a product...';
+                        productInput.placeholder = {% if is_rtl %}'اكتب أو اختر منتجاً...'{% else %}'Type or select a product...'{% endif %};
                         productInput.disabled = false;
                         productInput.focus();
                     })
                     .catch(error => {
                         console.error('Error loading products:', error);
-                        productInput.placeholder = 'Enter product name...';
+                        productInput.placeholder = {% if is_rtl %}'اكتب اسم المنتج...'{% else %}'Enter product name...'{% endif %};
                         productInput.disabled = false;
                     });
             } else {
-                productInput.placeholder = 'Select a category first...';
+                productInput.placeholder = {% if is_rtl %}'اختر التصنيف أولاً...'{% else %}'Select a category first...'{% endif %};
                 productInput.disabled = true;
                 productInput.removeAttribute('list');
             }
