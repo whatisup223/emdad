@@ -13,6 +13,12 @@
                         <i class="fas fa-arrow-left"></i> {{ _('Back to List') }}
                     </a>
                 </div>
+                <style>
+                  /* High-contrast action buttons for admin */
+                  .btn-action { background:#689b8a; color:#ffffff; border-color:#689b8a; font-weight:600; }
+                  .btn-action:hover, .btn-action:focus { background:#f9cb99; border-color:#f9cb99; color:#103d24; }
+                </style>
+
                 <div class="card-body">
                     <div class="row">
                         <!-- Customer Information -->
@@ -165,7 +171,7 @@
                         <div class="col-12">
                             <h5 class="mb-3">{{ _('Actions') }}</h5>
                             <div class="btn-group me-2">
-                                <button type="button" class="btn btn-outline-secondary dropdown-toggle" data-bs-toggle="dropdown">
+                                <button type="button" class="btn btn-sm btn-action dropdown-toggle" data-bs-toggle="dropdown">
                                     {{ _('Change Status') }}
                                 </button>
                                 <ul class="dropdown-menu">
@@ -177,7 +183,7 @@
                             </div>
 
                             <div class="btn-group me-2">
-                                <button type="button" class="btn btn-outline-secondary dropdown-toggle" data-bs-toggle="dropdown">
+                                <button type="button" class="btn btn-sm btn-action dropdown-toggle" data-bs-toggle="dropdown">
                                     {{ _('Change Priority') }}
                                 </button>
                                 <ul class="dropdown-menu">

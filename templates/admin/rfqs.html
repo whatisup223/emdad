@@ -7,6 +7,11 @@
     <div class="row">
         <div class="col-12">
             <div class="card">
+                <style>
+                  .btn-action { background:#689b8a; color:#ffffff; border-color:#689b8a; font-weight:600; }
+                  .btn-action:hover, .btn-action:focus { background:#f9cb99; border-color:#f9cb99; color:#103d24; }
+                </style>
+
                 <div class="card-header d-flex justify-content-between align-items-center">
                     <h3 class="card-title">{{ _('RFQ Management') }}</h3>
                     <div class="btn-group">
@@ -92,7 +97,7 @@
                                             <i class="fas fa-eye"></i> {{ _('View') }}
                                         </a>
                                         <div class="btn-group">
-                                            <button type="button" class="btn btn-sm btn-outline-secondary dropdown-toggle" data-bs-toggle="dropdown">
+                                            <button type="button" class="btn btn-sm btn-action dropdown-toggle" data-bs-toggle="dropdown">
                                                 {{ _('Change Status') }}
                                             </button>
                                             <ul class="dropdown-menu">
@@ -122,7 +127,7 @@
                                     <a class="page-link" href="{{ url_for('admin.rfqs', page=rfqs.prev_num, status=current_status) }}">{{ _('Previous') }}</a>
                                 </li>
                             {% endif %}
-                            
+
                             {% for page_num in rfqs.iter_pages() %}
                                 {% if page_num %}
                                     {% if page_num != rfqs.page %}
@@ -140,7 +145,7 @@
                                     </li>
                                 {% endif %}
                             {% endfor %}
-                            
+
                             {% if rfqs.has_next %}
                                 <li class="page-item">
                                     <a class="page-link" href="{{ url_for('admin.rfqs', page=rfqs.next_num, status=current_status) }}">{{ _('Next') }}</a>
