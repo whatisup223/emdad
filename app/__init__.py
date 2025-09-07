@@ -383,7 +383,47 @@ def create_app(config_name=None):
                 'Select Language': 'اختر اللغة',
                 'Change Language': 'تغيير اللغة',
                 'English': 'الإنجليزية',
-                'Arabic': 'العربية'
+                'Arabic': 'العربية',
+
+                # Admin Reports section (keep scoped to avoid affecting other areas)
+                'Reports & Analytics': 'التقارير والتحليلات',
+                'Apply': 'تطبيق',
+                'RFQs Trend': 'اتجاه طلبات عروض الأسعار',
+                'RFQs by Status': 'طلبات العروض حسب الحالة',
+                'Products by Category': 'المنتجات حسب الفئة',
+                'Export RFQs (CSV)': 'تصدير طلبات العروض (CSV)',
+                'RFQs': 'طلبات العروض',
+                'RFQ Status': 'حالة طلبات العروض',
+                'Products': 'المنتجات',
+                'New': 'جديد',
+                'In Review': 'قيد المراجعة',
+                'Quoted': 'مُسَعَّر',
+                'Closed': 'مغلق',
+                'Cancelled': 'ملغي',
+
+                # Stats cards in reports section
+                'Total Products': 'إجمالي المنتجات',
+                'Total Categories': 'إجمالي الفئات',
+                'Total RFQs': 'إجمالي طلبات العروض',
+                'Pending RFQs': 'طلبات العروض المعلقة'
+,
+
+                # Recent sections in reports
+                'Recent RFQs': 'أحدث طلبات العروض',
+                'Recent Products': 'أحدث المنتجات',
+                'Name': 'الاسم',
+                'Company': 'الشركة',
+                'Status': 'الحالة',
+                'Date': 'التاريخ',
+                'Category': 'الفئة',
+                'Active': 'نشط',
+                'Inactive': 'غير نشط',
+                'Draft': 'مسودة',
+                'Uncategorized': 'بدون تصنيف',
+                'Reports': 'التقارير'
+,
+                'In Progress': 'قيد التنفيذ',
+                'Completed': 'مكتمل'
             }
         }
 

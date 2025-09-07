@@ -5,12 +5,58 @@
 {% block content %}
 <div class="container-fluid">
     <div class="row">
-        <div class="col-12">
-            <h1 class="h2">{{ _('Reports & Analytics') }}</h1>
+        <div class="col-12 d-flex align-items-center justify-content-between">
+            <h1 class="h2 mb-0">{{ _('Reports & Analytics') }}</h1>
+            <div class="d-flex gap-2">
+                <input type="date" class="form-control" id="filterStart">
+                <input type="date" class="form-control" id="filterEnd">
+                <button class="btn btn-primary" id="applyFilters"><i class="fas fa-filter me-1"></i> {{ _('Apply') }}</button>
+            </div>
         </div>
     </div>
 
-    <!-- Statistics Cards -->
+    <!-- Charts Row -->
+    <div class="row my-4">
+        <div class="col-12 col-lg-8 mb-4">
+            <div class="card shadow h-100">
+                <div class="card-header py-3">
+                    <h6 class="m-0 fw-bold text-white">{{ _('RFQs Trend') }}</h6>
+                </div>
+                <div class="card-body" style="min-height: 300px;">
+                    <canvas id="rfqTrendChart" style="height:280px"></canvas>
+                </div>
+            </div>
+        </div>
+        <div class="col-12 col-lg-4 mb-4">
+            <div class="card shadow h-100">
+                <div class="card-header py-3">
+                    <h6 class="m-0 fw-bold text-white">{{ _('RFQs by Status') }}</h6>
+                </div>
+                <div class="card-body d-flex align-items-center justify-content-center" style="min-height: 300px;">
+                    <canvas id="rfqStatusChart" style="height:260px"></canvas>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Products by Category -->
+    <div class="row mb-4">
+        <div class="col-12">
+            <div class="card shadow">
+                <div class="card-header py-3 d-flex align-items-center justify-content-between">
+                    <h6 class="m-0 fw-bold text-white">{{ _('Products by Category') }}</h6>
+                    <a id="exportRfqsBtn" class="btn btn-sm btn-light text-dark" href="#">
+                        <i class="fas fa-download me-1"></i>{{ _('Export RFQs (CSV)') }}
+                    </a>
+                </div>
+                <div class="card-body" style="min-height: 280px;">
+                    <canvas id="productsByCategoryChart" style="height:260px"></canvas>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Existing Statistics Cards (kept) -->
     <div class="row mb-4">
         <div class="col-xl-3 col-md-6 mb-4">
             <div class="card border-left-primary shadow h-100 py-2">
@@ -74,6 +120,8 @@
                             <div class="text-xs font-weight-bold text-warning text-uppercase mb-1">
                                 {{ _('Pending RFQs') }}
                             </div>
+
+
                             <div class="h5 mb-0 font-weight-bold text-gray-800">{{ stats.pending_rfqs }}</div>
                         </div>
                         <div class="col-auto">
@@ -85,12 +133,12 @@
         </div>
     </div>
 
-    <!-- Recent Activity -->
+    <!-- Recent Activity (Real Data) -->
     <div class="row">
         <div class="col-lg-6">
             <div class="card shadow mb-4">
                 <div class="card-header py-3">
-                    <h6 class="m-0 font-weight-bold text-primary">{{ _('Recent RFQs') }}</h6>
+                    <h6 class="m-0 fw-bold text-white">{{ _('Recent RFQs') }}</h6>
                 </div>
                 <div class="card-body">
                     <div class="table-responsive">
@@ -105,15 +153,24 @@
                             </thead>
                             <tbody>
                                 {% for rfq in stats.recent_rfqs %}
+                                {% set badge = 'warning' if rfq.status=='new' else 'info' if rfq.status=='in_review' else 'primary' if rfq.status=='quoted' else 'secondary' if rfq.status=='closed' else 'dark' %}
                                 <tr>
                                     <td>{{ rfq.name }}</td>
                                     <td>{{ rfq.company or '-' }}</td>
                                     <td>
-                                        <span class="badge badge-{{ 'warning' if rfq.status == 'new' else 'info' if rfq.status == 'in_progress' else 'success' }}">
-                                            {{ rfq.status }}
-                                        </span>
+                                        {% set status_code = (rfq.status or '')|lower|replace(' ', '_') %}
+{% set status_map = {
+  'new':'New',
+  'in_review':'In Review',
+  'quoted':'Quoted',
+  'closed':'Closed',
+  'cancelled':'Cancelled',
+  'in_progress':'In Progress',
+  'completed':'Completed'
+} %}
+<span class="badge bg-{{ badge }}">{{ _(status_map.get(status_code, rfq.get_status_label() or rfq.status or '')) }}</span>
                                     </td>
-                                    <td>{{ rfq.created_at.strftime('%m/%d') }}</td>
+                                    <td>{{ rfq.created_at.strftime('%m/%d') if rfq.created_at else '' }}</td>
                                 </tr>
                                 {% endfor %}
                             </tbody>
@@ -126,7 +183,7 @@
         <div class="col-lg-6">
             <div class="card shadow mb-4">
                 <div class="card-header py-3">
-                    <h6 class="m-0 font-weight-bold text-primary">{{ _('Recent Products') }}</h6>
+                    <h6 class="m-0 fw-bold text-white">{{ _('Recent Products') }}</h6>
                 </div>
                 <div class="card-body">
                     <div class="table-responsive">
@@ -141,15 +198,14 @@
                             </thead>
                             <tbody>
                                 {% for product in stats.recent_products %}
+                                {% set pbadge = 'success' if product.status=='active' else 'secondary' %}
                                 <tr>
-                                    <td>{{ product.name_en }}</td>
-                                    <td>{{ product.category.name_en if product.category else '-' }}</td>
+                                    <td>{{ product.get_name(current_language) }}</td>
+                                    <td>{{ product.category.get_name(current_language) if product.category else '-' }}</td>
                                     <td>
-                                        <span class="badge badge-{{ 'success' if product.status == 'active' else 'secondary' }}">
-                                            {{ product.status }}
-                                        </span>
+                                        <span class="badge bg-{{ pbadge }}">{{ _('Active') if product.status=='active' else _('Inactive') if product.status=='inactive' else _('Draft') if product.status=='draft' else _(product.status) }}</span>
                                     </td>
-                                    <td>{{ product.created_at.strftime('%m/%d') }}</td>
+                                    <td>{{ product.created_at.strftime('%m/%d') if product.created_at else '' }}</td>
                                 </tr>
                                 {% endfor %}
                             </tbody>
@@ -159,5 +215,90 @@
             </div>
         </div>
     </div>
+
 </div>
+{% endblock %}
+
+{% block extra_js %}
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+(function() {
+  const startInput = document.getElementById('filterStart');
+  const endInput = document.getElementById('filterEnd');
+  const applyBtn = document.getElementById('applyFilters');
+  const exportBtn = document.getElementById('exportRfqsBtn');
+
+  // Default: last 30 days
+  const today = new Date();
+  const startDefault = new Date(today);
+  startDefault.setDate(today.getDate() - 29);
+  startInput.value = startDefault.toISOString().slice(0,10);
+  endInput.value = today.toISOString().slice(0,10);
+
+  async function fetchData(metric) {
+    const params = new URLSearchParams({
+      metric,
+      start: startInput.value,
+      end: endInput.value
+    });
+    const res = await fetch(`/admin/reports/data?${params.toString()}`);
+    return await res.json();
+  }
+
+  function makeOrUpdateChart(canvasId, type, data, options) {
+    const el = document.getElementById(canvasId);
+    if (!el) return;
+    const ctx = el.getContext('2d');
+    if (el._chart) { el._chart.destroy(); }
+    el._chart = new Chart(ctx, { type, data, options });
+  }
+
+  async function loadAll() {
+    const trend = await fetchData('rfq_trend');
+    makeOrUpdateChart('rfqTrendChart', 'line', {
+      labels: trend.labels,
+      datasets: trend.datasets.map(ds => ({
+        ...ds,
+        borderColor: '#0d6efd',
+        backgroundColor: 'rgba(13,110,253,0.15)',
+        tension: 0.2,
+        fill: true
+      }))
+    }, { responsive: true, maintainAspectRatio: false });
+
+    const status = await fetchData('rfq_status');
+    makeOrUpdateChart('rfqStatusChart', 'doughnut', {
+      labels: status.labels,
+      datasets: status.datasets.map(ds => ({
+        ...ds,
+        backgroundColor: ['#4e73df','#1cc88a','#36b9cc','#f6c23e','#858796']
+      }))
+    }, { responsive: true, maintainAspectRatio: false });
+
+    const pbc = await fetchData('products_by_category');
+    makeOrUpdateChart('productsByCategoryChart', 'bar', {
+      labels: pbc.labels,
+      datasets: pbc.datasets.map(ds => ({
+        ...ds,
+        backgroundColor: 'rgba(28,200,138,0.6)',
+        borderColor: '#1cc88a'
+      }))
+    }, { responsive: true, maintainAspectRatio: false, scales: { y: { beginAtZero: true } } });
+  }
+
+  applyBtn.addEventListener('click', loadAll);
+  if (exportBtn) {
+    exportBtn.addEventListener('click', function(e) {
+      e.preventDefault();
+      const params = new URLSearchParams({
+        type: 'rfqs', start: startInput.value, end: endInput.value
+      });
+      window.location.href = `/admin/reports/export?${params.toString()}`;
+    });
+  }
+
+  // Load once on page ready
+  loadAll();
+})();
+</script>
 {% endblock %}

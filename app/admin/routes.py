@@ -1,8 +1,38 @@
-from flask import render_template, request, redirect, url_for, flash, current_app, jsonify, session, send_from_directory, abort
+from flask import render_template, request, redirect, url_for, flash, current_app, jsonify, session, send_from_directory, abort, Response
+from flask_babel import gettext as _
+
 from flask_login import login_user, logout_user, login_required, current_user
 from werkzeug.utils import secure_filename
 from app.admin import bp
 from app.models import User, Category, Product, Certification, Service, News, Gallery, RFQ, CompanyInfo, AuditLog, GalleryCategory
+
+# Localized text helper for API responses (scoped to reports only)
+# Avoids touching global translations; uses session language and minimal mapping.
+def _t(text: str) -> str:
+    try:
+        lang = session.get('language', 'en')
+    except Exception:
+        lang = 'en'
+    if lang != 'ar':
+        return text
+    mapping = {
+        'Reports & Analytics': 'التقارير والتحليلات',
+        'Apply': 'تطبيق',
+        'RFQs Trend': 'اتجاه طلبات عروض الأسعار',
+        'RFQs by Status': 'طلبات العروض حسب الحالة',
+        'Products by Category': 'المنتجات حسب الفئة',
+        'Export RFQs (CSV)': 'تصدير طلبات العروض (CSV)',
+        'RFQs': 'طلبات العروض',
+        'RFQ Status': 'حالة طلبات العروض',
+        'Products': 'المنتجات',
+        'New': 'جديد',
+        'In Review': 'قيد المراجعة',
+        'Quoted': 'مُسَعَّر',
+        'Closed': 'مغلق',
+        'Cancelled': 'ملغي'
+    }
+    return mapping.get(text, text)
+
 from app.forms import LoginForm, UserForm, CategoryForm, ProductForm, CertificationForm, ServiceForm, NewsForm, GalleryForm, CompanyInfoForm
 from app import db
 import os
@@ -1248,6 +1278,246 @@ def reports():
     }
 
     return render_template('admin/reports.html', stats=stats)
+
+# Reports Data API for charts
+@bp.route('/reports/data')
+@login_required
+def reports_data():
+    """Return JSON data for reports charts based on metric and date range.
+    Query params:
+      - metric: one of [rfq_trend, rfq_status, products_by_category]
+      - start: YYYY-MM-DD (optional, default last 30 days)
+      - end: YYYY-MM-DD (optional)
+    """
+    from datetime import timedelta, date
+    metric = request.args.get('metric', 'rfq_trend')
+    start_str = request.args.get('start')
+    end_str = request.args.get('end')
+
+    def parse_date(s):
+        if not s:
+            return None
+        try:
+            return datetime.strptime(s, '%Y-%m-%d').date()
+        except Exception:
+            return None
+
+    # Default to last 30 days (inclusive)
+    today = datetime.utcnow().date()
+    start_date = parse_date(start_str) or (today - timedelta(days=29))
+    end_date = parse_date(end_str) or today
+
+    # Normalize to datetimes for querying
+    start_dt = datetime.combine(start_date, datetime.min.time())
+    end_dt = datetime.combine(end_date, datetime.max.time())
+
+    if metric == 'rfq_trend':
+        # Count RFQs per day in range
+        rfqs = RFQ.query.filter(RFQ.created_at >= start_dt, RFQ.created_at <= end_dt).all()
+        def build_series(start_d, end_d, rfqs_list):
+            rfq_by_day = {}
+            for r in rfqs_list:
+                if not r.created_at:
+                    continue
+                d = r.created_at.date()
+                rfq_by_day[d] = rfq_by_day.get(d, 0) + 1
+            days_local = []
+            counts_local = []
+            cur = start_d
+            while cur <= end_d:
+                days_local.append(cur.isoformat())
+                counts_local.append(rfq_by_day.get(cur, 0))
+                cur = cur + timedelta(days=1)
+            return days_local, counts_local
+        days, counts = build_series(start_date, end_date, rfqs)
+        # Fallback: if default range and no data, expand to all-time (capped to 365 days)
+        if (sum(counts) == 0) and (not start_str and not end_str):
+            first = RFQ.query.order_by(RFQ.created_at.asc()).first()
+            if first and first.created_at:
+                fb_start = first.created_at.date()
+                if (end_date - fb_start).days > 365:
+                    fb_start = end_date - timedelta(days=365)
+                fb_start_dt = datetime.combine(fb_start, datetime.min.time())
+                fb_end_dt = datetime.combine(end_date, datetime.max.time())
+                rfqs_fb = RFQ.query.filter(RFQ.created_at >= fb_start_dt, RFQ.created_at <= fb_end_dt).all()
+                days, counts = build_series(fb_start, end_date, rfqs_fb)
+        return jsonify({
+            'metric': 'rfq_trend',
+            'labels': days,
+            'datasets': [{
+                'label': _t('RFQs'),
+                'data': counts
+            }]
+        })
+
+    if metric == 'rfq_status':
+        # Distribution of RFQ statuses within range
+        rfqs = RFQ.query.filter(RFQ.created_at >= start_dt, RFQ.created_at <= end_dt).all()
+        status_defs = [
+            ('new', 'New'),
+            ('in_review', 'In Review'),
+            ('quoted', 'Quoted'),
+            ('closed', 'Closed'),
+            ('cancelled', 'Cancelled')
+        ]
+        counts = {code: 0 for code, _ in status_defs}
+        for r in rfqs:
+            if r.status not in counts:
+                counts[r.status] = counts.get(r.status, 0) + 1
+            else:
+                counts[r.status] += 1
+        labels = [_t(label) for code, label in status_defs]
+        values = [counts.get(code, 0) for code, label in status_defs]
+        # Fallback: if default range and no data, compute all-time distribution
+        if (sum(values) == 0) and (not start_str and not end_str):
+            counts = {code: 0 for code, _ in status_defs}
+            for r in RFQ.query.all():
+                if r.status not in counts:
+                    counts[r.status] = counts.get(r.status, 0) + 1
+                else:
+                    counts[r.status] += 1
+            values = [counts.get(code, 0) for code, label in status_defs]
+        return jsonify({
+            'metric': 'rfq_status',
+            'labels': labels,
+            'datasets': [{
+                'label': _t('RFQ Status'),
+                'data': values
+            }]
+        })
+
+    if metric == 'products_by_category':
+        # Count products by category created in range with localized category names
+        from sqlalchemy import func
+        lang = session.get('language', 'en')
+        q = db.session.query(Category, func.count(Product.id)) \
+            .join(Product, Product.category_id == Category.id) \
+            .group_by(Category.id) \
+            .order_by(func.count(Product.id).desc())
+        rows = q.all()
+        # Localize labels via manual translations if available
+        labels = [_(c.get_name(lang) or c.get_name('en')) for c, cnt in rows]
+        values = [cnt for c, cnt in rows]
+        # Fallback: if no data in selected range, show all-time top categories
+        if sum(values) == 0:
+            q_all = db.session.query(Category, func.count(Product.id)) \
+                .join(Product, Product.category_id == Category.id) \
+                .group_by(Category.id) \
+                .order_by(func.count(Product.id).desc())
+            rows_all = q_all.all()
+            labels = [_(c.get_name(lang)) for c, cnt in rows_all]
+            values = [cnt for c, cnt in rows_all]
+        # Include Uncategorized bucket (products without category)
+        from sqlalchemy import func
+        uncat_count = db.session.query(func.count(Product.id)).filter(Product.category_id == None).scalar()
+        if uncat_count and uncat_count > 0:
+            labels.append(_('Uncategorized'))
+            values.append(uncat_count)
+        return jsonify({
+            'metric': 'products_by_category',
+            'labels': labels,
+            'datasets': [{
+                'label': _t('Products'),
+                'data': values
+            }]
+        })
+
+    return jsonify({'error': 'unknown metric'}), 400
+
+
+# Reports RFQs list (JSON)
+@bp.route('/reports/rfqs')
+@login_required
+def reports_rfqs():
+    """Return list of RFQs filtered by date range and optional status.
+    Query params: start, end (YYYY-MM-DD), status (optional), limit (default 200)
+    """
+    from datetime import timedelta
+    start_str = request.args.get('start')
+    end_str = request.args.get('end')
+    status = request.args.get('status')
+    try:
+        limit = min(int(request.args.get('limit', 200)), 1000)
+    except Exception:
+        limit = 200
+
+    def parse_date(s):
+        if not s:
+            return None
+        try:
+            return datetime.strptime(s, '%Y-%m-%d').date()
+        except Exception:
+            return None
+
+    today = datetime.utcnow().date()
+    start_date = parse_date(start_str) or (today - timedelta(days=29))
+    end_date = parse_date(end_str) or today
+    start_dt = datetime.combine(start_date, datetime.min.time())
+    end_dt = datetime.combine(end_date, datetime.max.time())
+
+    q = RFQ.query.filter(RFQ.created_at >= start_dt, RFQ.created_at <= end_dt)
+    if status:
+        q = q.filter(RFQ.status == status)
+
+    rfqs = q.order_by(RFQ.created_at.desc()).limit(limit).all()
+    data = []
+    for r in rfqs:
+        data.append({
+            'id': r.id,
+            'name': r.name,
+            'company': r.company,
+            'country': r.country,
+            'status': r.status,
+            'priority': r.priority,
+            'product_name': r.product_name,
+            'category_key': r.category_key,
+            'created_at': r.created_at.strftime('%Y-%m-%d %H:%M:%S') if r.created_at else None
+        })
+    return jsonify({'items': data, 'count': len(data)})
+
+
+# Reports export (CSV)
+@bp.route('/reports/export')
+@login_required
+def reports_export():
+    """Export reports data as CSV. Supported types: rfqs"""
+    export_type = request.args.get('type', 'rfqs')
+    if export_type == 'rfqs':
+        # Reuse same filters as reports_rfqs
+        start = request.args.get('start')
+        end = request.args.get('end')
+        status = request.args.get('status')
+        request_args = request.args.to_dict(flat=True)
+        # Get JSON list via function to avoid duplicating logic
+        with current_app.test_request_context(f"/admin/reports/rfqs?start={start or ''}&end={end or ''}&status={status or ''}&limit=1000"):
+            resp = reports_rfqs()
+        rfqs_json = resp.get_json().get('items', [])
+
+        # Build CSV
+        import csv
+        from io import StringIO
+        output = StringIO()
+        writer = csv.writer(output)
+        headers = ['ID', 'Name', 'Company', 'Country', 'Status', 'Priority', 'Product', 'Category', 'Created At']
+        writer.writerow(headers)
+        for it in rfqs_json:
+            writer.writerow([
+                it.get('id'), it.get('name'), it.get('company') or '', it.get('country') or '',
+                it.get('status'), it.get('priority'), it.get('product_name') or '', it.get('category_key') or '',
+                it.get('created_at') or ''
+            ])
+        csv_text = output.getvalue()
+        filename = f"rfqs_{(start or 'start')}_{(end or 'end')}.csv"
+        return Response(
+            csv_text,
+            mimetype='text/csv',
+            headers={
+                'Content-Disposition': f'attachment; filename={filename}'
+            }
+        )
+
+    return jsonify({'error': 'unsupported export type'}), 400
+
 
 # Settings
 @bp.route('/settings', methods=['GET', 'POST'])

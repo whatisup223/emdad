@@ -14,12 +14,12 @@
     --warning-color: #f39c12;
     --danger-color: #e74c3c;
     --info-color: #3498db;
-    
+
     /* Gradients */
     --primary-gradient: linear-gradient(135deg, #689b8a 0%, #2c5f4f 100%);
     --secondary-gradient: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
     --dark-gradient: linear-gradient(135deg, #2c3e50 0%, #34495e 100%);
-    
+
     /* Layout */
     --sidebar-width: 280px;
     --header-height: 70px;
@@ -27,12 +27,12 @@
     --box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
     --glass-bg: rgba(255, 255, 255, 0.95);
     --glass-border: rgba(255, 255, 255, 0.2);
-    
+
     /* Typography */
     --font-arabic-heading: 'Hacen Tunisia', 'Arial', sans-serif;
     --font-english-heading: 'Poppins', 'Segoe UI', sans-serif;
     --font-body: 'Segoe UI', 'Tahoma', 'Geneva', 'Verdana', sans-serif;
-    
+
     /* Transitions */
     --transition-fast: 0.2s ease;
     --transition-normal: 0.3s ease;
@@ -804,8 +804,21 @@ body {
     .main-header {
         display: none !important;
     }
-    
+
     .main-content {
         margin: 0 !important;
     }
+}
+
+
+/* Accessibility: improve color contrast for text on gradient headers and badges */
+.card-header, .table thead th { color: #ffffff; }
+.badge { color: #ffffff; }
+.badge-warning { background-color: #d39e00 !important; color: #1a1a1a !important; }
+.badge-info { background-color: #117a8b !important; }
+.badge-success { background-color: #198754 !important; }
+
+/* Ensure chart containers have consistent height */
+#rfqTrendChart, #rfqStatusChart, #productsByCategoryChart {
+  max-width: 100%;
 }
