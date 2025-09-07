@@ -630,19 +630,19 @@
 </head>
 <body>
     <!-- Navigation -->
-    <nav class="navbar navbar-expand-lg navbar-light bg-white shadow-sm fixed-top">
+    <nav class="navbar navbar-expand-xxl navbar-light bg-white shadow-sm fixed-top">
         <div class="container-fluid px-3">
             <a class="navbar-brand d-flex align-items-center" href="{{ url_for('main.index') }}">
                 <img src="{{ url_for('static', filename='images/logo.png') }}"
                      alt="{{ COMPANY_NAME }}"
                      class="navbar-logo d-inline-block align-text-top me-2"
                      onerror="this.src='{{ url_for('static', filename='images/logo.svg') }}'; this.onerror=function(){this.style.display='none'; this.nextElementSibling.classList.remove('d-none', 'd-sm-inline'); this.nextElementSibling.classList.add('d-inline');};">
-                <span class="brand-text {{ 'arabic-heading' if is_rtl else 'english-heading' }} d-none d-sm-inline fw-bold">
+                <span class="brand-text {{ 'arabic-heading' if is_rtl else 'english-heading' }} d-none d-xxl-inline fw-bold">
                     {{ _('Emdad Global') if COMPANY_NAME == 'Emdad Global' else COMPANY_NAME }}
                 </span>
             </a>
 
-            <button class="navbar-toggler border-0 p-1" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="{{ _('Toggle navigation') }}">
+            <button class="navbar-toggler border-0 p-1" type="button" data-bs-toggle="offcanvas" data-bs-target="#mobileOffcanvasNav" aria-controls="mobileOffcanvasNav" aria-expanded="false" aria-label="{{ _('Toggle navigation') }}">
                 <span class="navbar-toggler-icon"></span>
             </button>
 
@@ -776,6 +776,88 @@
             </div>
         </div>
     </nav>
+
+    <!-- Offcanvas for mobile dropdowns (appears from side with close button) -->
+    <div class="offcanvas {{ 'offcanvas-end' if is_rtl else 'offcanvas-start' }}" tabindex="-1" id="mobileOffcanvasNav" aria-labelledby="mobileOffcanvasLabel">
+        <div class="offcanvas-header">
+            <h5 class="offcanvas-title" id="mobileOffcanvasLabel">{{ _('Menu') }}</h5>
+            <button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas" aria-label="{{ _('Close') }}"></button>
+        </div>
+        <div class="offcanvas-body p-0" id="mobileOffcanvasBody">
+            <nav class="mobile-nav px-2">
+                <ul class="list-group list-group-flush">
+                    {% if is_rtl %}
+                        <li class="list-group-item"><a class="nav-link w-100" href="{{ url_for('main.index') }}">{{ _('Home') }}</a></li>
+                        <li class="list-group-item"><a class="nav-link w-100" href="{{ url_for('main.about') }}">{{ _('About Us') }}</a></li>
+                        <li class="list-group-item">
+                            <button class="btn btn-link w-100 text-start dropdown-toggle" data-bs-toggle="collapse" data-bs-target="#mobileProducts" aria-expanded="false">{{ _('Products') }}</button>
+                            <div id="mobileProducts" class="collapse mt-1">
+                                <ul class="list-group list-group-flush">
+                                    <li class="list-group-item"><a class="nav-link w-100" href="{{ url_for('main.products') }}">{{ _('All Products') }}</a></li>
+                                    <li class="list-group-item"><hr class="my-1"></li>
+                                    {% for cat in nav_categories %}
+                                        <li class="list-group-item"><a class="nav-link w-100" href="{{ url_for('main.products', cat=cat.key) }}">{{ cat.get_name(current_language) }}</a></li>
+                                    {% endfor %}
+                                </ul>
+                            </div>
+                        </li>
+                        <li class="list-group-item"><a class="nav-link w-100" href="{{ url_for('main.certifications') }}">{{ _('Certifications') }}</a></li>
+                        <li class="list-group-item"><a class="nav-link w-100" href="{{ url_for('main.services') }}">{{ _('Services') }}</a></li>
+                        <li class="list-group-item"><a class="nav-link w-100" href="{{ url_for('main.gallery') }}">{{ _('Gallery') }}</a></li>
+                        <li class="list-group-item"><a class="nav-link w-100" href="{{ url_for('main.calendar') }}">{{ _('Calendar') }}</a></li>
+                        <li class="list-group-item"><a class="nav-link w-100" href="{{ url_for('main.news') }}">{{ _('News') }}</a></li>
+                        <li class="list-group-item"><a class="nav-link w-100" href="{{ url_for('main.contact') }}">{{ _('Contact') }}</a></li>
+                    {% else %}
+                        <li class="list-group-item"><a class="nav-link w-100" href="{{ url_for('main.index') }}">{{ _('Home') }}</a></li>
+                        <li class="list-group-item"><a class="nav-link w-100" href="{{ url_for('main.about') }}">{{ _('About Us') }}</a></li>
+                        <li class="list-group-item">
+                            <button class="btn btn-link w-100 text-start dropdown-toggle" data-bs-toggle="collapse" data-bs-target="#mobileProducts" aria-expanded="false">{{ _('Products') }}</button>
+                            <div id="mobileProducts" class="collapse mt-1">
+                                <ul class="list-group list-group-flush">
+                                    <li class="list-group-item"><a class="nav-link w-100" href="{{ url_for('main.products') }}">{{ _('All Products') }}</a></li>
+                                    <li class="list-group-item"><hr class="my-1"></li>
+                                    {% for cat in nav_categories %}
+                                        <li class="list-group-item"><a class="nav-link w-100" href="{{ url_for('main.products', cat=cat.key) }}">{{ cat.get_name(current_language) }}</a></li>
+                                    {% endfor %}
+                                </ul>
+                            </div>
+                        </li>
+                        <li class="list-group-item"><a class="nav-link w-100" href="{{ url_for('main.certifications') }}">{{ _('Certifications') }}</a></li>
+                        <li class="list-group-item"><a class="nav-link w-100" href="{{ url_for('main.services') }}">{{ _('Services') }}</a></li>
+                        <li class="list-group-item"><a class="nav-link w-100" href="{{ url_for('main.gallery') }}">{{ _('Gallery') }}</a></li>
+                        <li class="list-group-item"><a class="nav-link w-100" href="{{ url_for('main.calendar') }}">{{ _('Calendar') }}</a></li>
+                        <li class="list-group-item"><a class="nav-link w-100" href="{{ url_for('main.news') }}">{{ _('News') }}</a></li>
+                        <li class="list-group-item"><a class="nav-link w-100" href="{{ url_for('main.contact') }}">{{ _('Contact') }}</a></li>
+                    {% endif %}
+                </ul>
+
+                <!-- Language switcher -->
+                <div class="mt-3">
+                    <div class="dropdown">
+                        <button class="btn btn-outline-secondary w-100 dropdown-toggle" data-bs-toggle="dropdown">{% if current_language == 'ar' %}العربية{% else %}English{% endif %}</button>
+                        <ul class="dropdown-menu w-100">
+                            <li><a class="dropdown-item" href="{{ url_for('main.set_language', language='en') }}">English</a></li>
+                            <li><a class="dropdown-item" href="{{ url_for('main.set_language', language='ar') }}">العربية</a></li>
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- CTA -->
+                <div class="mt-3">
+                    <a href="{{ url_for('main.contact') }}" class="btn btn-primary w-100">{{ _('Request Quote') }}</a>
+                </div>
+            </nav>
+        </div>
+    </div>
+
+    <!-- Offcanvas for mobile dropdowns (legacy; kept hidden) -->
+    <div class="offcanvas {{ 'offcanvas-end' if is_rtl else 'offcanvas-start' }} d-none" tabindex="-1" id="mobileDropdownOffcanvas" aria-labelledby="mobileDropdownLabel">
+        <div class="offcanvas-header">
+            <h5 class="offcanvas-title" id="mobileDropdownLabel">{{ _('Menu') }}</h5>
+            <button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas" aria-label="{{ _('Close') }}"></button>
+        </div>
+        <div class="offcanvas-body p-0"><!-- Filled dynamically on mobile when clicking a dropdown --></div>
+    </div>
 
     <!-- Main Content -->
     <main style="margin-top: 76px;">
@@ -1157,27 +1239,9 @@
             var navbarCollapse = document.querySelector('.navbar-collapse');
             var navbarToggler = document.querySelector('.navbar-toggler');
 
-            // Initialize Bootstrap Collapse
-            var bsCollapse = null;
-            if (navbarCollapse) {
-                bsCollapse = new bootstrap.Collapse(navbarCollapse, {
-                    toggle: false
-                });
-            }
+            // Remove legacy collapse behavior for navbar toggler to avoid double menus
+            // (Offcanvas handling is in static/js/main.js)
 
-            // Handle navbar toggler click
-            if (navbarToggler && navbarCollapse) {
-                navbarToggler.addEventListener('click', function(e) {
-                    e.preventDefault();
-                    e.stopPropagation();
-
-                    if (navbarCollapse.classList.contains('show')) {
-                        bsCollapse.hide();
-                    } else {
-                        bsCollapse.show();
-                    }
-                });
-            }
 
             // Initialize Bootstrap dropdowns with unified behavior
             var dropdownElementList = [].slice.call(document.querySelectorAll('.dropdown-toggle'));

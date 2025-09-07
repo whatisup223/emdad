@@ -588,7 +588,7 @@ html[dir="rtl"] .navbar-nav {
 }
 
 /* CRITICAL MOBILE FIX - PERFECT RESPONSIVENESS */
-@media (max-width: 991.98px) {
+@media (max-width: 1199.98px) {
     /* Container fixes */
     .navbar {
         padding: 0.5rem 1rem !important;
@@ -668,7 +668,7 @@ html[dir="rtl"] .navbar-nav {
 }
 
 /* Mobile responsive fixes */
-@media (max-width: 991.98px) {
+@media (max-width: 1199.98px) {
     .navbar-nav {
         flex-direction: column;
         width: 100%;
@@ -721,7 +721,7 @@ html[dir="rtl"] .navbar-nav {
     gap: 0.5rem;
 }
 
-@media (max-width: 991.98px) {
+@media (max-width: 1199.98px) {
     .language-switcher {
         justify-content: center;
         margin-top: 1rem;
@@ -876,7 +876,7 @@ html:not([lang="ar"]) i[class*="fa-"] {
 }
 
 /* RESPONSIVE mobile navbar - PERFECT for both languages */
-@media (max-width: 991.98px) {
+@media (max-width: 1199.98px) {
     .navbar-collapse {
         background-color: rgba(255, 255, 255, 0.98);
         border-radius: 0.5rem;
@@ -1111,7 +1111,7 @@ html:not([lang="ar"]) i[class*="fa-"] {
     }
 
 /* MOBILE LAYOUT FIX - FORCE VERTICAL LAYOUT FOR BOTH LANGUAGES */
-@media (max-width: 991.98px) {
+@media (max-width: 1199.98px) {
     /* CRITICAL: Force vertical layout for navbar */
     .navbar-nav {
         flex-direction: column !important;
@@ -1315,7 +1315,7 @@ html:not([lang="ar"]) i[class*="fa-"] {
 }
 
 /* Enhanced dropdown toggle styling for mobile */
-@media (max-width: 991.98px) {
+@media (max-width: 1199.98px) {
     .navbar-nav .dropdown-toggle {
         background: rgba(104, 155, 138, 0.05) !important;
         border: 1px solid rgba(104, 155, 138, 0.2) !important;
@@ -1460,7 +1460,7 @@ html:not([lang="ar"]) i[class*="fa-"] {
 }
 
 /* FINAL OVERRIDE - Ensure Arabic navbar looks exactly like English */
-@media (max-width: 991.98px) {
+@media (max-width: 1199.98px) {
     /* Force all navbar items to stack vertically */
     .navbar-nav,
     .rtl .navbar-nav,
@@ -1580,7 +1580,7 @@ html:not([lang="ar"]) i[class*="fa-"] {
 }
 
 /* Ensure proper z-index for mobile dropdowns */
-@media (max-width: 991.98px) {
+@media (max-width: 1199.98px) {
     .navbar-nav .dropdown-menu {
         z-index: 1050;
     }
@@ -1623,14 +1623,51 @@ html:not([lang="ar"]) i[class*="fa-"] {
 
 /* ========================================
    ULTIMATE RESPONSIVE FIXES - ARABIC & ENGLISH
+
+/* Offcanvas dropdown styling for mobile side menu */
+@media (max-width: 1399.98px) {
+    #mobileDropdownOffcanvas .offcanvas-body {
+        padding: 0 !important;
+    }
+    #mobileDropdownOffcanvas .list-group-item {
+        border: none;
+        border-bottom: 1px solid rgba(0,0,0,0.06);
+    }
+    #mobileDropdownOffcanvas .list-group-item-action:active,
+    #mobileDropdownOffcanvas .list-group-item-action:hover {
+        background-color: rgba(104, 155, 138, 0.08);
+        color: #2e7d32;
+    }
+}
+
    ======================================== */
 
 /* CRITICAL: Prevent horizontal scrolling and ensure perfect responsiveness */
-@media (max-width: 991.98px) {
+@media (max-width: 1199.98px) {
     /* Global container fixes */
     html, body {
         overflow-x: hidden !important;
         max-width: 100% !important;
+
+/* Mobile offcanvas full menu normalize */
+@media (max-width: 1399.98px) {
+  #mobileOffcanvasNav .navbar-nav { display: block; width: 100%; }
+  #mobileOffcanvasNav .nav-item { width: 100%; }
+  #mobileOffcanvasNav .nav-link { display: block; width: 100%; padding: .85rem 1rem; }
+  #mobileOffcanvasNav .dropdown-menu { background: transparent; box-shadow: none; border: 0; }
+}
+
+/* Ensure proper text alignment inside mobile offcanvas based on dir */
+#mobileOffcanvasNav[dir="rtl"], html[dir="rtl"] #mobileOffcanvasNav {
+  text-align: right;
+}
+#mobileOffcanvasNav[dir="ltr"], html[dir="ltr"] #mobileOffcanvasNav {
+  text-align: left;
+}
+#mobileOffcanvasNav .dropdown-menu { display: none; }
+#mobileOffcanvasNav .dropdown-menu.show { display: block; }
+
+
     }
 
     .navbar {

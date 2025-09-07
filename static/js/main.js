@@ -21,7 +21,7 @@ document.addEventListener('DOMContentLoaded', function() {
 // Navbar functionality
 function initNavbar() {
     const navbar = document.querySelector('.navbar');
-    
+
     // Navbar scroll effect
     window.addEventListener('scroll', function() {
         if (window.scrollY > 50) {
@@ -30,19 +30,247 @@ function initNavbar() {
             navbar.classList.remove('navbar-scrolled');
         }
     });
-    
-    // Mobile menu close on link click
+
+    // Mobile menu close on link click (only for large screens where collapse is used)
     const navLinks = document.querySelectorAll('.navbar-nav .nav-link');
     const navbarCollapse = document.querySelector('.navbar-collapse');
-    
+
     navLinks.forEach(link => {
         link.addEventListener('click', () => {
-            if (navbarCollapse.classList.contains('show')) {
+            // Do not touch collapse when offcanvas (hamburger visible) is used
+            const togglerEl = document.querySelector('.navbar .navbar-toggler');
+            const isTogglerVisible = togglerEl && window.getComputedStyle(togglerEl).display !== 'none';
+            if (isTogglerVisible) return;
+            if (navbarCollapse && navbarCollapse.classList.contains('show')) {
                 const bsCollapse = new bootstrap.Collapse(navbarCollapse);
                 bsCollapse.hide();
             }
         });
     });
+
+    // Mobile dropdowns offcanvas (RTL/LTR aware)
+    try {
+        const offcanvasEl = document.getElementById('mobileDropdownOffcanvas');
+        // If legacy offcanvas is hidden or not present, do nothing
+        if (!offcanvasEl || offcanvasEl.classList.contains('d-none')) return;
+        const offcanvasBody = offcanvasEl.querySelector('.offcanvas-body');
+        const bsOffcanvas = new bootstrap.Offcanvas(offcanvasEl, { backdrop: true, scroll: true });
+
+        // Delegated click handler on dropdown toggles
+        document.addEventListener('click', function(e) {
+            const toggle = e.target.closest('.navbar-nav .dropdown-toggle');
+            if (!toggle) return;
+
+            // Only intercept on mobile widths (matches our CSS breakpoint <= 1399.98)
+            if (window.innerWidth >= 1400) return;
+
+            // Prevent default dropdown behavior on mobile
+            e.preventDefault();
+            e.stopPropagation();
+
+            if (!offcanvasBody) return;
+
+            // Find the related dropdown-menu content
+            const dropdown = toggle.closest('.dropdown');
+            const menu = dropdown ? dropdown.querySelector('.dropdown-menu') : null;
+            if (!menu) return;
+
+            // Clone menu into offcanvas body
+            offcanvasBody.innerHTML = '';
+
+            // Add header title from toggle text
+            const title = document.getElementById('mobileDropdownLabel');
+            if (title) {
+                title.textContent = toggle.textContent.trim() || toggle.getAttribute('aria-label') || 'Menu';
+            }
+
+            // Create a simple list to host items
+            const list = document.createElement('div');
+            list.className = 'list-group list-group-flush';
+
+            menu.querySelectorAll('.dropdown-item, .dropdown-divider').forEach(node => {
+                if (node.classList.contains('dropdown-divider')) {
+                    const hr = document.createElement('div');
+                    hr.className = 'list-group-item py-1';
+                    hr.innerHTML = '<hr class=\"my-1\">';
+                    list.appendChild(hr);
+                } else {
+                    const a = document.createElement('a');
+                    a.className = 'list-group-item list-group-item-action py-3';
+                    a.href = node.getAttribute('href');
+                    a.textContent = node.textContent.trim();
+                    a.addEventListener('click', () => {
+                        // Close offcanvas after navigation
+                        bsOffcanvas.hide();
+                    });
+                    list.appendChild(a);
+                }
+            });
+
+            offcanvasBody.appendChild(list);
+
+            // Open offcanvas
+            bsOffcanvas.show();
+        });
+    } catch(err) {
+        console.warn('Offcanvas mobile dropdown init failed:', err);
+    }
+
+// Turn entire navbar menu into side offcanvas on mobile
+(function initMobileOffcanvasNav() {
+  try {
+    const offcanvasEl = document.getElementById('mobileOffcanvasNav');
+    const offcanvasBody = offcanvasEl ? offcanvasEl.querySelector('#mobileOffcanvasBody') : null;
+    if (!offcanvasEl || !offcanvasBody) return;
+
+    const bsOffcanvas = new bootstrap.Offcanvas(offcanvasEl, { backdrop: true, scroll: true });
+    const navbar = document.querySelector('nav.navbar');
+    const collapse = document.getElementById('navbarNav');
+    const toggler = document.querySelector('.navbar .navbar-toggler');
+
+    // Ensure offcanvas has correct dir for alignment
+    try { offcanvasEl.setAttribute('dir', document.documentElement.getAttribute('dir') || 'ltr'); } catch(_) {}
+
+    // Do not require collapse to exist to initialize
+    if (!navbar || !toggler) return;
+
+    // Helper to open mobile offcanvas with full nav
+    function buildOffcanvasContent() {
+      // If already has server-rendered content, keep it
+      if (offcanvasBody && offcanvasBody.children && offcanvasBody.children.length > 0) return;
+      // Build content (brand + nav + language + CTA) dynamically as fallback
+      offcanvasBody.innerHTML = '';
+
+      let source = collapse;
+      if (!source) {
+        // Fallback: reconstruct from navbar markup if collapse missing
+        source = document.createElement('div');
+        const original = document.querySelector('nav.navbar .navbar-collapse');
+        if (original) source.appendChild(original.cloneNode(true));
+      }
+
+      const cloned = source ? source.cloneNode(true) : null;
+      if (cloned) {
+        // Ensure cloned collapse is visible as a vertical list inside offcanvas
+        cloned.classList.remove('collapse');
+        cloned.classList.remove('navbar-collapse');
+        cloned.classList.add('p-2');
+
+        // Normalize styles inside
+        cloned.querySelectorAll('.dropdown-menu').forEach(m => { m.classList.add('w-100'); m.style.position = 'static'; });
+
+        offcanvasBody.appendChild(cloned);
+
+        // Toggle dropdowns inside offcanvas
+        offcanvasBody.querySelectorAll('.dropdown-toggle').forEach(function(tgl){
+          tgl.addEventListener('click', function(ev){
+            ev.preventDefault();
+            const menu = tgl.nextElementSibling;
+            if (menu && menu.classList.contains('dropdown-menu')) {
+              menu.classList.toggle('show');
+            }
+          });
+        });
+      // If still empty by any chance, add a fallback basic list
+      if (!offcanvasBody.children.length) {
+        const fallback = document.createElement('ul');
+        fallback.className = 'list-group list-group-flush';
+        document.querySelectorAll('nav.navbar .navbar-nav > li > a.nav-link').forEach(a => {
+          const li = document.createElement('li');
+          li.className = 'list-group-item';
+          const link = document.createElement('a');
+          link.href = a.getAttribute('href');
+          link.textContent = a.textContent.trim();
+          li.appendChild(link);
+          fallback.appendChild(li);
+        });
+        offcanvasBody.appendChild(fallback);
+      }
+
+      }
+    }
+
+    function openMobileNav(e) {
+      // Prefer checking actual visibility of the toggler for robustness
+      const togglerVisible = toggler && window.getComputedStyle(toggler).display !== 'none';
+      if (!togglerVisible) return false;
+      if (e) { e.preventDefault(); }
+
+      // Make sure any bootstrap collapse state is closed
+      if (collapse) collapse.classList.remove('show');
+
+      // Build content just-in-time and show
+      buildOffcanvasContent();
+      // If still empty (unlikely), use server-rendered fallback list
+      if (!offcanvasBody.children.length) {
+        const fallback = document.getElementById('__server_nav_fallback');
+        if (fallback) {
+          const clone = fallback.cloneNode(true);
+          clone.classList.remove('d-none');
+          offcanvasBody.appendChild(clone);
+        }
+      }
+    // Absolute final fallback: if body still empty on shown, inject simple list
+    offcanvasEl.addEventListener('shown.bs.offcanvas', function(){
+      if (offcanvasBody && offcanvasBody.children && offcanvasBody.children.length === 0) {
+        const simple = document.createElement('ul');
+        simple.className = 'list-group list-group-flush';
+        const items = [
+          {href: '{{ url_for("main.index") }}', text: '{{ _("Home") }}'},
+          {href: '{{ url_for("main.about") }}', text: '{{ _("About Us") }}'},
+          {href: '{{ url_for("main.certifications") }}', text: '{{ _("Certifications") }}'},
+          {href: '{{ url_for("main.services") }}', text: '{{ _("Services") }}'},
+          {href: '{{ url_for("main.gallery") }}', text: '{{ _("Gallery") }}'},
+          {href: '{{ url_for("main.calendar") }}', text: '{{ _("Calendar") }}'},
+          {href: '{{ url_for("main.news") }}', text: '{{ _("News") }}'},
+          {href: '{{ url_for("main.contact") }}', text: '{{ _("Contact") }}'},
+        ];
+        items.forEach(it => {
+          const li = document.createElement('li');
+          li.className = 'list-group-item';
+          const a = document.createElement('a');
+          a.className = 'nav-link';
+          a.href = it.href; a.textContent = it.text;
+          li.appendChild(a);
+          simple.appendChild(li);
+        });
+        offcanvasBody.appendChild(simple);
+      }
+    });
+      bsOffcanvas.show();
+      return true;
+    }
+
+    // Populate content whenever offcanvas is about to show (covers data-bs triggers)
+    offcanvasEl.addEventListener('show.bs.offcanvas', function(){
+      buildOffcanvasContent();
+    });
+
+    // Attach to the toggler if present (for non data-bs flows)
+    if (toggler) {
+      toggler.addEventListener('click', openMobileNav);
+    }
+    // Fallback: delegate on document in case the toggler is re-rendered
+    document.addEventListener('click', function(ev) {
+      const btn = ev.target.closest('.navbar .navbar-toggler');
+      if (!btn) return;
+      openMobileNav(ev);
+    });
+
+    // Close offcanvas when any nav link is clicked
+    offcanvasEl.addEventListener('click', function(e) {
+      const link = e.target.closest('a.nav-link, a.dropdown-item, .btn');
+      if (link) bsOffcanvas.hide();
+    });
+
+    // Hide bootstrap collapse if it was open
+    document.addEventListener('shown.bs.offcanvas', function(evt){ if (evt.target === offcanvasEl) collapse.classList.remove('show'); });
+  } catch(err) {
+    console.warn('initMobileOffcanvasNav failed:', err);
+  }
+})();
+
+
 }
 
 // Form enhancements
@@ -50,16 +278,16 @@ function initForms() {
     // RFQ Form dynamic product loading
     const categorySelect = document.getElementById('category_key');
     const productInput = document.getElementById('product_name');
-    
+
     if (categorySelect && productInput) {
         categorySelect.addEventListener('change', function() {
             const categoryKey = this.value;
-            
+
             if (categoryKey) {
                 // Show loading state
                 productInput.placeholder = 'Loading products...';
                 productInput.disabled = true;
-                
+
                 // Fetch products for selected category
                 fetch(`/api/products/${categoryKey}`)
                     .then(response => response.json())
@@ -71,17 +299,17 @@ function initForms() {
                             datalist.id = 'product-list';
                             productInput.parentNode.appendChild(datalist);
                         }
-                        
+
                         // Clear existing options
                         datalist.innerHTML = '';
-                        
+
                         // Add product options
                         products.forEach(product => {
                             const option = document.createElement('option');
                             option.value = product.name;
                             datalist.appendChild(option);
                         });
-                        
+
                         // Set datalist attribute
                         productInput.setAttribute('list', 'product-list');
                         productInput.placeholder = 'Type or select a product...';
@@ -99,7 +327,7 @@ function initForms() {
             }
         });
     }
-    
+
     // Form validation feedback
     const forms = document.querySelectorAll('.needs-validation');
     forms.forEach(form => {
@@ -111,7 +339,7 @@ function initForms() {
             form.classList.add('was-validated');
         });
     });
-    
+
     // File upload preview
     const fileInputs = document.querySelectorAll('input[type="file"]');
     fileInputs.forEach(input => {
@@ -131,27 +359,27 @@ function initForms() {
 // Gallery functionality
 function initGallery() {
     const galleryItems = document.querySelectorAll('.gallery-item');
-    
+
     galleryItems.forEach(item => {
         item.addEventListener('click', function() {
             const imgSrc = this.querySelector('img').src;
             const title = this.querySelector('.gallery-overlay h6')?.textContent || '';
-            
+
             // Create modal for image preview
             showImageModal(imgSrc, title);
         });
     });
-    
+
     // Gallery filter functionality
     const filterButtons = document.querySelectorAll('.gallery-filter');
     filterButtons.forEach(button => {
         button.addEventListener('click', function() {
             const filter = this.dataset.filter;
-            
+
             // Update active button
             filterButtons.forEach(btn => btn.classList.remove('active'));
             this.classList.add('active');
-            
+
             // Filter gallery items
             galleryItems.forEach(item => {
                 if (filter === 'all' || item.dataset.category === filter) {
@@ -181,13 +409,13 @@ function initScrollEffects() {
             }
         });
     });
-    
+
     // Intersection Observer for animations
     const observerOptions = {
         threshold: 0.1,
         rootMargin: '0px 0px -50px 0px'
     };
-    
+
     const observer = new IntersectionObserver(function(entries) {
         entries.forEach(entry => {
             if (entry.isIntersecting) {
@@ -196,7 +424,7 @@ function initScrollEffects() {
             }
         });
     }, observerOptions);
-    
+
     // Observe elements for animation
     const animateElements = document.querySelectorAll('.card, .feature-icon, .news-card');
     animateElements.forEach(el => observer.observe(el));
@@ -209,7 +437,7 @@ function initTooltips() {
     tooltipTriggerList.map(function(tooltipTriggerEl) {
         return new bootstrap.Tooltip(tooltipTriggerEl);
     });
-    
+
     // Bootstrap popovers
     const popoverTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="popover"]'));
     popoverTriggerList.map(function(popoverTriggerEl) {
@@ -267,20 +495,20 @@ function showImageModal(imgSrc, title) {
             </div>
         </div>
     `;
-    
+
     // Remove existing modal
     const existingModal = document.getElementById('imageModal');
     if (existingModal) {
         existingModal.remove();
     }
-    
+
     // Add new modal
     document.body.insertAdjacentHTML('beforeend', modalHTML);
-    
+
     // Show modal
     const modal = new bootstrap.Modal(document.getElementById('imageModal'));
     modal.show();
-    
+
     // Remove modal from DOM when hidden
     document.getElementById('imageModal').addEventListener('hidden.bs.modal', function() {
         this.remove();
@@ -296,10 +524,10 @@ function showNotification(message, type = 'info') {
         ${message}
         <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
     `;
-    
+
     // Add to page
     document.body.appendChild(notification);
-    
+
     // Auto-remove after 5 seconds
     setTimeout(() => {
         if (notification.parentNode) {
@@ -317,7 +545,7 @@ function makeRequest(url, options = {}) {
             'X-Requested-With': 'XMLHttpRequest'
         }
     };
-    
+
     return fetch(url, { ...defaultOptions, ...options })
         .then(response => {
             if (!response.ok) {
