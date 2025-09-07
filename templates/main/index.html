@@ -472,6 +472,18 @@
                         box-shadow: 0 0 12px rgba(249, 203, 153, 0.9);
                       }
                     </style>
+
+                        <!-- Ensure overlays don't block clicks -->
+                        <style>
+                          .about-section, .about-content-wrapper, .about-action { position: relative; }
+                          .about-action { z-index: 100000; }
+                          /* Disable pointer events on decorative animations so clicks pass through */
+                          .about-section .export-animations,
+                          .about-section .export-animations * {
+                            pointer-events: none !important;
+                          }
+                        </style>
+
                     <div class="about-action" style="position: relative; z-index: 9999 !important; margin-top: 2rem;">
                         <a href="{{ url_for('main.about') }}" class="about-learn-btn">
                             <span class="peach-glow"></span>
