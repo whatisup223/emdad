@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 12 8" width="12" height="8" aria-label="Flag of Egypt" role="img">
+  <title>Egypt</title>
+  <rect width="12" height="8" fill="#000"/>
+  <rect width="12" height="5.3333333" y="0" fill="#ce1126"/>
+  <rect width="12" height="2.6666667" y="2.6666667" fill="#ffffff"/>
+  <!-- Simplified emblem -->
+  <circle cx="6" cy="4" r="0.5" fill="#c3a400"/>
+</svg>
+

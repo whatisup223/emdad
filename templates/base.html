@@ -45,6 +45,23 @@
             font-display: swap;
         }
 
+        /* Use Arabic font automatically for Arabic Unicode ranges even when UI is English */
+        @font-face {
+            font-family: 'Arabic Smart';
+            src: local('Hacen Tunisia Bold'), local('Cairo'), local('Tajawal'), local('Amiri');
+            font-weight: 400 900;
+            font-style: normal;
+            font-display: swap;
+            unicode-range: U+0600-06FF, U+0750-077F, U+08A0-08FF, U+FB50-FDFF, U+FE70-FEFF, U+1EE00-1EEFF;
+
+            /* Force Arabic glyphs to use Arabic font even in English UI */
+            [lang="ar"], .arabic-heading, .arabic-text {
+                font-family: 'Hacen Tunisia Bold', 'Arabic Smart', 'Cairo', 'Tajawal', 'Amiri', serif !important;
+            }
+
+        }
+
+
         /* Apply fonts based on language */
         html[lang="ar"] *, .rtl * {
             font-family: 'Hacen Tunisia Bold', 'Cairo', 'Tajawal', 'Amiri', serif !important;
@@ -625,7 +642,40 @@
       .state-chip.state-limited{ background:linear-gradient(180deg,#f9cb99,#f4b56f); border-color:#f4b56f; }
       .state-chip.state-off{ background:linear-gradient(180deg,#adb5bd,#8f9aa3); border-color:#8f9aa3; }
       .state-chip.state-iqf{ background:linear-gradient(180deg,#5bc0de,#3aa9c7); border-color:#3aa9c7; }
+
+    <!-- Minimal styles for language icon toggle -->
+    <style>
+      .language-switcher .language-icon-btn {
+        border-radius: 8px;
+        display: inline-flex;
+        align-items: center;
+        gap: .25rem;
+        color: inherit;
+        text-decoration: none;
+        transition: background-color .2s ease, color .2s ease, box-shadow .2s ease;
+      }
+      .language-switcher .language-icon-btn:hover {
+        background: rgba(0,0,0,0.05);
+      }
+      .language-switcher .language-icon-btn.active {
+        background: rgba(249,203,153,0.25);
+        box-shadow: inset 0 0 0 1px rgba(249,203,153,0.8);
+      }
+      /* Flag image alignment */
+      .language-switcher .flag-img { display:inline-block; width:auto; height:12px; border-radius:2px; box-shadow: 0 0 0 1px rgba(0,0,0,0.05) inset; }
+
     </style>
+
+        <!-- Offcanvas overflow fixes to prevent horizontal scroll/bleed -->
+        <style>
+          #mobileOffcanvasNav .offcanvas-body { overflow-x: hidden; }
+          #mobileOffcanvasBody { overflow-x: hidden; position: relative; }
+          /* Ensure animated layers do not cause horizontal overflow */
+          #mobileOffcanvasBody .mobile-offcanvas-animated { position: absolute; inset: 0; overflow: hidden; pointer-events: none; }
+          #mobileOffcanvasBody .mobile-offcanvas-animated .mobile-bubble,
+          #mobileOffcanvasBody .mobile-offcanvas-animated #mobileNavLeaves,
+          #mobileOffcanvasBody .mobile-offcanvas-animated .leaf { max-width: 100%; }
+        </style>
 
 </head>
 <body>
@@ -744,7 +794,30 @@
                     {% endif %}
                 </ul>
 
-                <!-- Language Switcher -->
+                <!-- START_LANGUAGE_GLOBE_DROPDOWN (reversible: say "تراجع" to revert) -->
+                <div class="navbar-nav language-switcher">
+                  <div class="nav-item dropdown">
+                    <a class="nav-link px-2 py-1" href="#" id="languageDropdownGlobe" role="button" data-bs-toggle="dropdown" aria-expanded="false" title="{{ 'Change language' if current_language == 'en' else 'تغيير اللغة' }}">
+                      <i class="fas fa-globe"></i>
+                    </a>
+                    <ul class="dropdown-menu {{ 'dropdown-menu-end' if is_rtl else '' }}">
+                      <li>
+                        <a class="dropdown-item d-flex align-items-center {{ 'active' if current_language == 'ar' else '' }}" href="{{ url_for('main.set_language', language='ar') }}">
+                          <img src="{{ url_for('static', filename='images/flags/eg.svg') }}" alt="EG" width="18" height="12" class="me-2" />
+                          <span lang="ar" class="arabic-heading">العربية</span>
+                        </a>
+                      </li>
+                      <li>
+                        <a class="dropdown-item d-flex align-items-center {{ 'active' if current_language == 'en' else '' }}" href="{{ url_for('main.set_language', language='en') }}">
+                          <img src="{{ url_for('static', filename='images/flags/us.svg') }}" alt="US" width="18" height="12" class="me-2" />
+                          English
+                        </a>
+                      </li>
+                    </ul>
+                  </div>
+                </div>
+                <!-- END_LANGUAGE_GLOBE_DROPDOWN -->
+                <!-- REVERT_POINT_LANGUAGE_DROPDOWN (original kept for quick undo)
                 <div class="navbar-nav language-switcher">
                     <div class="nav-item dropdown">
                         <a class="nav-link dropdown-toggle nav-text english-heading" href="#" id="languageDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
@@ -762,6 +835,7 @@
                         </ul>
                     </div>
                 </div>
+                END_REVERT_POINT_LANGUAGE_DROPDOWN -->
 
                 <!-- CTA Button -->
                 <div class="d-flex align-items-center">
@@ -783,71 +857,162 @@
             <h5 class="offcanvas-title" id="mobileOffcanvasLabel">{{ _('Menu') }}</h5>
             <button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas" aria-label="{{ _('Close') }}"></button>
         </div>
-        <div class="offcanvas-body p-0" id="mobileOffcanvasBody">
-            <nav class="mobile-nav px-2">
+        <div class="offcanvas-body p-0 position-relative" id="mobileOffcanvasBody">
+            <!-- Animated background layers -->
+            <div class="mobile-offcanvas-animated" aria-hidden="true">
+                <span class="mobile-bubble b1"></span>
+                <span class="mobile-bubble b2"></span>
+                <span class="mobile-bubble b3"></span>
+                <div id="mobileNavLeaves">
+                  <!-- SSR leaves so they are visible even without JS -->
+                  <i class="fas fa-leaf leaf l1"></i>
+                  <i class="fas fa-leaf leaf l2"></i>
+                  <i class="fas fa-leaf leaf l3"></i>
+                  <i class="fas fa-leaf leaf l4"></i>
+                  <i class="fas fa-leaf leaf l5"></i>
+                  <i class="fas fa-leaf leaf l6"></i>
+                </div>
+            </div>
+
+            <nav class="mobile-nav px-2 position-relative">
                 <ul class="list-group list-group-flush">
                     {% if is_rtl %}
-                        <li class="list-group-item"><a class="nav-link w-100" href="{{ url_for('main.index') }}">{{ _('Home') }}</a></li>
-                        <li class="list-group-item"><a class="nav-link w-100" href="{{ url_for('main.about') }}">{{ _('About Us') }}</a></li>
+                        <li class="list-group-item"><a class="nav-link w-100" href="{{ url_for('main.index') }}"><i class="fas fa-home me-2 icon-peach"></i>{{ _('Home') }}</a></li>
+                        <li class="list-group-item"><a class="nav-link w-100" href="{{ url_for('main.about') }}"><i class="fas fa-info-circle me-2 icon-peach"></i>{{ _('About Us') }}</a></li>
+                        <!-- START_SIDENAV_PRODUCTS_SIMPLE (reversible: say "تراجع" to revert) -->
                         <li class="list-group-item">
-                            <button class="btn btn-link w-100 text-start dropdown-toggle" data-bs-toggle="collapse" data-bs-target="#mobileProducts" aria-expanded="false">{{ _('Products') }}</button>
+                            <a class="nav-link w-100" href="{{ url_for('main.products') }}">
+                                <i class="fas fa-box-open me-2 icon-peach"></i>{{ _('Products') }}
+                            </a>
+                        </li>
+                        <!-- END_SIDENAV_PRODUCTS_SIMPLE -->
+                        {# REVERT_POINT_SIDENAV_PRODUCTS_EXPAND (original kept for quick undo)
+                        <li class="list-group-item">
+                            <button type="button" class="btn btn-link w-100 text-start dropdown-toggle nav-link" aria-expanded="false" aria-controls="mobileProducts"><i class="fas fa-box-open me-2 icon-peach"></i>{{ _('Products') }}</button>
                             <div id="mobileProducts" class="collapse mt-1">
                                 <ul class="list-group list-group-flush">
-                                    <li class="list-group-item"><a class="nav-link w-100" href="{{ url_for('main.products') }}">{{ _('All Products') }}</a></li>
+                                    <li class="list-group-item"><a class="nav-link w-100" href="{{ url_for('main.products') }}"><i class="fas fa-list me-2 icon-peach"></i>{{ _('All Products') }}</a></li>
                                     <li class="list-group-item"><hr class="my-1"></li>
-                                    {% for cat in nav_categories %}
-                                        <li class="list-group-item"><a class="nav-link w-100" href="{{ url_for('main.products', cat=cat.key) }}">{{ cat.get_name(current_language) }}</a></li>
+                                    {% for p in nav_products %}
+                                        <li class="list-group-item">
+                                            <a class="nav-link w-100" href="{{ url_for('main.product_detail', slug=p.slug) }}">
+                                                <i class="fas fa-seedling me-2 icon-peach"></i>{{ p.get_name(current_language) }}
+                                            </a>
+                                        </li>
                                     {% endfor %}
                                 </ul>
+                                <!-- REVERT_POINT_SIDENAV_CATEGORIES (original kept for quick undo)
+                                <ul class="list-group list-group-flush">
+                                    <li class="list-group-item"><a class="nav-link w-100" href="{{ url_for('main.products') }}"><i class="fas fa-list me-2 icon-peach"></i>{{ _('All Products') }}</a></li>
+                                    <li class="list-group-item"><hr class="my-1"></li>
+                                    {% for cat in nav_categories %}
+                                        <li class="list-group-item"><a class="nav-link w-100" href="{{ url_for('main.products', cat=cat.key) }}"><i class="fas fa-seedling me-2 icon-peach"></i>{{ cat.get_name(current_language) }}</a></li>
+                                    {% endfor %}
+                                </ul>
+                                END_REVERT_POINT_SIDENAV_CATEGORIES -->
                             </div>
                         </li>
-                        <li class="list-group-item"><a class="nav-link w-100" href="{{ url_for('main.certifications') }}">{{ _('Certifications') }}</a></li>
-                        <li class="list-group-item"><a class="nav-link w-100" href="{{ url_for('main.services') }}">{{ _('Services') }}</a></li>
-                        <li class="list-group-item"><a class="nav-link w-100" href="{{ url_for('main.gallery') }}">{{ _('Gallery') }}</a></li>
-                        <li class="list-group-item"><a class="nav-link w-100" href="{{ url_for('main.calendar') }}">{{ _('Calendar') }}</a></li>
-                        <li class="list-group-item"><a class="nav-link w-100" href="{{ url_for('main.news') }}">{{ _('News') }}</a></li>
-                        <li class="list-group-item"><a class="nav-link w-100" href="{{ url_for('main.contact') }}">{{ _('Contact') }}</a></li>
+                        END_REVERT_POINT_SIDENAV_PRODUCTS_EXPAND #}
+                        <li class="list-group-item"><a class="nav-link w-100" href="{{ url_for('main.certifications') }}"><i class="fas fa-certificate me-2 icon-peach"></i>{{ _('Certifications') }}</a></li>
+                        <li class="list-group-item"><a class="nav-link w-100" href="{{ url_for('main.services') }}"><i class="fas fa-seedling me-2 icon-peach"></i>{{ _('Services') }}</a></li>
+                        <li class="list-group-item"><a class="nav-link w-100" href="{{ url_for('main.gallery') }}"><i class="fas fa-images me-2 icon-peach"></i>{{ _('Gallery') }}</a></li>
+                        <li class="list-group-item"><a class="nav-link w-100" href="{{ url_for('main.calendar') }}"><i class="fas fa-calendar-alt me-2 icon-peach"></i>{{ _('Calendar') }}</a></li>
+                        <li class="list-group-item"><a class="nav-link w-100" href="{{ url_for('main.news') }}"><i class="fas fa-newspaper me-2 icon-peach"></i>{{ _('News') }}</a></li>
+                        <li class="list-group-item"><a class="nav-link w-100" href="{{ url_for('main.contact') }}"><i class="fas fa-envelope me-2 icon-peach"></i>{{ _('Contact') }}</a></li>
                     {% else %}
-                        <li class="list-group-item"><a class="nav-link w-100" href="{{ url_for('main.index') }}">{{ _('Home') }}</a></li>
-                        <li class="list-group-item"><a class="nav-link w-100" href="{{ url_for('main.about') }}">{{ _('About Us') }}</a></li>
+                        <li class="list-group-item"><a class="nav-link w-100" href="{{ url_for('main.index') }}"><i class="fas fa-home me-2 icon-peach"></i>{{ _('Home') }}</a></li>
+                        <li class="list-group-item"><a class="nav-link w-100" href="{{ url_for('main.about') }}"><i class="fas fa-info-circle me-2 icon-peach"></i>{{ _('About Us') }}</a></li>
+                        <!-- START_SIDENAV_PRODUCTS_SIMPLE_EN (reversible: say "تراجع" to revert) -->
                         <li class="list-group-item">
-                            <button class="btn btn-link w-100 text-start dropdown-toggle" data-bs-toggle="collapse" data-bs-target="#mobileProducts" aria-expanded="false">{{ _('Products') }}</button>
+                            <a class="nav-link w-100" href="{{ url_for('main.products') }}">
+                                <i class="fas fa-box-open me-2 icon-peach"></i>{{ _('Products') }}
+                            </a>
+                        </li>
+                        <!-- END_SIDENAV_PRODUCTS_SIMPLE_EN -->
+                        {# REVERT_POINT_SIDENAV_PRODUCTS_EXPAND_EN (original kept for quick undo)
+                        <li class="list-group-item">
+                            <button type="button" class="btn btn-link w-100 text-start dropdown-toggle nav-link" aria-expanded="false" aria-controls="mobileProducts"><i class="fas fa-box-open me-2 icon-peach"></i>{{ _('Products') }}</button>
                             <div id="mobileProducts" class="collapse mt-1">
+                                <!-- START_SIDENAV_PRODUCTS_EXPAND (reversible: say "تراجع" to revert) -->
                                 <ul class="list-group list-group-flush">
-                                    <li class="list-group-item"><a class="nav-link w-100" href="{{ url_for('main.products') }}">{{ _('All Products') }}</a></li>
+                                    <li class="list-group-item"><a class="nav-link w-100" href="{{ url_for('main.products') }}"><i class="fas fa-list me-2 icon-peach"></i>{{ _('All Products') }}</a></li>
                                     <li class="list-group-item"><hr class="my-1"></li>
-                                    {% for cat in nav_categories %}
-                                        <li class="list-group-item"><a class="nav-link w-100" href="{{ url_for('main.products', cat=cat.key) }}">{{ cat.get_name(current_language) }}</a></li>
+                                    {% for p in nav_products %}
+                                        <li class="list-group-item">
+                                            <a class="nav-link w-100" href="{{ url_for('main.product_detail', slug=p.slug) }}">
+                                                <i class="fas fa-seedling me-2 icon-peach"></i>{{ p.get_name(current_language) }}
+                                            </a>
+                                        </li>
                                     {% endfor %}
                                 </ul>
+                                <!-- END_SIDENAV_PRODUCTS_EXPAND -->
+                                <!-- REVERT_POINT_SIDENAV_CATEGORIES (original kept for quick undo)
+                                <ul class="list-group list-group-flush">
+                                    <li class="list-group-item"><a class="nav-link w-100" href="{{ url_for('main.products') }}"><i class="fas fa-list me-2 icon-peach"></i>{{ _('All Products') }}</a></li>
+                                    <li class="list-group-item"><hr class="my-1"></li>
+                                    {% for cat in nav_categories %}
+                                        <li class="list-group-item"><a class="nav-link w-100" href="{{ url_for('main.products', cat=cat.key) }}"><i class="fas fa-seedling me-2 icon-peach"></i>{{ cat.get_name(current_language) }}</a></li>
+                                    {% endfor %}
+                                </ul>
+                                END_REVERT_POINT_SIDENAV_CATEGORIES -->
                             </div>
                         </li>
-                        <li class="list-group-item"><a class="nav-link w-100" href="{{ url_for('main.certifications') }}">{{ _('Certifications') }}</a></li>
-                        <li class="list-group-item"><a class="nav-link w-100" href="{{ url_for('main.services') }}">{{ _('Services') }}</a></li>
-                        <li class="list-group-item"><a class="nav-link w-100" href="{{ url_for('main.gallery') }}">{{ _('Gallery') }}</a></li>
-                        <li class="list-group-item"><a class="nav-link w-100" href="{{ url_for('main.calendar') }}">{{ _('Calendar') }}</a></li>
-                        <li class="list-group-item"><a class="nav-link w-100" href="{{ url_for('main.news') }}">{{ _('News') }}</a></li>
-                        <li class="list-group-item"><a class="nav-link w-100" href="{{ url_for('main.contact') }}">{{ _('Contact') }}</a></li>
+                        END_REVERT_POINT_SIDENAV_PRODUCTS_EXPAND_EN #}
+                        <li class="list-group-item"><a class="nav-link w-100" href="{{ url_for('main.certifications') }}"><i class="fas fa-certificate me-2 icon-peach"></i>{{ _('Certifications') }}</a></li>
+                        <li class="list-group-item"><a class="nav-link w-100" href="{{ url_for('main.services') }}"><i class="fas fa-seedling me-2 icon-peach"></i>{{ _('Services') }}</a></li>
+                        <li class="list-group-item"><a class="nav-link w-100" href="{{ url_for('main.gallery') }}"><i class="fas fa-images me-2 icon-peach"></i>{{ _('Gallery') }}</a></li>
+                        <li class="list-group-item"><a class="nav-link w-100" href="{{ url_for('main.calendar') }}"><i class="fas fa-calendar-alt me-2 icon-peach"></i>{{ _('Calendar') }}</a></li>
+                        <li class="list-group-item"><a class="nav-link w-100" href="{{ url_for('main.news') }}"><i class="fas fa-newspaper me-2 icon-peach"></i>{{ _('News') }}</a></li>
+                        <li class="list-group-item"><a class="nav-link w-100" href="{{ url_for('main.contact') }}"><i class="fas fa-envelope me-2 icon-peach"></i>{{ _('Contact') }}</a></li>
                     {% endif %}
                 </ul>
 
-                <!-- Language switcher -->
+                <!-- START_LANGUAGE_ICON_TOGGLE_MOBILE (reversible: say "تراجع" to revert) -->
                 <div class="mt-3">
-                    <div class="dropdown">
-                        <button class="btn btn-outline-secondary w-100 dropdown-toggle" data-bs-toggle="dropdown">{% if current_language == 'ar' %}العربية{% else %}English{% endif %}</button>
-                        <ul class="dropdown-menu w-100">
+                    <div class="d-flex align-items-center justify-content-center gap-3">
+                        <a href="{{ url_for('main.set_language', language='ar') }}" class="btn btn-peach flex-fill d-flex align-items-center justify-content-center language-icon-btn {{ 'active' if current_language == 'ar' else '' }}" title="العربية">
+                            <img src="{{ url_for('static', filename='images/flags/eg.svg') }}" alt="EG" width="20" height="14" class="me-2 flag-img" aria-hidden="true" />
+                            <span class="ms-2 arabic-heading" lang="ar">العربية</span>
+                        </a>
+                        <a href="{{ url_for('main.set_language', language='en') }}" class="btn btn-peach flex-fill d-flex align-items-center justify-content-center language-icon-btn {{ 'active' if current_language == 'en' else '' }}" title="English">
+                            <img src="{{ url_for('static', filename='images/flags/us.svg') }}" alt="US" width="20" height="14" class="me-2 flag-img" aria-hidden="true" />
+                            <span class="ms-2">English</span>
+                        </a>
+                    </div>
+                </div>
+                <!-- END_LANGUAGE_ICON_TOGGLE_MOBILE -->
+                <!-- REVERT_POINT_LANGUAGE_DROPDOWN_MOBILE (original kept for quick undo)
+                <div class="mt-3">
+                    <div class="dropdown language-dropdown position-relative">
+                        <button class="btn btn-peach w-100 dropdown-toggle" data-bs-toggle="dropdown" data-bs-auto-close="outside">{% if current_language == 'ar' %}العربية{% else %}English{% endif %}</button>
+                        <ul class="dropdown-menu w-100 dropdown-menu-peach">
                             <li><a class="dropdown-item" href="{{ url_for('main.set_language', language='en') }}">English</a></li>
                             <li><a class="dropdown-item" href="{{ url_for('main.set_language', language='ar') }}">العربية</a></li>
                         </ul>
                     </div>
                 </div>
+                END_REVERT_POINT_LANGUAGE_DROPDOWN_MOBILE -->
 
                 <!-- CTA -->
                 <div class="mt-3">
-                    <a href="{{ url_for('main.contact') }}" class="btn btn-primary w-100">{{ _('Request Quote') }}</a>
+                    <a href="{{ url_for('main.contact') }}" class="btn btn-peach w-100">{{ _('Request Quote') }}</a>
                 </div>
             </nav>
         </div>
+
+                <!-- Contact icons -->
+                <div class="mt-4 mb-4 py-3 d-flex gap-3 justify-content-center align-items-center">
+                    <a href="mailto:{{ COMPANY_EMAIL or 'info@emdad.com' }}" class="social a-mail" aria-label="Email" title="Email">
+                        <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M20 4H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z"/></svg>
+                    </a>
+                    <a href="tel:{{ COMPANY_PHONE or '+966123456789' }}" class="social a-phone" aria-label="Phone" title="Phone">
+                        <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M6.62 10.79c1.44 2.83 3.76 5.14 6.59 6.59l2.2-2.2c.27-.27.67-.36 1.02-.24 1.12.37 2.33.57 3.57.57.55 0 1 .45 1 1V20c0 .55-.45 1-1 1-9.39 0-17-7.61-17-17 0-.55.45-1 1-1h3.5c.55 0 1 .45 1 1 0 1.25.2 2.45.57 3.57.11.35.03.74-.25 1.02l-2.2 2.2z"/></svg>
+                    </a>
+                    <a href="https://wa.me/{{ COMPANY_WHATSAPP.replace('+', '').replace('-', '') }}" target="_blank" rel="noopener" class="social a-whatsapp" aria-label="WhatsApp" title="WhatsApp">
+                        <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M20.52 3.48A11.78 11.78 0 0012 0C5.37 0 0 5.37 0 12c0 2.12.55 4.1 1.52 5.82L0 24l6.3-1.65A11.9 11.9 0 0012 24c6.63 0 12-5.37 12-12 0-3.18-1.24-6.17-3.48-8.52zM12 22a9.9 9.9 0 01-5.07-1.4l-.36-.21-3.74.98.99-3.64-.23-.37A9.9 9.9 0 012 12C2 6.49 6.49 2 12 2s10 4.49 10 10-4.49 10-10 10zm5.43-7.57c-.3-.15-1.77-.87-2.05-.97-.27-.1-.47-.15-.67.15-.2.3-.77.97-.95 1.18-.18.2-.35.22-.65.07-.3-.15-1.27-.47-2.42-1.5-.9-.8-1.5-1.78-1.67-2.08-.18-.3-.02-.46.13-.61.13-.13.3-.35.45-.52.15-.17.2-.3.3-.5.1-.2.05-.38-.02-.53-.07-.15-.67-1.62-.92-2.22-.24-.58-.49-.5-.67-.51l-.57-.01c-.2 0-.53.07-.81.38-.28.3-1.07 1.05-1.07 2.55s1.1 2.96 1.25 3.17c.15.2 2.17 3.31 5.26 4.64.74.32 1.32.51 1.77.65.74.23 1.42.2 1.96.12.6-.09 1.77-.72 2.02-1.42.25-.7.25-1.3.17-1.42-.07-.12-.27-.2-.57-.35z"/></svg>
+                    </a>
+                </div>
+
     </div>
 
     <!-- Offcanvas for mobile dropdowns (legacy; kept hidden) -->

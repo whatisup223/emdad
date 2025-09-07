@@ -150,9 +150,10 @@ def create_app(config_name=None):
         import time
         # Lazy import to avoid circular imports during app initialization
         try:
-            from app.models import Category
+            from app.models import Category, Product
         except Exception:
             Category = None
+            Product = None
 
         current_language = session.get('language', 'en')
 
@@ -169,6 +170,17 @@ def create_app(config_name=None):
                                   .all()) or []
             except Exception:
                 nav_categories = []
+
+        # Build products for sidebar/mobile (dynamic)
+        nav_products = []
+        if Product is not None:
+            try:
+                nav_products = (Product.query
+                                  .filter_by(status='active')
+                                  .order_by(Product.sort_order, Product.name_en)
+                                  .all()) or []
+            except Exception:
+                nav_products = []
 
         # Manual translation dictionary for critical texts
         manual_translations = {
@@ -483,7 +495,8 @@ def create_app(config_name=None):
             'get_latest_news': get_latest_news,
             'csrf_token': csrf_token,
             'image_url_with_timestamp': image_url_with_timestamp,
-            'nav_categories': nav_categories
+            'nav_categories': nav_categories,
+            'nav_products': nav_products
         }
 
     # Error handlers

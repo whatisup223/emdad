@@ -1398,6 +1398,48 @@ html {
     .agricultural-icon {
         font-size: 1.5rem;
         opacity: 0.25;
+
+/* Mobile Offcanvas Nav Styling */
+#mobileOffcanvasNav .offcanvas-header {
+  background: linear-gradient(135deg, var(--primary-dark), var(--primary-color));
+  color: var(--white);
+}
+#mobileOffcanvasNav .offcanvas-title { color: var(--white); }
+#mobileOffcanvasNav .btn-close { filter: invert(1) grayscale(1) brightness(200%); opacity: .9; }
+
+#mobileOffcanvasNav .offcanvas-body {
+  background: linear-gradient(180deg, var(--primary-dark), var(--primary-color));
+  color: var(--white);
+  min-height: 100%;
+}
+#mobileOffcanvasNav .list-group-item { background: transparent; border-color: rgba(255,255,255,.15); }
+#mobileOffcanvasNav .nav-link { color: var(--white) !important; font-weight: 600; }
+#mobileOffcanvasNav .nav-link:hover { background: rgba(255,255,255,.08); transform: translateY(-1px); }
+#mobileOffcanvasNav .btn-link.nav-link { color: var(--white); text-decoration: none; padding: .75rem 1rem; }
+#mobileOffcanvasNav .btn-link.nav-link:hover { text-decoration: none; background: rgba(255,255,255,.08); }
+#mobileOffcanvasNav .icon-peach { color: var(--secondary-color); }
+
+/* Animated background inside offcanvas */
+#mobileOffcanvasNav .mobile-offcanvas-animated { position: absolute; inset: 0; z-index: 0; pointer-events: none; overflow: hidden; }
+#mobileOffcanvasNav .mobile-bubble { position: absolute; border-radius: 50%; background: rgba(255,255,255,.15); filter: blur(.3px); animation: heroFloat 12s ease-in-out infinite; }
+#mobileOffcanvasNav .mobile-bubble.b1 { width:80px; height:80px; top: 8%; left: 12%; animation-duration: 14s; }
+#mobileOffcanvasNav .mobile-bubble.b2 { width:120px; height:120px; bottom: 12%; right: 15%; animation-duration: 16s; animation-direction: reverse; }
+#mobileOffcanvasNav .mobile-bubble.b3 { width:60px; height:60px; top: 40%; right: 20%; animation-duration: 13s; }
+#mobileOffcanvasNav #mobileNavLeaves .leaf { position:absolute; color: rgba(249,203,153,.55); font-size: 1rem; animation-duration: 20s; animation-timing-function: linear; animation-iteration-count: infinite; }
+
+/* Same animations used in About hero */
+@keyframes heroFloat { 0%,100%{ transform: translateY(0);} 50%{ transform: translateY(-14px);} }
+@keyframes leafDrift { 0%{ transform: translateX(0) rotate(0deg);} 50%{ transform: translateX(50vw) rotate(10deg);} 100%{ transform: translateX(100vw) rotate(0);} }
+@keyframes leafDriftReverse { 0%{ transform: translateX(0) rotate(0deg);} 50%{ transform: translateX(-50vw) rotate(-10deg);} 100%{ transform: translateX(-100vw) rotate(0);} }
+
+@media (prefers-reduced-motion: reduce){
+  #mobileOffcanvasNav .mobile-bubble, #mobileOffcanvasNav #mobileNavLeaves .leaf { animation: none !important; }
+}
+
+/* RTL/LTR alignment still respected */
+html[dir="rtl"] #mobileOffcanvasNav .nav-link { text-align: right; }
+html[dir="ltr"] #mobileOffcanvasNav .nav-link { text-align: left; }
+
     }
 
     .agricultural-icon.icon-3,
@@ -4666,4 +4708,111 @@ footer h6 {
   display:flex !important; align-items:center; justify-content:center;
   margin-left:auto !important; margin-right:auto !important;
 }
+
+
+
+/* --- Mobile Offcanvas Theming Overrides (strong specificity) --- */
+#mobileOffcanvasNav { background: linear-gradient(180deg, var(--primary-dark), var(--primary-color)) !important; color: #fff; }
+#mobileOffcanvasNav .offcanvas-header { background: transparent !important; color: #fff !important; border-bottom: 1px solid rgba(255,255,255,.15); }
+#mobileOffcanvasNav .offcanvas-title { color: #fff !important; }
+#mobileOffcanvasNav .btn-close { filter: invert(1) grayscale(1) brightness(200%); opacity: .9; }
+#mobileOffcanvasNav .offcanvas-body { background: transparent !important; color: #fff; }
+#mobileOffcanvasNav .list-group-item { background: transparent !important; border-color: rgba(255,255,255,.15) !important; }
+#mobileOffcanvasNav .nav-link, #mobileOffcanvasNav .btn-link.nav-link { color: #fff !important; }
+#mobileOffcanvasNav .nav-link:hover, #mobileOffcanvasNav .btn-link.nav-link:hover { background: rgba(255,255,255,.08) !important; }
+#mobileOffcanvasNav i, #mobileOffcanvasNav .icon-peach { color: var(--secondary-color) !important; }
+#mobileOffcanvasNav .dropdown-menu { background: rgba(0,0,0,0.15) !important; color: #fff !important; border: 1px solid rgba(255,255,255,.15) !important; }
+/* Animated layers must appear beneath content */
+#mobileOffcanvasNav .mobile-offcanvas-animated { z-index: 0 !important; }
+#mobileOffcanvasNav nav.mobile-nav { position: relative; z-index: 1; }
+
+
+/* Pre-seeded leaves positions (SSR) */
+#mobileOffcanvasNav #mobileNavLeaves .leaf { color: rgba(249,203,153,.55); position:absolute; animation-duration: 18s; animation-iteration-count: infinite; animation-timing-function: linear; }
+#mobileOffcanvasNav #mobileNavLeaves .leaf.l1 { top:10%; left:-40px; animation-name: leafDrift; }
+#mobileOffcanvasNav #mobileNavLeaves .leaf.l2 { top:35%; left:-50px; animation-name: leafDrift; animation-delay: 2s; }
+#mobileOffcanvasNav #mobileNavLeaves .leaf.l3 { top:70%; left:-60px; animation-name: leafDrift; animation-delay: 4s; }
+#mobileOffcanvasNav #mobileNavLeaves .leaf.l4 { top:20%; right:-40px; animation-name: leafDriftReverse; }
+#mobileOffcanvasNav #mobileNavLeaves .leaf.l5 { top:55%; right:-50px; animation-name: leafDriftReverse; animation-delay: 3s; }
+#mobileOffcanvasNav #mobileNavLeaves .leaf.l6 { top:80%; right:-60px; animation-name: leafDriftReverse; animation-delay: 5s; }
+
+
+/* Ensure dropdowns open inside offcanvas vertically */
+#mobileOffcanvasNav .collapse { display: none; }
+#mobileOffcanvasNav .collapse.show { display: block; }
+#mobileOffcanvasNav .dropdown-toggle::after { display: inline-block; margin-inline-start: .35rem; color: var(--secondary-color) !important; }
+
+
+/* Peach buttons inside offcanvas */
+.btn-peach { background: var(--secondary-color) !important; color: #7a4e25 !important; border: 1px solid rgba(0,0,0,.06) !important; }
+.btn-peach:hover, .btn-peach:focus { background: var(--secondary-dark) !important; color: #6a3f1a !important; }
+
+
+/* Peach dropdown inside offcanvas (language) */
+#mobileOffcanvasNav .language-dropdown .dropdown-menu-peach {
+  background: var(--secondary-color) !important;
+  border: 1px solid rgba(0,0,0,.08) !important;
+  color: #5a3c1c !important;
+  z-index: 1065 !important; /* above offcanvas inner content */
+}
+#mobileOffcanvasNav .language-dropdown .dropdown-menu-peach .dropdown-item { color: #5a3c1c !important; }
+#mobileOffcanvasNav .language-dropdown .dropdown-menu-peach .dropdown-item:hover { background: var(--secondary-dark) !important; color: #4a2f14 !important; }
+#mobileOffcanvasNav .language-dropdown { position: relative; z-index: 1060; }
+
+
+/* Ensure peach dropdown captures taps above content on mobile */
+@media (max-width: 767.98px){
+  #mobileOffcanvasNav .language-dropdown, #mobileOffcanvasNav .language-dropdown .dropdown-menu-peach { position: relative; z-index: 1070 !important; }
+}
+
+
+/* Ensure language dropdown is always clickable and above everything */
+#mobileOffcanvasNav .offcanvas-body { position: relative; z-index: 1050; }
+#mobileOffcanvasNav .language-dropdown { position: relative; z-index: 1070; }
+
+/* Overlay blocker when language dropdown is open (prevents clicks behind) */
+#mobileOffcanvasNav .language-blocker{ position:absolute; inset:0; z-index:1062; background:transparent; }
+#mobileOffcanvasNav .language-dropdown .dropdown-menu-peach{ z-index:1065 !important; }
+
+#mobileOffcanvasNav .language-dropdown .dropdown-menu-peach {
+  position: absolute; left: 0; right: 0; top: 100%;
+  z-index: 1085 !important;
+  pointer-events: auto !important;
+
+/* Force topmost stacking on mobile for offcanvas and language dropdown */
+@media (max-width: 991.98px){
+  #mobileOffcanvasNav { z-index: 2000 !important; }
+  #mobileOffcanvasNav .language-dropdown .dropdown-menu-peach { z-index: 9999 !important; }
+  #mobileOffcanvasNav .language-blocker { z-index: 9998 !important; }
+  #mobileOffcanvasNav .dropdown-menu-peach .dropdown-item { position: relative; z-index: 10000; }
+}
+
+}
+#mobileOffcanvasNav .language-dropdown .dropdown-menu-peach .dropdown-item { pointer-events: auto !important; }
+
+
+/* Social icons inside offcanvas */
+#mobileOffcanvasNav .social { color: var(--secondary-color); }
+#mobileOffcanvasNav .social a { width: 38px; height: 38px; border-radius: 50%; display:inline-flex; align-items:center; justify-content:center; background: rgba(255,255,255,.12); color: var(--secondary-color); transition: all .2s ease; }
+#mobileOffcanvasNav .social a:hover { background: rgba(255,255,255,.22); transform: translateY(-1px); }
+#mobileOffcanvasNav .social a svg { width: 18px; height: 18px; display:block; fill: currentColor; }
+
+
+/* Larger touch area and centered social block */
+#mobileOffcanvasNav .social { gap: 14px; }
+#mobileOffcanvasNav .social a { width: 44px; height: 44px; }
+#mobileOffcanvasNav .social a svg { width: 20px; height: 20px; }
+@media (max-width: 575.98px){
+  #mobileOffcanvasNav .social { padding-bottom: 10px; }
+}
+
+/* Offcanvas scrollbar in peach */
+#mobileOffcanvasNav .offcanvas-body { scrollbar-color: var(--secondary-color) rgba(255,255,255,0.15); }
+#mobileOffcanvasNav .offcanvas-body::-webkit-scrollbar { width: 10px; height: 10px; }
+#mobileOffcanvasNav .offcanvas-body::-webkit-scrollbar-track { background: rgba(255,255,255,0.12); border-radius: 10px; }
+#mobileOffcanvasNav .offcanvas-body::-webkit-scrollbar-thumb { background: var(--secondary-color); border-radius: 10px; border: 2px solid rgba(0,0,0,0.05); }
+#mobileOffcanvasNav .offcanvas-body::-webkit-scrollbar-thumb:hover { background: var(--secondary-dark); }
+
+/* Horizontal scrollbar (if any) */
+#mobileOffcanvasNav .offcanvas-body { overflow: auto; }
 

@@ -246,6 +246,57 @@ function initNavbar() {
       buildOffcanvasContent();
     });
 
+    // Inject animated leaves inside offcanvas (similar to About hero)
+    offcanvasEl.addEventListener('shown.bs.offcanvas', function(){
+      try {
+        const container = document.getElementById('mobileNavLeaves');
+        if (!container || container.childElementCount > 0) return;
+        const prefersReduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+        if (prefersReduced) return;
+        const COUNT = 8;
+        for (let i = 0; i < COUNT; i++) {
+          const leaf = document.createElement('i');
+          leaf.className = 'fas fa-leaf leaf';
+          const top = (Math.random() * 92) + 2;
+          leaf.style.top = top.toFixed(2) + '%';
+          const fromLeft = Math.random() < 0.5;
+          const offset = -30 - Math.random() * 70;
+          if (fromLeft) { leaf.style.left = offset.toFixed(0) + 'px'; leaf.style.animationName = 'leafDrift'; }
+          else { leaf.style.right = offset.toFixed(0) + 'px'; leaf.style.animationName = 'leafDriftReverse'; }
+          const duration = 16 + Math.random() * 12;
+          leaf.style.animationDuration = duration.toFixed(2) + 's';
+          const delay = Math.random() * 10;
+          leaf.style.animationDelay = delay.toFixed(2) + 's';
+          const size = 0.8 + Math.random() * 0.9;
+          leaf.style.fontSize = size.toFixed(2) + 'rem';
+          container.appendChild(leaf);
+        }
+      } catch(_){ }
+
+      // Explicit toggle for the built-in Products collapse
+      offcanvasEl.addEventListener('click', function(evt){
+        const tgl = evt.target.closest('#mobileOffcanvasNav .dropdown-toggle.nav-link');
+        if (!tgl) return;
+        evt.preventDefault();
+        const panel = document.getElementById('mobileProducts');
+        if (!panel) return;
+        panel.classList.toggle('show');
+        tgl.setAttribute('aria-expanded', panel.classList.contains('show'));
+      });
+
+    });
+
+    // Global delegation fallback for Products toggle (works in all cases)
+    document.addEventListener('click', function(ev){
+      const tgl = ev.target.closest('#mobileOffcanvasNav [aria-controls="mobileProducts"]');
+      if (!tgl) return;
+      ev.preventDefault();
+      const panel = document.getElementById('mobileProducts');
+      if (!panel) return;
+      panel.classList.toggle('show');
+      tgl.setAttribute('aria-expanded', panel.classList.contains('show'));
+    });
+
     // Attach to the toggler if present (for non data-bs flows)
     if (toggler) {
       toggler.addEventListener('click', openMobileNav);
@@ -257,11 +308,34 @@ function initNavbar() {
       openMobileNav(ev);
     });
 
-    // Close offcanvas when any nav link is clicked
+    // Close offcanvas when a nav link is clicked (ignore language dropdown)
     offcanvasEl.addEventListener('click', function(e) {
-      const link = e.target.closest('a.nav-link, a.dropdown-item, .btn');
+      // If click is inside language dropdown, don't close or bubble further
+      if (e.target.closest('.language-dropdown .dropdown-menu, .language-dropdown .dropdown-toggle')) {
+        e.stopPropagation();
+        return;
+      }
+      const link = e.target.closest('a.nav-link, a.dropdown-item');
       if (link) bsOffcanvas.hide();
     });
+
+    // Create a click-blocking transparent layer while language dropdown is open
+    const langDropdown = offcanvasEl.querySelector('.language-dropdown');
+    if (langDropdown) {
+      langDropdown.addEventListener('show.bs.dropdown', function(){
+        try {
+          // remove any existing blockers
+          offcanvasEl.querySelectorAll('.language-blocker').forEach(el=>el.remove());
+          const blocker = document.createElement('div');
+          blocker.className = 'language-blocker';
+          offcanvasEl.appendChild(blocker);
+        } catch(_) {}
+      });
+      langDropdown.addEventListener('hide.bs.dropdown', function(){
+        offcanvasEl.querySelectorAll('.language-blocker').forEach(el=>el.remove());
+      });
+    }
+
 
     // Hide bootstrap collapse if it was open
     document.addEventListener('shown.bs.offcanvas', function(evt){ if (evt.target === offcanvasEl) collapse.classList.remove('show'); });
