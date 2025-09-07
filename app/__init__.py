@@ -201,6 +201,8 @@ def create_app(config_name=None):
                 'Logistics': 'اللوجستيات',
                 'Certified': 'معتمد',
                 'About Us': 'من نحن',
+                'Calendar': 'التقويم',
+
                 'Get Quote': 'احصل على عرض سعر',
                 'Request a Quote': 'طلب عرض سعر',
                 'View Products': 'عرض المنتجات',

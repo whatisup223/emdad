@@ -37,6 +37,10 @@ msgstr "الأخبار"
 msgid "Gallery"
 msgstr "المعرض"
 
+
+msgid "Calendar"
+msgstr "التقويم"
+
 msgid "Users"
 msgstr "المستخدمين"
 
