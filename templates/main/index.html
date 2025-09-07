@@ -435,6 +435,52 @@
                         </div>
                     </div>
 
+                    <!-- Action Button: Learn More About Us -->
+                    <style>
+                      .about-learn-btn {
+                        background: linear-gradient(135deg, #689b8a, #2c5f4f);
+                        color: #fff !important;
+                        border: none;
+                        padding: 15px 30px;
+                        border-radius: 12px;
+                        font-weight: 600;
+                        display: inline-flex;
+                        align-items: center;
+                        gap: 10px;
+                        font-size: 1rem;
+                        transition: all 0.3s ease;
+                        box-shadow: 0 4px 15px rgba(104, 155, 138, 0.3);
+                        text-decoration: none;
+                      }
+                      .about-learn-btn:hover,
+                      .about-learn-btn:focus {
+                        color: #2c2c2c !important;
+                        background: linear-gradient(135deg, #7fb4a3, #377565);
+                        box-shadow: 0 8px 20px rgba(249, 203, 153, 0.55);
+                        outline: none;
+                      }
+                      .about-learn-btn .peach-glow {
+                        background-color: #f9cb99;
+                        width: 8px;
+                        height: 8px;
+                        border-radius: 50%;
+                        display: inline-block;
+                        box-shadow: 0 0 0 rgba(249, 203, 153, 0);
+                        transition: box-shadow 0.3s ease;
+                      }
+                      .about-learn-btn:hover .peach-glow {
+                        box-shadow: 0 0 12px rgba(249, 203, 153, 0.9);
+                      }
+                    </style>
+                    <div class="about-action" style="position: relative; z-index: 9999 !important; margin-top: 2rem;">
+                        <a href="{{ url_for('main.about') }}" class="about-learn-btn">
+                            <span class="peach-glow"></span>
+                            <span>{{ _('Learn More About Us') }}</span>
+                            <i class="fas fa-arrow-right"></i>
+                        </a>
+                    </div>
+
+
                 </div>
             </div>
 

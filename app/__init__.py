@@ -422,6 +422,8 @@ def create_app(config_name=None):
                 'Uncategorized': 'بدون تصنيف',
                 'Reports': 'التقارير'
 ,
+                'Learn More About Us': 'تعرف علينا أكثر'
+,
                 'In Progress': 'قيد التنفيذ',
                 'Completed': 'مكتمل'
             }
