@@ -116,6 +116,14 @@
                     </a>
                 </li>
 
+
+                <li class="nav-item">
+                    <a class="nav-link {{ 'active' if request.endpoint == 'admin.calendar_admin' or 'calendar_' in request.endpoint }}" href="{{ url_for('admin.calendar_admin') }}">
+                        <i class="fas fa-calendar-alt"></i>
+                        {{ "التقويم" if current_language == "ar" else "Calendar" }}
+                    </a>
+                </li>
+
                 <li class="nav-item">
                     <a class="nav-link {{ 'active' if 'rfq' in request.endpoint }}" href="{{ url_for('admin.rfqs') }}">
                         <i class="fas fa-envelope"></i>

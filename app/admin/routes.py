@@ -138,6 +138,69 @@ def dashboard():
                          recent_logs=recent_logs)
 
 # Categories Management
+
+@bp.route('/calendar')
+@login_required
+def calendar_admin():
+    """Admin Seasonality Calendar management."""
+    products = Product.query.filter_by(status='active').order_by(Product.sort_order, Product.name_en).all()
+    categories = Category.query.filter_by(is_active=True).order_by(Category.sort_order).all()
+    return render_template('admin/calendar.html', products=products, categories=categories)
+
+@bp.route('/calendar/<int:product_id>/save', methods=['POST'])
+@editor_required
+def calendar_save(product_id):
+    """Save seasonality JSON for a product."""
+    import json
+    product = Product.query.get_or_404(product_id)
+    payload = request.get_json(silent=True) or {}
+    # sanitize: ensure arrays of ints 1..12
+    def clean(arr):
+        try:
+            return sorted({m for m in (arr or []) if isinstance(m, int) and 1 <= m <= 12})
+        except Exception:
+            return []
+    # Backward-compatible save format:
+    # If payload has 'fresh' or 'iqf', store as nested; else treat payload as fresh-only.
+    if ('fresh' in payload) or isinstance(payload.get('iqf'), dict):
+        fresh = payload.get('fresh') or {}
+        iqf_payload = payload.get('iqf')
+        # Normalize IQF payload which can be dict or list
+        if isinstance(iqf_payload, dict):
+            yr = bool(iqf_payload.get('year_round'))
+            iqf_months = [] if yr else clean(iqf_payload.get('months'))
+        elif isinstance(iqf_payload, list):
+            yr = False
+            iqf_months = clean(iqf_payload)
+        else:
+            yr = False
+            iqf_months = []
+        data = {
+            'fresh': {
+                'peak': clean(fresh.get('peak')),
+                'available': clean(fresh.get('available')),
+                'limited': clean(fresh.get('limited')),
+                'off': clean(fresh.get('off')),
+                'iqf': clean(fresh.get('iqf'))
+            },
+            'iqf': {
+                'year_round': yr,
+                'months': iqf_months
+            }
+        }
+    else:
+        data = {
+            'peak': clean(payload.get('peak')),
+            'available': clean(payload.get('available')),
+            'limited': clean(payload.get('limited')),
+            'off': clean(payload.get('off')),
+            'iqf': clean(payload.get('iqf'))
+        }
+
+    product.seasonality = json.dumps(data)
+    db.session.commit()
+    return jsonify({'ok': True, 'nested': ('fresh' in payload or 'iqf' in payload)})
+
 @bp.route('/categories')
 @login_required
 def categories():

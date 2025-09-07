@@ -54,6 +54,67 @@ def about():
     return render_template('main/about.html')
 
 
+@bp.route('/calendar')
+def calendar():
+    """Public Seasonality Calendar page."""
+    from app.models import Product, Category
+    from flask import request
+    language = request.args.get('lang') or ('ar' if session.get('language') == 'ar' else 'en')
+    category_key = request.args.get('category')
+    q = (Product.query
+         .filter_by(status='active')
+         .order_by(Product.sort_order, Product.name_en))
+    categories = Category.query.filter_by(is_active=True, parent_id=None).order_by(Category.sort_order).all() or []
+    if category_key:
+        from app.models import Category as Cat
+        cat = Cat.query.filter_by(key=category_key, is_active=True).first()
+        if cat:
+            q = q.filter_by(category_id=cat.id)
+    products = q.all()
+    # Build a simple normalized seasonality map per product for the template
+    def normalize(prod):
+        raw = prod.get_seasonality() or {}
+        data_lang = prod.get_seasonality_lang(language) or {}
+        # Unwrap 'fresh' if present in language-scoped data
+        base = data_lang.get('fresh') if isinstance(data_lang, dict) and 'fresh' in data_lang else data_lang
+        # Normalize five states from base
+        peak = sorted(set((base.get('peak') or []))) if isinstance(base, dict) else []
+        available = sorted(set((base.get('available') or []))) if isinstance(base, dict) else []
+        limited = sorted(set((base.get('limited') or []))) if isinstance(base, dict) else []
+        off = sorted(set((base.get('off') or []))) if isinstance(base, dict) else []
+        # IQF months can live under base['iqf'] (list) or raw['iqf'] (list or dict)
+        iqf_months = []
+        if isinstance(base, dict) and isinstance(base.get('iqf'), list):
+            iqf_months = base.get('iqf')
+        else:
+            iqf = raw.get('iqf') if isinstance(raw, dict) else None
+            if isinstance(iqf, list):
+                iqf_months = iqf
+            elif isinstance(iqf, dict):
+                if iqf.get('year_round'):
+                    iqf_months = [1,2,3,4,5,6,7,8,9,10,11,12]
+                elif isinstance(iqf.get('months'), list):
+                    iqf_months = iqf.get('months')
+        return {
+            'id': prod.id,
+            'name': prod.get_name(language),
+            'slug': prod.slug,
+            'category_key': prod.category.key if prod.category else None,
+            'peak': peak,
+            'available': available,
+            'limited': limited,
+            'off': off,
+            'iqf': sorted(set(iqf_months))
+        }
+    items = [normalize(p) for p in products]
+    months = [1,2,3,4,5,6,7,8,9,10,11,12]
+    # Inject iqf sub-structure if exists
+    for it, p in zip(items, products):
+        data = p.get_seasonality() or {}
+        it['iqf'] = data.get('iqf', {})
+    return render_template('main/calendar.html', items=items, months=months, categories=categories, current_category=category_key)
+
+
 @bp.route('/products')
 def products():
     """Products listing page."""

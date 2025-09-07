@@ -1,0 +1,119 @@
+{% extends "base.html" %}
+
+{% block title %}{% if is_rtl %}تقويم المواسم{% else %}Seasonality Calendar{% endif %} - {{ SITE_NAME }}{% endblock %}
+
+{% block content %}
+<section class="py-5">
+  <div class="container">
+    <div class="d-flex align-items-center justify-content-between mb-4 flex-wrap gap-2">
+      <div>
+        <div class="section-badge badge bg-gradient-primary text-white px-4 py-2 rounded-pill fs-6 fw-semibold">
+          <i class="fas fa-calendar-alt me-2"></i>{% if is_rtl %}التقويم{% else %}Calendar{% endif %}
+        </div>
+        <h1 class="section-heading {{ 'arabic-heading' if is_rtl else 'english-heading' }} mb-0">
+          {% if is_rtl %}مواسم توفر المنتجات{% else %}Product Seasonality{% endif %}
+        </h1>
+      </div>
+      <div class="d-flex gap-2">
+        <form method="get" class="d-flex gap-2">
+          <select name="category" class="form-select" onchange="this.form.submit()" style="min-width: 200px;">
+            <option value="">{% if is_rtl %}كل الفئات{% else %}All Categories{% endif %}</option>
+            {% for c in categories %}
+              <option value="{{ c.key }}" {{ 'selected' if current_category==c.key else '' }}>{{ c.get_name(current_language) }}</option>
+            {% endfor %}
+          </select>
+          <input type="search" name="q" value="{{ request.args.get('q','') }}" placeholder="{% if is_rtl %}ابحث عن منتج{% else %}Search product{% endif %}" class="form-control" style="min-width:220px;">
+          <button class="btn btn-primary" type="submit"><i class="fas fa-search me-1"></i>{% if is_rtl %}بحث{% else %}Search{% endif %}</button>
+        </form>
+      </div>
+    </div>
+
+    <style>
+      .calendar-grid { overflow:auto; border-radius: 16px; box-shadow: 0 8px 30px rgba(0,0,0,.08); border:1px solid #e9ecef; }
+      .calendar-table { width:100%; border-collapse: separate; border-spacing:0; }
+      .calendar-table thead th { position: sticky; top:0; z-index:2; background:#fff; box-shadow: inset 0 -1px 0 #e9ecef; }
+      .calendar-table th, .calendar-table td { padding:.75rem; white-space:nowrap; }
+      .product-col { position: sticky; left:0; background:#fff; z-index:1; box-shadow: inset -1px 0 0 #e9ecef; min-width: 220px; }
+      .month-cell { width: 64px; min-width:64px; height: 30px; border-radius: 10px; border:1px solid transparent; background:#f8f9fa; position: relative; box-shadow: inset 0 1px 0 rgba(255,255,255,.18), 0 1px 2px rgba(0,0,0,.06); transition: transform .15s ease, box-shadow .15s ease, filter .15s ease; }
+/* Fancy tooltip on hover */
+.month-cell[data-tooltip]:hover{ transform: translateY(-1px); box-shadow: inset 0 1px 0 rgba(255,255,255,.18), 0 6px 16px rgba(0,0,0,.12); z-index:1001; }
+.month-cell[data-tooltip]:hover::after{ content: attr(data-tooltip); position:absolute; left:50%; transform:translateX(-50%); bottom:calc(100% + 10px); background:#fff; color:#212529; padding:8px 12px; border-radius:10px; border:1px solid #e9ecef; white-space:nowrap; box-shadow:0 10px 26px rgba(0,0,0,.14); z-index:1002; font-size:12px; }
+.month-cell[data-tooltip]:hover::before{ content:""; position:absolute; left:50%; transform:translateX(-50%); bottom:calc(100% + 2px); border:6px solid transparent; border-bottom-color:#fff; filter:drop-shadow(0 1px 0 #e9ecef); }
+/* Accent border by state */
+.state-peak[data-tooltip]:hover::after{ border-color:#2c5f4f; }
+.state-available[data-tooltip]:hover::after{ border-color:#689b8a; }
+.state-limited[data-tooltip]:hover::after{ border-color:#f9cb99; }
+.state-off[data-tooltip]:hover::after{ border-color:#adb5bd; }
+.state-iqf[data-tooltip]:hover::after{ border-color:#5bc0de; }
+      .state-peak { background:linear-gradient(180deg,#2c5f4f,#244d40) !important; border-color:#244d40 !important; } /* dark green */
+      .state-available { background:linear-gradient(180deg,#689b8a,#567f72) !important; border-color:#567f72 !important; } /* primary green */
+      .state-limited { background:linear-gradient(180deg,#f9cb99,#f4b56f) !important; border-color:#f4b56f !important; } /* peach */
+      .state-off { background:linear-gradient(180deg,#adb5bd,#8f9aa3) !important; border-color:#8f9aa3 !important; } /* gray */
+      .state-iqf { background:linear-gradient(180deg,#5bc0de,#3aa9c7) !important; border-color:#3aa9c7 !important; } /* frozen */
+      .month-cell:hover { box-shadow: 0 0 0 3px rgba(249,203,153,.35); }
+      .product-name a { color:#2c5f4f; font-weight:600; text-decoration:none; }
+      .product-name a:hover { text-decoration:underline; }
+      .legend .dot { width:14px; height:14px; border-radius:4px; display:inline-block; margin-inline-end:.5rem; vertical-align:middle; }
+      .legend .peak { background:#2c5f4f; }
+      .legend .available { background:#689b8a; }
+      .legend .limited { background:#f9cb99; }
+      .legend .off { background:#adb5bd; }
+    </style>
+
+    <!-- Legend -->
+    <div class="legend d-flex align-items-center gap-3 mb-3 flex-wrap">
+      <span><span class="dot peak"></span>{% if is_rtl %}ذروة{% else %}Peak{% endif %}</span>
+      <span><span class="dot available"></span>{% if is_rtl %}متاح{% else %}Available{% endif %}</span>
+      <span><span class="dot limited"></span>{% if is_rtl %}محدود{% else %}Limited{% endif %}</span>
+      <span><span class="dot off"></span>{% if is_rtl %}خارج الموسم{% else %}Off-season{% endif %}</span>
+      <span><span class="dot" style="background:#5bc0de"></span>{% if is_rtl %}مجمّد{% else %}Frozen{% endif %}</span>
+
+    </div>
+
+    <div class="calendar-grid">
+      <table class="calendar-table table align-middle mb-0">
+        <thead>
+          <tr>
+            <th class="product-col">{% if is_rtl %}المنتج{% else %}Product{% endif %}</th>
+            {% set months_names_en = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'] %}
+            {% set months_names_ar = ['يناير','فبراير','مارس','أبريل','مايو','يونيو','يوليو','أغسطس','سبتمبر','أكتوبر','نوفمبر','ديسمبر'] %}
+            {% for m in months %}
+              <th>{{ months_names_ar[m-1] if is_rtl else months_names_en[m-1] }}</th>
+            {% endfor %}
+          </tr>
+        </thead>
+        <tbody>
+          {% set q = request.args.get('q','')|lower %}
+          {% for item in items %}
+            {% if not q or (item.name or '')|lower is string and q in (item.name or '')|lower %}
+            <tr>
+              <th scope="row" class="product-col product-name">
+                <a href="{{ url_for('main.product_detail', slug=item.slug) }}">{{ item.name }}</a>
+              </th>
+              {% for m in months %}
+                {% set state = 'off' %}
+                {% if m in item.peak %}{% set state = 'peak' %}
+                {% elif m in item.available %}{% set state = 'available' %}
+                {% elif m in item.limited %}{% set state = 'limited' %}
+                {% elif item.iqf and (item.iqf.year_round if item.iqf.year_round is defined else false) %}{% set state = 'iqf' %}
+                {% elif item.iqf and item.iqf.months is defined and (m in item.iqf.months) %}{% set state = 'iqf' %}
+                {% elif item.iqf and (m in item.iqf) %}{% set state = 'iqf' %}
+                {% endif %}
+                <td>
+                  {% set labels_en = {'peak':'Peak','available':'Available','limited':'Limited','off':'Off-season','iqf':'Frozen'} %}
+                  {% set labels_ar = {'peak':'ذروة','available':'متاح','limited':'محدود','off':'خارج الموسم','iqf':'مجمّد'} %}
+                  {% set month_name = months_names_ar[m-1] if is_rtl else months_names_en[m-1] %}
+                  {% set state_label = (labels_ar if is_rtl else labels_en)[state] %}
+                  <div class="month-cell state-{{ state }}" data-tooltip="{{ item.name }} — {{ month_name }} • {{ state_label }}" aria-label="{{ item.name }} — {{ month_name }} • {{ state_label }}"></div>
+                </td>
+              {% endfor %}
+            </tr>
+            {% endif %}
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </div>
+</section>
+{% endblock %}
+
