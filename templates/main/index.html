@@ -201,6 +201,11 @@
         z-index: 1 !important;
     }
 
+    /* Ensure image column overlays are contained within right column */
+    .about-section .single-image-wrapper { position: relative !important; }
+    .about-section .about-single-image { position: relative !important; }
+
+
     /* Export Animation Styles */
     .export-animations {
         position: absolute;
@@ -435,75 +440,17 @@
                         </div>
                     </div>
 
-                    <!-- Action Button: Learn More About Us -->
-                    <style>
-                      .about-learn-btn {
-                        background: linear-gradient(135deg, #689b8a, #2c5f4f);
-                        color: #fff !important;
-                        border: none;
-                        padding: 15px 30px;
-                        border-radius: 12px;
-                        font-weight: 600;
-                        display: inline-flex;
-                        align-items: center;
-                        gap: 10px;
-                        font-size: 1rem;
-                        transition: all 0.3s ease;
-                        box-shadow: 0 4px 15px rgba(104, 155, 138, 0.3);
-                        text-decoration: none;
-                      }
-                      .about-learn-btn:hover,
-                      .about-learn-btn:focus {
-                        color: #2c2c2c !important;
-                        background: linear-gradient(135deg, #7fb4a3, #377565);
-                        box-shadow: 0 8px 20px rgba(249, 203, 153, 0.55);
-                        outline: none;
-                      }
-                      .about-learn-btn .peach-glow {
-                        background-color: #f9cb99;
-                        width: 8px;
-                        height: 8px;
-                        border-radius: 50%;
-                        display: inline-block;
-                        box-shadow: 0 0 0 rgba(249, 203, 153, 0);
-                        transition: box-shadow 0.3s ease;
-                      }
-                      .about-learn-btn:hover .peach-glow {
-                        box-shadow: 0 0 12px rgba(249, 203, 153, 0.9);
-                      }
-                    </style>
 
-                        <!-- Ensure overlays don't block clicks -->
-                        <style>
-                          .about-section, .about-content-wrapper, .about-action { position: relative; }
-                          .about-action { z-index: 100000; }
-                          /* Disable pointer events on decorative animations so clicks pass through */
-                          .about-section .export-animations,
-                          .about-section .export-animations * {
-                            pointer-events: none !important;
-                          }
-                        </style>
+
 
                         <style>
-                          /* Further ensure no decorative overlays capture clicks */
-                          .hero-export-animations,
-                          .hero-export-animations *,
-                          .agricultural-pattern,
-                          .floating-agricultural-icons,
-                          .floating-agricultural-icons * {
-                            pointer-events: none !important;
-                          }
-                          .about-learn-btn { pointer-events: auto !important; position: relative; z-index: 100001; }
+                          /* Create new stacking context for left column so it sits above any siblings */
+                          .about-section .col-lg-6[data-aos="fade-right"] { isolation: isolate !important; z-index: 100000 !important; }
                         </style>
 
 
-                    <div class="about-action" style="position: relative; z-index: 9999 !important; margin-top: 2rem;">
-                        <a href="{{ url_for('main.about') }}" class="about-learn-btn">
-                            <span class="peach-glow"></span>
-                            <span>{{ _('Learn More About Us') }}</span>
-                            <i class="fas fa-arrow-right"></i>
-                        </a>
-                    </div>
+
+
 
 
                 </div>
@@ -522,23 +469,6 @@
                              alt="About Emdad Global" class="single-about-image">
                         {% endif %}
 
-                        <!-- START_EXPORT_ANIMATIONS (reversible: say "تراجع" to remove) -->
-                        <div class="export-animations">
-                            <!-- Flying Planes -->
-                            <div class="plane plane-1">
-                                <i class="fas fa-plane"></i>
-                            </div>
-                            <div class="plane plane-2">
-                                <i class="fas fa-plane"></i>
-                            </div>
-
-                            <!-- Globe with Pulse -->
-                            <div class="globe globe-1">
-                                <i class="fas fa-globe-americas"></i>
-                                <div class="pulse-ring"></div>
-                            </div>
-                        </div>
-                        <!-- END_EXPORT_ANIMATIONS -->
                     </div>
 
                 </div>

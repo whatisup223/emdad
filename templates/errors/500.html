@@ -1,6 +1,6 @@
 {% extends "base.html" %}
 
-{% block title %}Server Error - {{ SITE_NAME }}{% endblock %}
+{% block title %}{% if is_rtl %}خطأ في الخادم - {{ SITE_NAME }}{% else %}Server Error - {{ SITE_NAME }}{% endif %}{% endblock %}
 
 {% block content %}
 <section class="py-5">
@@ -10,16 +10,16 @@
                 <div class="py-5">
                     <i class="fas fa-server fa-5x text-danger mb-4"></i>
                     <h1 class="display-4 mb-3">500</h1>
-                    <h2 class="mb-4">Internal Server Error</h2>
+                    <h2 class="mb-4">{% if is_rtl %}خطأ داخلي في الخادم{% else %}Internal Server Error{% endif %}</h2>
                     <p class="lead text-muted mb-4">
-                        Something went wrong on our end. We're working to fix it.
+                        {% if is_rtl %}حدث خطأ من جانبنا. نعمل على إصلاحه.{% else %}Something went wrong on our end. We're working to fix it.{% endif %}
                     </p>
                     <div class="d-flex gap-3 justify-content-center">
                         <a href="{{ url_for('main.index') }}" class="btn btn-primary">
-                            <i class="fas fa-home me-2"></i>Go Home
+                            <i class="fas fa-home me-2"></i>{% if is_rtl %}الذهاب إلى الرئيسية{% else %}Go Home{% endif %}
                         </a>
                         <a href="{{ url_for('main.contact') }}" class="btn btn-outline-primary">
-                            <i class="fas fa-envelope me-2"></i>Report Issue
+                            <i class="fas fa-envelope me-2"></i>{% if is_rtl %}الإبلاغ عن مشكلة{% else %}Report Issue{% endif %}
                         </a>
                     </div>
                 </div>
