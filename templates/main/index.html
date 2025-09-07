@@ -260,6 +260,7 @@
         left: 50%;
         width: 40px;
         height: 40px;
+
         border: 2px solid #f9cb99;
         border-radius: 50%;
         transform: translate(-50%, -50%);
@@ -746,6 +747,33 @@
                                     {{ product.category.get_name(current_language) if product.category else _('Premium') }}
                                 </span>
                             </div>
+
+                                <!-- Monthly availability chips -->
+                                {% set season = (product.get_seasonality_lang(current_language) or {}) %}
+                                {% if 'fresh' in season %}{% set season = season['fresh'] %}{% endif %}
+                                {% set months_names_en = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'] %}
+                                {% set months_names_ar = ['يناير','فبراير','مارس','أبريل','مايو','يونيو','يوليو','أغسطس','سبتمبر','أكتوبر','نوفمبر','ديسمبر'] %}
+                                {% set labels_en = {'peak':'Peak','available':'Available','limited':'Limited','off':'Off-season','iqf':'Frozen'} %}
+                                {% set labels_ar = {'peak':'ذروة','available':'متاح','limited':'محدود','off':'خارج الموسم','iqf':'مجمّد'} %}
+                                <div class="d-flex gap-1 flex-wrap mb-3">
+                                  {% set peak = season.get('peak') or [] %}
+                                  {% set available = season.get('available') or [] %}
+                                  {% set limited = season.get('limited') or [] %}
+                                  {% set iqf = season.get('iqf') or [] %}
+                                  {% for idx in range(0,12) %}
+                                    {% set m = idx+1 %}
+                                    {% set st = 'off' %}
+                                    {% if m in peak %}{% set st='peak' %}
+                                    {% elif m in available %}{% set st='available' %}
+                                    {% elif m in limited %}{% set st='limited' %}
+                                    {% elif m in iqf %}{% set st='iqf' %}
+                                    {% endif %}
+                                    {% set label = (labels_ar if is_rtl else labels_en)[st] %}
+                                    {% set m_name = months_names_ar[idx] if is_rtl else months_names_en[idx] %}
+                                    <span class="rounded-pill px-2 py-1 border small state-chip state-{{ st }}" title="{{ product.get_name(current_language) }} — {{ m_name }} • {{ label }}"></span>
+                                  {% endfor %}
+                                </div>
+
 
                             <h5 class="card-heading {{ 'arabic-heading' if current_language == 'ar' else 'english-heading' }} mb-3">{{ product.get_name(current_language) }}</h5>
                             <p class="card-text {{ 'arabic-text' if current_language == 'ar' else 'english-text' }} text-muted mb-4">

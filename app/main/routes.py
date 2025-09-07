@@ -112,8 +112,60 @@ def calendar():
     for it, p in zip(items, products):
         data = p.get_seasonality() or {}
         it['iqf'] = data.get('iqf', {})
-    return render_template('main/calendar.html', items=items, months=months, categories=categories, current_category=category_key)
+    # Counts for header filter info
+    try:
+        total_count = Product.query.filter_by(status='active').count()
+    except Exception:
+        total_count = len(items)
+    filtered_count = len(products)
+    # Featured products for calendar footer section (6 items)
+    try:
+        featured_products = Product.query.filter_by(status='active', show_on_homepage=True).order_by(Product.sort_order, Product.name_en).limit(6).all() or []
+    except Exception:
+        featured_products = products[:6]
+    return render_template('main/calendar.html', items=items, months=months, categories=categories, current_category=category_key, total_count=total_count, filtered_count=filtered_count, featured_products=featured_products)
 
+
+def _build_seasonality_view(prod, language):
+    """Return a normalized seasonality view for UI strips.
+    Output keys: months_state (list index 0..11), current_state (str)
+    """
+    from datetime import datetime
+    raw = prod.get_seasonality() or {}
+    data_lang = prod.get_seasonality_lang(language) or {}
+    base = data_lang.get('fresh') if isinstance(data_lang, dict) and 'fresh' in data_lang else data_lang
+    # Extract lists
+    peak = set((base.get('peak') or [])) if isinstance(base, dict) else set()
+    available = set((base.get('available') or [])) if isinstance(base, dict) else set()
+    limited = set((base.get('limited') or [])) if isinstance(base, dict) else set()
+    # IQF months detection (list on base or raw; dict with year_round)
+    iqf_months = set()
+    if isinstance(base, dict) and isinstance(base.get('iqf'), list):
+        iqf_months = set(base.get('iqf'))
+    else:
+        iqf = raw.get('iqf') if isinstance(raw, dict) else None
+        if isinstance(iqf, list):
+            iqf_months = set(iqf)
+        elif isinstance(iqf, dict):
+            if iqf.get('year_round'):
+                iqf_months = set(range(1,13))
+            elif isinstance(iqf.get('months'), list):
+                iqf_months = set(iqf.get('months'))
+    months_state = []
+    for m in range(1,13):
+        if m in peak:
+            months_state.append('peak')
+        elif m in available:
+            months_state.append('available')
+        elif m in limited:
+            months_state.append('limited')
+        elif m in iqf_months:
+            months_state.append('iqf')
+        else:
+            months_state.append('off')
+    cur_month = datetime.utcnow().month
+    current_state = months_state[cur_month-1]
+    return {'months_state': months_state, 'current_state': current_state}
 
 @bp.route('/products')
 def products():
@@ -145,15 +197,24 @@ def products():
     # Get all categories for filter menu
     categories = Category.query.filter_by(is_active=True, parent_id=None).order_by(Category.sort_order).all() or []
 
+    # Build mini seasonality map for cards
+    language = 'ar' if session.get('language') == 'ar' else 'en'
+    seasons_map = {p.id: _build_seasonality_view(p, language) for p in (products.items or [])}
+
     return render_template('main/products.html',
                          products=products,
                          categories=categories,
-                         selected_category=selected_category)
+                         selected_category=selected_category,
+                         seasons_map=seasons_map)
 
 @bp.route('/product/<slug>')
 def product_detail(slug):
     """Product detail page."""
     product = Product.query.filter_by(slug=slug, status='active').first_or_404()
+
+    # Build seasonality for detail page
+    language = 'ar' if session.get('language') == 'ar' else 'en'
+    season_view = _build_seasonality_view(product, language)
 
     # Get related products from same category
     related_products = Product.query.filter_by(
@@ -163,7 +224,8 @@ def product_detail(slug):
 
     return render_template('main/product_detail.html',
                          product=product,
-                         related_products=related_products)
+                         related_products=related_products,
+                         season_view=season_view)
 
 @bp.route('/certifications')
 def certifications():

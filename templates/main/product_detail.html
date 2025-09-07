@@ -209,6 +209,28 @@
                     <p class="lead text-muted mb-4 {{ 'arabic-text' if is_rtl else 'english-text' }}">{{ (product.get_short_description(current_language) if product.get_short_description is defined else product.get_short_description()) }}</p>
                     {% endif %}
 
+                    <!-- Seasonality strip -->
+                    {% if season_view %}
+                    <div class="mb-4">
+                      <div class="d-flex align-items-center gap-2 small text-muted mb-2">
+                        <i class="fas fa-calendar-alt"></i>
+                        <span>{% if is_rtl %}التوفر حسب الأشهر{% else %}Monthly availability{% endif %}</span>
+                      </div>
+                      <div class="d-flex gap-1 flex-wrap">
+                        {% set labels_en = {'peak':'Peak','available':'Available','limited':'Limited','off':'Off-season','iqf':'Frozen'} %}
+                        {% set labels_ar = {'peak':'ذروة','available':'متاح','limited':'محدود','off':'خارج الموسم','iqf':'مجمّد'} %}
+                        {% set months_names_en = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'] %}
+                        {% set months_names_ar = ['يناير','فبراير','مارس','أبريل','مايو','يونيو','يوليو','أغسطس','سبتمبر','أكتوبر','نوفمبر','ديسمبر'] %}
+                        {% for st in season_view.months_state %}
+                          {% set idx = loop.index0 %}
+                          {% set label = (labels_ar if is_rtl else labels_en)[st] %}
+                          {% set m_name = months_names_ar[idx] if is_rtl else months_names_en[idx] %}
+                          <span class="rounded-pill px-2 py-1 border small state-chip state-{{ st }}" title="{{ product.get_name(current_language) }} — {{ m_name }} • {{ label }}"></span>
+                        {% endfor %}
+                      </div>
+                    </div>
+                    {% endif %}
+
                     <!-- Key Features -->
                     {% set specs = product.get_specifications_lang(current_language) %}
                     {% if specs %}

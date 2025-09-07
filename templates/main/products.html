@@ -56,6 +56,13 @@ Browse our complete range of premium Egyptian agricultural products including ci
 
       /* Decoration glow on hover */
       .product-card:hover .decoration-circle { box-shadow: 0 0 0 10px rgba(104,155,138,.08), 0 0 25px rgba(249,203,153,.45); }
+  /* Mini season chips */
+  .state-chip { display:inline-block; width: 14px; height: 10px; border-radius: 6px; border:1px solid transparent; box-shadow: inset 0 1px 0 rgba(255,255,255,.28); }
+  .state-chip.state-peak{ background:linear-gradient(180deg,#2c5f4f,#244d40); border-color:#244d40; }
+  .state-chip.state-available{ background:linear-gradient(180deg,#689b8a,#567f72); border-color:#567f72; }
+  .state-chip.state-limited{ background:linear-gradient(180deg,#f9cb99,#f4b56f); border-color:#f4b56f; }
+  .state-chip.state-off{ background:linear-gradient(180deg,#adb5bd,#8f9aa3); border-color:#8f9aa3; }
+  .state-chip.state-iqf{ background:linear-gradient(180deg,#5bc0de,#3aa9c7); border-color:#3aa9c7; }
 
       /* Ripple effect for filter buttons */
       .category-filter .btn { position: relative; overflow: hidden; }
@@ -311,6 +318,29 @@ Browse our complete range of premium Egyptian agricultural products including ci
                         <p class="card-text {{ 'arabic-text' if current_language == 'ar' else 'english-text' }} text-muted flex-grow-1">
   {{ (product.get_short_description(current_language) if product.get_short_description is defined else product.get_short_description()) | truncate(100) if (product.get_short_description is defined or product.get_short_description()) else _('Premium quality Egyptian agricultural product with exceptional taste and nutritional value.') }}
 </p>
+
+                        <!-- Seasonality mini-strip -->
+                        {% if seasons_map and seasons_map.get(product.id) %}
+                        {% set s = seasons_map.get(product.id) %}
+                        <div class="mb-3">
+                          <div class="d-flex align-items-center gap-2 small text-muted mb-1">
+                            <i class="fas fa-calendar-alt"></i>
+                            <span>{% if is_rtl %}التوفر حسب الأشهر{% else %}Monthly availability{% endif %}</span>
+                          </div>
+                          <div class="d-flex gap-1 flex-wrap">
+                            {% set labels_en = {'peak':'Peak','available':'Available','limited':'Limited','off':'Off-season','iqf':'Frozen'} %}
+                            {% set labels_ar = {'peak':'ذروة','available':'متاح','limited':'محدود','off':'خارج الموسم','iqf':'مجمّد'} %}
+                            {% set months_names_en = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'] %}
+                            {% set months_names_ar = ['يناير','فبراير','مارس','أبريل','مايو','يونيو','يوليو','أغسطس','سبتمبر','أكتوبر','نوفمبر','ديسمبر'] %}
+                            {% for st in s.months_state %}
+                              {% set idx = loop.index0 %}
+                              {% set label = (labels_ar if is_rtl else labels_en)[st] %}
+                              {% set m_name = months_names_ar[idx] if is_rtl else months_names_en[idx] %}
+                              <span class="rounded-pill px-2 py-1 border small state-chip state-{{ st }}" title="{{ product.get_name(current_language) }} — {{ m_name }} • {{ label }}"></span>
+                            {% endfor %}
+                          </div>
+                        </div>
+                        {% endif %}
 
                         <!-- Product Features -->
                         {% set specs = product.get_specifications_lang(current_language) %}
