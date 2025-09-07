@@ -484,6 +484,19 @@
                           }
                         </style>
 
+                        <style>
+                          /* Further ensure no decorative overlays capture clicks */
+                          .hero-export-animations,
+                          .hero-export-animations *,
+                          .agricultural-pattern,
+                          .floating-agricultural-icons,
+                          .floating-agricultural-icons * {
+                            pointer-events: none !important;
+                          }
+                          .about-learn-btn { pointer-events: auto !important; position: relative; z-index: 100001; }
+                        </style>
+
+
                     <div class="about-action" style="position: relative; z-index: 9999 !important; margin-top: 2rem;">
                         <a href="{{ url_for('main.about') }}" class="about-learn-btn">
                             <span class="peach-glow"></span>
