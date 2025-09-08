@@ -7,6 +7,11 @@
 <style>
   /* tooltip style for vector map */
   .jvm-tooltip { font-weight:700; }
+  /* Center Arabic category titles & descriptions only in homepage categories section */
+  html[lang="ar"] #featured-categories .arabic-heading,
+  html[lang="ar"] #featured-categories .arabic-text {
+    text-align: center !important;
+  }
 </style>
 {% endblock %}
 
@@ -569,7 +574,7 @@
 
 
 <!-- Featured Categories Section -->
-<section class="py-5 bg-gradient-light position-relative overflow-hidden">
+<section id="featured-categories" class="py-5 bg-gradient-light position-relative overflow-hidden">
     <!-- Background Pattern -->
     <div class="position-absolute top-0 start-0 w-100 h-100 opacity-50">
         <div class="pattern-dots"></div>
