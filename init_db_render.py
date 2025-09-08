@@ -305,7 +305,8 @@ def ensure_link_owner_category_images(db):
     os.makedirs(cats_dir, exist_ok=True)
 
     # Fallback static dir (tracked in repo) used to populate instance on deploy
-    static_cats_dir = os.path.join(current_app.root_path, 'static', 'uploads', 'categories')
+    # Use Flask's configured static folder (absolute path)
+    static_cats_dir = os.path.join(current_app.static_folder, 'uploads', 'categories')
     os.makedirs(static_cats_dir, exist_ok=True)
 
     import shutil
