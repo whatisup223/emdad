@@ -138,6 +138,9 @@ uploads/*
 
 # Static files (generated)
 static/uploads/
+# Keep category images tracked for production fallback
+!static/uploads/categories/
+!static/uploads/categories/*.webp
 
 # IDE files
 .vscode/
