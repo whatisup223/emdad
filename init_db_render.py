@@ -304,36 +304,86 @@ def ensure_link_owner_category_images(db):
     cats_dir = os.path.join(current_app.instance_path, upload_folder, 'categories')
     os.makedirs(cats_dir, exist_ok=True)
 
+    # Fallback static dir (tracked in repo) used to populate instance on deploy
+    static_cats_dir = os.path.join(current_app.root_path, 'static', 'uploads', 'categories')
+    os.makedirs(static_cats_dir, exist_ok=True)
+
+    import shutil
+
     exts = ['.jpg', '.jpeg', '.png', '.webp', '.JPG', '.JPEG', '.PNG', '.WEBP']
     changed = False
 
     try:
-        files = [f for f in os.listdir(cats_dir) if os.path.isfile(os.path.join(cats_dir, f))]
+        files_instance = [f for f in os.listdir(cats_dir) if os.path.isfile(os.path.join(cats_dir, f))]
     except Exception:
-        files = []
+        files_instance = []
+
+    try:
+        files_static = [f for f in os.listdir(static_cats_dir) if os.path.isfile(os.path.join(static_cats_dir, f))]
+    except Exception:
+        files_static = []
+
+    def _case_insensitive_lookup(name, pool):
+        name_l = name.lower()
+        for real in pool:
+            if real.lower() == name_l:
+                return real
+        return None
 
     def find_candidate(key: str):
         key_lower = key.lower()
         # Prefer exact "<key>-emdad-global" filename with allowed extensions
         for ext in exts:
             fname = f"{key}-emdad-global{ext}"
-            if fname in files:
-                return fname
-            # Also check case-insensitive variant just in case
-            if fname.lower() in [f.lower() for f in files]:
-                # Return the actual-cased filename from files list
-                for real in files:
-                    if real.lower() == fname.lower():
-                        return real
+            # 1) Check instance dir
+            real = _case_insensitive_lookup(fname, files_instance)
+            if real:
+                return real
+            # 2) Check static dir; if found, copy to instance
+            real_static = _case_insensitive_lookup(fname, files_static)
+            if real_static:
+                src = os.path.join(static_cats_dir, real_static)
+                dst = os.path.join(cats_dir, real_static)
+                try:
+                    shutil.copy2(src, dst)
+                    files_instance.append(real_static)
+                    return real_static
+                except Exception as e:
+                    print(f"⚠️ Could not copy {real_static} from static to instance: {e}")
         # Next, any file starting with "<key>-"
-        for f in files:
+        # 1) Instance
+        for f in files_instance:
             fl = f.lower()
             if any(fl.endswith(ext.lower()) for ext in exts) and fl.startswith(f"{key_lower}-"):
                 return f
+        # 2) Static → copy to instance then return
+        for f in files_static:
+            fl = f.lower()
+            if any(fl.endswith(ext.lower()) for ext in exts) and fl.startswith(f"{key_lower}-"):
+                src = os.path.join(static_cats_dir, f)
+                dst = os.path.join(cats_dir, f)
+                try:
+                    shutil.copy2(src, dst)
+                    files_instance.append(f)
+                    return f
+                except Exception as e:
+                    print(f"⚠️ Could not copy {f} from static to instance: {e}")
         # Finally, any file that contains the key segment
-        for f in files:
+        # 1) Instance
+        for f in files_instance:
             if key_lower in f.lower() and any(f.lower().endswith(ext.lower()) for ext in exts):
                 return f
+        # 2) Static → copy
+        for f in files_static:
+            if key_lower in f.lower() and any(f.lower().endswith(ext.lower()) for ext in exts):
+                src = os.path.join(static_cats_dir, f)
+                dst = os.path.join(cats_dir, f)
+                try:
+                    shutil.copy2(src, dst)
+                    files_instance.append(f)
+                    return f
+                except Exception as e:
+                    print(f"⚠️ Could not copy {f} from static to instance: {e}")
         return None
 
     for cat in Category.query.all():
