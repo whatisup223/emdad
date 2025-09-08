@@ -546,3 +546,26 @@ class CompanyInfo(db.Model):
 
     def __repr__(self):
         return f'<CompanyInfo {self.key}>'
+
+
+class AppMeta(db.Model):
+    """Simple key/value store for app data migrations or one-time flags."""
+    id = db.Column(db.Integer, primary_key=True)
+    key = db.Column(db.String(100), unique=True, nullable=False, index=True)
+    value = db.Column(db.String(500))
+    created_at = db.Column(db.DateTime, default=datetime.utcnow)
+    updated_at = db.Column(db.DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
+
+    @staticmethod
+    def get(key):
+        return AppMeta.query.filter_by(key=key).first()
+
+    @staticmethod
+    def set(key, value="1"):
+        row = AppMeta.get(key)
+        if not row:
+            row = AppMeta(key=key, value=value)
+            db.session.add(row)
+        else:
+            row.value = value
+        return row

@@ -16,7 +16,7 @@ def index():
         featured_categories = Category.query.filter_by(
             is_active=True,
             show_on_homepage=True
-        ).order_by(Category.sort_order).limit(4).all() or []
+        ).order_by(Category.sort_order).limit(6).all() or []
     except Exception as e:
         print(f"Warning: Could not load categories: {e}")
         featured_categories = []

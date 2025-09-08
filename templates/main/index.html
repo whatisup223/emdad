@@ -590,7 +590,7 @@
         <div class="row g-4 stagger-animation">
             {% if featured_categories %}
                 {% for category in featured_categories %}
-                <div class="col-lg-3 col-md-6" data-aos="fade-up" data-aos-delay="{{ loop.index0 * 100 }}">
+                <div class="col-lg-4 col-md-6" data-aos="fade-up" data-aos-delay="{{ loop.index0 * 100 }}">
                     <div class="category-card card h-100 border-0 shadow-lg hover-lift position-relative overflow-hidden">
                         <!-- Category Image -->
                         <div class="category-image-wrapper position-relative overflow-hidden">
@@ -645,7 +645,7 @@
                 ] %}
 
                 {% for category in default_categories %}
-                <div class="col-lg-3 col-md-6" data-aos="fade-up" data-aos-delay="{{ loop.index0 * 100 }}">
+                <div class="col-lg-4 col-md-6" data-aos="fade-up" data-aos-delay="{{ loop.index0 * 100 }}">
                     <div class="category-card card h-100 border-0 shadow-lg hover-lift position-relative overflow-hidden">
                         <div class="card-img-top bg-gradient-primary d-flex align-items-center justify-content-center" style="height: 250px;">
                             <i class="{{ category.icon }} fa-4x text-white opacity-75"></i>

@@ -25,270 +25,393 @@ def create_admin_user(db):
     else:
         print("✅ Admin user already exists")
 
-def create_categories(db):
-    """Create sample categories"""
+def reset_and_seed_categories(db):
+    """One-time hard reset of categories/products and seed new official categories.
+    Uses AppMeta flag to ensure it runs only once per environment.
+    """
+    from app.models import Category, Product, ProductImage, AppMeta
+
+    FLAG_KEY = 'seed:new_categories_v1'
+    if AppMeta.get(FLAG_KEY):
+        print("✅ Category reset already applied. Skipping hard reset.")
+        return
+
+    print("⚠️ Resetting existing products and categories...")
+    # Delete product images via cascade by deleting products
+    try:
+        # Remove products first (cascade removes ProductImage)
+        Product.query.delete()
+        db.session.commit()
+    except Exception as e:
+        print(f"⚠️ Failed deleting products: {e}")
+        db.session.rollback()
+
+    try:
+        # Remove all categories
+        Category.query.delete()
+        db.session.commit()
+    except Exception as e:
+        print(f"⚠️ Failed deleting categories: {e}")
+        db.session.rollback()
+
+    print("✅ Inserting new official categories...")
+    categories = [
+        {
+            'key': 'iqf-fruit',
+            'name_en': 'IQF Fruit',
+            'name_ar': 'فواكه مجمدة (IQF)',
+            'slug': 'iqf-fruit',
+            'description_en': 'Individually Quick Frozen fruits preserving taste and nutrition.',
+            'description_ar': 'فواكه مجمدة سريعاً بشكل فردي مع الحفاظ على الطعم والقيمة الغذائية.',
+            'sort_order': 3,
+            'show_on_homepage': True,
+            'image_path': None,
+        },
+        {
+            'key': 'fresh-fruit',
+            'name_en': 'Fresh Fruit',
+            'name_ar': 'فواكه طازجة',
+            'slug': 'fresh-fruit',
+            'description_en': 'Seasonal premium fresh fruits from selected farms.',
+            'description_ar': 'فواكه طازجة موسمية ممتازة من مزارع مختارة.',
+            'sort_order': 1,
+            'show_on_homepage': True,
+            'image_path': None,
+        },
+        {
+            'key': 'dates',
+            'name_en': 'Dates',
+            'name_ar': 'تمور',
+            'slug': 'dates',
+            'description_en': 'High-quality Egyptian dates with rich flavor.',
+            'description_ar': 'تمور مصرية عالية الجودة بطعم غني.',
+            'sort_order': 4,
+            'show_on_homepage': True,
+            'image_path': None,
+        },
+        {
+            'key': 'spices',
+            'name_en': 'Spices',
+            'name_ar': 'توابل',
+            'slug': 'spices',
+            'description_en': 'Aromatic spices sourced and processed with care.',
+            'description_ar': 'توابل عطرية يتم الحصول عليها ومعالجتها بعناية.',
+            'sort_order': 5,
+            'show_on_homepage': True,
+            'image_path': None,
+        },
+        {
+            'key': 'dried-herbs',
+            'name_en': 'Dried Herbs',
+            'name_ar': 'أعشاب مجففة',
+            'slug': 'dried-herbs',
+            'description_en': 'Naturally dried herbs retaining their essential aromas.',
+            'description_ar': 'أعشاب مجففة بشكل طبيعي تحتفظ بروائحها الأساسية.',
+            'sort_order': 6,
+            'show_on_homepage': True,
+            'image_path': None,
+        },
+        {
+            'key': 'vegetables-roots',
+            'name_en': 'Vegetables & Roots',
+            'name_ar': 'خضروات وجذور',
+            'slug': 'vegetables-roots',
+            'description_en': 'Fresh vegetables and root crops of export quality.',
+            'description_ar': 'خضروات ومحاصيل جذرية طازجة بجودة التصدير.',
+            'sort_order': 2,
+            'show_on_homepage': True,
+            'image_path': None,
+        },
+        {
+            'key': 'herbs-herbal-plants',
+            'name_en': 'Herbs & Herbal Plants',
+            'name_ar': 'أعشاب ونباتات عشبية',
+            'slug': 'herbs-herbal-plants',
+            'description_en': 'Culinary and medicinal herbs, carefully curated.',
+            'description_ar': 'أعشاب للطهي والطب التقليدي مختارة بعناية.',
+            'sort_order': 7,
+            'show_on_homepage': False,
+            'image_path': None,
+        },
+        {
+            'key': 'oil-seeds',
+            'name_en': 'Oil Seeds',
+            'name_ar': 'بذور زيتية',
+            'slug': 'oil-seeds',
+            'description_en': 'Premium oil seeds suitable for various applications.',
+            'description_ar': 'بذور زيتية ممتازة مناسبة لتطبيقات متعددة.',
+            'sort_order': 8,
+            'show_on_homepage': False,
+            'image_path': None,
+        },
+    ]
+
+    from app.models import Category
+    for c in categories:
+        category = Category(
+            key=c['key'],
+            name_en=c['name_en'],
+            name_ar=c['name_ar'],
+            slug=c['slug'],
+            description_en=c['description_en'],
+            description_ar=c['description_ar'],
+            sort_order=c['sort_order'],
+            is_active=True,
+            show_on_homepage=c['show_on_homepage'],
+            image_path=c['image_path']
+        )
+        db.session.add(category)
+    db.session.commit()
+
+    # Mark flag so this hard reset does not run again automatically
+    AppMeta.set(FLAG_KEY, "applied")
+    db.session.commit()
+    print("✅ New categories seeded successfully.")
+
+
+def ensure_min_homepage_categories(db, min_count=6):
+    """Ensure at least `min_count` active categories are marked to show on homepage.
+    Idempotent and safe to run on every deploy.
+    """
+    from app.models import Category
+    try:
+        cats = Category.query.filter_by(is_active=True).order_by(Category.sort_order, Category.name_en).all()
+        current = [c for c in cats if c.show_on_homepage]
+        if len(current) >= min_count:
+            print(f"✅ Homepage categories already >= {min_count}.")
+            return
+        for c in cats:
+            if not c.show_on_homepage:
+                c.show_on_homepage = True
+                db.session.add(c)
+                current.append(c)
+                if len(current) >= min_count:
+                    break
+        db.session.commit()
+        print(f"✅ Ensured at least {min_count} homepage categories (now {len(current)}).")
+    except Exception as e:
+        print(f"⚠️ Failed ensuring homepage categories: {e}")
+        db.session.rollback()
+
+
+
+def ensure_category_images(db):
+    """Download real illustrative images for categories into uploads and update DB.
+    Safe to run every deploy; skips if files already exist.
+    """
+    import os
+    import urllib.request
+    from flask import current_app
     from app.models import Category
 
-    if Category.query.count() == 0:
-        print("Creating categories...")
-        categories_data = [
-            {
-                'key': 'citrus',
-                'name_en': 'Citrus Fruits',
-                'name_ar': 'الحمضيات',
-                'slug': 'citrus-fruits',
-                'description_en': 'Premium Egyptian citrus fruits including oranges, lemons, and mandarins with exceptional quality and taste.',
-                'description_ar': 'ثمار الحمضيات المصرية الممتازة بما في ذلك البرتقال والليمون واليوسفي بجودة وطعم استثنائي.',
-                'sort_order': 1
-            },
-            {
-                'key': 'fresh-fruits',
-                'name_en': 'Fresh Fruits',
-                'name_ar': 'الفواكه الطازجة',
-                'slug': 'fresh-fruits',
-                'description_en': 'Seasonal fresh fruits including grapes, mangoes, and pomegranates from Egyptian farms.',
-                'description_ar': 'الفواكه الطازجة الموسمية بما في ذلك العنب والمانجو والرمان من المزارع المصرية.',
-                'sort_order': 2
-            },
-            {
-                'key': 'vegetables',
-                'name_en': 'Fresh Vegetables',
-                'name_ar': 'الخضروات الطازجة',
-                'slug': 'fresh-vegetables',
-                'description_en': 'High-quality vegetables including garlic, onions, and potatoes for global markets.',
-                'description_ar': 'خضروات عالية الجودة بما في ذلك الثوم والبصل والبطاطس للأسواق العالمية.',
-                'sort_order': 3
-            },
-            {
-                'key': 'frozen',
-                'name_en': 'Frozen Products',
-                'name_ar': 'المنتجات المجمدة',
-                'slug': 'frozen-products',
-                'description_en': 'IQF frozen fruits and vegetables maintaining freshness and nutritional value.',
-                'description_ar': 'الفواكه والخضروات المجمدة بتقنية IQF مع الحفاظ على النضارة والقيمة الغذائية.',
-                'sort_order': 4
-            },
-            {
-                'key': 'dried-fruits',
-                'name_en': 'Dried Fruits',
-                'name_ar': 'الفواكه المجففة',
-                'slug': 'dried-fruits',
-                'description_en': 'Premium dried fruits processed with advanced techniques for extended shelf life.',
-                'description_ar': 'فواكه مجففة ممتازة معالجة بتقنيات متقدمة لفترة صلاحية ممتدة.',
-                'sort_order': 5
-            },
-            {
-                'key': 'fresh-citrus',
-                'name_en': 'Fresh Citrus',
-                'name_ar': 'الحمضيات الطازجة',
-                'slug': 'fresh-citrus',
-                'description_en': 'Fresh citrus fruits with superior quality and international standards.',
-                'description_ar': 'ثمار الحمضيات الطازجة بجودة فائقة ومعايير دولية.',
-                'sort_order': 6
-            },
-            {
-                'key': 'frozen-fruits-iqf',
-                'name_en': 'Frozen Fruits (IQF)',
-                'name_ar': 'الفواكه المجمدة',
-                'slug': 'frozen-fruits-iqf',
-                'description_en': 'Individually Quick Frozen fruits maintaining texture and nutritional benefits.',
-                'description_ar': 'فواكه مجمدة بسرعة فردية مع الحفاظ على الملمس والفوائد الغذائية.',
-                'sort_order': 7
-            }
-        ]
+    # Target filenames per category
+    image_plan = {
+        'fresh-fruit': {
+            'filename': 'fresh-fruit.jpg',
+            'url': 'https://source.unsplash.com/1200x800/?fruit,fruits'
+        },
+        'vegetables-roots': {
+            'filename': 'vegetables-roots.jpg',
+            'url': 'https://source.unsplash.com/1200x800/?vegetables,roots'
+        },
+        'iqf-fruit': {
+            'filename': 'iqf-fruit.jpg',
+            'url': 'https://source.unsplash.com/1200x800/?frozen,fruit,berries'
+        },
+        'dates': {
+            'filename': 'dates.jpg',
+            'url': 'https://source.unsplash.com/1200x800/?dates,fruit'
+        },
+        'spices': {
+            'filename': 'spices.jpg',
+            'url': 'https://source.unsplash.com/1200x800/?spices'
+        },
+        'dried-herbs': {
+            'filename': 'dried-herbs.jpg',
+            'url': 'https://source.unsplash.com/1200x800/?dried,herbs'
+        },
+        'herbs-herbal-plants': {
+            'filename': 'herbs-herbal-plants.jpg',
+            'url': 'https://source.unsplash.com/1200x800/?herbs,plants'
+        },
+        'oil-seeds': {
+            'filename': 'oil-seeds.jpg',
+            'url': 'https://source.unsplash.com/1200x800/?seeds'
+        },
+    }
 
-        for cat_data in categories_data:
-            # Set sample image path
-            image_path = f"{cat_data['key']}.svg"
+    # Determine upload base paths (instance and project uploads)
+    upload_folder = current_app.config.get('UPLOAD_FOLDER', 'uploads')
+    instance_upload_categories = os.path.join(current_app.instance_path, upload_folder, 'categories')
+    project_upload_categories = os.path.join('uploads', 'categories')
 
-            category = Category(
-                key=cat_data['key'],
-                name_en=cat_data['name_en'],
-                name_ar=cat_data['name_ar'],
-                slug=cat_data['slug'],
-                description_en=cat_data['description_en'],
-                description_ar=cat_data['description_ar'],
-                sort_order=cat_data['sort_order'],
-                image_path=image_path,
-                is_active=True
-            )
-            db.session.add(category)
+    os.makedirs(instance_upload_categories, exist_ok=True)
+    os.makedirs(project_upload_categories, exist_ok=True)
 
-        print("✅ Categories created successfully!")
+    changed = False
+
+    for key, info in image_plan.items():
+        filename = info['filename']
+        url = info['url']
+        instance_dst = os.path.join(instance_upload_categories, filename)
+        project_dst = os.path.join(project_upload_categories, filename)
+
+        # Download once if not present in either location
+        need_download = not (os.path.exists(instance_dst) or os.path.exists(project_dst))
+        if need_download:
+            try:
+                print(f"Downloading category image for {key}...")
+                # Download to project uploads first
+                urllib.request.urlretrieve(url, project_dst)
+                # Copy to instance uploads
+                with open(project_dst, 'rb') as src, open(instance_dst, 'wb') as dst:
+                    dst.write(src.read())
+                print(f"✅ Downloaded image for {key}: {filename}")
+            except Exception as e:
+                print(f"⚠️ Failed to download image for {key}: {e}")
+                continue
+
+        # Update DB image_path if needed
+        cat = Category.query.filter_by(key=key).first()
+        if cat:
+            if cat.image_path != filename:
+                cat.image_path = filename
+                db.session.add(cat)
+                changed = True
+
+    if changed:
+        try:
+            db.session.commit()
+            print("✅ Category images updated in database.")
+        except Exception as e:
+            print(f"⚠️ Failed to commit category image updates: {e}")
+            db.session.rollback()
     else:
-        print("✅ Categories already exist")
+        print("✅ Category images already up-to-date.")
 
-def create_products(db):
-    """Create sample products"""
-    from app.models import Product, Category
 
-    if Product.query.count() == 0:
-        print("Creating products...")
 
-        # Get categories
-        citrus_cat = Category.query.filter_by(key='citrus').first()
-        fresh_fruits_cat = Category.query.filter_by(key='fresh-fruits').first()
-        vegetables_cat = Category.query.filter_by(key='vegetables').first()
-        frozen_cat = Category.query.filter_by(key='frozen').first()
+def ensure_link_owner_category_images(db):
+    """Link owner-provided images in instance/uploads/categories to categories.
+    Idempotent and safe to run every deploy. Will not overwrite an existing
+    image_path if the file exists.
+    """
+    import os
+    from flask import current_app
+    from app.models import Category
 
-        products_data = [
-            {
-                'name_en': 'Egyptian Oranges',
-                'name_ar': 'البرتقال المصري',
-                'slug': 'egyptian-oranges',
-                'category_id': citrus_cat.id if citrus_cat else 1,
-                'description_en': 'Premium quality Egyptian oranges with exceptional sweetness and juice content. Grown in the fertile Nile Delta region.',
-                'description_ar': 'برتقال مصري عالي الجودة بحلاوة استثنائية ومحتوى عصير عالي. مزروع في منطقة دلتا النيل الخصبة.',
-                'short_description_en': 'Premium Egyptian oranges with exceptional sweetness',
-                'short_description_ar': 'برتقال مصري ممتاز بحلاوة استثنائية',
-                'featured': True,
-                'sort_order': 1
-            },
-            {
-                'name_en': 'Mandarins',
-                'name_ar': 'اليوسفي',
-                'slug': 'mandarins',
-                'category_id': citrus_cat.id if citrus_cat else 1,
-                'description_en': 'Sweet and juicy Egyptian mandarins, perfect for fresh consumption and export markets.',
-                'description_ar': 'يوسفي مصري حلو وعصيري، مثالي للاستهلاك الطازج وأسواق التصدير.',
-                'short_description_en': 'Sweet and juicy Egyptian mandarins',
-                'short_description_ar': 'يوسفي مصري حلو وعصيري',
-                'featured': True,
-                'sort_order': 2
-            },
-            {
-                'name_en': 'Egyptian Grapes',
-                'name_ar': 'العنب المصري',
-                'slug': 'egyptian-grapes',
-                'category_id': fresh_fruits_cat.id if fresh_fruits_cat else 2,
-                'description_en': 'High-quality table grapes in various varieties including Thompson Seedless and Red Globe.',
-                'description_ar': 'عنب مائدة عالي الجودة بأصناف مختلفة بما في ذلك طومسون بدون بذور والكرة الحمراء.',
-                'short_description_en': 'High-quality table grapes in various varieties',
-                'short_description_ar': 'عنب مائدة عالي الجودة بأصناف مختلفة',
-                'featured': True,
-                'sort_order': 3
-            },
-            {
-                'name_en': 'Pomegranates',
-                'name_ar': 'الرمان',
-                'slug': 'pomegranates',
-                'category_id': fresh_fruits_cat.id if fresh_fruits_cat else 2,
-                'description_en': 'Fresh Egyptian pomegranates rich in antioxidants and natural sweetness.',
-                'description_ar': 'رمان مصري طازج غني بمضادات الأكسدة والحلاوة الطبيعية.',
-                'short_description_en': 'Fresh Egyptian pomegranates rich in antioxidants',
-                'short_description_ar': 'رمان مصري طازج غني بمضادات الأكسدة',
-                'featured': True,
-                'sort_order': 4
-            },
-            {
-                'name_en': 'Egyptian Garlic',
-                'name_ar': 'الثوم المصري',
-                'slug': 'egyptian-garlic',
-                'category_id': vegetables_cat.id if vegetables_cat else 3,
-                'description_en': 'Premium white garlic with strong flavor and excellent storage capabilities.',
-                'description_ar': 'ثوم أبيض ممتاز بنكهة قوية وقدرات تخزين ممتازة.',
-                'short_description_en': 'Premium white garlic with strong flavor',
-                'short_description_ar': 'ثوم أبيض ممتاز بنكهة قوية',
-                'featured': True,
-                'sort_order': 5
-            },
-            {
-                'name_en': 'IQF Strawberries',
-                'name_ar': 'الفراولة المجمدة',
-                'slug': 'iqf-strawberries',
-                'category_id': frozen_cat.id if frozen_cat else 4,
-                'description_en': 'Individually Quick Frozen strawberries maintaining fresh taste and nutrition.',
-                'description_ar': 'فراولة مجمدة بسرعة فردية مع الحفاظ على الطعم الطازج والتغذية.',
-                'short_description_en': 'IQF strawberries maintaining fresh taste',
-                'short_description_ar': 'فراولة مجمدة مع الحفاظ على الطعم الطازج',
-                'featured': True,
-                'sort_order': 6
-            },
-            {
-                'name_en': 'Premium Valencia Oranges',
-                'name_ar': 'برتقال فالنسيا الممتاز',
-                'slug': 'premium-valencia-oranges',
-                'category_id': citrus_cat.id if citrus_cat else 1,
-                'description_en': 'Premium Valencia oranges perfect for juice production and fresh consumption.',
-                'description_ar': 'برتقال فالنسيا ممتاز مثالي لإنتاج العصير والاستهلاك الطازج.',
-                'short_description_en': 'Premium Valencia oranges for juice and fresh consumption',
-                'short_description_ar': 'برتقال فالنسيا ممتاز للعصير والاستهلاك الطازج',
-                'featured': True,
-                'sort_order': 7
-            },
-            {
-                'name_en': 'Fresh Red Onions',
-                'name_ar': 'البصل الأحمر الطازج',
-                'slug': 'fresh-red-onions',
-                'category_id': vegetables_cat.id if vegetables_cat else 3,
-                'description_en': 'Fresh red onions with excellent quality and long shelf life.',
-                'description_ar': 'بصل أحمر طازج بجودة ممتازة وفترة صلاحية طويلة.',
-                'short_description_en': 'Fresh red onions with excellent quality',
-                'short_description_ar': 'بصل أحمر طازج بجودة ممتازة',
-                'featured': True,
-                'sort_order': 8
-            },
-            {
-                'name_en': 'Egyptian Lemons',
-                'name_ar': 'الليمون المصري',
-                'slug': 'egyptian-lemons',
-                'category_id': citrus_cat.id if citrus_cat else 1,
-                'description_en': 'Fresh Egyptian lemons with high acidity and excellent aroma.',
-                'description_ar': 'ليمون مصري طازج بحموضة عالية ورائحة ممتازة.',
-                'short_description_en': 'Fresh Egyptian lemons with high acidity',
-                'short_description_ar': 'ليمون مصري طازج بحموضة عالية',
-                'featured': False,
-                'sort_order': 9
-            },
-            {
-                'name_en': 'Fresh Potatoes',
-                'name_ar': 'البطاطس الطازجة',
-                'slug': 'fresh-potatoes',
-                'category_id': vegetables_cat.id if vegetables_cat else 3,
-                'description_en': 'High-quality Egyptian potatoes suitable for various culinary applications.',
-                'description_ar': 'بطاطس مصرية عالية الجودة مناسبة لتطبيقات الطهي المختلفة.',
-                'short_description_en': 'High-quality Egyptian potatoes',
-                'short_description_ar': 'بطاطس مصرية عالية الجودة',
-                'featured': False,
-                'sort_order': 10
-            }
-        ]
+    upload_folder = current_app.config.get('UPLOAD_FOLDER', 'uploads')
+    cats_dir = os.path.join(current_app.instance_path, upload_folder, 'categories')
+    os.makedirs(cats_dir, exist_ok=True)
 
-        for prod_data in products_data:
-            # Create product
-            product = Product(
-                name_en=prod_data['name_en'],
-                name_ar=prod_data['name_ar'],
-                slug=prod_data['slug'],
-                category_id=prod_data['category_id'],
-                description_en=prod_data['description_en'],
-                description_ar=prod_data['description_ar'],
-                short_description_en=prod_data['short_description_en'],
-                short_description_ar=prod_data['short_description_ar'],
-                status='active',
-                featured=prod_data['featured'],
-                sort_order=prod_data['sort_order']
-            )
-            db.session.add(product)
-            db.session.flush()  # Get the product ID
+    exts = ['.jpg', '.jpeg', '.png', '.webp', '.JPG', '.JPEG', '.PNG', '.WEBP']
+    changed = False
 
-            # Create product image
-            from app.models import ProductImage
-            image_filename = f"{prod_data['slug']}.svg"
-            product_image = ProductImage(
-                product_id=product.id,
-                filename=image_filename,
-                alt_text_en=prod_data['name_en'],
-                alt_text_ar=prod_data['name_ar'],
-                is_main=True,
-                sort_order=0
-            )
-            db.session.add(product_image)
+    try:
+        files = [f for f in os.listdir(cats_dir) if os.path.isfile(os.path.join(cats_dir, f))]
+    except Exception:
+        files = []
 
-        print("✅ Products created successfully!")
+    def find_candidate(key: str):
+        key_lower = key.lower()
+        # Prefer exact "<key>-emdad-global" filename with allowed extensions
+        for ext in exts:
+            fname = f"{key}-emdad-global{ext}"
+            if fname in files:
+                return fname
+            # Also check case-insensitive variant just in case
+            if fname.lower() in [f.lower() for f in files]:
+                # Return the actual-cased filename from files list
+                for real in files:
+                    if real.lower() == fname.lower():
+                        return real
+        # Next, any file starting with "<key>-"
+        for f in files:
+            fl = f.lower()
+            if any(fl.endswith(ext.lower()) for ext in exts) and fl.startswith(f"{key_lower}-"):
+                return f
+        # Finally, any file that contains the key segment
+        for f in files:
+            if key_lower in f.lower() and any(f.lower().endswith(ext.lower()) for ext in exts):
+                return f
+        return None
+
+    for cat in Category.query.all():
+        # If image_path already points to an existing file, skip
+        if cat.image_path:
+            cur_path = os.path.join(cats_dir, cat.image_path)
+            if os.path.exists(cur_path):
+                continue
+        candidate = find_candidate(cat.key)
+        if candidate:
+            cat.image_path = candidate
+            db.session.add(cat)
+            changed = True
+        else:
+            # Clear any placeholder (e.g., seeded .svg) to avoid broken links
+            if cat.image_path:
+                cat.image_path = None
+                db.session.add(cat)
+                changed = True
+
+    if changed:
+        try:
+            db.session.commit()
+            print("✅ Linked owner-provided category images (and cleared missing ones).")
+        except Exception as e:
+            print(f"⚠️ Failed to link owner images: {e}")
+            db.session.rollback()
     else:
-        print("✅ Products already exist")
+        print("✅ Owner-provided category images already linked (or none found).")
 
+
+def create_categories(db):
+    """Deprecated: replaced by reset_and_seed_categories (no-op)"""
+    return
+
+
+
+def purge_category_images(db):
+    """Remove all category images and clear image_path for all categories.
+    Safe to run on any environment. This will not remove product/news images.
+    """
+    import os, shutil
+    from flask import current_app
+    from app.models import Category
+
+    upload_folder = current_app.config.get('UPLOAD_FOLDER', 'uploads')
+    dirs = [
+        os.path.join('uploads', 'categories'),
+        os.path.join(current_app.instance_path, upload_folder, 'categories'),
+    ]
+
+    for d in dirs:
+        try:
+            if os.path.isdir(d):
+                for fname in os.listdir(d):
+                    path = os.path.join(d, fname)
+                    if os.path.isfile(path):
+                        os.remove(path)
+                print(f"✅ Cleared category images in: {d}")
+        except Exception as e:
+            print(f"⚠️ Could not clear {d}: {e}")
+
+    # Clear image_path in DB
+    changed = False
+    for cat in Category.query.all():
+        if cat.image_path:
+            cat.image_path = None
+            db.session.add(cat)
+            changed = True
+    if changed:
+        try:
+            db.session.commit()
+            print("✅ Cleared image_path for all categories in DB.")
+        except Exception as e:
+            print(f"⚠️ Failed DB commit while clearing image_path: {e}")
+            db.session.rollback()
+    else:
+        print("✅ No category image_path to clear in DB.")
 
 
 def create_services(db):
@@ -616,15 +739,8 @@ def copy_sample_images():
         for upload_dir in upload_dirs:
             os.makedirs(upload_dir, exist_ok=True)
 
-        # Copy category images
-        if os.path.exists('static/images/samples/categories'):
-            for filename in os.listdir('static/images/samples/categories'):
-                if filename.endswith('.svg'):
-                    src = f'static/images/samples/categories/{filename}'
-                    for dest_dir in ['uploads/categories', 'instance/uploads/categories']:
-                        dest = f'{dest_dir}/{filename}'
-                        shutil.copy2(src, dest)
-                        print(f"✅ Copied category image: {filename}")
+        # Skip copying sample category images to allow real photos provided by owner
+        # (no-op for categories)
 
         # Copy product images
         if os.path.exists('static/images/samples/products'):
@@ -715,12 +831,16 @@ def init_database():
                 create_admin_user(db)
                 db.session.commit()
 
-                # Create categories
-                create_categories(db)
+                # Reset and seed official categories (one-time)
+                reset_and_seed_categories(db)
                 db.session.commit()
 
-                # Create products
-                create_products(db)
+                # Link any owner-provided category images (safe, idempotent)
+                ensure_link_owner_category_images(db)
+                db.session.commit()
+
+                # Always ensure at least 6 homepage categories (idempotent)
+                ensure_min_homepage_categories(db, min_count=6)
                 db.session.commit()
 
                 # Create default services
