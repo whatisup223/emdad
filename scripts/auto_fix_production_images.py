@@ -52,20 +52,44 @@ def auto_fix_production_images():
         for candidate in static_candidates:
             abs_candidate = os.path.abspath(candidate)
             if os.path.exists(abs_candidate):
-                webp_files = [f for f in os.listdir(abs_candidate) if f.endswith('.webp')]
-                if webp_files:
-                    static_dir = abs_candidate
-                    print(f"✅ Using static directory: {static_dir}")
-                    print(f"   Found {len(webp_files)} WebP files")
-                    break
-        
+                try:
+                    webp_files = [f for f in os.listdir(abs_candidate) if f.endswith('.webp')]
+                    if webp_files:
+                        static_dir = abs_candidate
+                        print(f"✅ Using static directory: {static_dir}")
+                        print(f"   Found {len(webp_files)} WebP files")
+                        break
+                    else:
+                        print(f"⚠️ Directory exists but no WebP files: {abs_candidate}")
+                        # List all files for debugging
+                        all_files = os.listdir(abs_candidate)
+                        print(f"   Files found: {len(all_files)}")
+                        webp_count = sum(1 for f in all_files if f.endswith('.webp'))
+                        svg_count = sum(1 for f in all_files if f.endswith('.svg'))
+                        print(f"   WebP: {webp_count}, SVG: {svg_count}")
+                        if webp_count > 0:
+                            static_dir = abs_candidate
+                            print(f"✅ Using directory anyway: {static_dir}")
+                            break
+                except Exception as e:
+                    print(f"⚠️ Error reading directory {abs_candidate}: {e}")
+                    continue
+
         if not static_dir:
             print("❌ CRITICAL: No static directory with WebP files found!")
             print("Available directories:")
             for candidate in static_candidates:
                 abs_candidate = os.path.abspath(candidate)
                 exists = os.path.exists(abs_candidate)
-                print(f"  - {abs_candidate}: {'EXISTS' if exists else 'NOT FOUND'}")
+                if exists:
+                    try:
+                        files = os.listdir(abs_candidate)
+                        webp_count = sum(1 for f in files if f.endswith('.webp'))
+                        print(f"  - {abs_candidate}: EXISTS ({len(files)} files, {webp_count} WebP)")
+                    except:
+                        print(f"  - {abs_candidate}: EXISTS (cannot read)")
+                else:
+                    print(f"  - {abs_candidate}: NOT FOUND")
             return False
         
         # Instance directory
