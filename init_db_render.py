@@ -903,7 +903,26 @@ def ensure_link_owner_product_images(db):
     # Support both top-level './static' and Flask's 'app/static' layouts
     app_static_products = os.path.join(current_app.static_folder, 'uploads', 'products')
     root_static_products = os.path.join(os.path.dirname(current_app.root_path), 'static', 'uploads', 'products')
-    static_dir = app_static_products if os.path.isdir(app_static_products) else root_static_products
+    # Prefer static dir that actually contains files
+    def _pick_static_dir(primary, secondary):
+        p_files = []
+        s_files = []
+        if os.path.isdir(primary):
+            try:
+                p_files = [f for f in os.listdir(primary) if os.path.isfile(os.path.join(primary, f))]
+            except Exception:
+                p_files = []
+        if os.path.isdir(secondary):
+            try:
+                s_files = [f for f in os.listdir(secondary) if os.path.isfile(os.path.join(secondary, f))]
+            except Exception:
+                s_files = []
+        if p_files:
+            return primary
+        if s_files:
+            return secondary
+        return primary if os.path.isdir(primary) else secondary
+    static_dir = _pick_static_dir(app_static_products, root_static_products)
     os.makedirs(static_dir, exist_ok=True)
 
     def _find_real_case(name: str, pool: list[str]) -> str | None:
@@ -1008,7 +1027,28 @@ def seed_official_products(db):
     upload_folder = current_app.config.get('UPLOAD_FOLDER', 'uploads')
     inst_dir = os.path.join(current_app.instance_path, upload_folder, 'products')
     os.makedirs(inst_dir, exist_ok=True)
-    static_dir = os.path.join(current_app.static_folder, 'uploads', 'products')
+    # Support both top-level './static' and Flask's 'app/static' layouts
+    app_static_products = os.path.join(current_app.static_folder, 'uploads', 'products')
+    root_static_products = os.path.join(os.path.dirname(current_app.root_path), 'static', 'uploads', 'products')
+    def _pick_static_dir(primary, secondary):
+        p_files = []
+        s_files = []
+        if os.path.isdir(primary):
+            try:
+                p_files = [f for f in os.listdir(primary) if os.path.isfile(os.path.join(primary, f))]
+            except Exception:
+                p_files = []
+        if os.path.isdir(secondary):
+            try:
+                s_files = [f for f in os.listdir(secondary) if os.path.isfile(os.path.join(secondary, f))]
+            except Exception:
+                s_files = []
+        if p_files:
+            return primary
+        if s_files:
+            return secondary
+        return primary if os.path.isdir(primary) else secondary
+    static_dir = _pick_static_dir(app_static_products, root_static_products)
     os.makedirs(static_dir, exist_ok=True)
 
     for item in items:
