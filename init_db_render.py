@@ -308,7 +308,26 @@ def ensure_link_owner_category_images(db):
     # Support both top-level './static' and Flask's 'app/static' layouts
     app_static_cats = os.path.join(current_app.static_folder, 'uploads', 'categories')
     root_static_cats = os.path.join(os.path.dirname(current_app.root_path), 'static', 'uploads', 'categories')
-    static_cats_dir = app_static_cats if os.path.isdir(app_static_cats) else root_static_cats
+    # Prefer the directory that actually contains files; fallback to existing dir
+    def _pick_static_dir(primary, secondary):
+        p_files = []
+        s_files = []
+        if os.path.isdir(primary):
+            try:
+                p_files = [f for f in os.listdir(primary) if os.path.isfile(os.path.join(primary, f))]
+            except Exception:
+                p_files = []
+        if os.path.isdir(secondary):
+            try:
+                s_files = [f for f in os.listdir(secondary) if os.path.isfile(os.path.join(secondary, f))]
+            except Exception:
+                s_files = []
+        if p_files:
+            return primary
+        if s_files:
+            return secondary
+        return primary if os.path.isdir(primary) else secondary
+    static_cats_dir = _pick_static_dir(app_static_cats, root_static_cats)
     os.makedirs(static_cats_dir, exist_ok=True)
 
     import shutil
@@ -360,6 +379,29 @@ def ensure_link_owner_category_images(db):
             if any(fl.endswith(ext.lower()) for ext in exts) and fl.startswith(f"{key_lower}-"):
                 return f
         # 2) Static → copy to instance then return
+
+
+    # Link candidates to categories
+    changed = False
+    for cat in Category.query.all():
+        key = getattr(cat, 'key', None) or getattr(cat, 'slug', None)
+        if not key:
+            continue
+        candidate = find_candidate(key)
+        if candidate and candidate != cat.image_path:
+            cat.image_path = candidate
+            db.session.add(cat)
+            changed = True
+
+    if changed:
+        try:
+            db.session.commit()
+            print("✅ Linked owner-provided category images.")
+        except Exception as e:
+            print(f"⚠️ Failed to link category images: {e}")
+            db.session.rollback()
+    else:
+        print("✅ Category images already linked or no changes needed.")
 
 
 def ensure_link_owner_news_images(db):
@@ -1137,16 +1179,16 @@ def init_database():
                 ensure_min_homepage_categories(db, min_count=6)
                 db.session.commit()
 
-                # Link/copy owner-provided product images (idempotent)
-                ensure_link_owner_product_images(db)
-                db.session.commit()
-
                 # Seed official products from seeds/products.json (idempotent upsert)
                 try:
                     seed_official_products(db)
                     db.session.commit()
                 except Exception as e:
                     print(f"⚠️ Could not seed official products: {e}")
+
+                # Link/copy owner-provided product images (idempotent, run AFTER seeding)
+                ensure_link_owner_product_images(db)
+                db.session.commit()
 
                 # Create default services
                 create_services(db)
