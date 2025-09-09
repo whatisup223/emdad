@@ -264,6 +264,10 @@ Browse our complete range of premium Egyptian agricultural products including ci
                     <!-- Product Image -->
                     {% set main_image = product.get_main_image() %}
                     {% set _fname = main_image.filename if main_image else (product.image_path if product.image_path else (product.slug ~ '-emdad-global.webp')) %}
+                    {% if _fname.endswith('.svg') %}
+                    {% set _fname = (product.slug ~ '-emdad-global.webp') %}
+                    {% endif %}
+
 
                     {% if main_image %}
                     <div class="product-image-wrapper position-relative overflow-hidden">

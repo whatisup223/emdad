@@ -718,6 +718,9 @@
                         <div class="product-image-wrapper position-relative overflow-hidden">
                             {% set main_image = product.get_main_image() %}
                             {% set _fname = main_image.filename if main_image else (product.image_path if product.image_path else (product.slug ~ '-emdad-global.webp')) %}
+                            {% if _fname.endswith('.svg') %}
+                            {% set _fname = (product.slug ~ '-emdad-global.webp') %}
+                            {% endif %}
                             <img src="{{ image_url_with_timestamp('products/' + _fname) }}"
                                  class="card-img-top product-image" alt="{{ product.get_name(current_language) }}" style="height: 250px; object-fit: cover;"
                                  loading="eager" decoding="async"

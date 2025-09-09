@@ -1118,15 +1118,12 @@ def seed_official_products(db):
         # Skip copying sample category images to allow real photos provided by owner
         # (no-op for categories)
 
-        # Copy product images
+        # Copy product images (disabled for SVG to avoid overriding real webp assets)
         if os.path.exists('static/images/samples/products'):
             for filename in os.listdir('static/images/samples/products'):
-                if filename.endswith('.svg'):
-                    src = f'static/images/samples/products/{filename}'
-                    for dest_dir in ['uploads/products', 'instance/uploads/products']:
-                        dest = f'{dest_dir}/{filename}'
-                        shutil.copy2(src, dest)
-                        print(f"✅ Copied product image: {filename}")
+                # Skip copying SVG placeholders for products in production
+                if filename.lower().endswith('.svg'):
+                    continue
 
         # Copy news images
         if os.path.exists('static/images/samples/news'):
