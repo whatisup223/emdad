@@ -858,7 +858,10 @@ def ensure_link_owner_product_images(db):
     os.makedirs(inst_dir, exist_ok=True)
 
     # Fallback static dir (tracked in repo) used to populate instance on deploy
-    static_dir = os.path.join(current_app.static_folder, 'uploads', 'products')
+    # Support both top-level './static' and Flask's 'app/static' layouts
+    app_static_products = os.path.join(current_app.static_folder, 'uploads', 'products')
+    root_static_products = os.path.join(os.path.dirname(current_app.root_path), 'static', 'uploads', 'products')
+    static_dir = app_static_products if os.path.isdir(app_static_products) else root_static_products
     os.makedirs(static_dir, exist_ok=True)
 
     def _find_real_case(name: str, pool: list[str]) -> str | None:
