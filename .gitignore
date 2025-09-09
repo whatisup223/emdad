@@ -136,8 +136,8 @@ dmypy.json
 uploads/*
 !uploads/.gitkeep
 
-# Static files (generated)
-static/uploads/
+# Static files (generated) - exclude uploads but keep essential images
+static/uploads/*
 # Keep category images tracked for production fallback
 !static/uploads/categories/
 !static/uploads/categories/*.webp
