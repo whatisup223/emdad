@@ -209,27 +209,7 @@
                     <p class="lead text-muted mb-4 {{ 'arabic-text' if is_rtl else 'english-text' }}">{{ (product.get_short_description(current_language) if product.get_short_description is defined else product.get_short_description()) }}</p>
                     {% endif %}
 
-                    <!-- Seasonality strip -->
-                    {% if season_view %}
-                    <div class="mb-4">
-                      <div class="d-flex align-items-center gap-2 small text-muted mb-2">
-                        <i class="fas fa-calendar-alt"></i>
-                        <span>{% if is_rtl %}التوفر حسب الأشهر{% else %}Monthly availability{% endif %}</span>
-                      </div>
-                      <div class="d-flex gap-1 flex-wrap">
-                        {% set labels_en = {'peak':'Peak','available':'Available','limited':'Limited','off':'Off-season','iqf':'Frozen'} %}
-                        {% set labels_ar = {'peak':'ذروة','available':'متاح','limited':'محدود','off':'خارج الموسم','iqf':'مجمّد'} %}
-                        {% set months_names_en = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'] %}
-                        {% set months_names_ar = ['يناير','فبراير','مارس','أبريل','مايو','يونيو','يوليو','أغسطس','سبتمبر','أكتوبر','نوفمبر','ديسمبر'] %}
-                        {% for st in season_view.months_state %}
-                          {% set idx = loop.index0 %}
-                          {% set label = (labels_ar if is_rtl else labels_en)[st] %}
-                          {% set m_name = months_names_ar[idx] if is_rtl else months_names_en[idx] %}
-                          <span class="rounded-pill px-2 py-1 border small state-chip state-{{ st }}" title="{{ product.get_name(current_language) }} — {{ m_name }} • {{ label }}"></span>
-                        {% endfor %}
-                      </div>
-                    </div>
-                    {% endif %}
+
 
                     <!-- Key Features -->
                     {% set specs = product.get_specifications_lang(current_language) %}
@@ -321,6 +301,83 @@
     </div>
 </section>
 
+<!-- Monthly Availability Section -->
+{% if season_view %}
+<section class="py-4 bg-white border-bottom">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-10 mx-auto">
+                <div class="monthly-availability-card">
+                    <div class="d-flex align-items-center justify-content-center gap-2 mb-3">
+                        <i class="fas fa-calendar-alt text-primary"></i>
+                        <h5 class="mb-0 text-primary fw-bold">
+                            {% if is_rtl %}
+                                التوفر الشهري
+                            {% else %}
+                                Monthly Availability
+                            {% endif %}
+                        </h5>
+                    </div>
+
+                    <!-- Months Grid -->
+                    <div class="months-grid">
+                        {% set labels_en = {'peak':'Peak','available':'Available','limited':'Limited','off':'Off-season','iqf':'Frozen'} %}
+                        {% set labels_ar = {'peak':'ذروة','available':'متاح','limited':'محدود','off':'خارج الموسم','iqf':'مجمّد'} %}
+                        {% set months_names_en = ['January','February','March','April','May','June','July','August','September','October','November','December'] %}
+                        {% set months_names_ar = ['يناير','فبراير','مارس','أبريل','مايو','يونيو','يوليو','أغسطس','سبتمبر','أكتوبر','نوفمبر','ديسمبر'] %}
+                        {% set months_short_en = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'] %}
+                        {% set months_short_ar = ['يناير','فبراير','مارس','أبريل','مايو','يونيو','يوليو','أغسطس','سبتمبر','أكتوبر','نوفمبر','ديسمبر'] %}
+
+                        <div class="months-row d-flex gap-1 justify-content-center flex-nowrap">
+                            {% for st in season_view.months_state %}
+                                {% set idx = loop.index0 %}
+                                {% set label = (labels_ar if is_rtl else labels_en)[st] %}
+                                {% set m_name_full = months_names_ar[idx] if is_rtl else months_names_en[idx] %}
+                                {% set m_name_short = months_short_ar[idx] if is_rtl else months_short_en[idx] %}
+
+                                <div class="month-item">
+                                    <div class="month-card-compact month-{{ st }} text-center p-2 rounded-2 border d-flex flex-column align-items-center justify-content-center"
+                                         title="{{ m_name_full }} - {{ label }}">
+                                        <div class="month-name-compact fw-bold small">{{ m_name_short }}</div>
+                                        <div class="status-dot status-{{ st }} mt-1"></div>
+                                    </div>
+                                </div>
+                            {% endfor %}
+                        </div>
+                    </div>
+
+                    <!-- Legend -->
+                    <div class="availability-legend-compact mt-3 pt-2 text-center">
+                        <div class="d-flex gap-3 justify-content-center flex-wrap">
+                            <div class="d-flex align-items-center gap-1">
+                                <span class="legend-dot-small legend-peak"></span>
+                                <small>{% if is_rtl %}ذروة{% else %}Peak{% endif %}</small>
+                            </div>
+                            <div class="d-flex align-items-center gap-1">
+                                <span class="legend-dot-small legend-available"></span>
+                                <small>{% if is_rtl %}متاح{% else %}Available{% endif %}</small>
+                            </div>
+                            <div class="d-flex align-items-center gap-1">
+                                <span class="legend-dot-small legend-limited"></span>
+                                <small>{% if is_rtl %}محدود{% else %}Limited{% endif %}</small>
+                            </div>
+                            <div class="d-flex align-items-center gap-1">
+                                <span class="legend-dot-small legend-off"></span>
+                                <small>{% if is_rtl %}خارج الموسم{% else %}Off-season{% endif %}</small>
+                            </div>
+                            <div class="d-flex align-items-center gap-1">
+                                <span class="legend-dot-small legend-iqf"></span>
+                                <small>{% if is_rtl %}مجمّد{% else %}Frozen{% endif %}</small>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+{% endif %}
+
 <!-- Product Details Tabs -->
 <section class="py-5 bg-light">
     <div class="container">
@@ -329,6 +386,194 @@
                 <!-- Tab Navigation -->
 
 <style>
+  /* Monthly Availability Styling - Compact Version */
+  .monthly-availability-card {
+    background: linear-gradient(135deg, #f8f9fa 0%, #ffffff 100%);
+    border-radius: 15px;
+    padding: 1.5rem;
+    box-shadow: 0 2px 15px rgba(0,0,0,0.06);
+    border: 1px solid rgba(249,203,153,0.2);
+  }
+
+  .months-row {
+    max-width: 100%;
+    overflow-x: auto;
+    padding: 0.5rem 0;
+    scrollbar-width: thin;
+    scrollbar-color: rgba(0,0,0,0.2) transparent;
+  }
+
+  .months-row::-webkit-scrollbar {
+    height: 4px;
+  }
+
+  .months-row::-webkit-scrollbar-track {
+    background: rgba(0,0,0,0.05);
+    border-radius: 2px;
+  }
+
+  .months-row::-webkit-scrollbar-thumb {
+    background: rgba(0,0,0,0.2);
+    border-radius: 2px;
+  }
+
+  .months-row::-webkit-scrollbar-thumb:hover {
+    background: rgba(0,0,0,0.3);
+  }
+
+  .month-item {
+    flex: 0 0 auto;
+    min-width: 60px;
+  }
+
+  .month-card-compact {
+    background: white;
+    transition: all 0.3s ease;
+    border: 2px solid #e9ecef;
+    min-height: 70px;
+    width: 60px;
+    cursor: pointer;
+  }
+
+  .month-card-compact:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+  }
+
+  .month-card-compact.month-peak {
+    background: linear-gradient(135deg, #d4edda 0%, #c3e6cb 100%);
+    border-color: #28a745;
+    color: #155724;
+  }
+
+  .month-card-compact.month-available {
+    background: linear-gradient(135deg, #cce5ff 0%, #b3d9ff 100%);
+    border-color: #007bff;
+    color: #004085;
+  }
+
+  .month-card-compact.month-limited {
+    background: linear-gradient(135deg, #fff3cd 0%, #ffeaa7 100%);
+    border-color: #ffc107;
+    color: #856404;
+  }
+
+  .month-card-compact.month-off {
+    background: linear-gradient(135deg, #f8d7da 0%, #f1c2c7 100%);
+    border-color: #dc3545;
+    color: #721c24;
+  }
+
+  .month-card-compact.month-iqf {
+    background: linear-gradient(135deg, #e2e3e5 0%, #d1d3d4 100%);
+    border-color: #6c757d;
+    color: #495057;
+  }
+
+  .month-name-compact {
+    font-size: 0.75rem;
+    line-height: 1;
+  }
+
+  .status-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    display: inline-block;
+  }
+
+  .status-dot.status-peak { background-color: #28a745; }
+  .status-dot.status-available { background-color: #007bff; }
+  .status-dot.status-limited { background-color: #ffc107; }
+  .status-dot.status-off { background-color: #dc3545; }
+  .status-dot.status-iqf { background-color: #6c757d; }
+
+  .availability-legend-compact {
+    background: rgba(249,203,153,0.08);
+    border-radius: 10px;
+    padding: 0.75rem;
+  }
+
+  .legend-dot-small {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    display: inline-block;
+  }
+
+  .legend-dot-small.legend-peak { background-color: #28a745; }
+  .legend-dot-small.legend-available { background-color: #007bff; }
+  .legend-dot-small.legend-limited { background-color: #ffc107; }
+  .legend-dot-small.legend-off { background-color: #dc3545; }
+  .legend-dot-small.legend-iqf { background-color: #6c757d; }
+
+  /* Active month card styling - Compact */
+  .month-card-compact.active-month {
+    transform: translateY(-3px) scale(1.1) !important;
+    box-shadow: 0 6px 20px rgba(0,0,0,0.15) !important;
+    border-width: 3px !important;
+  }
+
+  .month-card-compact.active-month.month-peak {
+    box-shadow: 0 6px 20px rgba(40, 167, 69, 0.3) !important;
+  }
+
+  .month-card-compact.active-month.month-available {
+    box-shadow: 0 6px 20px rgba(0, 123, 255, 0.3) !important;
+  }
+
+  .month-card-compact.active-month.month-limited {
+    box-shadow: 0 6px 20px rgba(255, 193, 7, 0.3) !important;
+  }
+
+  .month-card-compact.active-month.month-off {
+    box-shadow: 0 6px 20px rgba(220, 53, 69, 0.3) !important;
+  }
+
+  .month-card-compact.active-month.month-iqf {
+    box-shadow: 0 6px 20px rgba(108, 117, 125, 0.3) !important;
+  }
+
+  /* Responsive adjustments */
+  @media (max-width: 768px) {
+    .monthly-availability-card {
+      padding: 1rem;
+    }
+
+    .month-card-compact {
+      min-height: 60px;
+      width: 50px;
+    }
+
+    .month-name-compact {
+      font-size: 0.7rem;
+    }
+
+    .months-row {
+      gap: 0.5rem !important;
+    }
+
+    .availability-legend-compact {
+      padding: 0.5rem;
+    }
+
+    .legend-dot-small {
+      width: 6px;
+      height: 6px;
+    }
+  }
+
+  @media (max-width: 576px) {
+    .month-item {
+      min-width: 45px;
+    }
+
+    .month-card-compact {
+      width: 45px;
+      min-height: 55px;
+    }
+  }
+
   /* Tabs styling and mobile scroll */
   .product-tabs .nav-link { border-radius: 999px; border: 2px solid transparent; padding: .6rem 1rem; font-weight: 600; color: var(--primary-color); }
   .product-tabs .nav-link.active { background: var(--secondary-gradient); color: var(--dark-color); border-color: transparent; }
@@ -338,6 +583,74 @@
   .tabs-scroller::-webkit-scrollbar { height: 6px; }
   .tabs-scroller::-webkit-scrollbar-thumb { background: rgba(0,0,0,.15); border-radius: 3px; }
 </style>
+
+<script>
+// Monthly Availability Interactive Features - Compact Version
+document.addEventListener('DOMContentLoaded', function() {
+    // Add hover effects and tooltips for month cards
+    const monthCards = document.querySelectorAll('.month-card-compact');
+
+    monthCards.forEach(card => {
+        // Add click effect
+        card.addEventListener('click', function() {
+            // Remove active class from all cards
+            monthCards.forEach(c => c.classList.remove('active-month'));
+            // Add active class to clicked card
+            this.classList.add('active-month');
+
+            // Get month info from title attribute
+            const title = this.getAttribute('title');
+            console.log(`Selected: ${title}`);
+        });
+
+        // Add enhanced hover effect
+        card.addEventListener('mouseenter', function() {
+            if (!this.classList.contains('active-month')) {
+                this.style.transform = 'translateY(-2px) scale(1.05)';
+            }
+        });
+
+        card.addEventListener('mouseleave', function() {
+            if (!this.classList.contains('active-month')) {
+                this.style.transform = 'translateY(0) scale(1)';
+            }
+        });
+    });
+
+    // Animate cards on scroll
+    const observerOptions = {
+        threshold: 0.1,
+        rootMargin: '0px 0px -50px 0px'
+    };
+
+    const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                const cards = entry.target.querySelectorAll('.month-card-compact');
+                cards.forEach((card, index) => {
+                    setTimeout(() => {
+                        card.style.opacity = '1';
+                        card.style.transform = 'translateY(0)';
+                    }, index * 50); // Faster animation for compact version
+                });
+            }
+        });
+    }, observerOptions);
+
+    const monthsRow = document.querySelector('.months-row');
+    if (monthsRow) {
+        // Initially hide cards for animation
+        const cards = monthsRow.querySelectorAll('.month-card-compact');
+        cards.forEach(card => {
+            card.style.opacity = '0';
+            card.style.transform = 'translateY(10px)';
+            card.style.transition = 'all 0.3s ease';
+        });
+
+        observer.observe(monthsRow);
+    }
+});
+</script>
 
                 <div class="tabs-scroller product-tabs"><ul class="nav nav-pills nav-fill mb-4 flex-nowrap" id="productTabs" role="tablist" data-aos="fade-up" style="overflow-x:auto; white-space:nowrap; gap:.5rem;">
 
