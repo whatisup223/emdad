@@ -1095,6 +1095,7 @@ def seed_official_products(db):
     - Assigns category by category_key
     - Sets Product.image_path and ensures main ProductImage
     - Accepts .webp/.svg tracked in static/uploads/products
+    - Enhanced with better error handling and image verification
     """
     import json, os, shutil
     from flask import current_app
@@ -1112,36 +1113,60 @@ def seed_official_products(db):
     upload_folder = current_app.config.get('UPLOAD_FOLDER', 'uploads')
     inst_dir = os.path.join(current_app.instance_path, upload_folder, 'products')
     os.makedirs(inst_dir, exist_ok=True)
-    # Support both top-level './static' and Flask's 'app/static' layouts
-    app_static_products = os.path.join(current_app.static_folder, 'uploads', 'products')
-    root_static_products = os.path.join(os.path.dirname(current_app.root_path), 'static', 'uploads', 'products')
-    def _pick_static_dir(primary, secondary):
-        p_files = []
-        s_files = []
-        if os.path.isdir(primary):
-            try:
-                p_files = [f for f in os.listdir(primary) if os.path.isfile(os.path.join(primary, f))]
-            except Exception:
-                p_files = []
-        if os.path.isdir(secondary):
-            try:
-                s_files = [f for f in os.listdir(secondary) if os.path.isfile(os.path.join(secondary, f))]
-            except Exception:
-                s_files = []
-        if p_files:
-            return primary
-        if s_files:
-            return secondary
-        return primary if os.path.isdir(primary) else secondary
-    static_dir = _pick_static_dir(app_static_products, root_static_products)
-    os.makedirs(static_dir, exist_ok=True)
+
+    # Support multiple static directory layouts for robustness
+    static_candidates = []
+    try:
+        static_candidates.append(os.path.join(current_app.static_folder, 'uploads', 'products'))
+    except Exception:
+        pass
+    try:
+        static_candidates.append(os.path.join(os.path.dirname(current_app.root_path), 'static', 'uploads', 'products'))
+    except Exception:
+        pass
+    # Also check current working directory
+    static_candidates.append(os.path.join(os.getcwd(), 'static', 'uploads', 'products'))
+
+    def _pick_static_dir(candidates):
+        for candidate in candidates:
+            if os.path.isdir(candidate):
+                try:
+                    files = [f for f in os.listdir(candidate) if os.path.isfile(os.path.join(candidate, f)) and f.endswith('.webp')]
+                    if files:
+                        print(f"✅ Using static directory: {candidate} (found {len(files)} webp files)")
+                        return candidate
+                except Exception:
+                    continue
+        # Fallback to first existing directory
+        for candidate in candidates:
+            if os.path.isdir(candidate):
+                print(f"⚠️ Using fallback static directory: {candidate}")
+                return candidate
+        # Create first candidate if none exist
+        if candidates:
+            os.makedirs(candidates[0], exist_ok=True)
+            print(f"📁 Created static directory: {candidates[0]}")
+            return candidates[0]
+        return None
+
+    static_dir = _pick_static_dir(static_candidates)
+    if not static_dir:
+        print("❌ Could not determine static directory for products")
+        return
+
+    successful_products = 0
+    failed_products = 0
+    copied_images = 0
+    missing_images = []
 
     for item in items:
         slug = item['slug']
         cat = Category.query.filter_by(key=item['category_key']).first()
         if not cat:
             print(f"⚠️ Category not found for product {slug}: {item['category_key']}")
+            failed_products += 1
             continue
+
         p = Product.query.filter_by(slug=slug).first()
         if not p:
             p = Product(slug=slug, category_id=cat.id)
@@ -1156,31 +1181,73 @@ def seed_official_products(db):
         p.show_on_homepage = bool(item.get('show_on_homepage', True))
         p.sort_order = int(item.get('sort_order', 1))
         p.category_id = cat.id
-        # Ensure image copy
+
+        # Enhanced image handling
         fname = item.get('image_filename')
+        image_copied = False
         if fname:
             src = os.path.join(static_dir, fname)
             dst = os.path.join(inst_dir, fname)
-            if os.path.isfile(src) and not os.path.isfile(dst):
-                try:
-                    shutil.copy2(src, dst)
-                    print(f"✅ Copied product image from static: {fname}")
-                except Exception as e:
-                    print(f"⚠️ Failed to copy {fname}: {e}")
-            if os.path.isfile(dst) or os.path.isfile(src):
-                p.image_path = fname
+
+            # Check if source exists
+            if os.path.isfile(src):
+                # Copy to instance if not exists or if source is newer
+                if not os.path.isfile(dst) or os.path.getmtime(src) > os.path.getmtime(dst):
+                    try:
+                        shutil.copy2(src, dst)
+                        print(f"✅ Copied product image: {fname}")
+                        copied_images += 1
+                        image_copied = True
+                    except Exception as e:
+                        print(f"⚠️ Failed to copy {fname}: {e}")
+                else:
+                    image_copied = True
+
+                # Verify the image exists in destination
+                if os.path.isfile(dst):
+                    p.image_path = fname
+                else:
+                    print(f"⚠️ Image not found in destination: {fname}")
+                    missing_images.append((slug, fname))
+            else:
+                print(f"⚠️ Source image not found: {src}")
+                missing_images.append((slug, fname))
+
         db.session.add(p)
         db.session.flush()
-        # Ensure main ProductImage
+
+        # Ensure main ProductImage record
         main = p.images.filter_by(is_main=True).first()
         if p.image_path:
             if main and main.filename != p.image_path:
                 main.filename = p.image_path
                 db.session.add(main)
             elif not main:
-                db.session.add(ProductImage(product_id=p.id, filename=p.image_path, alt_text_en=p.name_en, alt_text_ar=p.name_ar, is_main=True, sort_order=0))
+                db.session.add(ProductImage(
+                    product_id=p.id,
+                    filename=p.image_path,
+                    alt_text_en=p.name_en,
+                    alt_text_ar=p.name_ar,
+                    is_main=True,
+                    sort_order=0
+                ))
+
+        successful_products += 1
 
     db.session.commit()
+
+    # Print detailed summary
+    print(f"\n📊 Product seeding summary:")
+    print(f"✅ Successful products: {successful_products}")
+    print(f"❌ Failed products: {failed_products}")
+    print(f"📁 Images copied: {copied_images}")
+    print(f"⚠️ Missing images: {len(missing_images)}")
+
+    if missing_images:
+        print(f"\n📋 Missing images list:")
+        for slug, fname in missing_images:
+            print(f"  - {slug}: {fname}")
+
     print("✅ Seeded/updated official products from seeds.")
 
 
@@ -1303,10 +1370,30 @@ def init_database():
 
                 # Seed official products from seeds/products.json (idempotent upsert)
                 try:
+                    print("🌱 Seeding official products...")
                     seed_official_products(db)
                     db.session.commit()
+
+                    # Verify seeding was successful
+                    from app.models import Product
+                    product_count = Product.query.filter_by(status='active').count()
+                    print(f"✅ Seeding completed: {product_count} active products")
+
+                    if product_count < 28:
+                        print(f"⚠️ WARNING: Expected at least 28 products, found {product_count}")
+                        print("🔄 Attempting to re-seed...")
+                        seed_official_products(db)
+                        db.session.commit()
+
+                        product_count = Product.query.filter_by(status='active').count()
+                        print(f"🔄 After re-seeding: {product_count} active products")
+
                 except Exception as e:
-                    print(f"⚠️ Could not seed official products: {e}")
+                    print(f"❌ Could not seed official products: {e}")
+                    import traceback
+                    traceback.print_exc()
+                    # Don't fail the entire initialization for this
+                    print("⚠️ Continuing with initialization despite seeding issues...")
 
                 # Link/copy owner-provided product images (idempotent, run AFTER seeding)
                 ensure_link_owner_product_images(db)

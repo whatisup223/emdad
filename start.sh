@@ -23,6 +23,16 @@ else
     exit 1
 fi
 
+# Final production check before starting server
+echo "🔍 Final production check..."
+if python3.11 scripts/verify_production_ready.py; then
+    echo "✅ Production verification passed"
+elif python3 scripts/verify_production_ready.py; then
+    echo "✅ Production verification passed"
+else
+    echo "⚠️ Production verification had issues, but starting server anyway..."
+fi
+
 # Test WSGI import
 echo "🔍 Testing WSGI import..."
 python3.11 -c "

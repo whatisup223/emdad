@@ -51,4 +51,26 @@ else
     exit 1
 fi
 
-echo "✅ Build completed successfully!"
+# Automatically fix and ensure WebP images
+echo "🖼️ Automatically ensuring all WebP images are available..."
+if python3.11 scripts/auto_fix_production_images.py; then
+    echo "✅ WebP images automatically fixed and verified with python3.11"
+elif python3 scripts/auto_fix_production_images.py; then
+    echo "✅ WebP images automatically fixed and verified with python3"
+else
+    echo "❌ WebP image auto-fix failed - this is critical!"
+    exit 1
+fi
+
+# Final verification
+echo "🔍 Final verification of production setup..."
+if python3.11 scripts/verify_production_ready.py; then
+    echo "✅ Production verification passed with python3.11"
+elif python3 scripts/verify_production_ready.py; then
+    echo "✅ Production verification passed with python3"
+else
+    echo "❌ Production verification failed - deployment aborted!"
+    exit 1
+fi
+
+echo "✅ Build completed successfully - All 28 products with WebP images ready!"

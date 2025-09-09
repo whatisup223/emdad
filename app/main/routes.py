@@ -569,67 +569,145 @@ Emdad Global Team
 @bp.route('/uploads/<path:filename>')
 def uploaded_file(filename):
     """Serve uploaded files from instance/uploads with static fallback.
+    Enhanced with better error handling and WebP support for production.
     If the file is missing in instance, try to find it under static/uploads and
-    copy it into instance for future requests. Adds no-cache headers.
+    copy it into instance for future requests. Adds appropriate cache headers.
     """
     from flask import make_response, abort
+    import mimetypes
 
     upload_root = os.path.join(current_app.instance_path, current_app.config.get('UPLOAD_FOLDER', 'uploads'))
 
-    def _send(path_root: str, rel_path: str):
-        response = make_response(send_from_directory(path_root, rel_path))
-        response.headers['Cache-Control'] = 'no-cache, no-store, must-revalidate'
-        response.headers['Pragma'] = 'no-cache'
-        response.headers['Expires'] = '0'
-        return response
+    def _send(path_root: str, rel_path: str, use_cache=False):
+        try:
+            response = make_response(send_from_directory(path_root, rel_path))
+
+            # Set appropriate MIME type for WebP files
+            if rel_path.lower().endswith('.webp'):
+                response.headers['Content-Type'] = 'image/webp'
+            else:
+                # Let Flask handle other MIME types
+                mime_type, _ = mimetypes.guess_type(rel_path)
+                if mime_type:
+                    response.headers['Content-Type'] = mime_type
+
+            # Cache headers - different for production vs development
+            if use_cache and not current_app.debug:
+                # Production: cache for 1 hour
+                response.headers['Cache-Control'] = 'public, max-age=3600'
+            else:
+                # Development: no cache
+                response.headers['Cache-Control'] = 'no-cache, no-store, must-revalidate'
+                response.headers['Pragma'] = 'no-cache'
+                response.headers['Expires'] = '0'
+
+            return response
+        except Exception as e:
+            current_app.logger.warning(f"Failed to send file {rel_path} from {path_root}: {e}")
+            raise FileNotFoundError(f"File not found: {rel_path}")
 
     # First try instance/uploads directly
     try:
-        return _send(upload_root, filename)
+        return _send(upload_root, filename, use_cache=True)
     except FileNotFoundError:
         pass
 
     # Fallback: look in static uploads and copy to instance if found
-    # Support both app/static and ./static layouts
-    static_primary = os.path.join(current_app.static_folder, 'uploads')
-    static_secondary = os.path.join(os.path.dirname(current_app.root_path), 'static', 'uploads')
-    static_root = static_primary if os.path.isdir(static_primary) else static_secondary
+    # Support multiple static directory layouts for robustness
+    static_candidates = []
+    try:
+        static_candidates.append(os.path.join(current_app.static_folder, 'uploads'))
+    except Exception:
+        pass
+    try:
+        static_candidates.append(os.path.join(os.path.dirname(current_app.root_path), 'static', 'uploads'))
+    except Exception:
+        pass
+    # Also check current working directory
+    static_candidates.append(os.path.join(os.getcwd(), 'static', 'uploads'))
 
     # Determine subdir (e.g., products/categories/news/...) and basename
     subdir, base = os.path.split(filename)
-    static_dir = os.path.join(static_root, subdir)
     instance_dir = os.path.join(upload_root, subdir)
     os.makedirs(instance_dir, exist_ok=True)
 
-    # Case-insensitive search in static_dir
-    real_name = None
-    try:
-        for f in os.listdir(static_dir):
-            if f.lower() == base.lower():
-                real_name = f
-                break
-    except Exception:
+    # Try each static directory candidate
+    for static_root in static_candidates:
+        if not os.path.isdir(static_root):
+            continue
+
+        static_dir = os.path.join(static_root, subdir)
+        if not os.path.isdir(static_dir):
+            continue
+
+        # Case-insensitive search in static_dir
         real_name = None
-
-    if real_name:
         try:
-            src = os.path.join(static_dir, real_name)
-            dst = os.path.join(instance_dir, real_name)
-            if not os.path.isfile(dst):
-                # Copy once; subsequent requests will hit instance directly
-                with open(src, 'rb') as s, open(dst, 'wb') as d:
-                    d.write(s.read())
-            # Recalculate relative path using the real name
-            rel = os.path.join(subdir, real_name) if subdir else real_name
-            return _send(upload_root, rel)
+            for f in os.listdir(static_dir):
+                if f.lower() == base.lower():
+                    real_name = f
+                    break
         except Exception:
-            # If copy fails, attempt to serve directly from static as a last resort
-            try:
-                return _send(static_root, os.path.join(subdir, real_name))
-            except Exception:
-                pass
+            continue
 
-    # Not found anywhere
+        if real_name:
+            try:
+                src = os.path.join(static_dir, real_name)
+                dst = os.path.join(instance_dir, real_name)
+
+                # Copy to instance if not exists or if source is newer
+                if not os.path.isfile(dst) or (os.path.isfile(src) and os.path.getmtime(src) > os.path.getmtime(dst)):
+                    try:
+                        with open(src, 'rb') as s, open(dst, 'wb') as d:
+                            d.write(s.read())
+                        current_app.logger.info(f"Auto-copied {real_name} from static to instance")
+                    except Exception as e:
+                        current_app.logger.warning(f"Failed to copy {real_name}: {e}")
+
+                # Try to serve from instance first
+                if os.path.isfile(dst):
+                    rel = os.path.join(subdir, real_name) if subdir else real_name
+                    return _send(upload_root, rel, use_cache=True)
+
+                # Fallback: serve directly from static
+                rel_static = os.path.join(subdir, real_name) if subdir else real_name
+                return _send(static_root, rel_static, use_cache=True)
+
+            except Exception as e:
+                current_app.logger.warning(f"Error handling file {real_name}: {e}")
+                continue
+
+    # Last resort: try to auto-fix missing images for products
+    if subdir == 'products' and base.endswith('.webp'):
+        try:
+            # Extract product slug from filename
+            slug = base.replace('-emdad-global.webp', '')
+            current_app.logger.info(f"Attempting auto-fix for missing product image: {slug}")
+
+            # Try to run auto-fix in background
+            import subprocess
+            import threading
+            import sys
+
+            def run_auto_fix():
+                try:
+                    subprocess.run([
+                        sys.executable,
+                        os.path.join(os.path.dirname(current_app.root_path), 'scripts', 'auto_monitor_images.py')
+                    ], timeout=30)
+                except Exception:
+                    pass
+
+            # Run in background thread
+            thread = threading.Thread(target=run_auto_fix)
+            thread.daemon = True
+            thread.start()
+
+        except Exception:
+            pass
+
+    # Not found anywhere - log for debugging
+    current_app.logger.warning(f"File not found in any location: {filename}")
     abort(404)
 
 @bp.route('/set-language/<language>')
