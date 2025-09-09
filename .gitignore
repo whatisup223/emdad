@@ -144,6 +144,7 @@ static/uploads/
 # Keep product images tracked for production fallback
 !static/uploads/products/
 !static/uploads/products/*.webp
+!static/uploads/products/*.svg
 # Keep news images tracked for production fallback
 !static/uploads/news/
 !static/uploads/news/*
