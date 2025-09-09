@@ -1115,11 +1115,11 @@
                         <div class="col-lg-3">
                             <h6 class="{{ 'arabic-heading' if is_rtl else 'english-heading' }} mb-3">{{ _('Categories') }}</h6>
                             <ul class="list-unstyled mb-0">
-                                <li class="mb-2"><a class="footer-link {{ 'arabic-text' if is_rtl else 'english-text' }}" href="{{ url_for('main.products', cat='citrus') }}">{{ _('Citrus Fruits') }}</a></li>
-                                <li class="mb-2"><a class="footer-link {{ 'arabic-text' if is_rtl else 'english-text' }}" href="{{ url_for('main.products', cat='fresh-fruits') }}">{{ _('Fresh Fruits') }}</a></li>
-                                <li class="mb-2"><a class="footer-link {{ 'arabic-text' if is_rtl else 'english-text' }}" href="{{ url_for('main.products', cat='fresh-vegetables') }}">{{ _('Vegetables') }}</a></li>
-                                <li class="mb-2"><a class="footer-link {{ 'arabic-text' if is_rtl else 'english-text' }}" href="{{ url_for('main.products', cat='frozen-fruits') }}">{{ _('Frozen Fruits') }}</a></li>
-                                <li class="mb-2"><a class="footer-link {{ 'arabic-text' if is_rtl else 'english-text' }}" href="{{ url_for('main.products', cat='herbs-spices') }}">{{ _('Herbs & Spices') }}</a></li>
+                                {% for cat in nav_categories[:5] %}
+                                <li class="mb-2">
+                                    <a class="footer-link {{ 'arabic-text' if is_rtl else 'english-text' }}" href="{{ url_for('main.products', cat=cat.key) }}">{{ cat.get_name(current_language) }}</a>
+                                </li>
+                                {% endfor %}
                             </ul>
                         </div>
 
