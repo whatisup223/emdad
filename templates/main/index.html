@@ -720,6 +720,9 @@
                             {% if main_image %}
                             <img src="{{ url_for('main.uploaded_file', filename='products/' + main_image.filename) }}"
                                  class="card-img-top product-image" alt="{{ product.get_name(current_language) }}" style="height: 250px; object-fit: cover;">
+                            {% elif product.image_path %}
+                            <img src="{{ url_for('main.uploaded_file', filename='products/' + product.image_path) }}"
+                                 class="card-img-top product-image" alt="{{ product.get_name(current_language) }}" style="height: 250px; object-fit: cover;">
                             {% else %}
                             <div class="card-img-top bg-gradient-primary d-flex align-items-center justify-content-center" style="height: 250px;">
                                 <i class="fas fa-apple-alt fa-4x text-white opacity-75"></i>

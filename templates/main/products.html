@@ -281,6 +281,25 @@ Browse our complete range of premium Egyptian agricultural products including ci
     </div>
   </div>
 </div>
+                    {% elif product.image_path %}
+                    <div class="product-image-wrapper position-relative overflow-hidden">
+  <img src="{{ url_for('main.uploaded_file', filename='products/' + product.image_path) }}"
+       class="card-img-top" alt="{{ product.get_name(current_language) if product.get_name is defined else product.get_name() }}"
+       style="height: 250px; object-fit: cover;">
+  <div class="product-overlay position-absolute top-0 start-0 w-100 h-100 d-flex align-items-center justify-content-center">
+    <div class="overlay-content text-center text-white">
+      <div class="btn-group-vertical">
+        <a href="{{ url_for('main.product_detail', slug=product.slug) }}" class="btn btn-light btn-sm mb-2">
+          <i class="fas fa-eye me-1"></i>{{ _('Quick View') }}
+        </a>
+        <a href="{{ url_for('main.contact') }}?product={{ product.slug }}" class="btn btn-primary btn-sm">
+          <i class="fas fa-envelope me-1"></i>{{ _('Get Quote') }}
+        </a>
+      </div>
+    </div>
+  </div>
+</div>
+
                     {% else %}
                     <div class="product-image-wrapper position-relative overflow-hidden">
   <div class="card-img-top bg-gradient-primary d-flex align-items-center justify-content-center" style="height: 250px;">
