@@ -998,6 +998,50 @@ def ensure_link_owner_product_images(db):
         print("✅ Product images already linked or no changes needed.")
 
 
+
+
+def enforce_strict_product_webp(db):
+    """Strictly enforce presence of webp images for all products in production.
+    For each product, require <slug>-emdad-global.webp to exist in instance/uploads/products
+    or at least in static/uploads/products (in which case copy to instance).
+    If any are missing, raise RuntimeError to abort startup.
+    """
+    import os, shutil
+    from flask import current_app
+    from app.models import Product
+
+    upload_folder = current_app.config.get('UPLOAD_FOLDER', 'uploads')
+    inst_dir = os.path.join(current_app.instance_path, upload_folder, 'products')
+    os.makedirs(inst_dir, exist_ok=True)
+
+    # Support both app/static and repo ./static layouts
+    app_static_products = os.path.join(current_app.static_folder, 'uploads', 'products')
+    root_static_products = os.path.join(os.path.dirname(current_app.root_path), 'static', 'uploads', 'products')
+    static_dir = app_static_products if os.path.isdir(app_static_products) else root_static_products
+
+    missing = []
+
+    for p in Product.query.all():
+        expected = f"{p.slug}-emdad-global.webp"
+        inst_path = os.path.join(inst_dir, expected)
+        if os.path.isfile(inst_path):
+            continue
+        static_path = os.path.join(static_dir, expected)
+        if os.path.isfile(static_path):
+            # Copy to instance
+            try:
+                shutil.copy2(static_path, inst_path)
+                continue
+            except Exception as e:
+                # If copy fails, still treat as missing
+                pass
+        missing.append(f"{p.slug}:{expected}")
+
+    if missing:
+        msg = "Strict assets check failed for products (missing webp):\n" + "\n".join(missing)
+        raise RuntimeError(msg)
+
+
 def copy_sample_images():
     """Copy sample images to upload directories"""
     import shutil
@@ -1226,6 +1270,9 @@ def init_database():
                 # Link/copy owner-provided product images (idempotent, run AFTER seeding)
                 ensure_link_owner_product_images(db)
                 db.session.commit()
+
+                # Enforce strict presence of product webp assets (fail startup if missing)
+                enforce_strict_product_webp(db)
 
                 # Create default services
                 create_services(db)
