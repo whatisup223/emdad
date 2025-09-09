@@ -263,11 +263,6 @@ Browse our complete range of premium Egyptian agricultural products including ci
                 <div class="product-card card h-100 border-0 shadow-lg hover-lift position-relative overflow-hidden">
                     <!-- Product Image -->
                     {% set main_image = product.get_main_image() %}
-                    {% set _fname = main_image.filename if main_image else (product.image_path if product.image_path else (product.slug ~ '-emdad-global.webp')) %}
-                    {% if _fname.endswith('.svg') %}
-                    {% set _fname = (product.slug ~ '-emdad-global.webp') %}
-                    {% endif %}
-
 
                     {% if main_image %}
                     <div class="product-image-wrapper position-relative overflow-hidden">
@@ -289,7 +284,7 @@ Browse our complete range of premium Egyptian agricultural products including ci
 </div>
                     {% elif product.image_path %}
                     <div class="product-image-wrapper position-relative overflow-hidden">
-  <img src="{{ image_url_with_timestamp('products/' + _fname) }}"
+  <img src="{{ url_for('static', filename=product.image_path.replace('static/', '')) }}"
        class="card-img-top" alt="{{ product.get_name(current_language) if product.get_name is defined else product.get_name() }}"
        style="height: 250px; object-fit: cover;"
        loading="eager" decoding="async"
@@ -360,7 +355,8 @@ Browse our complete range of premium Egyptian agricultural products including ci
                         <h5 class="card-heading {{ 'arabic-heading' if current_language == 'ar' else 'english-heading' }}">{{ product.get_name(current_language) if product.get_name is defined else product.get_name() }}</h5>
 
                         <p class="card-text {{ 'arabic-text' if current_language == 'ar' else 'english-text' }} text-muted flex-grow-1">
-  {{ (product.get_short_description(current_language) if product.get_short_description is defined else product.get_short_description()) | truncate(100) if (product.get_short_description is defined or product.get_short_description()) else _('Premium quality Egyptian agricultural product with exceptional taste and nutritional value.') }}
+  {% set short_desc = product.get_short_description(current_language) if product.get_short_description is defined else product.get_short_description() %}
+  {{ short_desc | truncate(100) if short_desc else _('Premium quality Egyptian agricultural product with exceptional taste and nutritional value.') }}
 </p>
 
                         <!-- Seasonality mini-strip -->
