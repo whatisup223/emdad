@@ -305,8 +305,10 @@ def ensure_link_owner_category_images(db):
     os.makedirs(cats_dir, exist_ok=True)
 
     # Fallback static dir (tracked in repo) used to populate instance on deploy
-    # Use Flask's configured static folder (absolute path)
-    static_cats_dir = os.path.join(current_app.static_folder, 'uploads', 'categories')
+    # Support both top-level './static' and Flask's 'app/static' layouts
+    app_static_cats = os.path.join(current_app.static_folder, 'uploads', 'categories')
+    root_static_cats = os.path.join(os.path.dirname(current_app.root_path), 'static', 'uploads', 'categories')
+    static_cats_dir = app_static_cats if os.path.isdir(app_static_cats) else root_static_cats
     os.makedirs(static_cats_dir, exist_ok=True)
 
     import shutil
@@ -378,7 +380,10 @@ def ensure_link_owner_news_images(db):
     os.makedirs(news_dir, exist_ok=True)
 
     # Fallback static dir (tracked in repo) to populate instance on deploy
-    static_news_dir = os.path.join(current_app.static_folder, 'uploads', 'news')
+    # Support both top-level './static' and Flask's 'app/static' layouts
+    app_static_news = os.path.join(current_app.static_folder, 'uploads', 'news')
+    root_static_news = os.path.join(os.path.dirname(current_app.root_path), 'static', 'uploads', 'news')
+    static_news_dir = app_static_news if os.path.isdir(app_static_news) else root_static_news
     os.makedirs(static_news_dir, exist_ok=True)
 
     exts = ['.webp', '.jpg', '.jpeg', '.png', '.svg', '.WEBP', '.JPG', '.JPEG', '.PNG', '.SVG']
@@ -597,7 +602,7 @@ def create_services(db):
         print("✅ Services already exist")
 
 def create_news(db):
-    """Create sample news articles"""
+    """Create sample news articles (slugs aligned with production assets)"""
     from app.models import News
     from datetime import datetime, timedelta
 
@@ -608,7 +613,7 @@ def create_news(db):
             {
                 'title_en': 'Emdad Global Expands to New Markets in 2025',
                 'title_ar': 'إمداد جلوبال تتوسع في أسواق جديدة في 2025',
-                'slug': 'emdad-global-expands-new-markets-2025',
+                'slug': 'emdad-global-expands-new-markets-2024',
                 'excerpt_en': 'We are excited to announce our expansion into European and Asian markets, bringing Egyptian agricultural excellence to new customers worldwide.',
                 'excerpt_ar': 'نحن متحمسون للإعلان عن توسعنا في الأسواق الأوروبية والآسيوية، مما يجلب التميز الزراعي المصري لعملاء جدد في جميع أنحاء العالم.',
                 'content_en': '''<p>Emdad Global is proud to announce a significant milestone in our journey of agricultural excellence. In 2025, we are expanding our operations to serve new markets across Europe and Asia, bringing the finest Egyptian agricultural products to customers worldwide.</p>
@@ -813,6 +818,7 @@ def create_company_info(db):
                 'is_active': True
             },
             {
+
                 'key': 'why_choose_us',
                 'title_en': 'Why Choose Emdad Global?',
                 'title_ar': 'لماذا تختار إمداد جلوبال؟',
@@ -932,6 +938,81 @@ def copy_sample_images():
     """Copy sample images to upload directories"""
     import shutil
     import os
+
+
+def seed_official_products(db):
+    """Upsert official products from seeds/products.json and link images.
+    - Uses slug as unique key
+    - Assigns category by category_key
+    - Sets Product.image_path and ensures main ProductImage
+    - Accepts .webp/.svg tracked in static/uploads/products
+    """
+    import json, os, shutil
+    from flask import current_app
+    from app.models import Product, ProductImage, Category
+
+    seeds_path = os.path.join(os.path.dirname(__file__), 'seeds', 'products.json')
+    if not os.path.isfile(seeds_path):
+        print(f"⚠️ seeds file not found: {seeds_path}")
+        return
+
+    with open(seeds_path, 'r', encoding='utf-8') as f:
+        payload = json.load(f)
+    items = payload.get('products') or []
+
+    upload_folder = current_app.config.get('UPLOAD_FOLDER', 'uploads')
+    inst_dir = os.path.join(current_app.instance_path, upload_folder, 'products')
+    os.makedirs(inst_dir, exist_ok=True)
+    static_dir = os.path.join(current_app.static_folder, 'uploads', 'products')
+    os.makedirs(static_dir, exist_ok=True)
+
+    for item in items:
+        slug = item['slug']
+        cat = Category.query.filter_by(key=item['category_key']).first()
+        if not cat:
+            print(f"⚠️ Category not found for product {slug}: {item['category_key']}")
+            continue
+        p = Product.query.filter_by(slug=slug).first()
+        if not p:
+            p = Product(slug=slug, category_id=cat.id)
+        p.name_en = item['name_en']
+        p.name_ar = item['name_ar']
+        p.description_en = item.get('desc_en')
+        p.description_ar = item.get('desc_ar')
+        p.short_description_en = item.get('short_en')
+        p.short_description_ar = item.get('short_ar')
+        p.status = 'active'
+        p.featured = bool(item.get('featured', True))
+        p.show_on_homepage = bool(item.get('show_on_homepage', True))
+        p.sort_order = int(item.get('sort_order', 1))
+        p.category_id = cat.id
+        # Ensure image copy
+        fname = item.get('image_filename')
+        if fname:
+            src = os.path.join(static_dir, fname)
+            dst = os.path.join(inst_dir, fname)
+            if os.path.isfile(src) and not os.path.isfile(dst):
+                try:
+                    shutil.copy2(src, dst)
+                    print(f"✅ Copied product image from static: {fname}")
+                except Exception as e:
+                    print(f"⚠️ Failed to copy {fname}: {e}")
+            if os.path.isfile(dst) or os.path.isfile(src):
+                p.image_path = fname
+        db.session.add(p)
+        db.session.flush()
+        # Ensure main ProductImage
+        main = p.images.filter_by(is_main=True).first()
+        if p.image_path:
+            if main and main.filename != p.image_path:
+                main.filename = p.image_path
+                db.session.add(main)
+            elif not main:
+                db.session.add(ProductImage(product_id=p.id, filename=p.image_path, alt_text_en=p.name_en, alt_text_ar=p.name_ar, is_main=True, sort_order=0))
+
+    db.session.commit()
+    print("✅ Seeded/updated official products from seeds.")
+
 
     try:
         print("Copying sample images...")
@@ -1056,6 +1137,13 @@ def init_database():
                 # Link/copy owner-provided product images (idempotent)
                 ensure_link_owner_product_images(db)
                 db.session.commit()
+
+                # Seed official products from seeds/products.json (idempotent upsert)
+                try:
+                    seed_official_products(db)
+                    db.session.commit()
+                except Exception as e:
+                    print(f"⚠️ Could not seed official products: {e}")
 
                 # Create default services
                 create_services(db)
