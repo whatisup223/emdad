@@ -166,11 +166,60 @@ def calendar():
     except Exception:
         total_count = len(items)
     filtered_count = len(products)
-    # Featured products for calendar footer section (6 items)
+    # Featured products for calendar footer section — mirror homepage logic (9 items)
     try:
-        featured_products = Product.query.filter_by(status='active', show_on_homepage=True).order_by(Product.sort_order, Product.name_en).limit(6).all() or []
+        categories_for_products = Category.query.filter_by(
+            is_active=True,
+            show_on_homepage=True
+        ).order_by(Category.sort_order).limit(8).all() or []
+
+        picked = []
+        picked_ids = set()
+
+        # One product per category
+        for cat in categories_for_products:
+            psel = Product.query.filter_by(
+                status='active',
+                show_on_homepage=True,
+                category_id=cat.id
+            ).order_by(Product.sort_order, Product.name_en).first()
+            if not psel:
+                # Fallback to any active product in this category
+                psel = Product.query.filter_by(
+                    status='active',
+                    category_id=cat.id
+                ).order_by(Product.sort_order, Product.name_en).first()
+            if psel and psel.id not in picked_ids:
+                picked.append(psel)
+                picked_ids.add(psel.id)
+
+        # Add 9th extra product (automatic choice): first featured not already picked
+        if len(picked) < 9:
+            extra_featured = Product.query.filter_by(
+                status='active',
+                show_on_homepage=True
+            ).order_by(Product.sort_order, Product.name_en).all() or []
+            for ep in extra_featured:
+                if ep.id not in picked_ids:
+                    picked.append(ep)
+                    picked_ids.add(ep.id)
+                    break
+
+        # If still fewer than 9, fill with any active products
+        if len(picked) < 9:
+            extra_any = Product.query.filter_by(status='active')\
+                .order_by(Product.sort_order, Product.name_en).all() or []
+            for ep in extra_any:
+                if ep.id not in picked_ids:
+                    picked.append(ep)
+                    picked_ids.add(ep.id)
+                    if len(picked) >= 9:
+                        break
+
+        featured_products = picked[:9]
     except Exception:
-        featured_products = products[:6]
+        featured_products = products[:9]
+
     return render_template('main/calendar.html', items=items, months=months, categories=categories, current_category=category_key, total_count=total_count, filtered_count=filtered_count, featured_products=featured_products)
 
 
