@@ -32,7 +32,8 @@
     {"slug":"marjoram","category_key":"dried-herbs","name_en":"Marjoram","name_ar":"مردقوش","short_en":"Aromatic marjoram.","short_ar":"مردقوش عطِر.","desc_en":"Dried marjoram.","desc_ar":"مردقوش مجفف.","sort_order":7,"featured":true,"show_on_homepage":true,"image_filename":"marjoram-emdad-global.webp"},
     {"slug":"mint","category_key":"dried-herbs","name_en":"Mint","name_ar":"نعناع","short_en":"Refreshing aroma.","short_ar":"رائحة منعشة.","desc_en":"Dried mint leaves.","desc_ar":"أوراق نعناع مجففة.","sort_order":8,"featured":true,"show_on_homepage":true,"image_filename":"mint-emdad-global.webp"},
     {"slug":"parsley","category_key":"dried-herbs","name_en":"Parsley","name_ar":"بقدونس","short_en":"Culinary dried parsley.","short_ar":"بقدونس مجفف للطهي.","desc_en":"Dried parsley flakes.","desc_ar":"رقائق بقدونس مجففة.","sort_order":9,"featured":true,"show_on_homepage":true,"image_filename":"parsley-emdad-global.webp"},
-    {"slug":"sage","category_key":"dried-herbs","name_en":"Sage","name_ar":"مريمية","short_en":"Earthy aroma.","short_ar":"رائحة ترابية.","desc_en":"Dried sage leaves.","desc_ar":"أوراق مريمية مجففة.","sort_order":10,"featured":true,"show_on_homepage":true,"image_filename":"sage-emdad-global.webp"}
+    {"slug":"sage","category_key":"dried-herbs","name_en":"Sage","name_ar":"مريمية","short_en":"Earthy aroma.","short_ar":"رائحة ترابية.","desc_en":"Dried sage leaves.","desc_ar":"أوراق مريمية مجففة.","sort_order":10,"featured":true,"show_on_homepage":true,"image_filename":"sage-emdad-global.webp"},
+    {"slug":"hibiscus","category_key":"dried-herbs","name_en":"Hibiscus","name_ar":"كركديه","short_en":"Tangy hibiscus petals.","short_ar":"بتلات كركديه حامضية.","desc_en":"Dried hibiscus for teas and beverages.","desc_ar":"كركديه مجفف للمشروبات والشاي.","sort_order":11,"featured":true,"show_on_homepage":true,"image_filename":"hibiscus-emdad-global.webp"}
   ]
 }
 
