@@ -1017,7 +1017,31 @@ def enforce_strict_product_webp(db):
     # Support both app/static and repo ./static layouts
     app_static_products = os.path.join(current_app.static_folder, 'uploads', 'products')
     root_static_products = os.path.join(os.path.dirname(current_app.root_path), 'static', 'uploads', 'products')
-    static_dir = app_static_products if os.path.isdir(app_static_products) else root_static_products
+
+    # Prefer the static dir that actually has files
+    def _pick_static_dir(primary, secondary):
+        def list_files(d):
+            try:
+                return [f for f in os.listdir(d) if os.path.isfile(os.path.join(d, f))]
+            except Exception:
+                return []
+        pf = list_files(primary) if os.path.isdir(primary) else []
+        sf = list_files(secondary) if os.path.isdir(secondary) else []
+        return primary if pf else (secondary if sf else primary)
+
+    static_dir = _pick_static_dir(app_static_products, root_static_products)
+
+    try:
+        files_static = [f for f in os.listdir(static_dir) if os.path.isfile(os.path.join(static_dir, f))]
+    except Exception:
+        files_static = []
+
+    def _find_case_insensitive(name):
+        nl = name.lower()
+        for real in files_static:
+            if real.lower() == nl:
+                return real
+        return None
 
     missing = []
 
@@ -1026,15 +1050,31 @@ def enforce_strict_product_webp(db):
         inst_path = os.path.join(inst_dir, expected)
         if os.path.isfile(inst_path):
             continue
-        static_path = os.path.join(static_dir, expected)
-        if os.path.isfile(static_path):
-            # Copy to instance
+
+        # Exact match in static (case-insensitive)
+        real = _find_case_insensitive(expected)
+        if real:
             try:
-                shutil.copy2(static_path, inst_path)
+                shutil.copy2(os.path.join(static_dir, real), os.path.join(inst_dir, real))
                 continue
-            except Exception as e:
-                # If copy fails, still treat as missing
+            except Exception:
                 pass
+
+        # Fallback: any webp starting with slug-
+        slug_prefix = f"{p.slug.lower()}-"
+        real_fallback = None
+        for realname in files_static:
+            rl = realname.lower()
+            if rl.endswith('.webp') and rl.startswith(slug_prefix):
+                real_fallback = realname
+                break
+        if real_fallback:
+            try:
+                shutil.copy2(os.path.join(static_dir, real_fallback), os.path.join(inst_dir, real_fallback))
+                continue
+            except Exception:
+                pass
+
         missing.append(f"{p.slug}:{expected}")
 
     if missing:
