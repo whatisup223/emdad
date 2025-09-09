@@ -568,23 +568,69 @@ Emdad Global Team
 
 @bp.route('/uploads/<path:filename>')
 def uploaded_file(filename):
-    """Serve uploaded files with cache control."""
-    from flask import make_response
-    upload_path = os.path.join(current_app.instance_path, current_app.config.get('UPLOAD_FOLDER', 'uploads'))
+    """Serve uploaded files from instance/uploads with static fallback.
+    If the file is missing in instance, try to find it under static/uploads and
+    copy it into instance for future requests. Adds no-cache headers.
+    """
+    from flask import make_response, abort
 
-    try:
-        response = make_response(send_from_directory(upload_path, filename))
+    upload_root = os.path.join(current_app.instance_path, current_app.config.get('UPLOAD_FOLDER', 'uploads'))
 
-        # Add cache control headers to prevent caching issues
+    def _send(path_root: str, rel_path: str):
+        response = make_response(send_from_directory(path_root, rel_path))
         response.headers['Cache-Control'] = 'no-cache, no-store, must-revalidate'
         response.headers['Pragma'] = 'no-cache'
         response.headers['Expires'] = '0'
-
         return response
+
+    # First try instance/uploads directly
+    try:
+        return _send(upload_root, filename)
     except FileNotFoundError:
-        # If file not found, return 404
-        from flask import abort
-        abort(404)
+        pass
+
+    # Fallback: look in static uploads and copy to instance if found
+    # Support both app/static and ./static layouts
+    static_primary = os.path.join(current_app.static_folder, 'uploads')
+    static_secondary = os.path.join(os.path.dirname(current_app.root_path), 'static', 'uploads')
+    static_root = static_primary if os.path.isdir(static_primary) else static_secondary
+
+    # Determine subdir (e.g., products/categories/news/...) and basename
+    subdir, base = os.path.split(filename)
+    static_dir = os.path.join(static_root, subdir)
+    instance_dir = os.path.join(upload_root, subdir)
+    os.makedirs(instance_dir, exist_ok=True)
+
+    # Case-insensitive search in static_dir
+    real_name = None
+    try:
+        for f in os.listdir(static_dir):
+            if f.lower() == base.lower():
+                real_name = f
+                break
+    except Exception:
+        real_name = None
+
+    if real_name:
+        try:
+            src = os.path.join(static_dir, real_name)
+            dst = os.path.join(instance_dir, real_name)
+            if not os.path.isfile(dst):
+                # Copy once; subsequent requests will hit instance directly
+                with open(src, 'rb') as s, open(dst, 'wb') as d:
+                    d.write(s.read())
+            # Recalculate relative path using the real name
+            rel = os.path.join(subdir, real_name) if subdir else real_name
+            return _send(upload_root, rel)
+        except Exception:
+            # If copy fails, attempt to serve directly from static as a last resort
+            try:
+                return _send(static_root, os.path.join(subdir, real_name))
+            except Exception:
+                pass
+
+    # Not found anywhere
+    abort(404)
 
 @bp.route('/set-language/<language>')
 def set_language(language):
