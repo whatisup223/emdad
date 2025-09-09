@@ -79,11 +79,29 @@ def index():
         print(f"Warning: Could not load products: {e}")
         featured_products = []
 
-    # Get latest news (now using show_on_homepage)
-    latest_news = News.query.filter_by(
-        status='published',
-        show_on_homepage=True
-    ).filter(News.publish_at <= datetime.utcnow()).order_by(News.publish_at.desc()).limit(3).all() or []
+    # Get latest news (prefer featured first, then fill up to 3 with other published + show_on_homepage)
+    latest_news = []
+    try:
+        base_q = News.query.filter_by(
+            status='published',
+            show_on_homepage=True
+        ).filter(News.publish_at <= datetime.utcnow()).order_by(News.publish_at.desc())
+        # 1) Featured first
+        featured_first = base_q.filter_by(featured=True).limit(3).all() or []
+        latest_news.extend(featured_first)
+        # 2) Fill remainder without duplicates
+        if len(latest_news) < 3:
+            picked_ids = [n.id for n in latest_news]
+            filler = base_q.filter(~News.id.in_(picked_ids)).limit(3 - len(latest_news)).all() or []
+            latest_news.extend(filler)
+        latest_news = latest_news[:3]
+    except Exception as e:
+        print(f"Warning: Could not build latest_news with featured-first logic: {e}")
+        try:
+            latest_news = News.query.filter_by(status='published', show_on_homepage=True)\
+                .filter(News.publish_at <= datetime.utcnow()).order_by(News.publish_at.desc()).limit(3).all() or []
+        except Exception:
+            latest_news = []
 
     # Get company info sections for homepage
     about_intro = CompanyInfo.query.filter_by(key='about_intro', is_active=True).first()
@@ -419,11 +437,28 @@ def news_detail(slug):
         News.publish_at <= datetime.utcnow()
     ).first_or_404()
 
-    # Get related articles
-    related_articles = News.query.filter_by(status='published').filter(
-        News.id != article.id,
-        News.publish_at <= datetime.utcnow()
-    ).order_by(News.publish_at.desc()).limit(3).all()
+    # Get related articles (prefer featured first, then fill to 3 without duplicates)
+    related_articles = []
+    try:
+        base_rel = News.query.filter_by(status='published').filter(
+            News.id != article.id,
+            News.publish_at <= datetime.utcnow()
+        ).order_by(News.publish_at.desc())
+        rel_featured = base_rel.filter_by(featured=True).limit(3).all() or []
+        related_articles.extend(rel_featured)
+        if len(related_articles) < 3:
+            picked_ids = [n.id for n in related_articles] + [article.id]
+            rel_fill = base_rel.filter(~News.id.in_(picked_ids)).limit(3 - len(related_articles)).all() or []
+            related_articles.extend(rel_fill)
+        related_articles = related_articles[:3]
+    except Exception:
+        try:
+            related_articles = News.query.filter_by(status='published').filter(
+                News.id != article.id,
+                News.publish_at <= datetime.utcnow()
+            ).order_by(News.publish_at.desc()).limit(3).all()
+        except Exception:
+            related_articles = []
 
     return render_template('main/news_detail.html',
                          article=article,

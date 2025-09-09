@@ -283,7 +283,7 @@
 
             <div class="d-flex justify-content-between align-items-center mt-auto">
               <small class="text-muted"><i class="fas fa-clock me-1"></i>{% if is_rtl %}{{ related.publish_at.strftime('%d %B %Y') }}{% else %}{{ related.publish_at.strftime('%B %d, %Y') }}{% endif %}</small>
-              <a href="{{ url_for('main.news_detail', slug=related.slug) }}" class="btn btn-outline-primary btn-sm hover-lift"><i class="fas fa-arrow-right me-1"></i>{{ _('Read More') }}</a>
+              <a href="{{ url_for('main.news_detail', slug=related.slug) }}" class="btn btn-outline-success btn-sm hover-lift"><i class="fas fa-arrow-right me-1"></i>{{ _('Read More') }}</a>
             </div>
           </div>
         </article>

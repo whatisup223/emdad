@@ -358,27 +358,97 @@ def ensure_link_owner_category_images(db):
             if any(fl.endswith(ext.lower()) for ext in exts) and fl.startswith(f"{key_lower}-"):
                 return f
         # 2) Static → copy to instance then return
-        for f in files_static:
-            fl = f.lower()
-            if any(fl.endswith(ext.lower()) for ext in exts) and fl.startswith(f"{key_lower}-"):
-                src = os.path.join(static_cats_dir, f)
-                dst = os.path.join(cats_dir, f)
+
+
+def ensure_link_owner_news_images(db):
+    """Link owner-provided images in instance/uploads/news to News.cover_image.
+    Idempotent and safe to run every deploy. Will not overwrite an existing
+    cover_image if the file exists. Falls back to static/uploads/news for
+    production first-run population, similar to categories/products.
+    Proposed naming: <slug>-emdad-global.webp (preferred) or any <slug>-*.ext
+    where ext is one of .webp/.jpg/.jpeg/.png/.svg
+    """
+    import os
+    import shutil
+    from flask import current_app
+    from app.models import News
+
+    upload_folder = current_app.config.get('UPLOAD_FOLDER', 'uploads')
+    news_dir = os.path.join(current_app.instance_path, upload_folder, 'news')
+    os.makedirs(news_dir, exist_ok=True)
+
+    # Fallback static dir (tracked in repo) to populate instance on deploy
+    static_news_dir = os.path.join(current_app.static_folder, 'uploads', 'news')
+    os.makedirs(static_news_dir, exist_ok=True)
+
+    exts = ['.webp', '.jpg', '.jpeg', '.png', '.svg', '.WEBP', '.JPG', '.JPEG', '.PNG', '.SVG']
+
+    try:
+        files_instance = [f for f in os.listdir(news_dir) if os.path.isfile(os.path.join(news_dir, f))]
+    except Exception:
+        files_instance = []
+
+    try:
+        files_static = [f for f in os.listdir(static_news_dir) if os.path.isfile(os.path.join(static_news_dir, f))]
+    except Exception:
+        files_static = []
+
+    def _case_insensitive_lookup(name, pool):
+        name_l = name.lower()
+        for real in pool:
+            if real.lower() == name_l:
+                return real
+        return None
+
+    def find_candidate(slug: str):
+        slug_lower = slug.lower()
+        # Prefer exact "<slug>-emdad-global" filename with allowed extensions
+        for ext in exts:
+            fname = f"{slug_lower}-emdad-global{ext}"
+            # 1) Check instance dir
+            real = _case_insensitive_lookup(fname, files_instance)
+            if real:
+                return real
+            # 2) Check static dir; if found, copy to instance
+            real_static = _case_insensitive_lookup(fname, files_static)
+            if real_static:
+                src = os.path.join(static_news_dir, real_static)
+                dst = os.path.join(news_dir, real_static)
                 try:
                     shutil.copy2(src, dst)
-                    files_instance.append(f)
-                    return f
+                    files_instance.append(real_static)
+                    return real_static
                 except Exception as e:
-                    print(f"⚠️ Could not copy {f} from static to instance: {e}")
-        # Finally, any file that contains the key segment
+                    print(f"⚠️ Could not copy {real_static} from static to instance: {e}")
+        # Next, any file starting with "<slug>-"
+        # Then, exact "<slug><ext>" match
+        for ext in exts:
+            fname = f"{slug_lower}{ext}"
+            real = _case_insensitive_lookup(fname, files_instance)
+            if real:
+                return real
+            real_static = _case_insensitive_lookup(fname, files_static)
+            if real_static:
+                src = os.path.join(static_news_dir, real_static)
+                dst = os.path.join(news_dir, real_static)
+                try:
+                    shutil.copy2(src, dst)
+                    files_instance.append(real_static)
+                    return real_static
+                except Exception as e:
+                    print(f"⚠️ Could not copy {real_static} from static to instance: {e}")
+
         # 1) Instance
         for f in files_instance:
-            if key_lower in f.lower() and any(f.lower().endswith(ext.lower()) for ext in exts):
+            fl = f.lower()
+            if any(fl.endswith(ext.lower()) for ext in exts) and fl.startswith(f"{slug_lower}-"):
                 return f
-        # 2) Static → copy
+        # 2) Static → copy to instance then return
         for f in files_static:
-            if key_lower in f.lower() and any(f.lower().endswith(ext.lower()) for ext in exts):
-                src = os.path.join(static_cats_dir, f)
-                dst = os.path.join(cats_dir, f)
+            fl = f.lower()
+            if any(fl.endswith(ext.lower()) for ext in exts) and fl.startswith(f"{slug_lower}-"):
+                src = os.path.join(static_news_dir, f)
+                dst = os.path.join(news_dir, f)
                 try:
                     shutil.copy2(src, dst)
                     files_instance.append(f)
@@ -387,33 +457,33 @@ def ensure_link_owner_category_images(db):
                     print(f"⚠️ Could not copy {f} from static to instance: {e}")
         return None
 
-    for cat in Category.query.all():
-        # If image_path already points to an existing file, skip
-        if cat.image_path:
-            cur_path = os.path.join(cats_dir, cat.image_path)
-            if os.path.exists(cur_path):
-                continue
-        candidate = find_candidate(cat.key)
-        if candidate:
-            cat.image_path = candidate
-            db.session.add(cat)
+    changed = False
+
+    for n in News.query.all():
+        # Prefer an owner-provided candidate based on slug pattern, even if a previous image exists
+        candidate = find_candidate(n.slug)
+        if candidate and candidate != n.cover_image:
+            n.cover_image = candidate
+            db.session.add(n)
             changed = True
         else:
-            # Clear any placeholder (e.g., seeded .svg) to avoid broken links
-            if cat.image_path:
-                cat.image_path = None
-                db.session.add(cat)
-                changed = True
+            # If no candidate was found, keep existing only if the file still exists; otherwise clear it
+            if n.cover_image:
+                existing_path = os.path.join(news_dir, n.cover_image)
+                if not os.path.isfile(existing_path):
+                    n.cover_image = None
+                    db.session.add(n)
+                    changed = True
 
     if changed:
         try:
             db.session.commit()
-            print("✅ Linked owner-provided category images (and cleared missing ones).")
+            print("✅ Linked owner-provided news images to articles.")
         except Exception as e:
-            print(f"⚠️ Failed to link owner images: {e}")
+            print(f"⚠️ Failed to commit news image links: {e}")
             db.session.rollback()
     else:
-        print("✅ Owner-provided category images already linked (or none found).")
+        print("✅ News images already linked or using existing fallbacks.")
 
 
 def create_categories(db):
@@ -536,12 +606,12 @@ def create_news(db):
 
         news_data = [
             {
-                'title_en': 'Emdad Global Expands to New Markets in 2024',
-                'title_ar': 'إمداد جلوبال تتوسع في أسواق جديدة في 2024',
-                'slug': 'emdad-global-expands-new-markets-2024',
+                'title_en': 'Emdad Global Expands to New Markets in 2025',
+                'title_ar': 'إمداد جلوبال تتوسع في أسواق جديدة في 2025',
+                'slug': 'emdad-global-expands-new-markets-2025',
                 'excerpt_en': 'We are excited to announce our expansion into European and Asian markets, bringing Egyptian agricultural excellence to new customers worldwide.',
                 'excerpt_ar': 'نحن متحمسون للإعلان عن توسعنا في الأسواق الأوروبية والآسيوية، مما يجلب التميز الزراعي المصري لعملاء جدد في جميع أنحاء العالم.',
-                'content_en': '''<p>Emdad Global is proud to announce a significant milestone in our journey of agricultural excellence. In 2024, we are expanding our operations to serve new markets across Europe and Asia, bringing the finest Egyptian agricultural products to customers worldwide.</p>
+                'content_en': '''<p>Emdad Global is proud to announce a significant milestone in our journey of agricultural excellence. In 2025, we are expanding our operations to serve new markets across Europe and Asia, bringing the finest Egyptian agricultural products to customers worldwide.</p>
 
 <p>This expansion represents years of careful planning and investment in our infrastructure, quality systems, and international partnerships. Our commitment to delivering premium Egyptian citrus fruits, fresh produce, and frozen products has earned us recognition in global markets.</p>
 
@@ -555,7 +625,7 @@ def create_news(db):
 </ul>
 
 <p>We remain committed to our core values of quality, sustainability, and customer satisfaction as we grow our international presence.</p>''',
-                'content_ar': '''<p>تفخر إمداد جلوبال بالإعلان عن معلم مهم في رحلتنا للتميز الزراعي. في عام 2024، نقوم بتوسيع عملياتنا لخدمة أسواق جديدة عبر أوروبا وآسيا، مما يجلب أفضل المنتجات الزراعية المصرية للعملاء في جميع أنحاء العالم.</p>
+                'content_ar': '''<p>تفخر إمداد جلوبال بالإعلان عن معلم مهم في رحلتنا للتميز الزراعي. في عام 2025، نقوم بتوسيع عملياتنا لخدمة أسواق جديدة عبر أوروبا وآسيا، مما يجلب أفضل المنتجات الزراعية المصرية للعملاء في جميع أنحاء العالم.</p>
 
 <p>يمثل هذا التوسع سنوات من التخطيط الدقيق والاستثمار في البنية التحتية وأنظمة الجودة والشراكات الدولية. التزامنا بتقديم ثمار الحمضيات المصرية الممتازة والمنتجات الطازجة والمجمدة قد كسبنا الاعتراف في الأسواق العالمية.</p>
 
@@ -696,7 +766,7 @@ def create_news(db):
 
         # Map news to sample images
         news_images = {
-            'emdad-global-expands-new-markets-2024': 'expansion.svg',
+            'emdad-global-expands-new-markets-2025': 'expansion.svg',
             'sustainable-farming-practices-emdad-global': 'sustainability.svg',
             'new-export-markets-expansion': 'export-markets.svg'
         }
@@ -989,11 +1059,52 @@ def init_database():
 
                 # Create default services
                 create_services(db)
+
+                # Force exactly the target three articles on homepage (idempotent)
+                try:
+                    def _ensure_homepage_news_exact_three(db):
+                        from app.models import News
+                        target_slugs = {
+                            'emdad-global-expands-new-markets-2024',
+                            'sustainable-farming-practices-emdad-global',
+                            'new-export-markets-expansion',
+                        }
+                        changed = False
+                        for n in News.query.all():
+                            want = n.slug in target_slugs
+                            if n.show_on_homepage != want:
+                                n.show_on_homepage = want
+                                db.session.add(n)
+                                changed = True
+                        if changed:
+                            db.session.commit()
+                            print('✅ Enforced homepage news to the exact three target slugs')
+                        else:
+                            print('✅ Homepage news already set to the three target slugs')
+                    _ensure_homepage_news_exact_three(db)
+                except Exception as e:
+                    print(f"⚠️ Could not enforce homepage news selection: {e}")
+
                 db.session.commit()
 
                 # Create news articles
                 create_news(db)
                 db.session.commit()
+                # Rewrite news with long-form 2025 SEO content (dev/prod safe)
+                try:
+                    from scripts.rewrite_news_content_2025 import apply_updates as _rewrite_news_2025
+                    _rewrite_news_2025()
+                    print("✅ Rewrote news articles with 2025 long-form SEO content")
+                except Exception as e:
+                    print(f"⚠️ Could not rewrite news content (2025 long-form): {e}")
+
+                # Link/copy owner-provided news images (idempotent)
+                try:
+                    ensure_link_owner_news_images(db)
+                    db.session.commit()
+                except Exception as e:
+                    print(f"⚠️ Could not link news images: {e}")
+
 
                 # Create company information
                 create_company_info(db)

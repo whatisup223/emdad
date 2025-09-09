@@ -407,6 +407,16 @@ Browse our complete range of premium Egyptian agricultural products including ci
                             {% endif %}
 
 <style>
+  /* Pagination contrast fixes */
+  .pagination .page-item.active .page-link {
+    color: #fff !important;
+    background-color: #689b8a !important;
+    border-color: #689b8a !important;
+  }
+  .pagination .page-link { color: #4f7f73; }
+  .pagination .page-link:hover { color: #3a5f56; }
+  html[lang="ar"] .pagination .page-link { font-weight: 600; }
+
   /* CTA mobile spacing and readability */
   @media (max-width: 767.98px) {
     section[style*="#689b8a"] .section-badge { margin-bottom: .75rem !important; }

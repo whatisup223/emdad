@@ -98,7 +98,7 @@
     </div>
 
     <div class="row">
-      {% for article in featured_news %}
+      {% for article in (featured_news[:3] if featured_news else []) %}
       <div class="col-lg-4" data-aos="fade-up" data-aos-delay="{{ loop.index0 * 100 }}">
         <article class="news-card card h-100 border-0 shadow-lg hover-lift position-relative overflow-hidden">
           <!-- News Image -->
@@ -139,7 +139,7 @@
             {% if article.tags %}
             <div class="mb-3">
               {% for tag in article.get_tags_list()[:3] %}
-              <span class="badge bg-light text-primary me-1">#{{ tag }}</span>
+              <span class="badge bg-light text-primary-custom me-1">#{{ tag }}</span>
               {% endfor %}
             </div>
             {% endif %}
@@ -149,17 +149,17 @@
               <small class="text-muted">
                 <i class="fas fa-clock me-1"></i>{{ article.publish_at.strftime('%B %d, %Y') }}
               </small>
-              <a href="{{ url_for('main.news_detail', slug=article.slug) }}" class="btn btn-outline-primary btn-sm hover-lift">
+              <a href="{{ url_for('main.news_detail', slug=article.slug) }}" class="btn btn-outline-success btn-sm hover-lift">
                 <i class="fas fa-arrow-right me-1"></i>{{ _('Read More') }}
               </a>
             </div>
           </div>
         <!-- Match homepage Latest Updates button hover effect -->
         <style>
-          .news-card .btn-outline-primary:hover,
-          .news-card .btn-outline-primary:focus,
-          .news-card .btn-outline-primary:active,
-          .news-card .btn-outline-primary:focus-visible {
+          .news-card .btn-outline-success:hover,
+          .news-card .btn-outline-success:focus,
+          .news-card .btn-outline-success:active,
+          .news-card .btn-outline-success:focus-visible {
             background: #f9cb99 !important;
             border-color: #f9cb99 !important;
             color: #103d24 !important;
@@ -226,7 +226,7 @@
                   {% endif %}
 
                   <div class="mt-auto d-flex gap-2">
-                    <a href="{{ url_for('main.news_detail', slug=article.slug) }}" class="btn btn-outline-primary btn-sm hover-lift">
+                    <a href="{{ url_for('main.news_detail', slug=article.slug) }}" class="btn btn-outline-success btn-sm hover-lift">
                       <i class="fas fa-arrow-right me-1"></i>{% if is_rtl %}قراءة المقال{% else %}{{ _('Read Article') }}{% endif %}
                     </a>
                     <a href="{{ url_for('main.contact') }}" class="btn btn-primary hover-lift"><i class="fas fa-envelope"></i></a>
@@ -378,7 +378,7 @@
         <p class="lead text-muted mb-4">{% if is_rtl %}تواصل معنا الآن واكتشف حلول التوريد الموثوقة لأسواقك العالمية.{% else %}Get in touch and discover reliable sourcing solutions for your markets.{% endif %}</p>
         <div class="d-flex flex-wrap justify-content-center gap-3">
           <a href="{{ url_for('main.contact') }}" class="btn btn-primary btn-lg px-5 py-3 hover-lift"><i class="fas fa-envelope me-2"></i>{% if is_rtl %}تواصل الآن{% else %}Contact Us{% endif %}</a>
-          <a href="{{ url_for('main.products') }}" class="btn btn-outline-primary btn-lg px-5 py-3 hover-lift"><i class="fas fa-leaf me-2"></i>{% if is_rtl %}تصفح المنتجات{% else %}View Products{% endif %}</a>
+          <a href="{{ url_for('main.products') }}" class="btn btn-outline-success btn-lg px-5 py-3 hover-lift"><i class="fas fa-leaf me-2"></i>{% if is_rtl %}تصفح المنتجات{% else %}View Products{% endif %}</a>
         </div>
       </div>
     </div>
