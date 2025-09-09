@@ -22,11 +22,59 @@ def index():
         featured_categories = []
 
     try:
-        # Get featured products (now using show_on_homepage)
-        featured_products = Product.query.filter_by(
-            status='active',
+        # Build featured products as 9 items:
+        # - One product from each of the top 8 homepage categories (by sort_order)
+        # - Plus a 9th extra product chosen automatically from featured list, then any active as fallback
+        categories_for_products = Category.query.filter_by(
+            is_active=True,
             show_on_homepage=True
-        ).order_by(Product.sort_order).limit(8).all() or []
+        ).order_by(Category.sort_order).limit(8).all() or []
+
+        picked = []
+        picked_ids = set()
+
+        # One product per category
+        for cat in categories_for_products:
+            p = Product.query.filter_by(
+                status='active',
+                show_on_homepage=True,
+                category_id=cat.id
+            ).order_by(Product.sort_order, Product.name_en).first()
+            if not p:
+                # Fallback to any active product in this category
+                p = Product.query.filter_by(
+                    status='active',
+                    category_id=cat.id
+                ).order_by(Product.sort_order, Product.name_en).first()
+            if p and p.id not in picked_ids:
+                picked.append(p)
+                picked_ids.add(p.id)
+
+        # Add 9th extra product (our automatic choice): first featured not already picked
+        if len(picked) < 9:
+            extra_featured = Product.query.filter_by(
+                status='active',
+                show_on_homepage=True
+            ).order_by(Product.sort_order, Product.name_en).all() or []
+            for ep in extra_featured:
+                if ep.id not in picked_ids:
+                    picked.append(ep)
+                    picked_ids.add(ep.id)
+                    break
+
+        # If still fewer than 9, fill with any active products
+        if len(picked) < 9:
+            extra_any = Product.query.filter_by(status='active')\
+                .order_by(Product.sort_order, Product.name_en).all() or []
+            for ep in extra_any:
+                if ep.id not in picked_ids:
+                    picked.append(ep)
+                    picked_ids.add(ep.id)
+                    if len(picked) >= 9:
+                        break
+
+        # Ensure exactly up to 9
+        featured_products = picked[:9]
     except Exception as e:
         print(f"Warning: Could not load products: {e}")
         featured_products = []

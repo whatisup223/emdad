@@ -382,7 +382,7 @@ Browse our complete range of premium Egyptian agricultural products including ci
                         {% if products.has_prev %}
                         <li class="page-item">
                             <a class="page-link" href="{{ url_for('main.products', page=products.prev_num, cat=request.args.get('cat')) }}">
-                                <i class="fas fa-chevron-left"></i> Previous
+                                <i class="fas fa-chevron-left"></i> {{ 'السابق' if session.get('language') == 'ar' else 'Previous' }}
                             </a>
                         </li>
                         {% endif %}
@@ -420,7 +420,7 @@ Browse our complete range of premium Egyptian agricultural products including ci
                         {% if products.has_next %}
                         <li class="page-item">
                             <a class="page-link" href="{{ url_for('main.products', page=products.next_num, cat=request.args.get('cat')) }}">
-                                Next <i class="fas fa-chevron-right"></i>
+                                {{ 'التالي' if session.get('language') == 'ar' else 'Next' }} <i class="fas fa-chevron-right"></i>
                             </a>
                         </li>
                         {% endif %}

@@ -769,6 +769,95 @@ def create_company_info(db):
     else:
         print("✅ Company information already exists")
 
+def ensure_link_owner_product_images(db):
+    """Link/copy owner-provided product images (webp preferred) from static to instance and
+    set product.image_path and main ProductImage accordingly. Safe to run each deploy.
+    """
+    import os, shutil
+    from flask import current_app
+    from app.models import Product, ProductImage
+
+    upload_folder = current_app.config.get('UPLOAD_FOLDER', 'uploads')
+    inst_dir = os.path.join(current_app.instance_path, upload_folder, 'products')
+    os.makedirs(inst_dir, exist_ok=True)
+
+    # Fallback static dir (tracked in repo) used to populate instance on deploy
+    static_dir = os.path.join(current_app.static_folder, 'uploads', 'products')
+    os.makedirs(static_dir, exist_ok=True)
+
+    def _find_real_case(name: str, pool: list[str]) -> str | None:
+        name_l = name.lower()
+        for real in pool:
+            if real.lower() == name_l:
+                return real
+        return None
+
+    try:
+        files_instance = [f for f in os.listdir(inst_dir) if os.path.isfile(os.path.join(inst_dir, f))]
+    except Exception:
+        files_instance = []
+    try:
+        files_static = [f for f in os.listdir(static_dir) if os.path.isfile(os.path.join(static_dir, f))]
+    except Exception:
+        files_static = []
+
+    changed = False
+
+    for p in Product.query.all():
+        # Expected preferred filename: <slug>-emdad-global.webp
+        preferred = f"{p.slug}-emdad-global.webp"
+
+        def ensure_present(fname: str) -> str | None:
+            # Return real filename present in instance; copy from static if needed
+            real = _find_real_case(fname, files_instance)
+            if real:
+                return real
+            real_static = _find_real_case(fname, files_static)
+            if real_static:
+                src = os.path.join(static_dir, real_static)
+                dst = os.path.join(inst_dir, real_static)
+                try:
+                    shutil.copy2(src, dst)
+                    files_instance.append(real_static)
+                    return real_static
+                except Exception as e:
+                    print(f"⚠️ Could not copy {real_static} from static to instance: {e}")
+            return None
+
+        real_name = ensure_present(preferred)
+
+        if real_name:
+            # Update product.image_path and main ProductImage
+            if p.image_path != real_name:
+                p.image_path = real_name
+                db.session.add(p)
+                changed = True
+
+            main = p.images.filter_by(is_main=True).first()
+            if main and main.filename != real_name:
+                main.filename = real_name
+                db.session.add(main)
+                changed = True
+            elif not main:
+                # Create main image record
+                main = ProductImage(product_id=p.id, filename=real_name, alt_text_en=p.name_en, alt_text_ar=p.name_ar, is_main=True, sort_order=0)
+                db.session.add(main)
+                changed = True
+        else:
+            # If preferred not found, do not clear existing to avoid regressions
+            pass
+
+    if changed:
+        try:
+            db.session.commit()
+            print("✅ Linked owner-provided product images.")
+        except Exception as e:
+            print(f"⚠️ Failed to link product images: {e}")
+            db.session.rollback()
+    else:
+        print("✅ Product images already linked or no changes needed.")
+
+
 def copy_sample_images():
     """Copy sample images to upload directories"""
     import shutil
@@ -892,6 +981,10 @@ def init_database():
 
                 # Always ensure at least 6 homepage categories (idempotent)
                 ensure_min_homepage_categories(db, min_count=6)
+                db.session.commit()
+
+                # Link/copy owner-provided product images (idempotent)
+                ensure_link_owner_product_images(db)
                 db.session.commit()
 
                 # Create default services
