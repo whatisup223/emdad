@@ -1003,7 +1003,7 @@ def ensure_link_owner_product_images(db):
 def enforce_strict_product_webp(db):
     """Strictly enforce presence of webp images for all products in production.
     For each product, require <slug>-emdad-global.webp to exist in instance/uploads/products
-    or at least in static/uploads/products (in which case copy to instance).
+    or at least any slug-*.webp to exist under one of known static roots (then copy).
     If any are missing, raise RuntimeError to abort startup.
     """
     import os, shutil
@@ -1014,63 +1014,64 @@ def enforce_strict_product_webp(db):
     inst_dir = os.path.join(current_app.instance_path, upload_folder, 'products')
     os.makedirs(inst_dir, exist_ok=True)
 
-    # Support both app/static and repo ./static layouts
-    app_static_products = os.path.join(current_app.static_folder, 'uploads', 'products')
-    root_static_products = os.path.join(os.path.dirname(current_app.root_path), 'static', 'uploads', 'products')
-
-    # Prefer the static dir that actually has files
-    def _pick_static_dir(primary, secondary):
-        def list_files(d):
-            try:
-                return [f for f in os.listdir(d) if os.path.isfile(os.path.join(d, f))]
-            except Exception:
-                return []
-        pf = list_files(primary) if os.path.isdir(primary) else []
-        sf = list_files(secondary) if os.path.isdir(secondary) else []
-        return primary if pf else (secondary if sf else primary)
-
-    static_dir = _pick_static_dir(app_static_products, root_static_products)
-
+    # Candidate static roots to search (robust across layouts)
+    candidates = []
     try:
-        files_static = [f for f in os.listdir(static_dir) if os.path.isfile(os.path.join(static_dir, f))]
+        candidates.append(os.path.join(current_app.static_folder, 'uploads', 'products'))
     except Exception:
-        files_static = []
+        pass
+    try:
+        candidates.append(os.path.join(os.path.dirname(current_app.root_path), 'static', 'uploads', 'products'))
+    except Exception:
+        pass
+    # Also search CWD/static in case of atypical environments
+    candidates.append(os.path.join(os.getcwd(), 'static', 'uploads', 'products'))
+    # De-duplicate while preserving order
+    seen = set()
+    static_roots = []
+    for c in candidates:
+        if c and c not in seen and os.path.isdir(c):
+            static_roots.append(c)
+            seen.add(c)
 
-    def _find_case_insensitive(name):
-        nl = name.lower()
-        for real in files_static:
-            if real.lower() == nl:
-                return real
+    def _find_in_statics(expected_lower: str, slug_lower: str):
+        # Try exact match (case-insensitive) across all roots
+        for root in static_roots:
+            try:
+                for f in os.listdir(root):
+                    fl = f.lower()
+                    if fl == expected_lower:
+                        return os.path.join(root, f)
+            except Exception:
+                continue
+        # Try any slug-*.webp
+        for root in static_roots:
+            try:
+                for f in os.listdir(root):
+                    fl = f.lower()
+                    if fl.endswith('.webp') and fl.startswith(f"{slug_lower}-"):
+                        return os.path.join(root, f)
+            except Exception:
+                continue
         return None
 
     missing = []
 
     for p in Product.query.all():
         expected = f"{p.slug}-emdad-global.webp"
+        expected_lower = expected.lower()
         inst_path = os.path.join(inst_dir, expected)
         if os.path.isfile(inst_path):
             continue
 
-        # Exact match in static (case-insensitive)
-        real = _find_case_insensitive(expected)
-        if real:
+        src = _find_in_statics(expected_lower, p.slug.lower())
+        if src and os.path.isfile(src):
+            # Copy to instance with original basename from src
             try:
-                shutil.copy2(os.path.join(static_dir, real), os.path.join(inst_dir, real))
-                continue
-            except Exception:
-                pass
-
-        # Fallback: any webp starting with slug-
-        slug_prefix = f"{p.slug.lower()}-"
-        real_fallback = None
-        for realname in files_static:
-            rl = realname.lower()
-            if rl.endswith('.webp') and rl.startswith(slug_prefix):
-                real_fallback = realname
-                break
-        if real_fallback:
-            try:
-                shutil.copy2(os.path.join(static_dir, real_fallback), os.path.join(inst_dir, real_fallback))
+                basename = os.path.basename(src)
+                dst = os.path.join(inst_dir, basename)
+                if not os.path.isfile(dst):
+                    shutil.copy2(src, dst)
                 continue
             except Exception:
                 pass
