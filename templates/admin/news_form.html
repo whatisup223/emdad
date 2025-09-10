@@ -7,8 +7,8 @@
 {% block extra_css %}
 <!-- Date Picker -->
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
-<!-- Summernote CSS -->
-<link href="{{ url_for('static', filename='css/summernote-lite.min.css') }}" rel="stylesheet">
+<!-- Quill CSS -->
+<link href="https://cdn.quilljs.com/1.3.7/quill.snow.css" rel="stylesheet">
 
 <style>
 .news-form-container {
@@ -98,716 +98,213 @@
     border-color: #004085;
 }
 
-/* Summernote styling */
-.note-editor {
-    border: 1px solid #dee2e6;
-    border-radius: 0.375rem;
+/* Quill Editor Styling */
+.quill-container {
+    border: 1px solid #ced4da;
+    border-radius: 6px;
+    background: white;
+    position: relative;
+    overflow: visible !important;
+    z-index: 1;
 }
 
-.note-editor.note-frame {
-    border: 1px solid #dee2e6;
+.ql-toolbar {
+    border: none;
+    border-bottom: 1px solid #e9ecef;
+    padding: 8px;
+    background: #f8f9fa;
+    border-radius: 6px 6px 0 0;
+    position: relative;
+    z-index: 100;
+    overflow: visible !important;
 }
 
-.note-editor.note-frame.is-invalid {
-    border-color: #dc3545;
-}
-
-.note-toolbar {
-    background-color: #f8f9fa;
-    border-bottom: 1px solid #dee2e6;
-}
-
-.note-editing-area {
-    background-color: #fff;
-}
-
-.note-editable {
-    padding: 15px;
-    min-height: 200px;
+.ql-container {
+    border: none;
     font-size: 14px;
     line-height: 1.6;
+    min-height: 300px;
+    border-radius: 0 0 6px 6px;
+    position: relative;
+    z-index: 1;
+}
+
+.ql-editor {
+    min-height: 280px;
+    padding: 15px;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
 }
 
 /* Arabic support */
-.note-editable[dir="rtl"] {
+.ql-editor[dir="rtl"] {
     text-align: right;
     font-family: 'Cairo', 'Amiri', 'Noto Sans Arabic', sans-serif;
 }
 
-/* Simple responsive toolbar */
+/* Responsive toolbar */
 @media (max-width: 768px) {
-    .note-toolbar {
+    .ql-toolbar {
+        overflow-x: auto;
+        overflow-y: visible !important;
+        white-space: nowrap;
+        -webkit-overflow-scrolling: touch;
+        padding: 6px;
+        position: relative;
+        z-index: 1000;
+    }
+
+    .ql-formats {
+        display: inline-block;
+        vertical-align: top;
+        margin-right: 8px;
+    }
+
+    .ql-toolbar::-webkit-scrollbar {
+        height: 6px;
+    }
+
+    .ql-toolbar::-webkit-scrollbar-track {
+        background: #f1f1f1;
+    }
+
+    .ql-toolbar::-webkit-scrollbar-thumb {
+        background: #007bff;
+        border-radius: 3px;
+    }
+
+    /* Mobile dropdown fixes - PROPER POSITIONING */
+    .ql-picker-options {
+        position: absolute !important;
+        top: 100% !important;
+        left: 0 !important;
+        right: auto !important;
+        z-index: 99999 !important;
+        background: white !important;
+        border: 1px solid #ced4da !important;
+        border-radius: 4px !important;
+        box-shadow: 0 6px 16px rgba(0,0,0,0.4) !important;
+        max-height: 150px !important;
+        overflow-y: auto !important;
+        min-width: 140px !important;
+        margin-top: 2px !important;
+        /* Let Quill control display - don't force it */
+    }
+
+    /* Force container to allow overflow */
+    .quill-container {
+        overflow: visible !important;
+        position: relative !important;
+        z-index: 1 !important;
+    }
+
+    .ql-container {
+        overflow: visible !important;
+        position: relative !important;
+        z-index: 1 !important;
+    }
+
+    .ql-toolbar {
         overflow-x: auto !important;
-        overflow-y: hidden !important;
-        white-space: nowrap !important;
-        -webkit-overflow-scrolling: touch !important;
+        overflow-y: visible !important;
+        position: relative !important;
+        z-index: 1000 !important;
     }
 
-    .note-toolbar .note-btn-group {
-        display: inline-block !important;
-        white-space: nowrap !important;
+    /* Force picker positioning */
+    .ql-picker {
+        position: relative !important;
+        z-index: 1001 !important;
+    }
+
+    .ql-picker.ql-expanded {
+        z-index: 10000 !important;
+        position: relative !important;
+    }
+
+    .ql-picker.ql-expanded .ql-picker-options {
+        position: absolute !important;
+        top: 100% !important;
+        left: 0 !important;
+        z-index: 99999 !important;
+        display: block !important;
+        visibility: visible !important;
+        opacity: 1 !important;
     }
 }
 
-/* Simple scrollbar */
-.note-toolbar::-webkit-scrollbar {
-    height: 8px;
+/* Custom button styling */
+.ql-toolbar .ql-formats .ql-picker,
+.ql-toolbar .ql-formats button {
+    margin: 0 2px;
 }
 
-.note-toolbar::-webkit-scrollbar-track {
-    background: #f1f1f1;
-}
-
-.note-toolbar::-webkit-scrollbar-thumb {
-    background: #007bff;
+.ql-toolbar button {
+    width: 28px;
+    height: 28px;
     border-radius: 4px;
+    border: 1px solid transparent;
+    transition: all 0.2s ease;
 }
 
-/* Fix dropdown menus */
-.note-toolbar .dropdown-menu {
-    position: absolute !important;
-    top: 100% !important;
-    left: 0 !important;
-    z-index: 1000 !important;
-    display: none !important;
-    min-width: 160px !important;
-    padding: 5px 0 !important;
-    margin: 2px 0 0 !important;
-    background-color: #fff !important;
-    border: 1px solid #ccc !important;
-    border-radius: 4px !important;
-    box-shadow: 0 6px 12px rgba(0,0,0,.175) !important;
+.ql-toolbar button:hover {
+    background: #e9ecef;
+    border-color: #adb5bd;
 }
 
-.note-toolbar .dropdown.open .dropdown-menu,
-.note-toolbar .btn-group.open .dropdown-menu {
-    display: block !important;
+.ql-toolbar button.ql-active {
+    background: #007bff;
+    color: white;
+    border-color: #007bff;
 }
 
-.note-toolbar .dropdown-menu li {
-    list-style: none !important;
-}
-
-.note-toolbar .dropdown-menu li a {
-    display: block !important;
-    padding: 3px 20px !important;
-    clear: both !important;
-    font-weight: normal !important;
-    line-height: 1.42857143 !important;
-    color: #333 !important;
-    white-space: nowrap !important;
-    text-decoration: none !important;
-}
-
-.note-toolbar .dropdown-menu li a:hover {
-    background-color: #f5f5f5 !important;
-    color: #262626 !important;
-}
-
-
-
-/* Hide Font Awesome icons and show SVG */
-.note-toolbar .note-btn i {
-    display: none !important;
-}
-
-.note-toolbar .note-btn svg {
-    width: 14px !important;
-    height: 14px !important;
-    fill: currentColor !important;
-    display: inline-block !important;
-    vertical-align: middle !important;
-    flex-shrink: 0 !important;
-}
-
-/* Ensure buttons show content properly */
-.note-toolbar .note-btn {
-    display: inline-flex !important;
-    align-items: center !important;
-    justify-content: center !important;
-    min-width: 28px !important;
-    min-height: 28px !important;
-}
-
-/* Fix for dropdown buttons */
-.note-toolbar .note-dropdown-menu .note-dropdown-item {
-    display: flex !important;
-    align-items: center !important;
-    gap: 8px !important;
-    padding: 6px 12px !important;
-}
-
-.note-toolbar .note-dropdown-menu .note-dropdown-item svg {
-    width: 14px !important;
-    height: 14px !important;
-    flex-shrink: 0 !important;
-}
-
-/* Responsive design for mobile - horizontal scrollable toolbar */
-@media (max-width: 768px) {
-    .note-toolbar {
-        padding: 6px !important;
-        gap: 2px !important;
-        overflow-x: scroll !important;
-        overflow-y: hidden !important;
-        -webkit-overflow-scrolling: touch !important;
-        white-space: nowrap !important;
-        max-width: 100% !important;
-        width: 100% !important;
-        flex-wrap: nowrap !important;
-        display: flex !important;
-    }
-
-    /* Force container to respect width */
-    .note-editor {
-        width: 100% !important;
-        max-width: 100% !important;
-        overflow: hidden !important;
-    }
-
-    .note-editor .note-toolbar {
-        width: 100% !important;
-        max-width: 100% !important;
-    }
-
-    .note-toolbar::-webkit-scrollbar {
-        height: 10px !important;
-    }
-
-    .note-toolbar::-webkit-scrollbar-track {
-        background: #e9ecef !important;
-        border-radius: 5px !important;
-    }
-
-    .note-toolbar::-webkit-scrollbar-thumb {
-        background: #007bff !important;
-        border-radius: 5px !important;
-        min-width: 30px !important;
-    }
-
-    .note-toolbar::-webkit-scrollbar-thumb:hover {
-        background: #0056b3 !important;
-    }
-
-    .note-toolbar .note-btn {
-        min-width: 28px !important;
-        min-height: 28px !important;
-        width: 28px !important;
-        height: 28px !important;
-        padding: 4px !important;
-        flex-shrink: 0 !important;
-        margin-right: 2px !important;
-    }
-
-    .note-toolbar .note-btn svg {
-        width: 14px !important;
-        height: 14px !important;
-    }
-
-    .note-toolbar .note-btn-group {
-        gap: 1px !important;
-        margin-right: 4px !important;
-        margin-bottom: 0 !important;
-        flex-shrink: 0 !important;
-        display: inline-flex !important;
-    }
-}
-
-@media (max-width: 480px) {
-    .note-toolbar {
-        padding: 4px !important;
-        gap: 1px !important;
-        width: 100% !important;
-        max-width: 100% !important;
-        overflow-x: scroll !important;
-        overflow-y: hidden !important;
-    }
-
-    /* Force container width on small screens */
-    .summernote {
-        width: 100% !important;
-        max-width: 100% !important;
-    }
-
-    .note-editor {
-        width: 100% !important;
-        max-width: 100% !important;
-    }
-
-    .note-toolbar::-webkit-scrollbar {
-        height: 8px !important;
-    }
-
-    .note-toolbar .note-btn {
-        min-width: 24px !important;
-        min-height: 24px !important;
-        width: 24px !important;
-        height: 24px !important;
-        padding: 2px !important;
-        flex-shrink: 0 !important;
-        margin-right: 1px !important;
-    }
-
-    .note-toolbar .note-btn svg {
-        width: 12px !important;
-        height: 12px !important;
-    }
-
-    .note-toolbar .note-btn-group {
-        margin-right: 2px !important;
-        flex-shrink: 0 !important;
-    }
-}
-
-/* Force hide any remaining Font Awesome or icon font characters */
-.note-toolbar .note-btn::before,
-.note-toolbar .note-btn::after {
-    display: none !important;
-}
-
-.note-toolbar .fa,
-.note-toolbar .fas,
-.note-toolbar .far,
-.note-toolbar .fal,
-.note-toolbar .fab,
-.note-toolbar [class*="fa-"],
-.note-toolbar [class^="icon-"],
-.note-toolbar [class*="icon-"] {
-    display: none !important;
-}
-
-/* Ensure text content is hidden if it contains special characters */
-.note-toolbar .note-btn:empty::before {
-    content: none !important;
-}
-
-/* Fix for any remaining square boxes or unicode characters */
-.note-toolbar .note-btn {
-    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif !important;
-    text-rendering: optimizeLegibility !important;
-    -webkit-font-smoothing: antialiased !important;
-    -moz-osx-font-smoothing: grayscale !important;
-}
-
-/* Ensure SVG icons are always visible and properly rendered */
-.note-toolbar .note-btn svg {
-    pointer-events: none !important;
-    user-select: none !important;
-    -webkit-user-select: none !important;
-    -moz-user-select: none !important;
-    -ms-user-select: none !important;
-}
-
-/* Hide any text content that might interfere with SVG icons */
-.note-toolbar .note-btn:not(:empty) {
-    text-indent: -9999px !important;
-    overflow: hidden !important;
-}
-
-.note-toolbar .note-btn svg {
-    position: relative !important;
-    z-index: 1 !important;
-    text-indent: 0 !important;
-}
-
-/* Custom scrollbar for horizontal toolbar */
-.note-toolbar::-webkit-scrollbar {
-    height: 8px !important;
-}
-
-.note-toolbar::-webkit-scrollbar-track {
-    background: #f1f1f1 !important;
-    border-radius: 4px !important;
-    margin: 0 4px !important;
-}
-
-.note-toolbar::-webkit-scrollbar-thumb {
-    background: #007bff !important;
-    border-radius: 4px !important;
-    min-width: 20px !important;
-}
-
-.note-toolbar::-webkit-scrollbar-thumb:hover {
-    background: #0056b3 !important;
-}
-
-/* For Firefox */
-.note-toolbar {
-    scrollbar-width: thin !important;
-    scrollbar-color: #007bff #f1f1f1 !important;
-}
-
-/* Ensure dropdown container has proper overflow */
-.note-editor {
-    position: relative !important;
-    overflow: visible !important;
-}
-
-/* Force dropdown menus to stay within editor bounds */
-.note-toolbar .dropdown,
-.note-toolbar .btn-group {
-    position: relative !important;
-}
-
-.note-toolbar .dropdown.open .dropdown-menu,
-.note-toolbar .btn-group.open .dropdown-menu {
-    position: absolute !important;
-    z-index: 1001 !important;
-    white-space: nowrap !important;
-}
-
-/* Specific positioning for right-side dropdowns */
-.note-toolbar .dropdown:nth-last-child(-n+3) .dropdown-menu,
-.note-toolbar .btn-group:nth-last-child(-n+3) .dropdown-menu {
-    left: auto !important;
-    right: 0 !important;
-}
-
-/* Fix for dropdown menus positioning - Keep within editor bounds */
-.note-toolbar .dropdown-menu {
-    position: absolute !important;
-    z-index: 1000 !important;
-    top: 100% !important;
-    left: 0 !important;
-    display: block !important;
-    visibility: visible !important;
-    opacity: 1 !important;
-    transform: none !important;
-    margin-top: 2px !important;
-    min-width: 160px !important;
-    max-width: 200px !important;
-    background: #fff !important;
-    border: 1px solid #ddd !important;
-    border-radius: 4px !important;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15) !important;
-    overflow: visible !important;
-}
-
-/* Fix dropdown positioning for specific elements */
-.note-toolbar .note-fontname .dropdown-menu,
-.note-toolbar .note-fontsize .dropdown-menu,
-.note-toolbar .note-style .dropdown-menu,
-.note-toolbar .note-color .dropdown-menu {
+/* Fix for all Quill dropdowns - PROPER FIX */
+.ql-picker-options {
     position: absolute !important;
     top: 100% !important;
     left: 0 !important;
     right: auto !important;
-    bottom: auto !important;
-    display: none !important;
-    z-index: 1001 !important;
-    background: #fff !important;
-    border: 1px solid #ddd !important;
+    z-index: 99999 !important;
+    background: white !important;
+    border: 1px solid #ced4da !important;
     border-radius: 4px !important;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15) !important;
-    min-width: 160px !important;
-    max-width: 200px !important;
-}
-
-/* Ensure dropdowns don't go outside editor bounds */
-.note-toolbar .dropdown-menu {
+    box-shadow: 0 4px 12px rgba(0,0,0,0.3) !important;
     max-height: 200px !important;
     overflow-y: auto !important;
+    min-width: 120px !important;
+    margin-top: 2px !important;
+    /* REMOVE display: block - let Quill control visibility */
 }
 
-/* Fix for dropdowns near the right edge */
-.note-toolbar .dropdown:last-child .dropdown-menu,
-.note-toolbar .btn-group:last-child .dropdown-menu {
-    left: auto !important;
-    right: 0 !important;
-}
-
-/* Responsive dropdown positioning */
-@media (max-width: 768px) {
-    .note-toolbar .dropdown-menu {
-        left: auto !important;
-        right: 0 !important;
-        min-width: 120px !important;
-        max-width: 150px !important;
-    }
-}
-
-/* Show dropdown when parent is active/open */
-.note-toolbar .dropdown.open .dropdown-menu,
-.note-toolbar .btn-group.open .dropdown-menu,
-.note-toolbar .note-fontname.open .dropdown-menu,
-.note-toolbar .note-fontsize.open .dropdown-menu,
-.note-toolbar .note-style.open .dropdown-menu,
-.note-toolbar .note-color.open .dropdown-menu {
+.ql-picker-item {
+    padding: 8px 12px !important;
+    transition: background-color 0.2s ease;
     display: block !important;
-    visibility: visible !important;
-    opacity: 1 !important;
-    z-index: 1050 !important;
-    position: fixed !important;
-    background: #fff !important;
-    border: 1px solid #ddd !important;
-    border-radius: 4px !important;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2) !important;
-    min-width: 160px !important;
-    max-width: 200px !important;
-    max-height: 200px !important;
-    overflow-y: auto !important;
-    margin: 0 !important;
-}
-
-/* Dropdown items styling */
-.note-toolbar .dropdown-menu li {
-    list-style: none !important;
-    margin: 0 !important;
-    padding: 0 !important;
-}
-
-.note-toolbar .dropdown-menu li a {
-    display: block !important;
-    padding: 6px 12px !important;
-    color: #333 !important;
-    text-decoration: none !important;
-    white-space: nowrap !important;
-}
-
-.note-toolbar .dropdown-menu li a:hover {
-    background-color: #f5f5f5 !important;
-    color: #333 !important;
-}
-
-/* Fix for color picker dropdown */
-.note-toolbar .note-color .dropdown-menu {
-    padding: 8px !important;
-}
-
-.note-toolbar .note-color .dropdown-menu .note-palette {
-    display: flex !important;
-    flex-wrap: wrap !important;
-    gap: 2px !important;
-}
-
-.note-toolbar .note-color .dropdown-menu .note-color-btn {
-    width: 20px !important;
-    height: 20px !important;
-    border: 1px solid #ddd !important;
+    width: 100% !important;
+    text-align: left !important;
+    border: none !important;
+    background: transparent !important;
     cursor: pointer !important;
 }
 
-/* Fix for Summernote modal backdrop issues - Complete Solution */
-.modal-backdrop {
-    display: none !important;
+.ql-picker-item:hover {
+    background-color: #f8f9fa !important;
 }
 
-.note-modal-backdrop {
-    display: none !important;
+/* Ensure picker container allows overflow */
+.ql-picker {
+    position: relative !important;
+    z-index: 1000 !important;
 }
 
-.note-modal {
-    z-index: 9999 !important;
-    background: rgba(0, 0, 0, 0.5) !important;
-    position: fixed !important;
-    top: 0 !important;
-    left: 0 !important;
-    width: 100% !important;
-    height: 100% !important;
-    pointer-events: auto !important;
-}
-
-.note-modal .modal-dialog {
+.ql-picker.ql-expanded {
     z-index: 10000 !important;
-    position: relative !important;
-    margin: 50px auto !important;
-    max-width: 600px !important;
-    pointer-events: auto !important;
 }
 
-.note-modal .modal-content {
-    z-index: 10001 !important;
-    position: relative !important;
-    background: #fff !important;
-    border-radius: 6px !important;
-    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3) !important;
-    pointer-events: auto !important;
-    border: none !important;
-}
-
-.note-modal .modal-header {
-    z-index: 10002 !important;
-    position: relative !important;
-    background: #007bff !important;
-    color: #fff !important;
-    border-radius: 6px 6px 0 0 !important;
-    padding: 15px 20px !important;
-    border-bottom: none !important;
-}
-
-.note-modal .modal-body {
-    z-index: 10002 !important;
-    position: relative !important;
-    padding: 20px !important;
-    pointer-events: auto !important;
-}
-
-.note-modal .modal-footer {
-    z-index: 10002 !important;
-    position: relative !important;
-    padding: 15px 20px !important;
-    border-top: 1px solid #dee2e6 !important;
-    border-radius: 0 0 6px 6px !important;
-}
-
-/* Ensure all form elements in modals are accessible */
-.note-modal input,
-.note-modal textarea,
-.note-modal select,
-.note-modal button,
-.note-modal .form-control,
-.note-modal .btn {
-    z-index: 10003 !important;
-    position: relative !important;
-    pointer-events: auto !important;
-}
-
-/* Fix for specific modal types */
-.note-link-dialog,
-.note-image-dialog,
-.note-video-dialog,
-.note-help-dialog {
-    z-index: 9999 !important;
-    background: rgba(0, 0, 0, 0.5) !important;
-}
-
-/* Remove any conflicting backdrop styles */
-.note-modal::before,
-.note-modal::after {
-    display: none !important;
-}
-
-/* Ensure modal is always on top */
-.note-modal.fade.in,
-.note-modal.show {
+/* ONLY show dropdown when expanded */
+.ql-picker.ql-expanded .ql-picker-options {
     display: block !important;
+    visibility: visible !important;
     opacity: 1 !important;
-}
-
-/* Force hide all backdrop elements */
-.modal-backdrop,
-.note-modal-backdrop,
-.modal-backdrop.fade,
-.modal-backdrop.show,
-.modal-backdrop.in {
-    display: none !important;
-    visibility: hidden !important;
-    opacity: 0 !important;
-    pointer-events: none !important;
-}
-
-/* Prevent body from getting modal-open class issues */
-body.modal-open {
-    overflow: auto !important;
-    padding-right: 0 !important;
-}
-
-/* Additional safety for modal positioning */
-.note-modal {
-    display: none;
-}
-
-.note-modal.show,
-.note-modal.fade.in {
-    display: block !important;
-}
-
-/* Ensure close buttons work */
-.note-modal .close,
-.note-modal .btn-close,
-.note-modal [data-dismiss="modal"] {
-    z-index: 10004 !important;
-    pointer-events: auto !important;
-}
-
-/* Specific button text content */
-.note-btn[data-original-title*="Bold"]:before { content: "B"; font-weight: bold; }
-.note-btn[data-original-title*="Italic"]:before { content: "I"; font-style: italic; }
-.note-btn[data-original-title*="Underline"]:before { content: "U"; text-decoration: underline; }
-.note-btn[data-original-title*="Strikethrough"]:before { content: "S"; text-decoration: line-through; }
-.note-btn[data-original-title*="Clear"]:before { content: "Clear"; }
-.note-btn[data-original-title*="Unordered"]:before { content: "• List"; }
-.note-btn[data-original-title*="Ordered"]:before { content: "1. List"; }
-.note-btn[data-original-title*="Link"]:before { content: "Link"; }
-.note-btn[data-original-title*="Picture"]:before { content: "Image"; }
-.note-btn[data-original-title*="Table"]:before { content: "Table"; }
-.note-btn[data-original-title*="Horizontal"]:before { content: "Line"; }
-.note-btn[data-original-title*="Full"]:before { content: "Full"; }
-.note-btn[data-original-title*="Code"]:before { content: "Code"; }
-.note-btn[data-original-title*="Color"]:before { content: "Color"; }
-.note-btn[data-original-title*="Size"]:before { content: "Size"; }
-.note-btn[data-original-title*="Font"]:before { content: "Font"; }
-.note-btn[data-original-title*="Style"]:before { content: "Style"; }
-.note-btn[data-original-title*="Paragraph"]:before { content: "Para"; }
-.note-btn[data-original-title*="Height"]:before { content: "Height"; }
-.note-btn[data-original-title*="Help"]:before { content: "Help"; }
-
-/* Dropdown arrows */
-.note-toolbar .note-btn .caret {
-    display: inline-block !important;
-    width: 0 !important;
-    height: 0 !important;
-    margin-left: 4px !important;
-    vertical-align: middle !important;
-    border-top: 4px solid #333 !important;
-    border-right: 4px solid transparent !important;
-    border-left: 4px solid transparent !important;
-    border-bottom: 0 !important;
-}
-
-/* Color picker styling */
-.note-toolbar .note-color .note-recent-color {
-    width: 16px !important;
-    height: 16px !important;
-    border: 1px solid #ddd !important;
-    border-radius: 2px !important;
-    display: inline-block !important;
-    margin-right: 4px !important;
-}
-
-/* Dropdown menu styling */
-.note-toolbar .dropdown-menu {
-    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif !important;
-    font-size: 13px !important;
-}
-
-/* Button groups spacing */
-.note-toolbar .note-btn-group {
-    margin-right: 4px !important;
-}
-
-/* Active button state */
-.note-toolbar .note-btn.active {
-    background-color: #007bff !important;
-    color: white !important;
-}
-
-/* Custom text spans for buttons */
-.note-toolbar .btn-text {
-    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif !important;
-    font-size: 11px !important;
-    font-weight: 600 !important;
-    line-height: 1 !important;
-    display: inline-block !important;
-    padding: 0 !important;
-    margin: 0 !important;
-}
-
-/* Special styling for formatting buttons */
-.note-toolbar .btn-text:contains("B") {
-    font-weight: bold !important;
-}
-
-.note-toolbar .btn-text:contains("I") {
-    font-style: italic !important;
-}
-
-.note-toolbar .btn-text:contains("U") {
-    text-decoration: underline !important;
-}
-
-.note-toolbar .btn-text:contains("S") {
-    text-decoration: line-through !important;
 }
 
 @media (max-width: 768px) {
@@ -830,26 +327,27 @@ body.modal-open {
                 
                 <!-- Page Header -->
                 <div class="d-flex justify-content-between align-items-center mb-4">
-                    <div>
-                        <h2 class="mb-1">
-                            <i class="fas fa-newspaper text-primary me-2"></i>
-                            {% if news_item %}{{ _('Edit Article') }}{% else %}{{ _('Add New Article') }}{% endif %}
-                        </h2>
-                        <p class="text-muted mb-0">{{ _('Create and manage news articles') }}</p>
-                    </div>
+                    <h1 class="h3 mb-0">
+                        {% if news_item %}
+                            {{ _('Edit Article') }}
+                        {% else %}
+                            {{ _('Add New Article') }}
+                        {% endif %}
+                    </h1>
                     <a href="{{ url_for('admin.news') }}" class="btn btn-outline-secondary">
-                        <i class="fas fa-arrow-left me-1"></i>{{ _('Back to News') }}
+                        <i class="fas fa-arrow-left me-2"></i>{{ _('Back to Articles') }}
                     </a>
                 </div>
 
-                <!-- Main Form -->
+                <!-- Form Card -->
                 <div class="card form-card">
                     <div class="card-header form-header">
                         <h5 class="mb-0">
-                            <i class="fas fa-edit me-2"></i>{{ _('Article Details') }}
+                            <i class="fas fa-newspaper me-2"></i>
+                            {{ _('Article Information') }}
                         </h5>
                     </div>
-
+                    
                     <div class="card-body form-body">
                         <form method="POST" enctype="multipart/form-data" id="newsForm">
                             {{ form.hidden_tag() }}
@@ -858,54 +356,56 @@ body.modal-open {
                             <div class="row mb-4">
                                 <div class="col-md-8">
                                     <div class="form-floating mb-3">
-                                        {{ form.title_en(class="form-control", placeholder=_("Enter article title")) }}
-                                        <label for="title_en" class="form-label">{{ _('Title') }} ({{ _('English') }})</label>
+                                        {{ form.title_en(class="form-control", placeholder=_('Article Title (English)'), required=True) }}
+                                        <label for="title_en">{{ _('Title') }} ({{ _('English') }}) *</label>
                                         {% if form.title_en.errors %}
                                             <div class="invalid-feedback d-block">
                                                 {% for error in form.title_en.errors %}{{ error }}{% endfor %}
                                             </div>
                                         {% endif %}
-                                        <div class="char-counter" id="title-counter">0/200</div>
+                                        <div class="char-counter" id="title_en_counter">0/200</div>
                                     </div>
                                 </div>
                                 <div class="col-md-4">
                                     <div class="form-floating mb-3">
-                                        {{ form.slug(class="form-control", placeholder=_("article-url-slug")) }}
-                                        <label for="slug" class="form-label">{{ _('URL Slug') }}</label>
-                                        {% if form.slug.errors %}
-                                            <div class="invalid-feedback d-block">
-                                                {% for error in form.slug.errors %}{{ error }}{% endfor %}
-                                            </div>
-                                        {% endif %}
+                                        {{ form.status(class="form-select") }}
+                                        <label for="status">{{ _('Status') }}</label>
                                     </div>
                                 </div>
                             </div>
 
-                            <!-- Excerpt -->
-                            <div class="form-floating mb-4">
-                                {{ form.excerpt_en(class="form-control", placeholder=_("Brief description"), rows="3") }}
-                                <label for="excerpt_en" class="form-label">{{ _('Excerpt') }} ({{ _('English') }})</label>
-                                {% if form.excerpt_en.errors %}
-                                    <div class="invalid-feedback d-block">
-                                        {% for error in form.excerpt_en.errors %}{{ error }}{% endfor %}
+                            <div class="row mb-4">
+                                <div class="col-md-8">
+                                    <div class="form-floating mb-3">
+                                        {{ form.title_ar(class="form-control", placeholder=_('Article Title (Arabic)'), dir="rtl") }}
+                                        <label for="title_ar">{{ _('Title') }} ({{ _('Arabic') }})</label>
+                                        {% if form.title_ar.errors %}
+                                            <div class="invalid-feedback d-block">
+                                                {% for error in form.title_ar.errors %}{{ error }}{% endfor %}
+                                            </div>
+                                        {% endif %}
+                                        <div class="char-counter" id="title_ar_counter">0/200</div>
                                     </div>
-                                {% endif %}
-                                <div class="char-counter" id="excerpt-counter">0/500</div>
+                                </div>
+                                <div class="col-md-4">
+                                    <div class="form-floating mb-3">
+                                        {{ form.publish_at(class="form-control", type="datetime-local") }}
+                                        <label for="publish_at">{{ _('Publication Date') }}</label>
+                                    </div>
+                                </div>
                             </div>
 
                             <!-- Content Tabs -->
                             <div class="mb-4">
                                 <ul class="nav nav-tabs" id="contentTabs" role="tablist">
                                     <li class="nav-item" role="presentation">
-                                        <button class="nav-link active" id="english-tab" data-bs-toggle="tab"
-                                                data-bs-target="#english" type="button" role="tab">
-                                            <i class="fas fa-globe me-1"></i>{{ _('English Content') }}
+                                        <button class="nav-link active" id="english-tab" data-bs-toggle="tab" data-bs-target="#english" type="button" role="tab">
+                                            <i class="fas fa-globe me-2"></i>{{ _('English Content') }}
                                         </button>
                                     </li>
                                     <li class="nav-item" role="presentation">
-                                        <button class="nav-link" id="arabic-tab" data-bs-toggle="tab"
-                                                data-bs-target="#arabic" type="button" role="tab">
-                                            <i class="fas fa-globe me-1"></i>{{ _('Arabic Content') }}
+                                        <button class="nav-link" id="arabic-tab" data-bs-toggle="tab" data-bs-target="#arabic" type="button" role="tab">
+                                            <i class="fas fa-language me-2"></i>{{ _('Arabic Content') }}
                                         </button>
                                     </li>
                                 </ul>
@@ -914,28 +414,22 @@ body.modal-open {
                                     <!-- English Content -->
                                     <div class="tab-pane fade show active" id="english" role="tabpanel">
                                         <div class="mb-3">
-                                            <label for="title_ar" class="form-label">{{ _('Title') }} ({{ _('Arabic') }})</label>
-                                            {{ form.title_ar(class="form-control", placeholder=_("Enter article title"), dir="rtl") }}
-                                            {% if form.title_ar.errors %}
+                                            <label for="excerpt_en" class="form-label">{{ _('Summary') }} ({{ _('English') }})</label>
+                                            {{ form.excerpt_en(class="form-control", rows="3", placeholder=_('Brief summary of the article...')) }}
+                                            {% if form.excerpt_en.errors %}
                                                 <div class="invalid-feedback d-block">
-                                                    {% for error in form.title_ar.errors %}{{ error }}{% endfor %}
+                                                    {% for error in form.excerpt_en.errors %}{{ error }}{% endfor %}
                                                 </div>
                                             {% endif %}
-                                        </div>
-
-                                        <div class="mb-3">
-                                            <label for="excerpt_ar" class="form-label">{{ _('Excerpt') }} ({{ _('Arabic') }})</label>
-                                            {{ form.excerpt_ar(class="form-control", placeholder=_("Brief description"), rows="3", dir="rtl") }}
-                                            {% if form.excerpt_ar.errors %}
-                                                <div class="invalid-feedback d-block">
-                                                    {% for error in form.excerpt_ar.errors %}{{ error }}{% endfor %}
-                                                </div>
-                                            {% endif %}
+                                            <div class="char-counter" id="excerpt_en_counter">0/500</div>
                                         </div>
 
                                         <div class="mb-3">
                                             <label for="content_en" class="form-label">{{ _('Content') }} ({{ _('English') }})</label>
-                                            {{ form.content_en(class="form-control summernote", id="content_en") }}
+                                            <div class="quill-container">
+                                                <div id="content_en_editor"></div>
+                                            </div>
+                                            {{ form.content_en(style="display: none;", id="content_en") }}
                                             {% if form.content_en.errors %}
                                                 <div class="invalid-feedback d-block">
                                                     {% for error in form.content_en.errors %}{{ error }}{% endfor %}
@@ -947,8 +441,22 @@ body.modal-open {
                                     <!-- Arabic Content -->
                                     <div class="tab-pane fade" id="arabic" role="tabpanel">
                                         <div class="mb-3">
+                                            <label for="excerpt_ar" class="form-label">{{ _('Summary') }} ({{ _('Arabic') }})</label>
+                                            {{ form.excerpt_ar(class="form-control", rows="3", placeholder=_('Brief summary of the article...'), dir="rtl") }}
+                                            {% if form.excerpt_ar.errors %}
+                                                <div class="invalid-feedback d-block">
+                                                    {% for error in form.excerpt_ar.errors %}{{ error }}{% endfor %}
+                                                </div>
+                                            {% endif %}
+                                            <div class="char-counter" id="excerpt_ar_counter">0/500</div>
+                                        </div>
+
+                                        <div class="mb-3">
                                             <label for="content_ar" class="form-label">{{ _('Content') }} ({{ _('Arabic') }})</label>
-                                            {{ form.content_ar(class="form-control summernote", id="content_ar", dir="rtl") }}
+                                            <div class="quill-container">
+                                                <div id="content_ar_editor" dir="rtl"></div>
+                                            </div>
+                                            {{ form.content_ar(style="display: none;", id="content_ar") }}
                                             {% if form.content_ar.errors %}
                                                 <div class="invalid-feedback d-block">
                                                     {% for error in form.content_ar.errors %}{{ error }}{% endfor %}
@@ -959,66 +467,53 @@ body.modal-open {
                                 </div>
                             </div>
 
-                            <!-- Publishing Options -->
+                            <!-- Featured Image -->
                             <div class="row mb-4">
-                                <div class="col-md-3">
-                                    <div class="form-floating mb-3">
-                                        {{ form.status(class="form-select") }}
-                                        <label for="status" class="form-label">{{ _('Status') }}</label>
+                                <div class="col-md-6">
+                                    <div class="mb-3">
+                                        <label for="cover_image" class="form-label">{{ _('Featured Image') }}</label>
+                                        {{ form.cover_image(class="form-control", accept="image/*") }}
+                                        {% if form.cover_image.errors %}
+                                            <div class="invalid-feedback d-block">
+                                                {% for error in form.cover_image.errors %}{{ error }}{% endfor %}
+                                            </div>
+                                        {% endif %}
+                                        <div class="form-text">{{ _('Recommended size: 1200x630 pixels') }}</div>
                                     </div>
                                 </div>
-                                <div class="col-md-3">
-                                    <div class="form-floating mb-3">
-                                        {{ form.publish_at(class="form-control datetime-picker", placeholder=_("Select date")) }}
-                                        <label for="publish_at" class="form-label">{{ _('Publish Date') }}</label>
-                                    </div>
+                                <div class="col-md-6">
+                                    {% if news_item and news_item.cover_image %}
+                                        <div class="current-image">
+                                            <label class="form-label">{{ _('Current Image') }}</label>
+                                            <div class="border rounded p-2">
+                                                <img src="{{ url_for('static', filename='uploads/news/' + news_item.cover_image) }}"
+                                                     alt="{{ _('Current featured image') }}"
+                                                     class="img-fluid rounded"
+                                                     style="max-height: 150px;">
+                                            </div>
+                                        </div>
+                                    {% endif %}
                                 </div>
-                                <div class="col-md-4">
-                                    <div class="form-floating mb-3">
-                                        {{ form.tags(class="form-control", placeholder=_("tag1, tag2, tag3")) }}
-                                        <label for="tags" class="form-label">{{ _('Tags') }}</label>
-                                    </div>
-                                </div>
-                                <div class="col-md-2">
-                                    <div class="form-check mt-4">
-                                        {{ form.featured(class="form-check-input") }}
-                                        <label for="featured" class="form-check-label">{{ _('Featured') }}</label>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <!-- Cover Image -->
-                            <div class="mb-4">
-                                <label for="cover_image" class="form-label">{{ _('Cover Image') }}</label>
-                                {{ form.cover_image(class="form-control") }}
-                                {% if form.cover_image.errors %}
-                                    <div class="invalid-feedback d-block">
-                                        {% for error in form.cover_image.errors %}{{ error }}{% endfor %}
-                                    </div>
-                                {% endif %}
-                                {% if news_item and news_item.cover_image %}
-                                    <div class="mt-2">
-                                        <small class="text-muted">{{ _('Current Image') }}:</small><br>
-                                        <img src="{{ url_for('main.uploaded_file', filename='news/' + news_item.cover_image) }}"
-                                             alt="{{ news_item.title_en }}" class="img-thumbnail" style="max-width: 200px;">
-                                    </div>
-                                {% endif %}
-                                <div class="form-text">{{ _('Upload cover image (JPG, PNG, WebP - Max 5MB)') }}</div>
                             </div>
 
                             <!-- Form Actions -->
-                            <div class="d-flex justify-content-between align-items-center pt-3 border-top">
+                            <div class="d-flex justify-content-between align-items-center">
+                                <a href="{{ url_for('admin.news') }}" class="btn btn-outline-secondary">
+                                    <i class="fas fa-times me-2"></i>{{ _('Cancel') }}
+                                </a>
                                 <div>
-                                    <span class="badge bg-secondary me-2">{{ _('Draft') }}</span>
-                                    <small class="text-muted">{{ _('Auto-save: Enabled') }}</small>
-                                </div>
-                                <div class="d-flex gap-2">
-                                    <button type="submit" name="action" value="draft" class="btn btn-outline-primary">
-                                        <i class="fas fa-save me-1"></i>{{ _('Save Draft') }}
-                                    </button>
-                                    <button type="submit" name="action" value="publish" class="btn btn-primary">
-                                        <i class="fas fa-paper-plane me-1"></i>{{ _('Publish') }}
-                                    </button>
+                                    {% if news_item %}
+                                        <button type="submit" name="action" value="save" class="btn btn-primary me-2">
+                                            <i class="fas fa-save me-2"></i>{{ _('Update Article') }}
+                                        </button>
+                                    {% else %}
+                                        <button type="submit" name="action" value="save" class="btn btn-outline-primary me-2">
+                                            <i class="fas fa-save me-2"></i>{{ _('Save as Draft') }}
+                                        </button>
+                                        <button type="submit" name="action" value="publish" class="btn btn-primary">
+                                            <i class="fas fa-paper-plane me-2"></i>{{ _('Save & Publish') }}
+                                        </button>
+                                    {% endif %}
                                 </div>
                             </div>
                         </form>
@@ -1034,235 +529,212 @@ body.modal-open {
 <!-- Date Picker -->
 <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
 
-<!-- Summernote JavaScript -->
-<script src="{{ url_for('static', filename='js/summernote-lite.min.js') }}"></script>
-<script src="{{ url_for('static', filename='js/summernote-ar-AR.min.js') }}"></script>
+<!-- Quill JavaScript -->
+<script src="https://cdn.quilljs.com/1.3.7/quill.min.js"></script>
 
 <script>
 document.addEventListener('DOMContentLoaded', function() {
-    // Initialize Summernote editors
-    $('.summernote').summernote({
-        height: 300,
-        minHeight: 200,
-        maxHeight: 500,
-        focus: false,
-        lang: '{{ current_language }}' === 'ar' ? 'ar-AR' : 'en-US',
-        direction: '{{ current_language }}' === 'ar' ? 'rtl' : 'ltr',
-        toolbar: [
-            ['style', ['style']],
-            ['font', ['bold', 'italic', 'underline', 'clear']],
-            ['fontname', ['fontname']],
-            ['fontsize', ['fontsize']],
-            ['color', ['color']],
-            ['para', ['ul', 'ol', 'paragraph']],
-            ['table', ['table']],
-            ['insert', ['link', 'picture', 'hr']],
-            ['view', ['fullscreen', 'codeview']]
-        ],
-        icons: {
-            'bold': '<svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M15.6 10.79c.97-.67 1.65-1.77 1.65-2.79 0-2.26-1.75-4-4-4H7v14h7.04c2.09 0 3.71-1.7 3.71-3.79 0-1.52-.86-2.82-2.15-3.42zM10 6.5h3c.83 0 1.5.67 1.5 1.5s-.67 1.5-1.5 1.5h-3v-3zm3.5 9H10v-3h3.5c.83 0 1.5.67 1.5 1.5s-.67 1.5-1.5 1.5z"/></svg>',
-            'italic': '<svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M10 4v3h2.21l-3.42 8H6v3h8v-3h-2.21l3.42-8H18V4z"/></svg>',
-            'underline': '<svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M12 17c3.31 0 6-2.69 6-6V3h-2.5v8c0 1.93-1.57 3.5-3.5 3.5S8.5 12.93 8.5 11V3H6v8c0 3.31 2.69 6 6 6zm-7 2v2h14v-2H5z"/></svg>',
-            'clear': '<svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M5 13l4 4L19 7l-1.5-1.5L9 14l-2.5-2.5L5 13z"/></svg>',
-            'insertUnorderedList': '<svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M4 10.5c-.83 0-1.5.67-1.5 1.5s.67 1.5 1.5 1.5 1.5-.67 1.5-1.5-.67-1.5-1.5-1.5zm0-6c-.83 0-1.5.67-1.5 1.5S3.17 7.5 4 7.5 5.5 6.83 5.5 6 4.83 4.5 4 4.5zm0 12c-.83 0-1.5.67-1.5 1.5s.67 1.5 1.5 1.5 1.5-.67 1.5-1.5-.67-1.5-1.5-1.5zM7 19h14v-2H7v2zm0-6h14v-2H7v2zm0-8v2h14V5H7z"/></svg>',
-            'insertOrderedList': '<svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M2 17h2v.5H3v1h1v.5H2v1h3v-4H2v1zm1-9h1V4H2v1h1v3zm-1 3h1.8L2 13.1v.9h3v-1H3.2L5 10.9V10H2v1zm5-6v2h14V5H7zm0 14h14v-2H7v2zm0-6h14v-2H7v2z"/></svg>',
-            'link': '<svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg>',
-            'picture': '<svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M21 19V5c0-1.1-.9-2-2-2H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2zM8.5 13.5l2.5 3.01L14.5 12l4.5 6H5l3.5-4.5z"/></svg>',
-            'table': '<svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M10 10.02h5V21h-5zM17 21h3c1.1 0 2-.9 2-2v-9h-5v11zm3-18H5c-1.1 0-2 .9-2 2v3h19V5c0-1.1-.9-2-2-2zM3 19c0 1.1.9 2 2 2h3V10H3v9z"/></svg>',
-            'hr': '<svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M4 11h16v2H4z"/></svg>',
-            'fullscreen': '<svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M7 14H5v5h5v-2H7v-3zm-2-4h2V7h3V5H5v5zm12 7h-3v2h5v-5h-2v3zM14 5v2h3v3h2V5h-5z"/></svg>',
-            'codeview': '<svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M9.4 16.6L4.8 12l4.6-4.6L8 6l-6 6 6 6 1.4-1.4zm5.2 0L19.2 12l-4.6-4.6L16 6l6 6-6 6-1.4-1.4z"/></svg>',
-            'color': '<svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M12 3c-4.97 0-9 4.03-9 9s4.03 9 9 9c.83 0 1.5-.67 1.5-1.5 0-.39-.15-.74-.39-1.01-.23-.26-.38-.61-.38-.99 0-.83.67-1.5 1.5-1.5H16c2.76 0 5-2.24 5-5 0-4.42-4.03-8-9-8z"/></svg>'
-        },
-        fontNames: [
-            'Arial', 'Arial Black', 'Comic Sans MS', 'Courier New',
-            'Helvetica Neue', 'Helvetica', 'Impact', 'Lucida Grande',
-            'Tahoma', 'Times New Roman', 'Verdana',
-            'Cairo', 'Amiri', 'Noto Sans Arabic', 'Tajawal'
-        ],
-        fontSizes: ['8', '9', '10', '11', '12', '14', '16', '18', '20', '24', '28', '32', '36', '48', '64'],
-        placeholder: '{{ current_language }}' === 'ar' ? 'اكتب المحتوى هنا...' : 'Write your content here...',
-        callbacks: {
-            onImageUpload: function(files) {
-                for (let i = 0; i < files.length; i++) {
-                    uploadImage(files[i], this);
-                }
-            },
-            onInit: function() {
-                // Fix icons and dropdowns after initialization
-                setTimeout(function() {
-                    // Replace all Font Awesome icons with SVG
-                    $('.note-toolbar .note-btn').each(function() {
-                        var $btn = $(this);
-                        var $icon = $btn.find('i');
+    // Initialize Quill editors
 
-                        if ($icon.length > 0) {
-                            var iconClass = $icon.attr('class') || '';
-                            var svgIcon = '';
-
-                            // Map Font Awesome classes to SVG icons
-                            if (iconClass.includes('fa-bold')) {
-                                svgIcon = '<svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M15.6 10.79c.97-.67 1.65-1.77 1.65-2.79 0-2.26-1.75-4-4-4H7v14h7.04c2.09 0 3.71-1.7 3.71-3.79 0-1.52-.86-2.82-2.15-3.42zM10 6.5h3c.83 0 1.5.67 1.5 1.5s-.67 1.5-1.5 1.5h-3v-3zm3.5 9H10v-3h3.5c.83 0 1.5.67 1.5 1.5s-.67 1.5-1.5 1.5z"/></svg>';
-                            } else if (iconClass.includes('fa-italic')) {
-                                svgIcon = '<svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M10 4v3h2.21l-3.42 8H6v3h8v-3h-2.21l3.42-8H18V4z"/></svg>';
-                            } else if (iconClass.includes('fa-underline')) {
-                                svgIcon = '<svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M12 17c3.31 0 6-2.69 6-6V3h-2.5v8c0 1.93-1.57 3.5-3.5 3.5S8.5 12.93 8.5 11V3H6v8c0 3.31 2.69 6 6 6zm-7 2v2h14v-2H5z"/></svg>';
-                            } else if (iconClass.includes('fa-eraser') || iconClass.includes('fa-remove-format')) {
-                                svgIcon = '<svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M5 13l4 4L19 7l-1.5-1.5L9 14l-2.5-2.5L5 13z"/></svg>';
-                            } else if (iconClass.includes('fa-list-ul')) {
-                                svgIcon = '<svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M4 10.5c-.83 0-1.5.67-1.5 1.5s.67 1.5 1.5 1.5 1.5-.67 1.5-1.5-.67-1.5-1.5-1.5zm0-6c-.83 0-1.5.67-1.5 1.5S3.17 7.5 4 7.5 5.5 6.83 5.5 6 4.83 4.5 4 4.5zm0 12c-.83 0-1.5.67-1.5 1.5s.67 1.5 1.5 1.5 1.5-.67 1.5-1.5-.67-1.5-1.5-1.5zM7 19h14v-2H7v2zm0-6h14v-2H7v2zm0-8v2h14V5H7z"/></svg>';
-                            } else if (iconClass.includes('fa-list-ol')) {
-                                svgIcon = '<svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M2 17h2v.5H3v1h1v.5H2v1h3v-4H2v1zm1-9h1V4H2v1h1v3zm-1 3h1.8L2 13.1v.9h3v-1H3.2L5 10.9V10H2v1zm5-6v2h14V5H7zm0 14h14v-2H7v2zm0-6h14v-2H7v2z"/></svg>';
-                            } else if (iconClass.includes('fa-link')) {
-                                svgIcon = '<svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg>';
-                            } else if (iconClass.includes('fa-image') || iconClass.includes('fa-picture')) {
-                                svgIcon = '<svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M21 19V5c0-1.1-.9-2-2-2H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2zM8.5 13.5l2.5 3.01L14.5 12l4.5 6H5l3.5-4.5z"/></svg>';
-                            } else if (iconClass.includes('fa-table')) {
-                                svgIcon = '<svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M10 10.02h5V21h-5zM17 21h3c1.1 0 2-.9 2-2v-9h-5v11zm3-18H5c-1.1 0-2 .9-2 2v3h19V5c0-1.1-.9-2-2-2zM3 19c0 1.1.9 2 2 2h3V10H3v9z"/></svg>';
-                            } else if (iconClass.includes('fa-minus')) {
-                                svgIcon = '<svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M4 11h16v2H4z"/></svg>';
-                            } else if (iconClass.includes('fa-expand') || iconClass.includes('fa-arrows-alt')) {
-                                svgIcon = '<svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M7 14H5v5h5v-2H7v-3zm-2-4h2V7h3V5H5v5zm12 7h-3v2h5v-5h-2v3zM14 5v2h3v3h2V5h-5z"/></svg>';
-                            } else if (iconClass.includes('fa-code')) {
-                                svgIcon = '<svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M9.4 16.6L4.8 12l4.6-4.6L8 6l-6 6 6 6 1.4-1.4zm5.2 0L19.2 12l-4.6-4.6L16 6l6 6-6 6-1.4-1.4z"/></svg>';
-                            } else if (iconClass.includes('fa-paint-brush') || iconClass.includes('fa-tint')) {
-                                svgIcon = '<svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M12 3c-4.97 0-9 4.03-9 9s4.03 9 9 9c.83 0 1.5-.67 1.5-1.5 0-.39-.15-.74-.39-1.01-.23-.26-.38-.61-.38-.99 0-.83.67-1.5 1.5-1.5H16c2.76 0 5-2.24 5-5 0-4.42-4.03-8-9-8z"/></svg>';
-                            } else if (iconClass.includes('fa-font')) {
-                                svgIcon = '<svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M9 4v3h5v12h3V7h5V4H9zm-6 8h3v7h3v-7h3V9H3v3z"/></svg>';
-                            } else if (iconClass.includes('fa-caret-down')) {
-                                svgIcon = '<svg width="10" height="10" viewBox="0 0 24 24" fill="currentColor"><path d="M7 10l5 5 5-5z"/></svg>';
-                            } else {
-                                // Default icon for unknown buttons
-                                svgIcon = '<svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/></svg>';
-                            }
-
-                            if (svgIcon) {
-                                $icon.replaceWith(svgIcon);
-                            }
-                        }
-                    });
-
-                    // Fix dropdown functionality
-                    $('.note-toolbar .dropdown-toggle').off('click').on('click', function(e) {
-                        e.preventDefault();
-                        e.stopPropagation();
-
-                        var $this = $(this);
-                        var $dropdown = $this.siblings('.dropdown-menu');
-                        var $parent = $this.closest('.dropdown, .btn-group');
-
-                        // Close all other dropdowns
-                        $('.note-toolbar .dropdown-menu').not($dropdown).hide();
-                        $('.note-toolbar .dropdown, .note-toolbar .btn-group').not($parent).removeClass('open');
-
-                        // Toggle current dropdown
-                        if ($dropdown.is(':visible')) {
-                            $dropdown.hide();
-                            $parent.removeClass('open');
-                        } else {
-                            $dropdown.show();
-                            $parent.addClass('open');
-                        }
-                    });
-
-                    // Close dropdowns when clicking outside
-                    $(document).on('click.summernote-dropdown', function(e) {
-                        if (!$(e.target).closest('.note-toolbar .dropdown, .note-toolbar .btn-group').length) {
-                            $('.note-toolbar .dropdown-menu').hide();
-                            $('.note-toolbar .dropdown, .note-toolbar .btn-group').removeClass('open');
-                        }
-                    });
-                }, 200);
-            }
+    // English editor
+    const quillEn = new Quill('#content_en_editor', {
+        theme: 'snow',
+        placeholder: 'Write your content here...',
+        modules: {
+            toolbar: [
+                [{ 'header': [1, 2, 3, 4, 5, 6, false] }],
+                ['bold', 'italic', 'underline', 'strike'],
+                [{ 'color': [] }, { 'background': [] }],
+                [{ 'font': [] }],
+                [{ 'size': ['small', false, 'large', 'huge'] }],
+                [{ 'list': 'ordered'}, { 'list': 'bullet' }],
+                [{ 'indent': '-1'}, { 'indent': '+1' }],
+                [{ 'align': [] }],
+                ['link', 'image', 'video'],
+                ['blockquote', 'code-block'],
+                ['clean']
+            ]
         }
     });
 
-    // Excerpt fields are now simple textareas (no rich editor needed)
+    // Arabic editor
+    const quillAr = new Quill('#content_ar_editor', {
+        theme: 'snow',
+        placeholder: 'اكتب المحتوى هنا...',
+        modules: {
+            toolbar: [
+                [{ 'header': [1, 2, 3, 4, 5, 6, false] }],
+                ['bold', 'italic', 'underline', 'strike'],
+                [{ 'color': [] }, { 'background': [] }],
+                [{ 'font': [] }],
+                [{ 'size': ['small', false, 'large', 'huge'] }],
+                [{ 'list': 'ordered'}, { 'list': 'bullet' }],
+                [{ 'indent': '-1'}, { 'indent': '+1' }],
+                [{ 'align': [] }],
+                ['link', 'image', 'video'],
+                ['blockquote', 'code-block'],
+                ['clean']
+            ]
+        }
+    });
 
-    // Simple image upload function
-    function uploadImage(file, editor) {
-        var data = new FormData();
-        data.append("file", file);
-        data.append("csrf_token", "{{ csrf_token() }}");
+    // Set initial content from hidden fields
+    const contentEn = document.getElementById('content_en').value;
+    const contentAr = document.getElementById('content_ar').value;
 
-        $.ajax({
-            url: "/admin/upload-editor-image",
-            cache: false,
-            contentType: false,
-            processData: false,
-            data: data,
-            type: "POST",
-            success: function(response) {
-                if (response.success) {
-                    $(editor).summernote('insertImage', response.url);
-                } else {
-                    alert('{{ _("Image upload failed") }}: ' + response.error);
+    if (contentEn) {
+        quillEn.root.innerHTML = contentEn;
+    }
+    if (contentAr) {
+        quillAr.root.innerHTML = contentAr;
+    }
+
+    // Update hidden fields when content changes
+    quillEn.on('text-change', function() {
+        document.getElementById('content_en').value = quillEn.root.innerHTML;
+    });
+
+    quillAr.on('text-change', function() {
+        document.getElementById('content_ar').value = quillAr.root.innerHTML;
+    });
+
+    // SMART FIX DROPDOWN POSITIONING - Only when opened
+    function smartFixDropdowns() {
+        // Monitor dropdown visibility changes
+        const observer = new MutationObserver(function(mutations) {
+            mutations.forEach(function(mutation) {
+                if (mutation.type === 'attributes' && mutation.attributeName === 'aria-hidden') {
+                    const target = mutation.target;
+                    if (target.classList.contains('ql-picker-options')) {
+                        const isVisible = target.getAttribute('aria-hidden') === 'false';
+
+                        if (isVisible) {
+                            // Only fix positioning when dropdown is actually opened
+                            setTimeout(function() {
+                                target.style.position = 'absolute';
+                                target.style.top = '100%';
+                                target.style.left = '0';
+                                target.style.right = 'auto';
+                                target.style.zIndex = '99999';
+                                target.style.background = 'white';
+                                target.style.border = '1px solid #ced4da';
+                                target.style.borderRadius = '4px';
+                                target.style.boxShadow = '0 4px 12px rgba(0,0,0,0.3)';
+                                target.style.maxHeight = '200px';
+                                target.style.overflowY = 'auto';
+                                target.style.minWidth = '120px';
+                                target.style.marginTop = '2px';
+
+                                // Ensure picker container is positioned
+                                const picker = target.closest('.ql-picker');
+                                if (picker) {
+                                    picker.style.position = 'relative';
+                                    picker.style.zIndex = '10000';
+                                }
+                            }, 10);
+                        }
+                        // Don't force display when closed - let Quill handle it
+                    }
                 }
-            },
-            error: function() {
-                alert('{{ _("Image upload failed") }}');
-            }
+            });
+        });
+
+        // Observe all picker options
+        document.querySelectorAll('.ql-picker-options').forEach(function(options) {
+            observer.observe(options, { attributes: true });
         });
     }
 
-    // Initialize date/time picker
-    const publishField = document.querySelector('.datetime-picker');
-    if (publishField) {
-        flatpickr(publishField, {
-            enableTime: true,
-            dateFormat: "Y-m-d H:i:S",
-            time_24hr: true,
-            defaultDate: "{{ news_item.publish_at.strftime('%Y-%m-%d %H:%M:%S') if news_item and news_item.publish_at else '' }}",
-            locale: {
-                firstDayOfWeek: 1
-            },
-            allowInput: true
+    // Apply smart fixes
+    setTimeout(smartFixDropdowns, 100);
+
+
+
+    // Custom image upload handler
+    quillEn.getModule('toolbar').addHandler('image', function() {
+        selectLocalImage(quillEn);
+    });
+
+    quillAr.getModule('toolbar').addHandler('image', function() {
+        selectLocalImage(quillAr);
+    });
+
+    function selectLocalImage(quill) {
+        const input = document.createElement('input');
+        input.setAttribute('type', 'file');
+        input.setAttribute('accept', 'image/*');
+        input.click();
+
+        input.onchange = function() {
+            const file = input.files[0];
+            if (file) {
+                uploadImageToServer(file, quill);
+            }
+        };
+    }
+
+    function uploadImageToServer(file, quill) {
+        const formData = new FormData();
+        formData.append('file', file);
+        formData.append('csrf_token', '{{ csrf_token() }}');
+
+        fetch('/admin/upload-editor-image', {
+            method: 'POST',
+            body: formData
+        })
+        .then(response => response.json())
+        .then(result => {
+            if (result.success) {
+                const range = quill.getSelection();
+                quill.insertEmbed(range.index, 'image', result.url);
+            } else {
+                alert('{{ _("Image upload failed") }}: ' + result.error);
+            }
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            alert('{{ _("Image upload failed") }}');
         });
     }
 
     // Character counters
-    function updateCharCounter(input, counterId, maxLength) {
+    function updateCharCounter(inputId, counterId, maxLength) {
+        const input = document.getElementById(inputId);
         const counter = document.getElementById(counterId);
-        if (!counter) return;
 
-        const length = input.value.length;
-        counter.textContent = `${length}/${maxLength}`;
+        if (input && counter) {
+            const updateCount = () => {
+                const length = input.value.length;
+                counter.textContent = `${length}/${maxLength}`;
 
-        counter.className = 'char-counter';
-        if (length > maxLength * 0.9) {
-            counter.classList.add('danger');
-        } else if (length > maxLength * 0.7) {
-            counter.classList.add('warning');
+                if (length > maxLength * 0.9) {
+                    counter.classList.add('danger');
+                    counter.classList.remove('warning');
+                } else if (length > maxLength * 0.7) {
+                    counter.classList.add('warning');
+                    counter.classList.remove('danger');
+                } else {
+                    counter.classList.remove('warning', 'danger');
+                }
+            };
+
+            input.addEventListener('input', updateCount);
+            updateCount();
         }
     }
 
-    // Setup character counters
-    const titleInput = document.getElementById('title_en');
-    const excerptInput = document.getElementById('excerpt_en');
+    // Initialize character counters
+    updateCharCounter('title_en', 'title_en_counter', 200);
+    updateCharCounter('title_ar', 'title_ar_counter', 200);
+    updateCharCounter('excerpt_en', 'excerpt_en_counter', 500);
+    updateCharCounter('excerpt_ar', 'excerpt_ar_counter', 500);
 
-    if (titleInput) {
-        titleInput.addEventListener('input', () => updateCharCounter(titleInput, 'title-counter', 200));
-        updateCharCounter(titleInput, 'title-counter', 200); // Initial count
-    }
-
-    if (excerptInput) {
-        excerptInput.addEventListener('input', () => updateCharCounter(excerptInput, 'excerpt-counter', 500));
-        updateCharCounter(excerptInput, 'excerpt-counter', 500); // Initial count
-    }
-
-    // Auto-generate slug from title
-    if (titleInput) {
-        titleInput.addEventListener('input', function() {
-            const slug = this.value
-                .toLowerCase()
-                .replace(/[^a-z0-9\s-]/g, '')
-                .replace(/\s+/g, '-')
-                .replace(/-+/g, '-')
-                .trim('-');
-            const slugField = document.getElementById('slug');
-            if (slugField && !slugField.value) {
-                slugField.value = slug;
-            }
+    // Date picker
+    if (document.getElementById('publish_at')) {
+        flatpickr('#publish_at', {
+            enableTime: true,
+            dateFormat: 'Y-m-d H:i',
+            time_24hr: true
         });
     }
 
@@ -1271,7 +743,7 @@ document.addEventListener('DOMContentLoaded', function() {
     if (form) {
         form.addEventListener('submit', function(e) {
             const titleEn = document.getElementById('title_en').value.trim();
-            const contentEn = $('#content_en').summernote('code');
+            const contentEn = quillEn.getText().trim();
 
             if (!titleEn) {
                 e.preventDefault();
@@ -1284,9 +756,12 @@ document.addEventListener('DOMContentLoaded', function() {
                 alert('{{ _("Please enter article content (minimum 50 characters)") }}');
                 return false;
             }
+
+            // Update hidden fields before submission
+            document.getElementById('content_en').value = quillEn.root.innerHTML;
+            document.getElementById('content_ar').value = quillAr.root.innerHTML;
         });
     }
 });
 </script>
 {% endblock %}
-
