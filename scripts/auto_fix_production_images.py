@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """
 Automatically fix all WebP image issues in production.
-This script runs during deployment and ensures all 28 products have working WebP images.
+This script runs during deployment and ensures all 38 products have working WebP images.
 NO MANUAL INTERVENTION REQUIRED.
 """
 
@@ -35,8 +35,8 @@ def auto_fix_production_images():
         products_data = data.get('products', [])
         print(f"✅ Found {len(products_data)} products in seeds")
         
-        if len(products_data) != 28:
-            print(f"⚠️ WARNING: Expected 28 products, found {len(products_data)}")
+        if len(products_data) != 38:
+            print(f"⚠️ WARNING: Expected 38 products, found {len(products_data)}")
         
         # Step 2: Setup directories
         print("\n📁 Step 2: Setting up directories...")
@@ -224,21 +224,21 @@ def auto_fix_production_images():
         
         # Success criteria
         success = (
-            len(instance_webp_files) >= 28 and
-            products_with_webp >= 28 and
-            products_with_main_image >= 28
+            len(instance_webp_files) >= 38 and
+            products_with_webp >= 38 and
+            products_with_main_image >= 38
         )
         
         print("\n" + "=" * 60)
         if success:
             print("🎉 AUTO-FIX COMPLETED SUCCESSFULLY!")
-            print("✅ All 28 products ready with WebP images")
+            print("✅ All 38 products ready with WebP images")
             print("✅ Production deployment can continue")
         else:
             print("❌ AUTO-FIX FAILED!")
-            print(f"   Instance WebP files: {len(instance_webp_files)}/28")
-            print(f"   Products with WebP: {products_with_webp}/28")
-            print(f"   Products with main image: {products_with_main_image}/28")
+            print(f"   Instance WebP files: {len(instance_webp_files)}/38")
+            print(f"   Products with WebP: {products_with_webp}/38")
+            print(f"   Products with main image: {products_with_main_image}/38")
         
         return success
         

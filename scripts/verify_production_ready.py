@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-Verify that production is ready with all 28 products and WebP images.
+Verify that production is ready with all 38 products and WebP images.
 This script runs at the end of deployment to ensure everything is working.
 If this fails, deployment is aborted.
 """
@@ -35,8 +35,8 @@ def verify_production_ready():
             products = Product.query.filter_by(status='active').all()
             print(f"   Found: {len(products)} active products")
             
-            if len(products) < 28:
-                print(f"❌ FAIL: Expected at least 28 products, found {len(products)}")
+            if len(products) < 38:
+                print(f"❌ FAIL: Expected at least 38 products, found {len(products)}")
                 return False
             else:
                 print("✅ PASS: Sufficient products found")
@@ -54,8 +54,8 @@ def verify_production_ready():
             
             print(f"   Products with WebP: {products_with_webp}/{len(products)}")
             
-            if products_with_webp < 28:
-                print(f"❌ FAIL: Expected at least 28 products with WebP, found {products_with_webp}")
+            if products_with_webp < 38:
+                print(f"❌ FAIL: Expected at least 38 products with WebP, found {products_with_webp}")
                 if products_without_webp:
                     print("   Products without WebP:")
                     for slug in products_without_webp[:10]:  # Show first 10
@@ -78,8 +78,8 @@ def verify_production_ready():
             
             print(f"   Products with main image: {products_with_main_image}/{len(products)}")
             
-            if products_with_main_image < 28:
-                print(f"❌ FAIL: Expected at least 28 products with main image, found {products_with_main_image}")
+            if products_with_main_image < 38:
+                print(f"❌ FAIL: Expected at least 38 products with main image, found {products_with_main_image}")
                 if products_without_main_image:
                     print("   Products without main image:")
                     for slug in products_without_main_image[:10]:
@@ -113,8 +113,8 @@ def verify_production_ready():
                 print(f"   Instance directory: {instance_dir}")
                 print(f"   WebP files found: {instance_webp_count}")
                 
-                if instance_webp_count < 28:
-                    print(f"❌ FAIL: Expected at least 28 WebP files in instance, found {instance_webp_count}")
+                if instance_webp_count < 38:
+                    print(f"❌ FAIL: Expected at least 38 WebP files in instance, found {instance_webp_count}")
                     return False
                 else:
                     print("✅ PASS: Sufficient WebP files in instance directory")

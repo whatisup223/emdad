@@ -31,7 +31,7 @@ def reset_and_seed_categories(db):
     """
     from app.models import Category, Product, ProductImage, AppMeta
 
-    FLAG_KEY = 'seed:new_categories_v1'
+    FLAG_KEY = 'seed:new_categories_v2'
     if AppMeta.get(FLAG_KEY):
         print("✅ Category reset already applied. Skipping hard reset.")
         return
@@ -57,13 +57,24 @@ def reset_and_seed_categories(db):
     print("✅ Inserting new official categories...")
     categories = [
         {
-            'key': 'iqf-fruit',
-            'name_en': 'IQF Fruit',
-            'name_ar': 'فواكه مجمدة (IQF)',
-            'slug': 'iqf-fruit',
-            'description_en': 'Individually Quick Frozen fruits preserving taste and nutrition.',
-            'description_ar': 'فواكه مجمدة سريعاً بشكل فردي مع الحفاظ على الطعم والقيمة الغذائية.',
-            'sort_order': 3,
+            'key': 'fresh-citrus',
+            'name_en': 'Fresh Citrus',
+            'name_ar': 'حمضيات طازجة',
+            'slug': 'fresh-citrus',
+            'description_en': 'Fresh citrus fruits including oranges, mandarins, and tangerines',
+            'description_ar': 'حمضيات طازجة تشمل البرتقال واليوسفي والكلمنتينا',
+            'sort_order': 1,
+            'show_on_homepage': True,
+            'image_path': None,
+        },
+        {
+            'key': 'fresh-vegetables',
+            'name_en': 'Fresh Vegetables',
+            'name_ar': 'خضروات طازجة',
+            'slug': 'fresh-vegetables',
+            'description_en': 'Fresh vegetables including garlic, onions, potatoes, and sweet potatoes',
+            'description_ar': 'خضروات طازجة تشمل الثوم والبصل والبطاطس والبطاطا الحلوة',
+            'sort_order': 2,
             'show_on_homepage': True,
             'image_path': None,
         },
@@ -72,9 +83,9 @@ def reset_and_seed_categories(db):
             'name_en': 'Fresh Fruit',
             'name_ar': 'فواكه طازجة',
             'slug': 'fresh-fruit',
-            'description_en': 'Seasonal premium fresh fruits from selected farms.',
-            'description_ar': 'فواكه طازجة موسمية ممتازة من مزارع مختارة.',
-            'sort_order': 1,
+            'description_en': 'Fresh fruits including pomegranates, grapes, strawberries, and mango',
+            'description_ar': 'فواكه طازجة تشمل الرمان والعنب والفراولة والمانجو',
+            'sort_order': 3,
             'show_on_homepage': True,
             'image_path': None,
         },
@@ -83,9 +94,20 @@ def reset_and_seed_categories(db):
             'name_en': 'Dates',
             'name_ar': 'تمور',
             'slug': 'dates',
-            'description_en': 'High-quality Egyptian dates with rich flavor.',
-            'description_ar': 'تمور مصرية عالية الجودة بطعم غني.',
+            'description_en': 'Premium Egyptian dates including whole, pitted, and Medjool varieties',
+            'description_ar': 'تمور مصرية ممتازة تشمل الكامل ومنزوع النواة وأصناف المجهول',
             'sort_order': 4,
+            'show_on_homepage': True,
+            'image_path': None,
+        },
+        {
+            'key': 'iqf',
+            'name_en': 'IQF',
+            'name_ar': 'مجمد سريع',
+            'slug': 'iqf',
+            'description_en': 'Individually Quick Frozen fruits preserving taste and nutrition',
+            'description_ar': 'فواكه مجمدة سريعاً بشكل فردي مع الحفاظ على الطعم والقيمة الغذائية',
+            'sort_order': 5,
             'show_on_homepage': True,
             'image_path': None,
         },
@@ -94,31 +116,9 @@ def reset_and_seed_categories(db):
             'name_en': 'Spices',
             'name_ar': 'توابل',
             'slug': 'spices',
-            'description_en': 'Aromatic spices sourced and processed with care.',
-            'description_ar': 'توابل عطرية يتم الحصول عليها ومعالجتها بعناية.',
-            'sort_order': 5,
-            'show_on_homepage': True,
-            'image_path': None,
-        },
-        {
-            'key': 'dried-herbs',
-            'name_en': 'Dried Herbs',
-            'name_ar': 'أعشاب مجففة',
-            'slug': 'dried-herbs',
-            'description_en': 'Naturally dried herbs retaining their essential aromas.',
-            'description_ar': 'أعشاب مجففة بشكل طبيعي تحتفظ بروائحها الأساسية.',
+            'description_en': 'Aromatic spices including cumin, coriander, fennel, and black seed',
+            'description_ar': 'توابل عطرية تشمل الكمون والكزبرة والشمر وحبة البركة',
             'sort_order': 6,
-            'show_on_homepage': True,
-            'image_path': None,
-        },
-        {
-            'key': 'vegetables-roots',
-            'name_en': 'Vegetables & Roots',
-            'name_ar': 'خضروات وجذور',
-            'slug': 'vegetables-roots',
-            'description_en': 'Fresh vegetables and root crops of export quality.',
-            'description_ar': 'خضروات ومحاصيل جذرية طازجة بجودة التصدير.',
-            'sort_order': 2,
             'show_on_homepage': True,
             'image_path': None,
         },
@@ -127,10 +127,10 @@ def reset_and_seed_categories(db):
             'name_en': 'Herbs & Herbal Plants',
             'name_ar': 'أعشاب ونباتات عشبية',
             'slug': 'herbs-herbal-plants',
-            'description_en': 'Culinary and medicinal herbs, carefully curated.',
-            'description_ar': 'أعشاب للطهي والطب التقليدي مختارة بعناية.',
+            'description_en': 'Culinary and medicinal herbs including basil, mint, thyme, and oregano',
+            'description_ar': 'أعشاب للطهي والطب التقليدي تشمل الريحان والنعناع والزعتر والأوريجانو',
             'sort_order': 7,
-            'show_on_homepage': False,
+            'show_on_homepage': True,
             'image_path': None,
         },
         {
@@ -138,10 +138,10 @@ def reset_and_seed_categories(db):
             'name_en': 'Oil Seeds',
             'name_ar': 'بذور زيتية',
             'slug': 'oil-seeds',
-            'description_en': 'Premium oil seeds suitable for various applications.',
-            'description_ar': 'بذور زيتية ممتازة مناسبة لتطبيقات متعددة.',
+            'description_en': 'Premium oil seeds including sesame and flax seeds',
+            'description_ar': 'بذور زيتية ممتازة تشمل السمسم وبذور الكتان',
             'sort_order': 8,
-            'show_on_homepage': False,
+            'show_on_homepage': True,
             'image_path': None,
         },
     ]
@@ -1182,6 +1182,11 @@ def seed_official_products(db):
         p.sort_order = int(item.get('sort_order', 1))
         p.category_id = cat.id
 
+        # Handle seasonality data
+        seasonality_data = item.get('seasonality')
+        if seasonality_data:
+            p.seasonality = json.dumps(seasonality_data)
+
         # Enhanced image handling
         fname = item.get('image_filename')
         image_copied = False
@@ -1379,8 +1384,8 @@ def init_database():
                     product_count = Product.query.filter_by(status='active').count()
                     print(f"✅ Seeding completed: {product_count} active products")
 
-                    if product_count < 28:
-                        print(f"⚠️ WARNING: Expected at least 28 products, found {product_count}")
+                    if product_count < 38:
+                        print(f"⚠️ WARNING: Expected at least 38 products, found {product_count}")
                         print("🔄 Attempting to re-seed...")
                         seed_official_products(db)
                         db.session.commit()
