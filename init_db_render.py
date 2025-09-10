@@ -206,29 +206,29 @@ def ensure_category_images(db):
 
     # Target filenames per category
     image_plan = {
+        'fresh-citrus': {
+            'filename': 'fresh-citrus.jpg',
+            'url': 'https://source.unsplash.com/1200x800/?citrus,oranges,lemons'
+        },
+        'fresh-vegetables': {
+            'filename': 'fresh-vegetables.jpg',
+            'url': 'https://source.unsplash.com/1200x800/?vegetables,fresh'
+        },
         'fresh-fruit': {
             'filename': 'fresh-fruit.jpg',
             'url': 'https://source.unsplash.com/1200x800/?fruit,fruits'
-        },
-        'vegetables-roots': {
-            'filename': 'vegetables-roots.jpg',
-            'url': 'https://source.unsplash.com/1200x800/?vegetables,roots'
-        },
-        'iqf-fruit': {
-            'filename': 'iqf-fruit.jpg',
-            'url': 'https://source.unsplash.com/1200x800/?frozen,fruit,berries'
         },
         'dates': {
             'filename': 'dates.jpg',
             'url': 'https://source.unsplash.com/1200x800/?dates,fruit'
         },
+        'iqf': {
+            'filename': 'iqf.jpg',
+            'url': 'https://source.unsplash.com/1200x800/?frozen,fruit,berries'
+        },
         'spices': {
             'filename': 'spices.jpg',
             'url': 'https://source.unsplash.com/1200x800/?spices'
-        },
-        'dried-herbs': {
-            'filename': 'dried-herbs.jpg',
-            'url': 'https://source.unsplash.com/1200x800/?dried,herbs'
         },
         'herbs-herbal-plants': {
             'filename': 'herbs-herbal-plants.jpg',
@@ -237,6 +237,19 @@ def ensure_category_images(db):
         'oil-seeds': {
             'filename': 'oil-seeds.jpg',
             'url': 'https://source.unsplash.com/1200x800/?seeds'
+        },
+        # Legacy mappings for backward compatibility
+        'vegetables-roots': {
+            'filename': 'vegetables-roots.jpg',
+            'url': 'https://source.unsplash.com/1200x800/?vegetables,roots'
+        },
+        'iqf-fruit': {
+            'filename': 'iqf-fruit.jpg',
+            'url': 'https://source.unsplash.com/1200x800/?frozen,fruit,berries'
+        },
+        'dried-herbs': {
+            'filename': 'dried-herbs.jpg',
+            'url': 'https://source.unsplash.com/1200x800/?dried,herbs'
         },
     }
 
