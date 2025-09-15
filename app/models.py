@@ -237,6 +237,28 @@ class Product(db.Model):
             return f"HS:{self.hs_code}"
         return None
 
+    def get_hs_code_description(self, language='en'):
+        """Get HS code description in specified language."""
+        if not self.hs_code:
+            return None
+
+        try:
+            from app.utils.hs_codes import get_hs_code_description
+            return get_hs_code_description(self.hs_code, language)
+        except ImportError:
+            return None
+
+    def get_hs_code_display(self, language='en'):
+        """Get HS code with description for display."""
+        if not self.hs_code:
+            return None
+
+        try:
+            from app.utils.hs_codes import format_hs_code_display
+            return format_hs_code_display(self.hs_code, language)
+        except ImportError:
+            return self.hs_code
+
     def __repr__(self):
         return f'<Product {self.slug}>'
 

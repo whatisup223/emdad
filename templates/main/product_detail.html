@@ -765,12 +765,15 @@ document.addEventListener('DOMContentLoaded', function() {
                                                 {% if product.hs_code %}
                                                 <tr>
                                                     <td class="spec-label">
-                                                        <strong>{% if is_rtl %}كود النظام المنسق (العائلة){% else %}HS Code (family){% endif %}</strong>
+                                                        <strong>{% if is_rtl %}كود النظام المنسق{% else %}HS Code{% endif %}</strong>
                                                     </td>
                                                     <td class="spec-value">
-                                                        <span class="text-primary">{{ product.hs_code }}</span>
-                                                        — {% if is_rtl %}التوابل تشمل الزعتر، أوراق الغار، وغيرها{% else %}Spices incl. thyme, bay leaves, other{% endif %}
-                                                        <small class="text-muted">({% if is_rtl %}تأكد من الكود الدقيق للعشب{% else %}confirm exact code for herb{% endif %})</small>
+                                                        {% set hs_display = product.get_hs_code_display(current_language) %}
+                                                        {% if hs_display %}
+                                                            <span class="text-primary">{{ hs_display }}</span>
+                                                        {% else %}
+                                                            <span class="text-primary">{{ product.hs_code }}</span>
+                                                        {% endif %}
                                                     </td>
                                                 </tr>
                                                 {% endif %}
