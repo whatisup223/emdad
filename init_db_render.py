@@ -1430,6 +1430,25 @@ def init_database():
                     # Don't fail the entire initialization for this
                     print("⚠️ Continuing with initialization despite HS code assignment issues...")
 
+                # Add default specifications to products (FORCE UPDATE for production)
+                try:
+                    print("📋 Adding comprehensive specifications to ALL products...")
+                    from migrations.add_default_product_specifications import update_product_specifications
+                    # Use force_update=True to ensure ALL products get comprehensive specifications
+                    success = update_product_specifications(db, force_update=True)
+                    if success:
+                        db.session.commit()
+                        print("✅ Product specifications FORCE UPDATE completed")
+                        print("🌟 All products now have comprehensive bilingual specifications")
+                    else:
+                        print("⚠️ Product specifications FORCE UPDATE failed")
+                except Exception as e:
+                    print(f"⚠️ Could not assign product specifications: {e}")
+                    import traceback
+                    traceback.print_exc()
+                    # Don't fail the entire initialization for this
+                    print("⚠️ Continuing with initialization despite specifications assignment issues...")
+
                 # Link/copy owner-provided product images (idempotent, run AFTER seeding)
                 ensure_link_owner_product_images(db)
                 db.session.commit()

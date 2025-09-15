@@ -413,6 +413,14 @@ def product_new():
     """Create new product."""
     form = ProductForm()
 
+    if request.method == 'POST':
+        # Check for CSRF errors specifically
+        if not form.validate():
+            csrf_errors = form.csrf_token.errors if hasattr(form, 'csrf_token') and form.csrf_token.errors else []
+            if csrf_errors:
+                flash('خطأ في الأمان: انتهت صلاحية النموذج. يرجى المحاولة مرة أخرى.', 'error')
+                return render_template('admin/product_form.html', form=form, title='إضافة منتج جديد')
+
     if form.validate_on_submit():
         # Prepare specifications as JSON
         specifications = {}
@@ -506,6 +514,14 @@ def product_edit(id):
     """Edit product."""
     product = Product.query.get_or_404(id)
     form = ProductForm(obj=product)
+
+    if request.method == 'POST':
+        # Check for CSRF errors specifically
+        if not form.validate():
+            csrf_errors = form.csrf_token.errors if hasattr(form, 'csrf_token') and form.csrf_token.errors else []
+            if csrf_errors:
+                flash('خطأ في الأمان: انتهت صلاحية النموذج. يرجى المحاولة مرة أخرى.', 'error')
+                return render_template('admin/product_form.html', form=form, title=f'تعديل المنتج: {product.name_ar or product.name_en}', product=product)
 
     if form.validate_on_submit():
         # Prepare specifications as JSON

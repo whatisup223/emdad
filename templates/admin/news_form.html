@@ -351,6 +351,8 @@
                     <div class="card-body form-body">
                         <form method="POST" enctype="multipart/form-data" id="newsForm">
                             {{ form.hidden_tag() }}
+
+
                             
                             <!-- Basic Information -->
                             <div class="row mb-4">
@@ -493,6 +495,41 @@
                                             </div>
                                         </div>
                                     {% endif %}
+                                </div>
+                            </div>
+
+                            <!-- Publishing Options -->
+                            <div class="row mb-4">
+                                <div class="col-md-12">
+                                    <div class="card">
+                                        <div class="card-header">
+                                            <h6 class="mb-0">{{ _('Publishing Options') }}</h6>
+                                        </div>
+                                        <div class="card-body">
+                                            <div class="row">
+                                                <div class="col-md-4">
+                                                    <div class="form-check form-switch">
+                                                        <input type="hidden" name="featured" value="false">
+                                                        {{ form.featured(class="form-check-input", id="featured") }}
+                                                        <label class="form-check-label" for="featured">
+                                                            <i class="fas fa-star text-warning me-2"></i>{{ _('Featured Article') }}
+                                                        </label>
+                                                        <div class="form-text">{{ _('Mark this article as featured to highlight it') }}</div>
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-4">
+                                                    <div class="form-check form-switch">
+                                                        <input type="hidden" name="show_on_homepage" value="false">
+                                                        {{ form.show_on_homepage(class="form-check-input", id="show_on_homepage") }}
+                                                        <label class="form-check-label" for="show_on_homepage">
+                                                            <i class="fas fa-home text-primary me-2"></i>{{ _('Show on Homepage') }}
+                                                        </label>
+                                                        <div class="form-text">{{ _('Display this article on the homepage') }}</div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
 
@@ -760,6 +797,12 @@ document.addEventListener('DOMContentLoaded', function() {
             // Update hidden fields before submission
             document.getElementById('content_en').value = quillEn.root.innerHTML;
             document.getElementById('content_ar').value = quillAr.root.innerHTML;
+
+            // Debug: Log checkbox values
+            const featuredCheckbox = document.getElementById('featured');
+            const homepageCheckbox = document.getElementById('show_on_homepage');
+            console.log('Featured checkbox:', featuredCheckbox ? featuredCheckbox.checked : 'not found');
+            console.log('Homepage checkbox:', homepageCheckbox ? homepageCheckbox.checked : 'not found');
         });
     }
 });

@@ -25,8 +25,23 @@
                         {% endif %}
                     {% endwith %}
 
-                    <form method="POST" enctype="multipart/form-data">
+                    <form method="POST" enctype="multipart/form-data" id="productForm">
                         {{ form.hidden_tag() }}
+
+                        <!-- Debug CSRF Token -->
+                        {% if config.DEBUG %}
+                        <div class="alert alert-info small">
+                            <strong>Debug:</strong> CSRF Token: {{ csrf_token() }}
+                        </div>
+                        {% endif %}
+
+                        <!-- CSRF Error Alert (hidden by default) -->
+                        <div id="csrfErrorAlert" class="alert alert-danger" style="display: none;">
+                            <strong>خطأ في الأمان:</strong> انتهت صلاحية النموذج. يرجى إعادة تحميل الصفحة والمحاولة مرة أخرى.
+                            <button type="button" class="btn btn-sm btn-outline-danger ms-2" onclick="location.reload()">
+                                إعادة تحميل الصفحة
+                            </button>
+                        </div>
                         
                         <!-- Basic Information -->
                         <div class="row">
@@ -357,6 +372,32 @@ document.getElementById('name_en').addEventListener('input', function() {
         .replace(/-+/g, '-')
         .trim('-');
     document.getElementById('slug').value = slug;
+});
+
+// Handle form submission with CSRF error handling
+document.getElementById('productForm').addEventListener('submit', function(e) {
+    // Hide any previous CSRF error
+    document.getElementById('csrfErrorAlert').style.display = 'none';
+
+    // Add loading state to submit button
+    const submitBtn = this.querySelector('button[type="submit"]');
+    if (submitBtn) {
+        submitBtn.disabled = true;
+        submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin me-2"></i>جاري الحفظ...';
+    }
+});
+
+// Handle CSRF errors globally
+window.addEventListener('load', function() {
+    // Check if there's a CSRF error in the URL or flash messages
+    const urlParams = new URLSearchParams(window.location.search);
+    if (urlParams.get('csrf_error') || document.querySelector('.alert-danger')) {
+        const errorText = document.querySelector('.alert-danger')?.textContent;
+        if (errorText && errorText.includes('CSRF')) {
+            document.getElementById('csrfErrorAlert').style.display = 'block';
+            window.scrollTo(0, 0);
+        }
+    }
 });
 
 // Preview specifications function

@@ -34,6 +34,18 @@ def create_app(config_name=None):
     mail.init_app(app)
     limiter.init_app(app)
     csrf.init_app(app)
+
+    # Handle CSRF errors globally
+    try:
+        @csrf.error_handler
+        def csrf_error(reason):
+            from flask import flash, redirect, request, url_for
+            flash('خطأ في الأمان: انتهت صلاحية النموذج. يرجى المحاولة مرة أخرى.', 'error')
+            # Redirect back to the same page
+            return redirect(request.url)
+    except AttributeError:
+        # Fallback for older Flask-WTF versions
+        pass
     # Auto-create missing RFQ columns in non-migrated environments (safe fallback)
     # Flask 3 removed before_first_request; run once at startup inside app context
     try:
