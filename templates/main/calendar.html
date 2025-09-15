@@ -139,6 +139,8 @@
       .month-cell:hover { box-shadow: 0 0 0 3px rgba(249,203,153,.35); }
       .product-name a { color:#2c5f4f; font-weight:600; text-decoration:none; }
       .product-name a:hover { text-decoration:underline; }
+      .product-col { padding: 0.75rem 1rem; vertical-align: middle; }
+      .product-name .badge { font-size: 0.7rem !important; font-weight: normal; }
       .legend .dot { width:14px; height:14px; border-radius:4px; display:inline-block; margin-inline-end:.5rem; vertical-align:middle; }
       .legend .peak { background:#2c5f4f; }
       .legend .available { background:#689b8a; }
@@ -174,7 +176,16 @@
             {% if not q or (item.name or '')|lower is string and q in (item.name or '')|lower %}
             <tr>
               <th scope="row" class="product-col product-name">
-                <a href="{{ url_for('main.product_detail', slug=item.slug) }}">{{ item.name }}</a>
+                <div class="d-flex flex-column">
+                  <a href="{{ url_for('main.product_detail', slug=item.slug) }}" class="text-decoration-none fw-semibold">{{ item.name }}</a>
+                  {% if item.hs_code %}
+                  <small class="text-muted mt-1">
+                    <span class="badge bg-light text-dark border" style="font-size: 0.7rem;">
+                      <i class="fas fa-barcode me-1"></i>HS:{{ item.hs_code }}
+                    </span>
+                  </small>
+                  {% endif %}
+                </div>
               </th>
               {% for m in months %}
                 {% set state = 'off' %}
@@ -273,7 +284,14 @@
                 {% endfor %}
               </div>
 
-              <h5 class="card-heading {{ 'arabic-heading' if current_language == 'ar' else 'english-heading' }} mb-3">{{ product.get_name(current_language) }}</h5>
+              <h5 class="card-heading {{ 'arabic-heading' if current_language == 'ar' else 'english-heading' }} mb-2">{{ product.get_name(current_language) }}</h5>
+              {% if product.get_hs_code_formatted() %}
+              <div class="mb-3">
+                  <span class="badge bg-light text-dark border fw-normal">
+                      <i class="fas fa-barcode me-1"></i>{{ product.get_hs_code_formatted() }}
+                  </span>
+              </div>
+              {% endif %}
               <p class="card-text {{ 'arabic-text' if current_language == 'ar' else 'english-text' }} text-muted mb-4">
                 {{ product.get_short_description(current_language) | truncate(100) if product.get_short_description(current_language) else _('Premium quality Egyptian agricultural product with exceptional taste and nutritional value.') }}
               </p>

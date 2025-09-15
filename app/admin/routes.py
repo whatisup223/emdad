@@ -426,6 +426,7 @@ def product_new():
             name_ar=form.name_ar.data,
             slug=form.slug.data,
             category_id=form.category_id.data,
+            hs_code=form.hs_code.data,
             description_en=form.description_en.data,
             description_ar=form.description_ar.data,
             short_description_en=form.short_description_en.data,
@@ -503,6 +504,7 @@ def product_edit(id):
         product.name_ar = form.name_ar.data
         product.slug = form.slug.data
         product.category_id = form.category_id.data
+        product.hs_code = form.hs_code.data
         product.description_en = form.description_en.data
         product.description_ar = form.description_ar.data
         product.short_description_en = form.short_description_en.data
@@ -743,6 +745,11 @@ def news_new():
     form = NewsForm()
 
     if form.validate_on_submit():
+        # Debug: Print form data
+        print(f"DEBUG: Featured checkbox value: {form.featured.data}")
+        print(f"DEBUG: Show on homepage checkbox value: {form.show_on_homepage.data}")
+        print(f"DEBUG: Raw form data: featured={request.form.get('featured')}, show_on_homepage={request.form.get('show_on_homepage')}")
+
         # Handle action buttons (save_draft or publish)
         action = request.form.get('action', 'save')
 
@@ -834,6 +841,11 @@ def news_edit(id):
     form = NewsForm(obj=news_item)
 
     if form.validate_on_submit():
+        # Debug: Print form data
+        print(f"DEBUG EDIT: Featured checkbox value: {form.featured.data}")
+        print(f"DEBUG EDIT: Show on homepage checkbox value: {form.show_on_homepage.data}")
+        print(f"DEBUG EDIT: Raw form data: featured={request.form.get('featured')}, show_on_homepage={request.form.get('show_on_homepage')}")
+
         # Basic Information
         news_item.title_en = form.title_en.data
         news_item.title_ar = form.title_ar.data

@@ -284,6 +284,18 @@
                                     <p class="mb-0">{% if is_rtl %}مصر{% else %}{{ _('Egypt') }}{% endif %}</p>
                                 </div>
                             </div>
+                            {% if product.get_hs_code_formatted() %}
+                            <div class="col-6">
+                                <div class="info-item mb-3">
+                                    <h6 class="text-muted mb-1">{% if is_rtl %}رمز HS{% else %}{{ _('HS Code') }}{% endif %}</h6>
+                                    <p class="mb-0">
+                                        <span class="badge bg-light text-dark border fw-normal">
+                                            <i class="fas fa-barcode me-1"></i>{{ product.get_hs_code_formatted() }}
+                                        </span>
+                                    </p>
+                                </div>
+                            </div>
+                            {% endif %}
                             {% set seasonality = product.get_seasonality_lang(current_language) %}
                             {% if seasonality.get('harvest') %}
                             <div class="col-6">

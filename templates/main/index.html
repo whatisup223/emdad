@@ -803,7 +803,14 @@
                                 </div>
 
 
-                            <h5 class="card-heading {{ 'arabic-heading' if current_language == 'ar' else 'english-heading' }} mb-3">{{ product.get_name(current_language) }}</h5>
+                            <h5 class="card-heading {{ 'arabic-heading' if current_language == 'ar' else 'english-heading' }} mb-2">{{ product.get_name(current_language) }}</h5>
+                            {% if product.get_hs_code_formatted() %}
+                            <div class="mb-2">
+                                <span class="badge bg-light text-dark border fw-normal">
+                                    <i class="fas fa-barcode me-1"></i>{{ product.get_hs_code_formatted() }}
+                                </span>
+                            </div>
+                            {% endif %}
                             <p class="card-text {{ 'arabic-text' if current_language == 'ar' else 'english-text' }} text-muted mb-4">
                                 {{ product.get_short_description(current_language) | truncate(100) if product.get_short_description(current_language) else _('Premium quality Egyptian agricultural product with exceptional taste and nutritional value.') }}
                             </p>

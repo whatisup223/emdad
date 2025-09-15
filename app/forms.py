@@ -103,6 +103,8 @@ class ProductForm(FlaskForm):
     name_ar = StringField('Name (Arabic)', validators=[Optional(), Length(max=200)])
     slug = StringField('URL Slug', validators=[DataRequired(), Length(max=200)])
     category_id = SelectField('Category', validators=[DataRequired()], coerce=int, choices=[])
+    hs_code = StringField('HS Code', validators=[Optional(), Length(max=20)],
+                         render_kw={"placeholder": "e.g., 080510"})
 
     description_en = TextAreaField('Description (English)', validators=[Optional()])
     description_ar = TextAreaField('Description (Arabic)', validators=[Optional()])

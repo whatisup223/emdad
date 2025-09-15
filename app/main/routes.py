@@ -166,6 +166,7 @@ def calendar():
             'name': prod.get_name(language),
             'slug': prod.slug,
             'category_key': prod.category.key if prod.category else None,
+            'hs_code': prod.hs_code,
             'peak': peak,
             'available': available,
             'limited': limited,

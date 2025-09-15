@@ -352,7 +352,15 @@ Browse our complete range of premium Egyptian agricultural products including ci
   <span class="badge bg-light text-primary-custom fw-semibold">{{ product.category.get_name(current_language) if product.category else _('Premium') }}</span>
 </div>
 
-                        <h5 class="card-heading {{ 'arabic-heading' if current_language == 'ar' else 'english-heading' }}">{{ product.get_name(current_language) if product.get_name is defined else product.get_name() }}</h5>
+                        <h5 class="card-heading {{ 'arabic-heading' if current_language == 'ar' else 'english-heading' }} mb-2">{{ product.get_name(current_language) if product.get_name is defined else product.get_name() }}</h5>
+
+                        {% if product.get_hs_code_formatted() %}
+                        <div class="mb-2">
+                            <span class="badge bg-light text-dark border fw-normal">
+                                <i class="fas fa-barcode me-1"></i>{{ product.get_hs_code_formatted() }}
+                            </span>
+                        </div>
+                        {% endif %}
 
                         <p class="card-text {{ 'arabic-text' if current_language == 'ar' else 'english-text' }} text-muted flex-grow-1">
   {% set short_desc = product.get_short_description(current_language) if product.get_short_description is defined else product.get_short_description() %}

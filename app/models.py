@@ -88,6 +88,9 @@ class Product(db.Model):
     slug = db.Column(db.String(200), unique=True, nullable=False, index=True)
     category_id = db.Column(db.Integer, db.ForeignKey('category.id'), nullable=False)
 
+    # HS Code for customs and trade
+    hs_code = db.Column(db.String(20), nullable=True)
+
     # Content
     description_en = db.Column(db.Text)
     description_ar = db.Column(db.Text)
@@ -227,6 +230,12 @@ class Product(db.Model):
     def get_main_image(self):
         """Get the main product image."""
         return self.images.filter_by(is_main=True).first() or self.images.first()
+
+    def get_hs_code_formatted(self):
+        """Get HS code in formatted display format (HS:XXXXXX)."""
+        if self.hs_code:
+            return f"HS:{self.hs_code}"
+        return None
 
     def __repr__(self):
         return f'<Product {self.slug}>'
