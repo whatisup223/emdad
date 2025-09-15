@@ -156,27 +156,73 @@
                             </div>
                         </div>
 
-                        <div class="row">
-                            <div class="col-md-6">
-                                <div class="mb-3">
-                                    {{ form.specifications_en.label(class="form-label") }}
-                                    {{ form.specifications_en(class="form-control" + (" is-invalid" if form.specifications_en.errors else ""), rows="4") }}
-                                    {% if form.specifications_en.errors %}
-                                        <div class="invalid-feedback">
-                                            {% for error in form.specifications_en.errors %}{{ error }}{% endfor %}
-                                        </div>
-                                    {% endif %}
-                                </div>
+                        <!-- Specifications Section -->
+                        <div class="card border-0 shadow-sm mb-4">
+                            <div class="card-header bg-light">
+                                <h6 class="mb-0">
+                                    <i class="fas fa-list-ul me-2"></i>Product Specifications
+                                    <small class="text-muted ms-2">- Displayed in organized table format</small>
+                                </h6>
                             </div>
-                            <div class="col-md-6">
-                                <div class="mb-3">
-                                    {{ form.specifications_ar.label(class="form-label") }}
-                                    {{ form.specifications_ar(class="form-control" + (" is-invalid" if form.specifications_ar.errors else ""), rows="4", dir="rtl") }}
-                                    {% if form.specifications_ar.errors %}
-                                        <div class="invalid-feedback">
-                                            {% for error in form.specifications_ar.errors %}{{ error }}{% endfor %}
+                            <div class="card-body">
+                                <!-- Format Guide -->
+                                <div class="alert alert-info border-0 mb-3">
+                                    <h6 class="alert-heading mb-2">
+                                        <i class="fas fa-info-circle me-1"></i>Specification Format Guide
+                                    </h6>
+                                    <p class="mb-2"><strong>Use JSON format for structured specifications:</strong></p>
+                                    <pre class="bg-white p-2 rounded border small mb-2">{
+  "Essential Oil (EO)": "0.3–1.5% (starter target: ISO 6571/ASTA)",
+  "Cut Sizes": "Whole leaf • Crushed 3–6 mm • Tea Bag Cut 1–3 mm • Powder 60–120 mesh",
+  "Moisture": "≤ 10–12% (typical)",
+  "Color": "Green retention target: sortex available",
+  "Metal Detection": "Ferrous/Non-ferrous/SS per QA plan",
+  "Crop Year": "Current season (declare on COA)"
+}</pre>
+                                    <p class="mb-0"><small class="text-muted">
+                                        <strong>Tips:</strong> Use bullet points (•) to separate multiple values.
+                                        HS Code will be automatically included in the specifications table.
+                                    </small></p>
+                                </div>
+
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <div class="mb-3">
+                                            {{ form.specifications_en.label(class="form-label") }}
+                                            {{ form.specifications_en(class="form-control" + (" is-invalid" if form.specifications_en.errors else ""), rows="8", placeholder='{"Essential Oil (EO)": "0.3–1.5% (starter target: ISO 6571/ASTA)", "Cut Sizes": "Whole leaf • Crushed 3–6 mm", "Moisture": "≤ 10–12% (typical)"}') }}
+                                            {% if form.specifications_en.errors %}
+                                                <div class="invalid-feedback">
+                                                    {% for error in form.specifications_en.errors %}{{ error }}{% endfor %}
+                                                </div>
+                                            {% endif %}
+                                            <div class="form-text">
+                                                <i class="fas fa-lightbulb me-1"></i>
+                                                Use JSON format for structured table display
+                                            </div>
                                         </div>
-                                    {% endif %}
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="mb-3">
+                                            {{ form.specifications_ar.label(class="form-label") }}
+                                            {{ form.specifications_ar(class="form-control" + (" is-invalid" if form.specifications_ar.errors else ""), rows="8", dir="rtl", placeholder='{"الزيت العطري": "0.3–1.5% (الهدف المبدئي: ISO 6571/ASTA)", "أحجام القطع": "ورقة كاملة • مطحون 3–6 مم", "الرطوبة": "≤ 10–12% (نموذجي)"}') }}
+                                            {% if form.specifications_ar.errors %}
+                                                <div class="invalid-feedback">
+                                                    {% for error in form.specifications_ar.errors %}{{ error }}{% endfor %}
+                                                </div>
+                                            {% endif %}
+                                            <div class="form-text" dir="rtl">
+                                                <i class="fas fa-lightbulb me-1"></i>
+                                                استخدم تنسيق JSON للعرض المنظم في الجدول
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- Preview Button -->
+                                <div class="text-center">
+                                    <button type="button" class="btn btn-outline-primary btn-sm" onclick="previewSpecifications()">
+                                        <i class="fas fa-eye me-1"></i>Preview Table Format
+                                    </button>
                                 </div>
                             </div>
                         </div>
@@ -312,5 +358,153 @@ document.getElementById('name_en').addEventListener('input', function() {
         .trim('-');
     document.getElementById('slug').value = slug;
 });
+
+// Preview specifications function
+function previewSpecifications() {
+    const specsEn = document.getElementById('specifications_en').value;
+    const specsAr = document.getElementById('specifications_ar').value;
+    const productName = document.getElementById('name_en').value || 'Product Name';
+    const hsCode = document.getElementById('hs_code').value;
+
+    let previewHtml = `
+        <div class="modal fade" id="specsPreviewModal" tabindex="-1">
+            <div class="modal-dialog modal-lg">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title">
+                            <i class="fas fa-eye me-2"></i>Specifications Preview
+                        </h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="row">
+                            <div class="col-md-6">
+                                <h6 class="text-primary mb-3">English Version</h6>
+                                <div class="specifications-table">
+                                    <table class="table table-borderless">
+                                        <tbody>
+                                            <tr>
+                                                <td class="spec-label"><strong>Product</strong></td>
+                                                <td class="spec-value">${productName}</td>
+                                            </tr>`;
+
+    if (hsCode) {
+        previewHtml += `
+                                            <tr>
+                                                <td class="spec-label"><strong>HS Code</strong></td>
+                                                <td class="spec-value">${hsCode}</td>
+                                            </tr>`;
+    }
+
+    if (specsEn) {
+        try {
+            const specs = JSON.parse(specsEn);
+            for (const [key, value] of Object.entries(specs)) {
+                previewHtml += `
+                                            <tr>
+                                                <td class="spec-label"><strong>${key}</strong></td>
+                                                <td class="spec-value">${value}</td>
+                                            </tr>`;
+            }
+        } catch (e) {
+            previewHtml += `
+                                            <tr>
+                                                <td colspan="2" class="text-danger">
+                                                    <i class="fas fa-exclamation-triangle me-1"></i>
+                                                    Invalid JSON format in English specifications
+                                                </td>
+                                            </tr>`;
+        }
+    }
+
+    previewHtml += `
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <h6 class="text-primary mb-3">Arabic Version</h6>
+                                <div class="specifications-table">
+                                    <table class="table table-borderless">
+                                        <tbody>
+                                            <tr>
+                                                <td class="spec-label"><strong>المنتج</strong></td>
+                                                <td class="spec-value">${productName}</td>
+                                            </tr>`;
+
+    if (hsCode) {
+        previewHtml += `
+                                            <tr>
+                                                <td class="spec-label"><strong>كود النظام المنسق</strong></td>
+                                                <td class="spec-value">${hsCode}</td>
+                                            </tr>`;
+    }
+
+    if (specsAr) {
+        try {
+            const specs = JSON.parse(specsAr);
+            for (const [key, value] of Object.entries(specs)) {
+                previewHtml += `
+                                            <tr>
+                                                <td class="spec-label"><strong>${key}</strong></td>
+                                                <td class="spec-value">${value}</td>
+                                            </tr>`;
+            }
+        } catch (e) {
+            previewHtml += `
+                                            <tr>
+                                                <td colspan="2" class="text-danger">
+                                                    <i class="fas fa-exclamation-triangle me-1"></i>
+                                                    تنسيق JSON غير صحيح في المواصفات العربية
+                                                </td>
+                                            </tr>`;
+        }
+    }
+
+    previewHtml += `
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <style>
+        .spec-label {
+            width: 35%;
+            padding: 0.75rem;
+            background: #f8f9fa;
+            color: #6c757d;
+            font-size: 0.9rem;
+            border-right: 1px solid #e9ecef;
+        }
+        .spec-value {
+            padding: 0.75rem;
+            color: #495057;
+        }
+        .specifications-table tr {
+            border-bottom: 1px solid #f8f9fa;
+        }
+        </style>`;
+
+    // Remove existing modal if any
+    const existingModal = document.getElementById('specsPreviewModal');
+    if (existingModal) {
+        existingModal.remove();
+    }
+
+    // Add modal to body
+    document.body.insertAdjacentHTML('beforeend', previewHtml);
+
+    // Show modal
+    const modal = new bootstrap.Modal(document.getElementById('specsPreviewModal'));
+    modal.show();
+}
 </script>
 {% endblock %}

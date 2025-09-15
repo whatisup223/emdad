@@ -144,9 +144,17 @@ class ProductForm(FlaskForm):
                 import json
                 specs = json.loads(obj.specifications)
                 if 'en' in specs:
-                    self.specifications_en.data = specs['en']
+                    # If it's a dict, convert to JSON string for editing
+                    if isinstance(specs['en'], dict):
+                        self.specifications_en.data = json.dumps(specs['en'], indent=2, ensure_ascii=False)
+                    else:
+                        self.specifications_en.data = specs['en']
                 if 'ar' in specs:
-                    self.specifications_ar.data = specs['ar']
+                    # If it's a dict, convert to JSON string for editing
+                    if isinstance(specs['ar'], dict):
+                        self.specifications_ar.data = json.dumps(specs['ar'], indent=2, ensure_ascii=False)
+                    else:
+                        self.specifications_ar.data = specs['ar']
             except (json.JSONDecodeError, TypeError):
                 pass
 

@@ -740,47 +740,142 @@ document.addEventListener('DOMContentLoaded', function() {
                     <div class="tab-pane fade" id="specifications" role="tabpanel" data-aos="fade-up">
                         <div class="card border-0 shadow-sm">
                             <div class="card-body p-4">
-                                {% if specs %}
-                                    <div class="row">
-                                        {% for key, value in specs.items() %}
-                                        <div class="col-md-6 mb-3">
-                                            <div class="spec-item">
-                                                <h6 class="text-primary mb-1">{{ key.replace('_', ' ').title() }}</h6>
-                                                {% if value is iterable and value is not string %}
-                                                    <ul class="list-unstyled mb-0">
-                                                        {% for item in value %}
-                                                        <li class="text-muted">• {{ item }}</li>
-                                                        {% endfor %}
-                                                    </ul>
-                                                {% else %}
-                                                    <p class="text-muted mb-0">{{ value }}</p>
+                                {% if specs or product.hs_code %}
+                                    <!-- Specifications Table -->
+                                    <div class="specifications-table">
+                                        <table class="table table-borderless">
+                                            <tbody>
+                                                <!-- Product Name -->
+                                                <tr>
+                                                    <td class="spec-label">
+                                                        <strong>{% if is_rtl %}المنتج{% else %}Product{% endif %}</strong>
+                                                    </td>
+                                                    <td class="spec-value">
+                                                        <span class="text-primary fw-semibold">{{ product.get_name(current_language) }}</span>
+                                                        {% if product.category %}
+                                                        — {{ product.category.get_name(current_language) }}
+                                                        {% endif %}
+                                                        {% if product.origin %}
+                                                        — {% if is_rtl %}منشأ{% else %}origin{% endif %} {{ product.origin }}
+                                                        {% endif %}
+                                                    </td>
+                                                </tr>
+
+                                                <!-- HS Code -->
+                                                {% if product.hs_code %}
+                                                <tr>
+                                                    <td class="spec-label">
+                                                        <strong>{% if is_rtl %}كود النظام المنسق (العائلة){% else %}HS Code (family){% endif %}</strong>
+                                                    </td>
+                                                    <td class="spec-value">
+                                                        <span class="text-primary">{{ product.hs_code }}</span>
+                                                        — {% if is_rtl %}التوابل تشمل الزعتر، أوراق الغار، وغيرها{% else %}Spices incl. thyme, bay leaves, other{% endif %}
+                                                        <small class="text-muted">({% if is_rtl %}تأكد من الكود الدقيق للعشب{% else %}confirm exact code for herb{% endif %})</small>
+                                                    </td>
+                                                </tr>
                                                 {% endif %}
 
-<style>
-  /* Packaging cards style */
-  .packaging-option { background: rgba(104,155,138,.06); border: 1px solid rgba(104,155,138,.25); border-radius: 12px; padding: 1rem; height: 100%; }
-</style>
+                                                <!-- Dynamic Specifications -->
+                                                {% if specs %}
+                                                    {% for key, value in specs.items() %}
+                                                        {% if key != 'notes' %}
+                                                        <tr>
+                                                            <td class="spec-label">
+                                                                <strong>{{ key.replace('_', ' ').title() }}</strong>
+                                                            </td>
+                                                            <td class="spec-value">
+                                                                {% if value is iterable and value is not string %}
+                                                                    {% for item in value %}
+                                                                        {{ item }}{% if not loop.last %} • {% endif %}
+                                                                    {% endfor %}
+                                                                {% else %}
+                                                                    {{ value }}
+                                                                {% endif %}
+                                                            </td>
+                                                        </tr>
+                                                        {% endif %}
+                                                    {% endfor %}
 
-                                            </div>
-                                        </div>
-                                        {% endfor %}
-
-<style>
-  /* Peach-themed hover for CTA buttons to match design */
-  .btn-peach-hover { border: none; background: var(--primary-gradient, var(--secondary-gradient)); color: var(--dark-color); transition: transform .2s ease, box-shadow .2s ease; }
-  .btn-peach-hover:hover { filter: brightness(1.05); transform: translateY(-2px); box-shadow: 0 8px 18px rgba(249,203,153,.35); }
-  .btn-peach-outline { border-color: var(--secondary-color) !important; color: var(--secondary-color) !important; background: transparent !important; transition: transform .2s ease, box-shadow .2s ease, background .2s ease, color .2s ease, border-color .2s ease; }
-  .btn-peach-outline:hover,
-  .btn-peach-outline:focus,
-  .btn-green-to-peach { border:2px solid var(--brand-green, #689b8a); background: var(--brand-green, #689b8a); color: #fff; border-radius: 12px; transition: transform .2s ease, box-shadow .2s ease, background .2s ease, color .2s ease, border-color .2s ease; }
-  .btn-green-to-peach:hover,
-  .btn-green-to-peach:focus,
-  .btn-green-to-peach:active { background: var(--secondary-gradient); color: var(--dark-color); border-color: transparent; transform: translateY(-2px); box-shadow: 0 8px 18px rgba(249,203,153,.35); }
-
-  .btn-peach-outline:active { background: var(--secondary-gradient) !important; color: var(--dark-color) !important; border-color: transparent !important; transform: translateY(-2px); box-shadow: 0 8px 18px rgba(249,203,153,.35); }
-</style>
-
+                                                    <!-- Notes at the bottom -->
+                                                    {% if specs.get('notes') %}
+                                                    <tr>
+                                                        <td colspan="2" class="spec-notes">
+                                                            <div class="alert alert-light border-0 mt-3 mb-0">
+                                                                <small class="text-muted">{{ specs.notes }}</small>
+                                                            </div>
+                                                        </td>
+                                                    </tr>
+                                                    {% endif %}
+                                                {% endif %}
+                                            </tbody>
+                                        </table>
                                     </div>
+
+<style>
+/* Specifications Table Styling */
+.specifications-table {
+    background: #fff;
+    border-radius: 12px;
+    overflow: hidden;
+}
+
+.specifications-table .table {
+    margin-bottom: 0;
+}
+
+.specifications-table tr {
+    border-bottom: 1px solid #f8f9fa;
+}
+
+.specifications-table tr:last-child {
+    border-bottom: none;
+}
+
+.spec-label {
+    width: 25%;
+    padding: 1rem 1.5rem;
+    background: #f8f9fa;
+    color: #6c757d;
+    font-size: 0.9rem;
+    vertical-align: top;
+    border-right: 1px solid #e9ecef;
+}
+
+.spec-value {
+    padding: 1rem 1.5rem;
+    color: #495057;
+    line-height: 1.6;
+}
+
+.spec-value .text-primary {
+    color: var(--brand-green, #689b8a) !important;
+}
+
+.spec-notes {
+    padding: 0 1.5rem 1rem;
+}
+
+/* RTL Support */
+[dir="rtl"] .spec-label {
+    border-right: none;
+    border-left: 1px solid #e9ecef;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .spec-label {
+        width: 35%;
+        padding: 0.75rem 1rem;
+        font-size: 0.85rem;
+    }
+
+    .spec-value {
+        padding: 0.75rem 1rem;
+        font-size: 0.9rem;
+    }
+}
+</style>
+
                                 {% else %}
                                     <div class="text-center py-4">
                                         <i class="fas fa-clipboard-list fa-3x text-muted mb-3"></i>

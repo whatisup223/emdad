@@ -417,9 +417,24 @@ def product_new():
         # Prepare specifications as JSON
         specifications = {}
         if form.specifications_en.data:
-            specifications['en'] = form.specifications_en.data
+            # Try to parse as JSON first, fallback to plain text
+            try:
+                # If it's already valid JSON, parse and store it
+                parsed_specs = json.loads(form.specifications_en.data)
+                specifications['en'] = parsed_specs
+            except json.JSONDecodeError:
+                # If not JSON, store as plain text under 'notes'
+                specifications['en'] = {'notes': form.specifications_en.data}
+
         if form.specifications_ar.data:
-            specifications['ar'] = form.specifications_ar.data
+            # Try to parse as JSON first, fallback to plain text
+            try:
+                # If it's already valid JSON, parse and store it
+                parsed_specs = json.loads(form.specifications_ar.data)
+                specifications['ar'] = parsed_specs
+            except json.JSONDecodeError:
+                # If not JSON, store as plain text under 'notes'
+                specifications['ar'] = {'notes': form.specifications_ar.data}
 
         product = Product(
             name_en=form.name_en.data,
@@ -496,9 +511,24 @@ def product_edit(id):
         # Prepare specifications as JSON
         specifications = {}
         if form.specifications_en.data:
-            specifications['en'] = form.specifications_en.data
+            # Try to parse as JSON first, fallback to plain text
+            try:
+                # If it's already valid JSON, parse and store it
+                parsed_specs = json.loads(form.specifications_en.data)
+                specifications['en'] = parsed_specs
+            except json.JSONDecodeError:
+                # If not JSON, store as plain text under 'notes'
+                specifications['en'] = {'notes': form.specifications_en.data}
+
         if form.specifications_ar.data:
-            specifications['ar'] = form.specifications_ar.data
+            # Try to parse as JSON first, fallback to plain text
+            try:
+                # If it's already valid JSON, parse and store it
+                parsed_specs = json.loads(form.specifications_ar.data)
+                specifications['ar'] = parsed_specs
+            except json.JSONDecodeError:
+                # If not JSON, store as plain text under 'notes'
+                specifications['ar'] = {'notes': form.specifications_ar.data}
 
         product.name_en = form.name_en.data
         product.name_ar = form.name_ar.data
