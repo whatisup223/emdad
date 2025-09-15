@@ -1413,6 +1413,18 @@ def init_database():
                     # Don't fail the entire initialization for this
                     print("⚠️ Continuing with initialization despite seeding issues...")
 
+                # Add default HS codes to products (idempotent, run AFTER seeding)
+                try:
+                    print("🏷️ Adding default HS codes to products...")
+                    from migrations.add_default_hs_codes import update_product_hs_codes
+                    update_product_hs_codes()
+                    db.session.commit()
+                    print("✅ HS codes assignment completed")
+                except Exception as e:
+                    print(f"⚠️ Could not assign HS codes: {e}")
+                    # Don't fail the entire initialization for this
+                    print("⚠️ Continuing with initialization despite HS code assignment issues...")
+
                 # Link/copy owner-provided product images (idempotent, run AFTER seeding)
                 ensure_link_owner_product_images(db)
                 db.session.commit()
