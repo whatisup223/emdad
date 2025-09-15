@@ -72,52 +72,64 @@ def get_default_hs_codes():
         'iqf-mango': '081140',              # Frozen mangoes
     }
 
-def update_product_hs_codes():
+def update_product_hs_codes(db=None):
     """Update products with default HS codes."""
     try:
-        from app import create_app, db
-        from app.models import Product
-        
-        app = create_app()
-        with app.app_context():
-            hs_codes = get_default_hs_codes()
-            updated_count = 0
-            not_found_count = 0
-            
-            print("🔄 Starting HS code assignment...")
-            
-            for slug, hs_code in hs_codes.items():
-                product = Product.query.filter_by(slug=slug).first()
-                if product:
-                    if not product.hs_code:  # Only update if HS code is not already set
-                        product.hs_code = hs_code
-                        updated_count += 1
-                        print(f"✅ Updated {slug}: HS:{hs_code}")
-                    else:
-                        print(f"⏭️ Skipped {slug}: Already has HS code {product.hs_code}")
-                else:
-                    not_found_count += 1
-                    print(f"⚠️ Product not found: {slug}")
-            
-            if updated_count > 0:
-                db.session.commit()
-                print(f"\n✅ Successfully updated {updated_count} products with HS codes")
-            else:
-                print("\n✅ No products needed HS code updates")
-                
-            if not_found_count > 0:
-                print(f"⚠️ {not_found_count} products from the HS code list were not found in database")
-                
-            # Verify results
-            total_with_hs = Product.query.filter(Product.hs_code.isnot(None)).count()
-            total_products = Product.query.count()
-            print(f"📊 Final status: {total_with_hs}/{total_products} products have HS codes")
-            
-            return True
-            
+        # If called from init_db_render.py, db will be passed
+        # If called standalone, we need to create app context
+        if db is None:
+            from app import create_app, db as app_db
+            from app.models import Product
+
+            app = create_app()
+            with app.app_context():
+                return _update_hs_codes_internal(app_db, Product)
+        else:
+            # We're already in app context, just import Product model
+            from app.models import Product
+            return _update_hs_codes_internal(db, Product)
+
     except Exception as e:
         print(f"❌ Error updating HS codes: {e}")
+        import traceback
+        traceback.print_exc()
         return False
+
+def _update_hs_codes_internal(db, Product):
+    """Internal function to update HS codes."""
+    hs_codes = get_default_hs_codes()
+    updated_count = 0
+    not_found_count = 0
+
+    print("🔄 Starting HS code assignment...")
+
+    for slug, hs_code in hs_codes.items():
+        product = Product.query.filter_by(slug=slug).first()
+        if product:
+            if not product.hs_code:  # Only update if HS code is not already set
+                product.hs_code = hs_code
+                updated_count += 1
+                print(f"✅ Updated {slug}: HS:{hs_code}")
+            else:
+                print(f"⏭️ Skipped {slug}: Already has HS code {product.hs_code}")
+        else:
+            not_found_count += 1
+            print(f"⚠️ Product not found: {slug}")
+
+    if updated_count > 0:
+        print(f"\n✅ Successfully updated {updated_count} products with HS codes")
+    else:
+        print("\n✅ No products needed HS code updates")
+
+    if not_found_count > 0:
+        print(f"⚠️ {not_found_count} products from the HS code list were not found in database")
+
+    # Verify results
+    total_with_hs = Product.query.filter(Product.hs_code.isnot(None)).count()
+    total_products = Product.query.count()
+    print(f"📊 Final status: {total_with_hs}/{total_products} products have HS codes")
+
+    return True
 
 if __name__ == "__main__":
     success = update_product_hs_codes()

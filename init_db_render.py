@@ -1417,11 +1417,16 @@ def init_database():
                 try:
                     print("🏷️ Adding default HS codes to products...")
                     from migrations.add_default_hs_codes import update_product_hs_codes
-                    update_product_hs_codes()
-                    db.session.commit()
-                    print("✅ HS codes assignment completed")
+                    success = update_product_hs_codes(db)
+                    if success:
+                        db.session.commit()
+                        print("✅ HS codes assignment completed")
+                    else:
+                        print("⚠️ HS codes assignment failed")
                 except Exception as e:
                     print(f"⚠️ Could not assign HS codes: {e}")
+                    import traceback
+                    traceback.print_exc()
                     # Don't fail the entire initialization for this
                     print("⚠️ Continuing with initialization despite HS code assignment issues...")
 
