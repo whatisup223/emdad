@@ -444,6 +444,28 @@ def product_new():
                 # If not JSON, store as plain text under 'notes'
                 specifications['ar'] = {'notes': form.specifications_ar.data}
 
+        # Prepare packaging as JSON
+        packaging = {}
+        if form.packaging_en.data:
+            # Try to parse as JSON first, fallback to plain text
+            try:
+                # If it's already valid JSON, parse and store it
+                parsed_packaging = json.loads(form.packaging_en.data)
+                packaging['en'] = parsed_packaging
+            except json.JSONDecodeError:
+                # If not JSON, store as plain text under 'notes'
+                packaging['en'] = {'notes': form.packaging_en.data}
+
+        if form.packaging_ar.data:
+            # Try to parse as JSON first, fallback to plain text
+            try:
+                # If it's already valid JSON, parse and store it
+                parsed_packaging = json.loads(form.packaging_ar.data)
+                packaging['ar'] = parsed_packaging
+            except json.JSONDecodeError:
+                # If not JSON, store as plain text under 'notes'
+                packaging['ar'] = {'notes': form.packaging_ar.data}
+
         product = Product(
             name_en=form.name_en.data,
             name_ar=form.name_ar.data,
@@ -455,6 +477,7 @@ def product_new():
             short_description_en=form.short_description_en.data,
             short_description_ar=form.short_description_ar.data,
             specifications=json.dumps(specifications) if specifications else None,
+            packaging_options=json.dumps(packaging) if packaging else None,
             seo_title_en=form.seo_title_en.data,
             seo_title_ar=form.seo_title_ar.data,
             seo_description_en=form.seo_description_en.data,
@@ -546,6 +569,28 @@ def product_edit(id):
                 # If not JSON, store as plain text under 'notes'
                 specifications['ar'] = {'notes': form.specifications_ar.data}
 
+        # Prepare packaging as JSON
+        packaging = {}
+        if form.packaging_en.data:
+            # Try to parse as JSON first, fallback to plain text
+            try:
+                # If it's already valid JSON, parse and store it
+                parsed_packaging = json.loads(form.packaging_en.data)
+                packaging['en'] = parsed_packaging
+            except json.JSONDecodeError:
+                # If not JSON, store as plain text under 'notes'
+                packaging['en'] = {'notes': form.packaging_en.data}
+
+        if form.packaging_ar.data:
+            # Try to parse as JSON first, fallback to plain text
+            try:
+                # If it's already valid JSON, parse and store it
+                parsed_packaging = json.loads(form.packaging_ar.data)
+                packaging['ar'] = parsed_packaging
+            except json.JSONDecodeError:
+                # If not JSON, store as plain text under 'notes'
+                packaging['ar'] = {'notes': form.packaging_ar.data}
+
         product.name_en = form.name_en.data
         product.name_ar = form.name_ar.data
         product.slug = form.slug.data
@@ -556,6 +601,7 @@ def product_edit(id):
         product.short_description_en = form.short_description_en.data
         product.short_description_ar = form.short_description_ar.data
         product.specifications = json.dumps(specifications) if specifications else None
+        product.packaging_options = json.dumps(packaging) if packaging else None
         product.seo_title_en = form.seo_title_en.data
         product.seo_title_ar = form.seo_title_ar.data
         product.seo_description_en = form.seo_description_en.data

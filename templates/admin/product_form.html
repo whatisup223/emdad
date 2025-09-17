@@ -242,6 +242,75 @@
                             </div>
                         </div>
 
+                        <!-- Packaging Section -->
+                        <div class="card border-0 shadow-sm mb-4">
+                            <div class="card-header bg-light">
+                                <h6 class="mb-0">
+                                    <i class="fas fa-box me-2"></i>Packaging Options
+                                    <small class="text-muted ms-2">- Displayed in packaging tab</small>
+                                </h6>
+                            </div>
+                            <div class="card-body">
+                                <!-- Format Guide -->
+                                <div class="alert alert-info border-0 mb-3">
+                                    <h6 class="alert-heading mb-2">
+                                        <i class="fas fa-info-circle me-1"></i>Packaging Format Guide
+                                    </h6>
+                                    <p class="mb-2"><strong>Use JSON format for structured packaging options:</strong></p>
+                                    <pre class="bg-white p-2 rounded border small mb-2">{
+  "Bulk Packaging": "15kg cartons • 18kg cartons • Custom bulk sizes",
+  "Retail Packaging": "1kg • 2kg • 5kg consumer-ready packages",
+  "Private Labeling": "Custom labels with your brand and specifications",
+  "Cold Chain": "Temperature-controlled packaging for optimal freshness"
+}</pre>
+                                    <p class="mb-0"><small class="text-muted">
+                                        <strong>Tips:</strong> Use bullet points (•) to separate multiple options.
+                                        These will be displayed in the packaging tab on product detail page.
+                                    </small></p>
+                                </div>
+
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <div class="mb-3">
+                                            {{ form.packaging_en.label(class="form-label") }}
+                                            {{ form.packaging_en(class="form-control" + (" is-invalid" if form.packaging_en.errors else ""), rows="8", placeholder='{"Bulk Packaging": "15kg cartons • 18kg cartons", "Retail Packaging": "1kg • 2kg • 5kg packages", "Private Labeling": "Custom labels available"}') }}
+                                            {% if form.packaging_en.errors %}
+                                                <div class="invalid-feedback">
+                                                    {% for error in form.packaging_en.errors %}{{ error }}{% endfor %}
+                                                </div>
+                                            {% endif %}
+                                            <div class="form-text">
+                                                <i class="fas fa-lightbulb me-1"></i>
+                                                Use JSON format for structured packaging display
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="mb-3">
+                                            {{ form.packaging_ar.label(class="form-label") }}
+                                            {{ form.packaging_ar(class="form-control" + (" is-invalid" if form.packaging_ar.errors else ""), rows="8", dir="rtl", placeholder='{"تعبئة بالجملة": "كراتين 15 كجم • كراتين 18 كجم", "تعبئة تجزئة": "عبوات 1كجم • 2كجم • 5كجم", "ملصقات خاصة": "ملصقات مخصصة متاحة"}') }}
+                                            {% if form.packaging_ar.errors %}
+                                                <div class="invalid-feedback">
+                                                    {% for error in form.packaging_ar.errors %}{{ error }}{% endfor %}
+                                                </div>
+                                            {% endif %}
+                                            <div class="form-text" dir="rtl">
+                                                <i class="fas fa-lightbulb me-1"></i>
+                                                استخدم تنسيق JSON للعرض المنظم لخيارات التعبئة
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- Preview Button -->
+                                <div class="text-center">
+                                    <button type="button" class="btn btn-outline-success btn-sm" onclick="previewPackaging()">
+                                        <i class="fas fa-eye me-1"></i>Preview Packaging Format
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+
                         <!-- SEO Fields -->
                         <h5 class="mt-4 mb-3">SEO Settings</h5>
                         <div class="row">
@@ -545,6 +614,123 @@ function previewSpecifications() {
 
     // Show modal
     const modal = new bootstrap.Modal(document.getElementById('specsPreviewModal'));
+    modal.show();
+}
+
+// Preview packaging function
+function previewPackaging() {
+    const packagingEn = document.getElementById('packaging_en').value;
+    const packagingAr = document.getElementById('packaging_ar').value;
+
+    if (!packagingEn && !packagingAr) {
+        alert('Please enter packaging information in at least one language.');
+        return;
+    }
+
+    let packagingDataEn = {};
+    let packagingDataAr = {};
+
+    // Parse English packaging
+    if (packagingEn) {
+        try {
+            packagingDataEn = JSON.parse(packagingEn);
+        } catch (e) {
+            alert('Invalid JSON format in English packaging field.');
+            return;
+        }
+    }
+
+    // Parse Arabic packaging
+    if (packagingAr) {
+        try {
+            packagingDataAr = JSON.parse(packagingAr);
+        } catch (e) {
+            alert('Invalid JSON format in Arabic packaging field.');
+            return;
+        }
+    }
+
+    // Create preview HTML
+    let previewHtml = `
+        <div class="modal fade" id="packagingPreviewModal" tabindex="-1">
+            <div class="modal-dialog modal-lg">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title">Packaging Preview</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="row">`;
+
+    // English packaging preview
+    if (Object.keys(packagingDataEn).length > 0) {
+        previewHtml += `
+                            <div class="col-md-6">
+                                <h6>English Packaging</h6>
+                                <div class="row">`;
+
+        for (const [key, value] of Object.entries(packagingDataEn)) {
+            previewHtml += `
+                                    <div class="col-12 mb-3">
+                                        <div class="packaging-option">
+                                            <h6 class="text-success mb-2">
+                                                <i class="fas fa-box me-2"></i>${key}
+                                            </h6>
+                                            <p class="text-muted mb-0">${value}</p>
+                                        </div>
+                                    </div>`;
+        }
+
+        previewHtml += `
+                                </div>
+                            </div>`;
+    }
+
+    // Arabic packaging preview
+    if (Object.keys(packagingDataAr).length > 0) {
+        previewHtml += `
+                            <div class="col-md-6">
+                                <h6>Arabic Packaging</h6>
+                                <div class="row">`;
+
+        for (const [key, value] of Object.entries(packagingDataAr)) {
+            previewHtml += `
+                                    <div class="col-12 mb-3">
+                                        <div class="packaging-option">
+                                            <h6 class="text-success mb-2" dir="rtl">
+                                                <i class="fas fa-box me-2"></i>${key}
+                                            </h6>
+                                            <p class="text-muted mb-0" dir="rtl">${value}</p>
+                                        </div>
+                                    </div>`;
+        }
+
+        previewHtml += `
+                                </div>
+                            </div>`;
+    }
+
+    previewHtml += `
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    </div>
+                </div>
+            </div>
+        </div>`;
+
+    // Remove existing modal if any
+    const existingModal = document.getElementById('packagingPreviewModal');
+    if (existingModal) {
+        existingModal.remove();
+    }
+
+    // Add modal to body
+    document.body.insertAdjacentHTML('beforeend', previewHtml);
+
+    // Show modal
+    const modal = new bootstrap.Modal(document.getElementById('packagingPreviewModal'));
     modal.show();
 }
 </script>

@@ -113,6 +113,10 @@ class ProductForm(FlaskForm):
     specifications_en = TextAreaField('Specifications (English)', validators=[Optional()])
     specifications_ar = TextAreaField('Specifications (Arabic)', validators=[Optional()])
 
+    # Packaging fields
+    packaging_en = TextAreaField('Packaging (English)', validators=[Optional()])
+    packaging_ar = TextAreaField('Packaging (Arabic)', validators=[Optional()])
+
     # SEO fields
     seo_title_en = StringField('SEO Title (English)', validators=[Optional(), Length(max=200)])
     seo_title_ar = StringField('SEO Title (Arabic)', validators=[Optional(), Length(max=200)])
@@ -155,6 +159,26 @@ class ProductForm(FlaskForm):
                         self.specifications_ar.data = json.dumps(specs['ar'], indent=2, ensure_ascii=False)
                     else:
                         self.specifications_ar.data = specs['ar']
+            except (json.JSONDecodeError, TypeError):
+                pass
+
+        # If editing existing product, populate packaging fields
+        if obj and obj.packaging_options:
+            try:
+                import json
+                packaging = json.loads(obj.packaging_options)
+                if 'en' in packaging:
+                    # If it's a dict, convert to JSON string for editing
+                    if isinstance(packaging['en'], dict):
+                        self.packaging_en.data = json.dumps(packaging['en'], indent=2, ensure_ascii=False)
+                    else:
+                        self.packaging_en.data = packaging['en']
+                if 'ar' in packaging:
+                    # If it's a dict, convert to JSON string for editing
+                    if isinstance(packaging['ar'], dict):
+                        self.packaging_ar.data = json.dumps(packaging['ar'], indent=2, ensure_ascii=False)
+                    else:
+                        self.packaging_ar.data = packaging['ar']
             except (json.JSONDecodeError, TypeError):
                 pass
 
