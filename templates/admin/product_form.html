@@ -311,6 +311,56 @@
                             </div>
                         </div>
 
+                        <!-- Applications / Use Cases Section -->
+                        <div class="card border-0 shadow-sm mb-4">
+                            <div class="card-header bg-light">
+                                <h6 class="mb-0">
+                                    <i class="fas fa-lightbulb me-2"></i>Applications / Use Cases
+                                    <small class="text-muted ms-2">- Displayed in a dedicated tab on product page</small>
+                                </h6>
+                            </div>
+                            <div class="card-body">
+                                <div class="alert alert-info border-0 mb-3">
+                                    <h6 class="alert-heading mb-2">
+                                        <i class="fas fa-info-circle me-1"></i>Applications Format Guide
+                                    </h6>
+                                    <p class="mb-2"><strong>Use JSON format for structured use cases:</strong></p>
+                                    <pre class="bg-white p-2 rounded border small mb-2">{
+  "Food Industry": "Snacks • Bakery • Ready-to-eat meals",
+  "Beverages": "Juices • Smoothies • Nutraceutical drinks",
+  "Culinary": "Restaurants • Catering • Home cooking"
+}</pre>
+                                    <p class="mb-0"><small class="text-muted">
+                                        <strong>Tips:</strong> Use bullet points (•) to separate multiple applications.
+                                    </small></p>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <div class="mb-3">
+                                            {{ form.applications_en.label(class="form-label") }}
+                                            {{ form.applications_en(class="form-control" + (" is-invalid" if form.applications_en.errors else ""), rows="8", placeholder='{"Food Industry": "Snacks • Bakery", "Beverages": "Juices • Smoothies"}') }}
+                                            {% if form.applications_en.errors %}
+                                                <div class="invalid-feedback">
+                                                    {% for error in form.applications_en.errors %}{{ error }}{% endfor %}
+                                                </div>
+                                            {% endif %}
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="mb-3">
+                                            {{ form.applications_ar.label(class="form-label") }}
+                                            {{ form.applications_ar(class="form-control" + (" is-invalid" if form.applications_ar.errors else ""), rows="8", dir="rtl", placeholder='{"صناعة الأغذية": "وجبات خفيفة • مخبوزات", "المشروبات": "عصائر • سموثي"}') }}
+                                            {% if form.applications_ar.errors %}
+                                                <div class="invalid-feedback">
+                                                    {% for error in form.applications_ar.errors %}{{ error }}{% endfor %}
+                                                </div>
+                                            {% endif %}
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
                         <!-- SEO Fields -->
                         <h5 class="mt-4 mb-3">SEO Settings</h5>
                         <div class="row">

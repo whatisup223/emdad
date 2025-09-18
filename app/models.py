@@ -101,6 +101,7 @@ class Product(db.Model):
     specifications = db.Column(db.Text)  # JSON string
     seasonality = db.Column(db.Text)     # JSON string
     packaging_options = db.Column(db.Text)  # JSON string
+    applications = db.Column(db.Text)  # JSON string for applications/use cases
 
     # SEO
     seo_title_en = db.Column(db.String(200))
@@ -226,6 +227,35 @@ class Product(db.Model):
     def set_packaging_options(self, packaging_dict):
         """Set packaging options from dictionary."""
         self.packaging_options = json.dumps(packaging_dict) if packaging_dict else None
+
+    # Applications / Use Cases helpers (same pattern as packaging/specifications)
+    def get_applications(self):
+        """Get raw applications JSON as dictionary (may contain language keys)."""
+        if self.applications:
+            try:
+                return json.loads(self.applications)
+            except json.JSONDecodeError:
+                return {}
+        return {}
+
+    def get_applications_lang(self, language='en'):
+        """Return applications for the given language if language-keyed, else raw dict."""
+        data = self.get_applications()
+        if not data:
+            return {}
+        if isinstance(data, dict) and ('en' in data or 'ar' in data):
+            val = data.get(language) or data.get('en') or data.get('ar')
+            if isinstance(val, str):
+                try:
+                    return json.loads(val)
+                except Exception:
+                    return {'notes': val}
+            return val if isinstance(val, dict) else {}
+        return data if isinstance(data, dict) else {}
+
+    def set_applications(self, applications_dict):
+        """Set applications from dictionary."""
+        self.applications = json.dumps(applications_dict) if applications_dict else None
 
     def get_main_image(self):
         """Get the main product image."""

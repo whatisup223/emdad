@@ -117,6 +117,10 @@ class ProductForm(FlaskForm):
     packaging_en = TextAreaField('Packaging (English)', validators=[Optional()])
     packaging_ar = TextAreaField('Packaging (Arabic)', validators=[Optional()])
 
+    # Applications / Use Cases fields
+    applications_en = TextAreaField('Applications / Use Cases (English)', validators=[Optional()])
+    applications_ar = TextAreaField('التطبيقات / حالات الاستخدام (Arabic)', validators=[Optional()])
+
     # SEO fields
     seo_title_en = StringField('SEO Title (English)', validators=[Optional(), Length(max=200)])
     seo_title_ar = StringField('SEO Title (Arabic)', validators=[Optional(), Length(max=200)])
@@ -179,6 +183,24 @@ class ProductForm(FlaskForm):
                         self.packaging_ar.data = json.dumps(packaging['ar'], indent=2, ensure_ascii=False)
                     else:
                         self.packaging_ar.data = packaging['ar']
+            except (json.JSONDecodeError, TypeError):
+                pass
+
+        # If editing existing product, populate applications fields
+        if obj and getattr(obj, 'applications', None):
+            try:
+                import json
+                apps = json.loads(obj.applications)
+                if 'en' in apps:
+                    if isinstance(apps['en'], dict):
+                        self.applications_en.data = json.dumps(apps['en'], indent=2, ensure_ascii=False)
+                    else:
+                        self.applications_en.data = apps['en']
+                if 'ar' in apps:
+                    if isinstance(apps['ar'], dict):
+                        self.applications_ar.data = json.dumps(apps['ar'], indent=2, ensure_ascii=False)
+                    else:
+                        self.applications_ar.data = apps['ar']
             except (json.JSONDecodeError, TypeError):
                 pass
 

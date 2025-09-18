@@ -64,6 +64,16 @@ def create_app(config_name=None):
                     db.session.execute(text('ALTER TABLE rfq ADD COLUMN budget VARCHAR(100)'))
                 except Exception:
                     pass
+
+            # Auto-add new Product columns in non-migrated environments (safe no-op if exists)
+            try:
+                pcols = {c['name'] for c in inspector.get_columns('product')}
+                if 'applications' not in pcols:
+                    db.session.execute(text('ALTER TABLE product ADD COLUMN applications TEXT'))
+            except Exception:
+                # Ignore if DB doesn't support runtime ALTER or column already exists
+                pass
+
             db.session.commit()
     except Exception:
         # Ignore if inspection fails; rely on proper migrations

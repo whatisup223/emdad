@@ -466,6 +466,21 @@ def product_new():
                 # If not JSON, store as plain text under 'notes'
                 packaging['ar'] = {'notes': form.packaging_ar.data}
 
+        # Prepare applications/use cases as JSON
+        applications = {}
+        if getattr(form, 'applications_en', None) and form.applications_en.data:
+            try:
+                parsed_apps = json.loads(form.applications_en.data)
+                applications['en'] = parsed_apps
+            except json.JSONDecodeError:
+                applications['en'] = {'notes': form.applications_en.data}
+        if getattr(form, 'applications_ar', None) and form.applications_ar.data:
+            try:
+                parsed_apps = json.loads(form.applications_ar.data)
+                applications['ar'] = parsed_apps
+            except json.JSONDecodeError:
+                applications['ar'] = {'notes': form.applications_ar.data}
+
         product = Product(
             name_en=form.name_en.data,
             name_ar=form.name_ar.data,
@@ -478,6 +493,7 @@ def product_new():
             short_description_ar=form.short_description_ar.data,
             specifications=json.dumps(specifications) if specifications else None,
             packaging_options=json.dumps(packaging) if packaging else None,
+            applications=json.dumps(applications) if applications else None,
             seo_title_en=form.seo_title_en.data,
             seo_title_ar=form.seo_title_ar.data,
             seo_description_en=form.seo_description_en.data,
@@ -591,6 +607,21 @@ def product_edit(id):
                 # If not JSON, store as plain text under 'notes'
                 packaging['ar'] = {'notes': form.packaging_ar.data}
 
+        # Prepare applications/use cases as JSON
+        applications = {}
+        if getattr(form, 'applications_en', None) and form.applications_en.data:
+            try:
+                parsed_apps = json.loads(form.applications_en.data)
+                applications['en'] = parsed_apps
+            except json.JSONDecodeError:
+                applications['en'] = {'notes': form.applications_en.data}
+        if getattr(form, 'applications_ar', None) and form.applications_ar.data:
+            try:
+                parsed_apps = json.loads(form.applications_ar.data)
+                applications['ar'] = parsed_apps
+            except json.JSONDecodeError:
+                applications['ar'] = {'notes': form.applications_ar.data}
+
         product.name_en = form.name_en.data
         product.name_ar = form.name_ar.data
         product.slug = form.slug.data
@@ -602,6 +633,7 @@ def product_edit(id):
         product.short_description_ar = form.short_description_ar.data
         product.specifications = json.dumps(specifications) if specifications else None
         product.packaging_options = json.dumps(packaging) if packaging else None
+        product.applications = json.dumps(applications) if applications else None
         product.seo_title_en = form.seo_title_en.data
         product.seo_title_ar = form.seo_title_ar.data
         product.seo_description_en = form.seo_description_en.data
