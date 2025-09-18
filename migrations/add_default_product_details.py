@@ -67,16 +67,22 @@ def get_category_defaults():
             },
             'commercial_docs': {
                 'en': {
-                    'Incoterms': 'FOB • CIF • EXW',
-                    'Documentation': 'Invoice • Packing List • COO • Phytosanitary',
-                    'Lead Time': '7–14 days depending on volume',
-                    'Ports': 'Alexandria • Damietta • Port Said',
+                    'Payment': 'T/T or L/C (subject to approval)',
+                    'MOQ': "Typically 1 × 20' FCL (mix types possible)",
+                    'Lead Time': '1–2 weeks after PO (sterilization may add time)',
+                    'Incoterms': 'FOB Alexandria / Damietta / Port Said · CFR/CIF on request',
+                    'Docs': 'Invoice, Packing List, COO, Phytosanitary (if required), COA, Fumigation (if required)',
+                    'Samples': '250–1000 g (courier at cost)',
+                    'Private Label': 'Bag printing & carton branding available'
                 },
                 'ar': {
-                    'المصطلحات التجارية': 'FOB • CIF • EXW',
-                    'المستندات': 'فاتورة • بيان تعبئة • شهادة منشأ • شهادة صحة نباتية',
-                    'مدة التجهيز': '7–14 يوماً حسب الكمية',
-                    'الموانئ': 'الإسكندرية • دمياط • بورسعيد',
+                    'الدفع': 'تحويل بنكي T/T أو اعتماد L/C (رهناً بالموافقة)',
+                    'الحد الأدنى للطلب': "عادة 20 قدم FCL × 1 (إمكانية خلط الأنواع)",
+                    'مدة التجهيز': '1–2 أسبوع بعد أمر الشراء (قد تضيف التعقيم وقتاً)',
+                    'مصطلحات الشحن': 'FOB الإسكندرية/دمياط/بورسعيد · CFR/CIF عند الطلب',
+                    'المستندات': 'فاتورة، بيان تعبئة، شهادة منشأ، شهادة صحة نباتية (إن لزم)، شهادة تحليل COA، تبخير (إن لزم)',
+                    'العيّنات': '250–1000 جم (شحن سريع على نفقة العميل)',
+                    'علامة خاصة': 'طباعة على الأكياس وتخصيص العلامة على الكراتين متاح'
                 },
             },
         },
@@ -119,18 +125,26 @@ def get_category_defaults():
             },
             'commercial_docs': {
                 'en': {
-                    'Incoterms': 'FOB • CIF • EXW',
-                    'Documentation': 'Invoice • Packing List • COO • Phytosanitary',
-                    'Inspection': 'SGS on request',
-                    'Lead Time': '7–14 days',
+                    'Payment': 'T/T or L/C (subject to approval)',
+                    'MOQ': "Typically 1 × 20' FCL (mix types possible)",
+                    'Lead Time': '1–2 weeks after PO (sterilization may add time)',
+                    'Incoterms': 'FOB Alexandria / Damietta / Port Said · CFR/CIF on request',
+                    'Docs': 'Invoice, Packing List, COO, Phytosanitary (if required), COA, Fumigation (if required)',
+                    'Samples': '250–1000 g (courier at cost)',
+                    'Private Label': 'Bag printing & carton branding available'
                 },
                 'ar': {
-                    'المصطلحات التجارية': 'FOB • CIF • EXW',
-                    'المستندات': 'فاتورة • بيان تعبئة • شهادة منشأ • صحة نباتية',
-                    'الفحص': 'SGS عند الطلب',
-                    'مدة التجهيز': '7–14 يوماً',
+                    'الدفع': 'تحويل بنكي T/T أو اعتماد L/C (رهناً بالموافقة)',
+                    'الحد الأدنى للطلب': "عادة 20 قدم FCL × 1 (إمكانية خلط الأنواع)",
+                    'مدة التجهيز': '1–2 أسبوع بعد أمر الشراء (قد تضيف التعقيم وقتاً)',
+                    'مصطلحات الشحن': 'FOB الإسكندرية/دمياط/بورسعيد · CFR/CIF عند الطلب',
+                    'المستندات': 'فاتورة، بيان تعبئة، شهادة منشأ، شهادة صحة نباتية (إن لزم)، شهادة تحليل COA، تبخير (إن لزم)',
+                    'العيّنات': '250–1000 جم (شحن سريع على نفقة العميل)',
+                    'علامة خاصة': 'طباعة على الأكياس وتخصيص العلامة على الكراتين متاح'
                 },
             },
+
+
         },
 
         # Fresh vegetables
@@ -171,14 +185,22 @@ def get_category_defaults():
             },
             'commercial_docs': {
                 'en': {
-                    'Incoterms': 'FOB • CIF • EXW',
-                    'Documentation': 'Invoice • Packing List • COO • Health Cert',
-                    'Lead Time': '7–21 days depending on harvest',
+                    'Payment': 'T/T or L/C (subject to approval)',
+                    'MOQ': "Typically 1 × 20' FCL (mix types possible)",
+                    'Lead Time': '1–2 weeks after PO (sterilization may add time)',
+                    'Incoterms': 'FOB Alexandria / Damietta / Port Said · CFR/CIF on request',
+                    'Docs': 'Invoice, Packing List, COO, Phytosanitary (if required), COA, Fumigation (if required)',
+                    'Samples': '250–1000 g (courier at cost)',
+                    'Private Label': 'Bag printing & carton branding available'
                 },
                 'ar': {
-                    'المصطلحات التجارية': 'FOB • CIF • EXW',
-                    'المستندات': 'فاتورة • بيان تعبئة • شهادة منشأ • شهادة صحية',
-                    'مدة التجهيز': '7–21 يوماً حسب الحصاد',
+                    'الدفع': 'تحويل بنكي T/T أو اعتماد L/C (رهناً بالموافقة)',
+                    'الحد الأدنى للطلب': "عادة 20 قدم FCL × 1 (إمكانية خلط الأنواع)",
+                    'مدة التجهيز': '1–2 أسبوع بعد أمر الشراء (قد تضيف التعقيم وقتاً)',
+                    'مصطلحات الشحن': 'FOB الإسكندرية/دمياط/بورسعيد · CFR/CIF عند الطلب',
+                    'المستندات': 'فاتورة، بيان تعبئة، شهادة منشأ، شهادة صحة نباتية (إن لزم)، شهادة تحليل COA، تبخير (إن لزم)',
+                    'العيّنات': '250–1000 جم (شحن سريع على نفقة العميل)',
+                    'علامة خاصة': 'طباعة على الأكياس وتخصيص العلامة على الكراتين متاح'
                 },
             },
         },
@@ -221,14 +243,22 @@ def get_category_defaults():
             },
             'commercial_docs': {
                 'en': {
-                    'Incoterms': 'FOB • CIF • EXW',
-                    'Documentation': 'Invoice • Packing List • COO • Health Cert',
-                    'Lead Time': '10–20 days',
+                    'Payment': 'T/T or L/C (subject to approval)',
+                    'MOQ': "Typically 1 × 20' FCL (mix types possible)",
+                    'Lead Time': '1–2 weeks after PO (sterilization may add time)',
+                    'Incoterms': 'FOB Alexandria / Damietta / Port Said · CFR/CIF on request',
+                    'Docs': 'Invoice, Packing List, COO, Phytosanitary (if required), COA, Fumigation (if required)',
+                    'Samples': '250–1000 g (courier at cost)',
+                    'Private Label': 'Bag printing & carton branding available'
                 },
                 'ar': {
-                    'المصطلحات التجارية': 'FOB • CIF • EXW',
-                    'المستندات': 'فاتورة • بيان تعبئة • شهادة منشأ • شهادة صحية',
-                    'مدة التجهيز': '10–20 يوماً',
+                    'الدفع': 'تحويل بنكي T/T أو اعتماد L/C (رهناً بالموافقة)',
+                    'الحد الأدنى للطلب': "عادة 20 قدم FCL × 1 (إمكانية خلط الأنواع)",
+                    'مدة التجهيز': '1–2 أسبوع بعد أمر الشراء (قد تضيف التعقيم وقتاً)',
+                    'مصطلحات الشحن': 'FOB الإسكندرية/دمياط/بورسعيد · CFR/CIF عند الطلب',
+                    'المستندات': 'فاتورة، بيان تعبئة، شهادة منشأ، شهادة صحة نباتية (إن لزم)، شهادة تحليل COA، تبخير (إن لزم)',
+                    'العيّنات': '250–1000 جم (شحن سريع على نفقة العميل)',
+                    'علامة خاصة': 'طباعة على الأكياس وتخصيص العلامة على الكراتين متاح'
                 },
             },
         },
@@ -271,14 +301,22 @@ def get_category_defaults():
             },
             'commercial_docs': {
                 'en': {
-                    'Incoterms': 'FOB • CIF • EXW',
-                    'Documentation': 'Invoice • Packing List • COO • Health Cert',
-                    'Lead Time': '7–14 days',
+                    'Payment': 'T/T or L/C (subject to approval)',
+                    'MOQ': "Typically 1 × 20' FCL (mix types possible)",
+                    'Lead Time': '1–2 weeks after PO (sterilization may add time)',
+                    'Incoterms': 'FOB Alexandria / Damietta / Port Said · CFR/CIF on request',
+                    'Docs': 'Invoice, Packing List, COO, Phytosanitary (if required), COA, Fumigation (if required)',
+                    'Samples': '250–1000 g (courier at cost)',
+                    'Private Label': 'Bag printing & carton branding available'
                 },
                 'ar': {
-                    'المصطلحات التجارية': 'FOB • CIF • EXW',
-                    'المستندات': 'فاتورة • بيان تعبئة • شهادة منشأ • شهادة صحية',
-                    'مدة التجهيز': '7–14 يوماً',
+                    'الدفع': 'تحويل بنكي T/T أو اعتماد L/C (رهناً بالموافقة)',
+                    'الحد الأدنى للطلب': "عادة 20 قدم FCL × 1 (إمكانية خلط الأنواع)",
+                    'مدة التجهيز': '1–2 أسبوع بعد أمر الشراء (قد تضيف التعقيم وقتاً)',
+                    'مصطلحات الشحن': 'FOB الإسكندرية/دمياط/بورسعيد · CFR/CIF عند الطلب',
+                    'المستندات': 'فاتورة، بيان تعبئة، شهادة منشأ، شهادة صحة نباتية (إن لزم)، شهادة تحليل COA، تبخير (إن لزم)',
+                    'العيّنات': '250–1000 جم (شحن سريع على نفقة العميل)',
+                    'علامة خاصة': 'طباعة على الأكياس وتخصيص العلامة على الكراتين متاح'
                 },
             },
         },
@@ -319,14 +357,22 @@ def get_category_defaults():
             },
             'commercial_docs': {
                 'en': {
-                    'Incoterms': 'FOB • CIF • EXW',
-                    'Documentation': 'Invoice • Packing List • COO • Health Cert',
-                    'Lead Time': '10–20 days',
+                    'Payment': 'T/T or L/C (subject to approval)',
+                    'MOQ': "Typically 1 × 20' FCL (mix types possible)",
+                    'Lead Time': '1–2 weeks after PO (sterilization may add time)',
+                    'Incoterms': 'FOB Alexandria / Damietta / Port Said · CFR/CIF on request',
+                    'Docs': 'Invoice, Packing List, COO, Phytosanitary (if required), COA, Fumigation (if required)',
+                    'Samples': '250–1000 g (courier at cost)',
+                    'Private Label': 'Bag printing & carton branding available'
                 },
                 'ar': {
-                    'المصطلحات التجارية': 'FOB • CIF • EXW',
-                    'المستندات': 'فاتورة • بيان تعبئة • شهادة منشأ • شهادة صحية',
-                    'مدة التجهيز': '10–20 يوماً',
+                    'الدفع': 'تحويل بنكي T/T أو اعتماد L/C (رهناً بالموافقة)',
+                    'الحد الأدنى للطلب': "عادة 20 قدم FCL × 1 (إمكانية خلط الأنواع)",
+                    'مدة التجهيز': '1–2 أسبوع بعد أمر الشراء (قد تضيف التعقيم وقتاً)',
+                    'مصطلحات الشحن': 'FOB الإسكندرية/دمياط/بورسعيد · CFR/CIF عند الطلب',
+                    'المستندات': 'فاتورة، بيان تعبئة، شهادة منشأ، شهادة صحة نباتية (إن لزم)، شهادة تحليل COA، تبخير (إن لزم)',
+                    'العيّنات': '250–1000 جم (شحن سريع على نفقة العميل)',
+                    'علامة خاصة': 'طباعة على الأكياس وتخصيص العلامة على الكراتين متاح'
                 },
             },
         },
@@ -367,14 +413,22 @@ def get_category_defaults():
             },
             'commercial_docs': {
                 'en': {
-                    'Incoterms': 'FOB • CIF • EXW',
-                    'Documentation': 'Invoice • Packing List • COO • Health Cert',
-                    'Lead Time': '7–14 days',
+                    'Payment': 'T/T or L/C (subject to approval)',
+                    'MOQ': "Typically 1 × 20' FCL (mix types possible)",
+                    'Lead Time': '1–2 weeks after PO (sterilization may add time)',
+                    'Incoterms': 'FOB Alexandria / Damietta / Port Said · CFR/CIF on request',
+                    'Docs': 'Invoice, Packing List, COO, Phytosanitary (if required), COA, Fumigation (if required)',
+                    'Samples': '250–1000 g (courier at cost)',
+                    'Private Label': 'Bag printing & carton branding available'
                 },
                 'ar': {
-                    'المصطلحات التجارية': 'FOB • CIF • EXW',
-                    'المستندات': 'فاتورة • بيان تعبئة • شهادة منشأ • شهادة صحية',
-                    'مدة التجهيز': '7–14 يوماً',
+                    'الدفع': 'تحويل بنكي T/T أو اعتماد L/C (رهناً بالموافقة)',
+                    'الحد الأدنى للطلب': "عادة 20 قدم FCL × 1 (إمكانية خلط الأنواع)",
+                    'مدة التجهيز': '1–2 أسبوع بعد أمر الشراء (قد تضيف التعقيم وقتاً)',
+                    'مصطلحات الشحن': 'FOB الإسكندرية/دمياط/بورسعيد · CFR/CIF عند الطلب',
+                    'المستندات': 'فاتورة، بيان تعبئة، شهادة منشأ، شهادة صحة نباتية (إن لزم)، شهادة تحليل COA، تبخير (إن لزم)',
+                    'العيّنات': '250–1000 جم (شحن سريع على نفقة العميل)',
+                    'علامة خاصة': 'طباعة على الأكياس وتخصيص العلامة على الكراتين متاح'
                 },
             },
         },
@@ -415,14 +469,22 @@ def get_category_defaults():
             },
             'commercial_docs': {
                 'en': {
-                    'Incoterms': 'FOB • CIF • EXW',
-                    'Documentation': 'Invoice • Packing List • COO • Health Cert',
-                    'Lead Time': '10–20 days',
+                    'Payment': 'T/T or L/C (subject to approval)',
+                    'MOQ': "Typically 1 × 20' FCL (mix types possible)",
+                    'Lead Time': '1–2 weeks after PO (sterilization may add time)',
+                    'Incoterms': 'FOB Alexandria / Damietta / Port Said · CFR/CIF on request',
+                    'Docs': 'Invoice, Packing List, COO, Phytosanitary (if required), COA, Fumigation (if required)',
+                    'Samples': '250–1000 g (courier at cost)',
+                    'Private Label': 'Bag printing & carton branding available'
                 },
                 'ar': {
-                    'المصطلحات التجارية': 'FOB • CIF • EXW',
-                    'المستندات': 'فاتورة • بيان تعبئة • شهادة منشأ • شهادة صحية',
-                    'مدة التجهيز': '10–20 يوماً',
+                    'الدفع': 'تحويل بنكي T/T أو اعتماد L/C (رهناً بالموافقة)',
+                    'الحد الأدنى للطلب': "عادة 20 قدم FCL × 1 (إمكانية خلط الأنواع)",
+                    'مدة التجهيز': '1–2 أسبوع بعد أمر الشراء (قد تضيف التعقيم وقتاً)',
+                    'مصطلحات الشحن': 'FOB الإسكندرية/دمياط/بورسعيد · CFR/CIF عند الطلب',
+                    'المستندات': 'فاتورة، بيان تعبئة، شهادة منشأ، شهادة صحة نباتية (إن لزم)، شهادة تحليل COA، تبخير (إن لزم)',
+                    'العيّنات': '250–1000 جم (شحن سريع على نفقة العميل)',
+                    'علامة خاصة': 'طباعة على الأكياس وتخصيص العلامة على الكراتين متاح'
                 },
             },
         },
