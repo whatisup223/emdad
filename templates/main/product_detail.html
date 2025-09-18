@@ -1045,6 +1045,49 @@ document.addEventListener('DOMContentLoaded', function() {
 
 
 
+
+                        <!-- Commercial & Documentation Tab -->
+                        <div class="tab-pane fade" id="commercial" role="tabpanel" data-aos="fade-up">
+                            <div class="card border-0 shadow-sm">
+                                <div class="card-body p-4">
+                                    {% set comm = product.get_commercial_docs_lang(current_language) %}
+                                    {% if comm %}
+                                        <div class="row">
+                                            {% for key, value in comm.items() %}
+                                                {% if key != 'notes' %}
+                                                <div class="col-md-6 mb-4">
+                                                    <div class="packaging-option">
+                                                        <h6 class="text-primary mb-2">
+                                                            <i class="fas fa-file-contract me-2"></i>{{ key.replace('_', ' ').title() }}
+                                                        </h6>
+                                                        <p class="text-muted mb-0">
+                                                            {% if value is iterable and value is not string %}
+                                                                {% for item in value %}
+                                                                    {{ item }}{% if not loop.last %} • {% endif %}
+                                                                {% endfor %}
+                                                            {% else %}
+                                                                {{ value }}
+                                                            {% endif %}
+                                                        </p>
+                                                    </div>
+                                                </div>
+                                                {% endif %}
+                                            {% endfor %}
+                                        </div>
+                                        {% if comm.get('notes') %}
+                                            <div class="alert alert-light border-0 mt-2 mb-0"><small class="text-muted">{{ comm.notes }}</small></div>
+                                        {% endif %}
+                                    {% else %}
+                                        <div class="text-center py-4">
+                                            <i class="fas fa-file-contract fa-3x text-muted mb-3"></i>
+                                            <h5>{% if is_rtl %}التجاري والوثائق{% else %}{{ _('Commercial & Documentation') }}{% endif %}</h5>
+                                            <p class="text-muted">{% if is_rtl %}تفاصيل الشروط التجارية والمستندات الداعمة.{% else %}{{ _('Trade terms and required documentation details.') }}{% endif %}</p>
+                                        </div>
+                                    {% endif %}
+                                </div>
+                            </div>
+                        </div>
+
                     <!-- Certifications Tab -->
                     <div class="tab-pane fade" id="certifications" role="tabpanel" data-aos="fade-up">
                         <div class="card border-0 shadow-sm">
