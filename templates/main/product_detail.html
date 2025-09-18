@@ -695,6 +695,16 @@ document.addEventListener('DOMContentLoaded', function() {
                         </button>
                     </li>
                     <li class="nav-item" role="presentation">
+                        <button class="nav-link" id="quality-tab" data-bs-toggle="tab" data-bs-target="#quality" type="button" role="tab">
+                            <i class="fas fa-shield-alt me-2"></i>{% if is_rtl %}الجودة وسلامة الغذاء{% else %}{{ _('Quality & Food Safety') }}{% endif %}
+                        </button>
+                    </li>
+                    <li class="nav-item" role="presentation">
+                        <button class="nav-link" id="commercial-tab" data-bs-toggle="tab" data-bs-target="#commercial" type="button" role="tab">
+                            <i class="fas fa-file-contract me-2"></i>{% if is_rtl %}التجاري والوثائق{% else %}{{ _('Commercial & Documentation') }}{% endif %}
+                        </button>
+                    </li>
+                    <li class="nav-item" role="presentation">
                         <button class="nav-link" id="certifications-tab" data-bs-toggle="tab" data-bs-target="#certifications" type="button" role="tab">
                             <i class="fas fa-certificate me-2"></i>{% if is_rtl %}الشهادات{% else %}{{ _('Certifications') }}{% endif %}
                         </button>
@@ -987,10 +997,147 @@ document.addEventListener('DOMContentLoaded', function() {
                                         <div class="alert alert-light border-0 mt-2 mb-0"><small class="text-muted">{{ apps.notes }}</small></div>
                                     {% endif %}
                                 {% else %}
+
+                    <!-- Quality & Food Safety (typical targets) Tab -->
+                    <div class="tab-pane fade" id="quality" role="tabpanel" data-aos="fade-up">
+                        <div class="card border-0 shadow-sm">
+                            <div class="card-body p-4">
+                                {% set qt = product.get_quality_targets_lang(current_language) %}
+                                {% if qt %}
+                                    <div class="row">
+                                        {% for key, value in qt.items() %}
+                                            {% if key != 'notes' %}
+                                            <div class="col-md-6 mb-4">
+                                                <div class="packaging-option">
+                                                    <h6 class="text-primary mb-2">
+                                                        <i class="fas fa-shield-alt me-2"></i>{{ key.replace('_', ' ').title() }}
+                                                    </h6>
+                                                    <p class="text-muted mb-0">{{ value }}</p>
+                                                </div>
+                                            </div>
+                                            {% endif %}
+                                        {% endfor %}
+                                    </div>
+                                    {% if qt.get('notes') %}
+                                        <div class="alert alert-light border-0 mt-2 mb-0"><small class="text-muted">{{ qt.notes }}</small></div>
+                                    {% endif %}
+                                {% else %}
+                                    <div class="text-center py-4">
+                                        <i class="fas fa-shield-alt fa-3x text-muted mb-3"></i>
+                                        <h5>{% if is_rtl %}الجودة وسلامة الغذاء{% else %}{{ _('Quality & Food Safety') }}{% endif %}</h5>
+                                        <p class="text-muted">{% if is_rtl %}أهداف نموذجية للميكروبيولوجيا والملوثات وجودة المنتج.{% else %}{{ _('Typical targets for microbiology, contaminants, and product quality.') }}{% endif %}</p>
+                                    </div>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Commercial & Documentation Tab -->
+                    <div class="tab-pane fade" id="commercial" role="tabpanel" data-aos="fade-up">
+                        <div class="card border-0 shadow-sm">
+                            <div class="card-body p-4">
+                                {% set cd = product.get_commercial_docs_lang(current_language) %}
+                                {% if cd %}
+                                    <div class="row">
+                                        {% for key, value in cd.items() %}
+                                            {% if key != 'notes' %}
+                                            <div class="col-md-6 mb-4">
+                                                <div class="packaging-option">
+                                                    <h6 class="text-primary mb-2">
+                                                        <i class="fas fa-file-contract me-2"></i>{{ key.replace('_', ' ').title() }}
+                                                    </h6>
+                                                    <p class="text-muted mb-0">{{ value }}</p>
+                                                </div>
+                                            </div>
+                                            {% endif %}
+                                        {% endfor %}
+                                    </div>
+                                    {% if cd.get('notes') %}
+                                        <div class="alert alert-light border-0 mt-2 mb-0"><small class="text-muted">{{ cd.notes }}</small></div>
+                                    {% endif %}
+                                {% else %}
+                                    <div class="text-center py-4">
+                                        <i class="fas fa-file-contract fa-3x text-muted mb-3"></i>
+                                        <h5>{% if is_rtl %}التجاري والوثائق{% else %}{{ _('Commercial & Documentation') }}{% endif %}</h5>
+                                        <p class="text-muted">{% if is_rtl %}مصطلحات تجارية ووثائق الشحن والشهادات وغيرها.{% else %}{{ _('Trade terms, shipment documentation, and compliance certificates.') }}{% endif %}</p>
+                                    </div>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+
                                     <div class="text-center py-4">
                                         <i class="fas fa-lightbulb fa-3x text-muted mb-3"></i>
                                         <h5>{% if is_rtl %}تطبيقات متنوعة{% else %}{{ _('Versatile Applications') }}{% endif %}</h5>
                                         <p class="text-muted">{% if is_rtl %}يُستخدم المنتج في صناعات الأغذية والمشروبات والضيافة وغيرها.{% else %}{{ _('Used across food, beverage, culinary, and hospitality industries.') }}{% endif %}</p>
+                                    </div>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Quality & Food Safety (typical targets) Tab -->
+                    <div class="tab-pane fade" id="quality" role="tabpanel" data-aos="fade-up">
+                        <div class="card border-0 shadow-sm">
+                            <div class="card-body p-4">
+                                {% set qt = product.get_quality_targets_lang(current_language) %}
+                                {% if qt %}
+                                    <div class="row">
+                                        {% for key, value in qt.items() %}
+                                            {% if key != 'notes' %}
+                                            <div class="col-md-6 mb-4">
+                                                <div class="packaging-option">
+                                                    <h6 class="text-primary mb-2">
+                                                        <i class="fas fa-shield-alt me-2"></i>{{ key.replace('_', ' ').title() }}
+                                                    </h6>
+                                                    <p class="text-muted mb-0">{{ value }}</p>
+                                                </div>
+                                            </div>
+                                            {% endif %}
+                                        {% endfor %}
+                                    </div>
+                                    {% if qt.get('notes') %}
+                                        <div class="alert alert-light border-0 mt-2 mb-0"><small class="text-muted">{{ qt.notes }}</small></div>
+                                    {% endif %}
+                                {% else %}
+                                    <div class="text-center py-4">
+                                        <i class="fas fa-shield-alt fa-3x text-muted mb-3"></i>
+                                        <h5>{% if is_rtl %}الجودة وسلامة الغذاء{% else %}{{ _('Quality & Food Safety') }}{% endif %}</h5>
+                                        <p class="text-muted">{% if is_rtl %}أهداف نموذجية للميكروبيولوجيا والملوثات وجودة المنتج.{% else %}{{ _('Typical targets for microbiology, contaminants, and product quality.') }}{% endif %}</p>
+                                    </div>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Commercial & Documentation Tab -->
+                    <div class="tab-pane fade" id="commercial" role="tabpanel" data-aos="fade-up">
+                        <div class="card border-0 shadow-sm">
+                            <div class="card-body p-4">
+                                {% set cd = product.get_commercial_docs_lang(current_language) %}
+                                {% if cd %}
+                                    <div class="row">
+                                        {% for key, value in cd.items() %}
+                                            {% if key != 'notes' %}
+                                            <div class="col-md-6 mb-4">
+                                                <div class="packaging-option">
+                                                    <h6 class="text-primary mb-2">
+                                                        <i class="fas fa-file-contract me-2"></i>{{ key.replace('_', ' ').title() }}
+                                                    </h6>
+                                                    <p class="text-muted mb-0">{{ value }}</p>
+                                                </div>
+                                            </div>
+                                            {% endif %}
+                                        {% endfor %}
+                                    </div>
+                                    {% if cd.get('notes') %}
+                                        <div class="alert alert-light border-0 mt-2 mb-0"><small class="text-muted">{{ cd.notes }}</small></div>
+                                    {% endif %}
+                                {% else %}
+                                    <div class="text-center py-4">
+                                        <i class="fas fa-file-contract fa-3x text-muted mb-3"></i>
+                                        <h5>{% if is_rtl %}التجاري والوثائق{% else %}{{ _('Commercial & Documentation') }}{% endif %}</h5>
+                                        <p class="text-muted">{% if is_rtl %}مصطلحات تجارية ووثائق الشحن والشهادات وغيرها.{% else %}{{ _('Trade terms, shipment documentation, and compliance certificates.') }}{% endif %}</p>
                                     </div>
                                 {% endif %}
                             </div>

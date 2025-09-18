@@ -121,6 +121,14 @@ class ProductForm(FlaskForm):
     applications_en = TextAreaField('Applications / Use Cases (English)', validators=[Optional()])
     applications_ar = TextAreaField('التطبيقات / حالات الاستخدام (Arabic)', validators=[Optional()])
 
+    # Quality & Food Safety (typical targets)
+    quality_targets_en = TextAreaField('Quality & Food Safety (typical targets) (English)', validators=[Optional()])
+    quality_targets_ar = TextAreaField('الجودة وسلامة الغذاء (الأهداف النموذجية) (Arabic)', validators=[Optional()])
+
+    # Commercial & Documentation
+    commercial_docs_en = TextAreaField('Commercial & Documentation (English)', validators=[Optional()])
+    commercial_docs_ar = TextAreaField('التجاري والوثائق (Arabic)', validators=[Optional()])
+
     # SEO fields
     seo_title_en = StringField('SEO Title (English)', validators=[Optional(), Length(max=200)])
     seo_title_ar = StringField('SEO Title (Arabic)', validators=[Optional(), Length(max=200)])
@@ -201,6 +209,30 @@ class ProductForm(FlaskForm):
                         self.applications_ar.data = json.dumps(apps['ar'], indent=2, ensure_ascii=False)
                     else:
                         self.applications_ar.data = apps['ar']
+            except (json.JSONDecodeError, TypeError):
+                pass
+
+        # Populate quality targets fields
+        if obj and getattr(obj, 'quality_targets', None):
+            try:
+                import json
+                qt = json.loads(obj.quality_targets)
+                if 'en' in qt:
+                    self.quality_targets_en.data = json.dumps(qt['en'], indent=2, ensure_ascii=False) if isinstance(qt['en'], dict) else qt['en']
+                if 'ar' in qt:
+                    self.quality_targets_ar.data = json.dumps(qt['ar'], indent=2, ensure_ascii=False) if isinstance(qt['ar'], dict) else qt['ar']
+            except (json.JSONDecodeError, TypeError):
+                pass
+
+        # Populate commercial docs fields
+        if obj and getattr(obj, 'commercial_docs', None):
+            try:
+                import json
+                cd = json.loads(obj.commercial_docs)
+                if 'en' in cd:
+                    self.commercial_docs_en.data = json.dumps(cd['en'], indent=2, ensure_ascii=False) if isinstance(cd['en'], dict) else cd['en']
+                if 'ar' in cd:
+                    self.commercial_docs_ar.data = json.dumps(cd['ar'], indent=2, ensure_ascii=False) if isinstance(cd['ar'], dict) else cd['ar']
             except (json.JSONDecodeError, TypeError):
                 pass
 

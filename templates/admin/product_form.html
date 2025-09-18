@@ -361,6 +361,96 @@
                             </div>
                         </div>
 
+                        <!-- Quality & Food Safety (typical targets) -->
+                        <div class="card border-0 shadow-sm mb-4">
+                            <div class="card-header bg-light">
+                                <h6 class="mb-0">
+                                    <i class="fas fa-shield-alt me-2"></i>Quality & Food Safety (typical targets)
+                                </h6>
+                            </div>
+                            <div class="card-body">
+                                <div class="alert alert-info border-0 mb-3">
+                                    <h6 class="alert-heading mb-2">
+                                        <i class="fas fa-info-circle me-1"></i>Format Guide
+                                    </h6>
+                                    <p class="mb-2"><strong>Use JSON format, e.g.:</strong></p>
+                                    <pre class="bg-white p-2 rounded border small mb-2">{
+  "Microbiology": "TPC < 10^5 • Yeast & Mold < 10^3",
+  "Contaminants": "Aflatoxin B1 < 2 ppb • Heavy metals within limits"
+}</pre>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <div class="mb-3">
+                                            {{ form.quality_targets_en.label(class="form-label") }}
+                                            {{ form.quality_targets_en(class="form-control" + (" is-invalid" if form.quality_targets_en.errors else ""), rows="8", placeholder='{"Microbiology": "TPC < 10^5", "Contaminants": "Aflatoxin B1 < 2 ppb"}') }}
+                                            {% if form.quality_targets_en.errors %}
+                                                <div class="invalid-feedback">
+                                                    {% for error in form.quality_targets_en.errors %}{{ error }}{% endfor %}
+                                                </div>
+                                            {% endif %}
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="mb-3">
+                                            {{ form.quality_targets_ar.label(class="form-label") }}
+                                            {{ form.quality_targets_ar(class="form-control" + (" is-invalid" if form.quality_targets_ar.errors else ""), rows="8", dir="rtl", placeholder='{"الميكروبيولوجيا": "العدد الكلي < 10^5", "المُلوِّثات": "الأفلاتوكسين B1 < 2 جزء بالبليون"}') }}
+                                            {% if form.quality_targets_ar.errors %}
+                                                <div class="invalid-feedback">
+                                                    {% for error in form.quality_targets_ar.errors %}{{ error }}{% endfor %}
+                                                </div>
+                                            {% endif %}
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Commercial & Documentation -->
+                        <div class="card border-0 shadow-sm mb-4">
+                            <div class="card-header bg-light">
+                                <h6 class="mb-0">
+                                    <i class="fas fa-file-contract me-2"></i>Commercial & Documentation
+                                </h6>
+                            </div>
+                            <div class="card-body">
+                                <div class="alert alert-info border-0 mb-3">
+                                    <h6 class="alert-heading mb-2">
+                                        <i class="fas fa-info-circle me-1"></i>Format Guide
+                                    </h6>
+                                    <p class="mb-2"><strong>Use JSON format, e.g.:</strong></p>
+                                    <pre class="bg-white p-2 rounded border small mb-2">{
+  "Incoterms": "FOB • CIF • EXW",
+  "Documentation": "COO • Health Cert • Phytosanitary"
+}</pre>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <div class="mb-3">
+                                            {{ form.commercial_docs_en.label(class="form-label") }}
+                                            {{ form.commercial_docs_en(class="form-control" + (" is-invalid" if form.commercial_docs_en.errors else ""), rows="8", placeholder='{"Incoterms": "FOB • CIF • EXW"}') }}
+                                            {% if form.commercial_docs_en.errors %}
+                                                <div class="invalid-feedback">
+                                                    {% for error in form.commercial_docs_en.errors %}{{ error }}{% endfor %}
+                                                </div>
+                                            {% endif %}
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="mb-3">
+                                            {{ form.commercial_docs_ar.label(class="form-label") }}
+                                            {{ form.commercial_docs_ar(class="form-control" + (" is-invalid" if form.commercial_docs_ar.errors else ""), rows="8", dir="rtl", placeholder='{"المصطلحات التجارية": "فوب • سيف • إكس وركس"}') }}
+                                            {% if form.commercial_docs_ar.errors %}
+                                                <div class="invalid-feedback">
+                                                    {% for error in form.commercial_docs_ar.errors %}{{ error }}{% endfor %}
+                                                </div>
+                                            {% endif %}
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
                         <!-- SEO Fields -->
                         <h5 class="mt-4 mb-3">SEO Settings</h5>
                         <div class="row">

@@ -102,6 +102,8 @@ class Product(db.Model):
     seasonality = db.Column(db.Text)     # JSON string
     packaging_options = db.Column(db.Text)  # JSON string
     applications = db.Column(db.Text)  # JSON string for applications/use cases
+    quality_targets = db.Column(db.Text)  # JSON string for quality & food safety typical targets
+    commercial_docs = db.Column(db.Text)  # JSON string for commercial & documentation
 
     # SEO
     seo_title_en = db.Column(db.String(200))
@@ -256,6 +258,58 @@ class Product(db.Model):
     def set_applications(self, applications_dict):
         """Set applications from dictionary."""
         self.applications = json.dumps(applications_dict) if applications_dict else None
+
+    # Quality & Food Safety (typical targets)
+    def get_quality_targets(self):
+        if self.quality_targets:
+            try:
+                return json.loads(self.quality_targets)
+            except json.JSONDecodeError:
+                return {}
+        return {}
+
+    def get_quality_targets_lang(self, language='en'):
+        data = self.get_quality_targets()
+        if not data:
+            return {}
+        if isinstance(data, dict) and ('en' in data or 'ar' in data):
+            val = data.get(language) or data.get('en') or data.get('ar')
+            if isinstance(val, str):
+                try:
+                    return json.loads(val)
+                except Exception:
+                    return {'notes': val}
+            return val if isinstance(val, dict) else {}
+        return data if isinstance(data, dict) else {}
+
+    def set_quality_targets(self, d):
+        self.quality_targets = json.dumps(d) if d else None
+
+    # Commercial & Documentation
+    def get_commercial_docs(self):
+        if self.commercial_docs:
+            try:
+                return json.loads(self.commercial_docs)
+            except json.JSONDecodeError:
+                return {}
+        return {}
+
+    def get_commercial_docs_lang(self, language='en'):
+        data = self.get_commercial_docs()
+        if not data:
+            return {}
+        if isinstance(data, dict) and ('en' in data or 'ar' in data):
+            val = data.get(language) or data.get('en') or data.get('ar')
+            if isinstance(val, str):
+                try:
+                    return json.loads(val)
+                except Exception:
+                    return {'notes': val}
+            return val if isinstance(val, dict) else {}
+        return data if isinstance(data, dict) else {}
+
+    def set_commercial_docs(self, d):
+        self.commercial_docs = json.dumps(d) if d else None
 
     def get_main_image(self):
         """Get the main product image."""

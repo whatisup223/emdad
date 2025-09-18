@@ -481,6 +481,32 @@ def product_new():
             except json.JSONDecodeError:
                 applications['ar'] = {'notes': form.applications_ar.data}
 
+        # Prepare quality targets as JSON
+        quality_targets = {}
+        if getattr(form, 'quality_targets_en', None) and form.quality_targets_en.data:
+            try:
+                quality_targets['en'] = json.loads(form.quality_targets_en.data)
+            except json.JSONDecodeError:
+                quality_targets['en'] = {'notes': form.quality_targets_en.data}
+        if getattr(form, 'quality_targets_ar', None) and form.quality_targets_ar.data:
+            try:
+                quality_targets['ar'] = json.loads(form.quality_targets_ar.data)
+            except json.JSONDecodeError:
+                quality_targets['ar'] = {'notes': form.quality_targets_ar.data}
+
+        # Prepare commercial docs as JSON
+        commercial_docs = {}
+        if getattr(form, 'commercial_docs_en', None) and form.commercial_docs_en.data:
+            try:
+                commercial_docs['en'] = json.loads(form.commercial_docs_en.data)
+            except json.JSONDecodeError:
+                commercial_docs['en'] = {'notes': form.commercial_docs_en.data}
+        if getattr(form, 'commercial_docs_ar', None) and form.commercial_docs_ar.data:
+            try:
+                commercial_docs['ar'] = json.loads(form.commercial_docs_ar.data)
+            except json.JSONDecodeError:
+                commercial_docs['ar'] = {'notes': form.commercial_docs_ar.data}
+
         product = Product(
             name_en=form.name_en.data,
             name_ar=form.name_ar.data,
@@ -494,6 +520,8 @@ def product_new():
             specifications=json.dumps(specifications) if specifications else None,
             packaging_options=json.dumps(packaging) if packaging else None,
             applications=json.dumps(applications) if applications else None,
+            quality_targets=json.dumps(quality_targets) if quality_targets else None,
+            commercial_docs=json.dumps(commercial_docs) if commercial_docs else None,
             seo_title_en=form.seo_title_en.data,
             seo_title_ar=form.seo_title_ar.data,
             seo_description_en=form.seo_description_en.data,
@@ -622,6 +650,33 @@ def product_edit(id):
             except json.JSONDecodeError:
                 applications['ar'] = {'notes': form.applications_ar.data}
 
+
+        # Prepare quality targets as JSON
+        quality_targets = {}
+        if getattr(form, 'quality_targets_en', None) and form.quality_targets_en.data:
+            try:
+                quality_targets['en'] = json.loads(form.quality_targets_en.data)
+            except json.JSONDecodeError:
+                quality_targets['en'] = {'notes': form.quality_targets_en.data}
+        if getattr(form, 'quality_targets_ar', None) and form.quality_targets_ar.data:
+            try:
+                quality_targets['ar'] = json.loads(form.quality_targets_ar.data)
+            except json.JSONDecodeError:
+                quality_targets['ar'] = {'notes': form.quality_targets_ar.data}
+
+        # Prepare commercial docs as JSON
+        commercial_docs = {}
+        if getattr(form, 'commercial_docs_en', None) and form.commercial_docs_en.data:
+            try:
+                commercial_docs['en'] = json.loads(form.commercial_docs_en.data)
+            except json.JSONDecodeError:
+                commercial_docs['en'] = {'notes': form.commercial_docs_en.data}
+        if getattr(form, 'commercial_docs_ar', None) and form.commercial_docs_ar.data:
+            try:
+                commercial_docs['ar'] = json.loads(form.commercial_docs_ar.data)
+            except json.JSONDecodeError:
+                commercial_docs['ar'] = {'notes': form.commercial_docs_ar.data}
+
         product.name_en = form.name_en.data
         product.name_ar = form.name_ar.data
         product.slug = form.slug.data
@@ -634,6 +689,8 @@ def product_edit(id):
         product.specifications = json.dumps(specifications) if specifications else None
         product.packaging_options = json.dumps(packaging) if packaging else None
         product.applications = json.dumps(applications) if applications else None
+        product.quality_targets = json.dumps(quality_targets) if quality_targets else None
+        product.commercial_docs = json.dumps(commercial_docs) if commercial_docs else None
         product.seo_title_en = form.seo_title_en.data
         product.seo_title_ar = form.seo_title_ar.data
         product.seo_description_en = form.seo_description_en.data

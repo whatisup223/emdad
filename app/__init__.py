@@ -70,6 +70,10 @@ def create_app(config_name=None):
                 pcols = {c['name'] for c in inspector.get_columns('product')}
                 if 'applications' not in pcols:
                     db.session.execute(text('ALTER TABLE product ADD COLUMN applications TEXT'))
+                if 'quality_targets' not in pcols:
+                    db.session.execute(text('ALTER TABLE product ADD COLUMN quality_targets TEXT'))
+                if 'commercial_docs' not in pcols:
+                    db.session.execute(text('ALTER TABLE product ADD COLUMN commercial_docs TEXT'))
             except Exception:
                 # Ignore if DB doesn't support runtime ALTER or column already exists
                 pass
