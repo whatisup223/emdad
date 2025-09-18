@@ -1459,7 +1459,26 @@ def init_database():
                 # Create default services
                 create_services(db)
 
-                # Force exactly the target three articles on homepage (idempotent)
+                # Create news articles
+                create_news(db)
+                db.session.commit()
+
+                # Rewrite news with long-form 2025 SEO content (dev/prod safe)
+                try:
+                    from scripts.rewrite_news_content_2025 import apply_updates as _rewrite_news_2025
+                    _rewrite_news_2025()
+                    print("✅ Rewrote news articles with 2025 long-form SEO content")
+                except Exception as e:
+                    print(f"⚠️ Could not rewrite news content (2025 long-form): {e}")
+
+                # Link/copy owner-provided news images (idempotent)
+                try:
+                    ensure_link_owner_news_images(db)
+                    db.session.commit()
+                except Exception as e:
+                    print(f"⚠️ Could not link news images: {e}")
+
+                # Now enforce exactly the target three articles on homepage (idempotent)
                 try:
                     def _ensure_homepage_news_exact_three(db):
                         from app.models import News
@@ -1485,24 +1504,6 @@ def init_database():
                     print(f"⚠️ Could not enforce homepage news selection: {e}")
 
                 db.session.commit()
-
-                # Create news articles
-                create_news(db)
-                db.session.commit()
-                # Rewrite news with long-form 2025 SEO content (dev/prod safe)
-                try:
-                    from scripts.rewrite_news_content_2025 import apply_updates as _rewrite_news_2025
-                    _rewrite_news_2025()
-                    print("✅ Rewrote news articles with 2025 long-form SEO content")
-                except Exception as e:
-                    print(f"⚠️ Could not rewrite news content (2025 long-form): {e}")
-
-                # Link/copy owner-provided news images (idempotent)
-                try:
-                    ensure_link_owner_news_images(db)
-                    db.session.commit()
-                except Exception as e:
-                    print(f"⚠️ Could not link news images: {e}")
 
 
                 # Create company information
