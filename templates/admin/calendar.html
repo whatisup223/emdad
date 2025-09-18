@@ -4,7 +4,7 @@
 <div class="container-fluid">
   <div class="d-flex align-items-center justify-content-between mb-4 flex-wrap gap-2">
     <h1 class="h3 mb-0">{{ 'تقويم المواسم' if is_rtl else 'Seasonality Calendar' }}</h1>
-    <div class="text-muted small">{{ 'انقر على الخلايا لتغيير الحالة: خارج الموسم → محدود → متاح → ذروة → مجمّد' if is_rtl else 'Click cells to cycle state: Off → Limited → Available → Peak → Frozen' }}</div>
+    <div class="text-muted small">{{ 'انقر على الخلايا لتغيير الحالة: خارج الموسم - محدود - متاح - ذروة - مجمّد' if is_rtl else 'Click cells to cycle state: Off - Limited - Available - Peak - Frozen' }}</div>
   </div>
 
   <div class="card shadow-sm">
@@ -271,7 +271,10 @@
 
 {% raw %}
 <script>
+// Calendar functionality - Main script
 (function(){
+  console.log('🚀 Loading calendar main script...');
+
   // Cycle now includes IQF as a fifth state
   const nextState = { 'off':'limited', 'limited':'available', 'available':'peak', 'peak':'iqf', 'iqf':'off' };
 
@@ -294,29 +297,44 @@
     btn.addEventListener('click', ()=> handleCellClick(btn));
   });
 
-  // Function to extract payload from row (desktop) or card (mobile)
-  function rowPayload(container){
+  // Function to extract payload from row (desktop) or card (mobile) - GLOBAL
+  window.rowPayload = function(container){
     const months = {peak:[], available:[], limited:[], off:[], iqf:[]};
     const cells = container.querySelectorAll('.cell, .cell-mobile');
+
+    console.log(`Processing ${cells.length} cells for container`);
+
     cells.forEach(b=>{
       const m = parseInt(b.dataset.month,10);
+      if (isNaN(m) || m < 1 || m > 12) {
+        console.warn(`Invalid month value: ${b.dataset.month}`);
+        return;
+      }
+
       let s = Array.from(b.classList).find(c=>c.startsWith('state-'));
       s = s ? s.replace('state-','') : 'off';
-      if(!months[s]) months[s] = [];
+
+      if(!months[s]) {
+        console.warn(`Unknown state: ${s}, defaulting to 'off'`);
+        s = 'off';
+      }
+
       months[s].push(m);
     });
+
+    console.log('Generated payload:', months);
     return months;
-  }
+  };
 
   // Desktop save buttons
   document.querySelectorAll('.save-row').forEach(btn=>{
     btn.addEventListener('click', async ()=>{
       const tr = btn.closest('tr');
       const url = tr.dataset.saveUrl;
-      const payload = rowPayload(tr);
+      const payload = window.rowPayload(tr);
       const res = await fetch(url,{ method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify(payload) });
       const j = await res.json();
-      if(j.ok){ showSaveSuccess(btn); }
+      if(j.ok){ window.showSaveSuccess(btn); }
     });
   });
 
@@ -325,16 +343,12 @@
     btn.addEventListener('click', async ()=>{
       const card = btn.closest('.product-card');
       const url = card.dataset.saveUrl;
-      const payload = rowPayload(card);
+      const payload = window.rowPayload(card);
       const res = await fetch(url,{ method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify(payload) });
       const j = await res.json();
-      if(j.ok){ showSaveSuccess(btn); }
+      if(j.ok){ window.showSaveSuccess(btn); }
     });
   });
-
-
-
-  // Save All functionality is handled in the separate script block below
 
   // Filters
   const catSel = document.getElementById('categoryFilter');
@@ -364,56 +378,183 @@
   catSel.addEventListener('change', applyFilters);
   qIn.addEventListener('input', applyFilters);
 
-  // Toggle functionality is handled in the separate script block below
+  console.log('✅ Calendar main script loaded successfully');
 })();
 </script>
 {% endraw %}
 
 <script>
-// Jinja2 template variables for JavaScript
-const isRtl = {{ 'true' if is_rtl else 'false' }};
-const saveText = {{ '"حفظ"' if is_rtl else '"Save"' }};
-const savedText = {{ '"تم الحفظ"' if is_rtl else '"Saved"' }};
-const savingText = {{ '"جاري الحفظ..."' if is_rtl else '"Saving..."' }};
-const allSavedText = {{ '"تم حفظ جميع المنتجات بنجاح"' if is_rtl else '"All products saved successfully"' }};
-const desktopViewText = {{ '"عرض سطح المكتب"' if is_rtl else '"Desktop View"' }};
-const mobileViewText = {{ '"عرض الموبايل"' if is_rtl else '"Mobile View"' }};
+// Jinja2 template variables for JavaScript - Using safe encoding
+const isRtl = {% if is_rtl %}true{% else %}false{% endif %};
+const saveText = {% if is_rtl %}"حفظ"{% else %}"Save"{% endif %};
+const savedText = {% if is_rtl %}"تم الحفظ"{% else %}"Saved"{% endif %};
+const savingText = {% if is_rtl %}"جاري الحفظ..."{% else %}"Saving..."{% endif %};
+const allSavedText = {% if is_rtl %}"تم حفظ جميع المنتجات بنجاح"{% else %}"All products saved successfully"{% endif %};
+const desktopViewText = {% if is_rtl %}"عرض سطح المكتب"{% else %}"Desktop View"{% endif %};
+const mobileViewText = {% if is_rtl %}"عرض الموبايل"{% else %}"Mobile View"{% endif %};
 
-// Update save success feedback function
-function showSaveSuccess(btn) {
+// Update save success feedback function - GLOBAL
+window.showSaveSuccess = function(btn) {
   btn.classList.replace('btn-outline-primary','btn-success');
   btn.textContent = savedText;
   setTimeout(()=>{
     btn.classList.replace('btn-success','btn-outline-primary');
     btn.textContent = saveText;
   }, 1200);
-}
+};
 
-// Update save all button text
-document.getElementById('saveAll').addEventListener('click', async function() {
-  const btn = this;
-  const originalText = btn.textContent;
-  btn.disabled = true;
-  btn.textContent = savingText;
+// Save All functionality - Completely rewritten for reliability
+window.initSaveAllButton = function() {
+  console.log('🔧 Initializing Save All button...');
 
-  // Get all containers (both desktop rows and mobile cards)
-  const desktopRows = Array.from(document.querySelectorAll('#calendarTable tbody tr'));
-  const mobileCards = Array.from(document.querySelectorAll('.product-card'));
+  const saveAllBtn = document.getElementById('saveAll');
 
-  // Use desktop rows if visible, otherwise use mobile cards
-  const containers = window.innerWidth >= 992 ? desktopRows : mobileCards;
-
-  for(const container of containers){
-    const url = container.dataset.saveUrl;
-    const payload = rowPayload(container);
-    await fetch(url,{
-      method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify(payload)
-    });
+  if (!saveAllBtn) {
+    console.error('❌ Save All button not found!');
+    return false;
   }
 
-  btn.disabled = false;
-  btn.textContent = originalText;
-  alert(allSavedText);
+  console.log('✅ Save All button found:', saveAllBtn);
+
+  // Clear any existing listeners
+  saveAllBtn.onclick = null;
+
+  // Add new click handler
+  saveAllBtn.onclick = async function(event) {
+    event.preventDefault();
+    event.stopPropagation();
+
+    console.log('🚀 Save All button clicked!');
+
+    const btn = this;
+    const originalText = btn.textContent;
+    const originalClass = btn.className;
+
+    try {
+      // Disable button and show loading state
+      btn.disabled = true;
+      btn.textContent = savingText;
+      btn.className = 'btn btn-warning';
+
+      console.log('🚀 Starting Save All operation...');
+
+      // Get all containers
+      const desktopRows = Array.from(document.querySelectorAll('#calendarTable tbody tr[data-save-url]'));
+      const mobileCards = Array.from(document.querySelectorAll('.product-card[data-save-url]'));
+
+      // Choose active containers based on screen size
+      const isDesktop = window.innerWidth >= 992;
+      const containers = isDesktop ? desktopRows : mobileCards;
+
+      console.log(`📊 Found ${containers.length} containers (${isDesktop ? 'desktop' : 'mobile'} view)`);
+
+      if (containers.length === 0) {
+        throw new Error('No products found to save');
+      }
+
+      let successCount = 0;
+      let errorCount = 0;
+      const errors = [];
+
+      // Process each container
+      for (let i = 0; i < containers.length; i++) {
+        const container = containers[i];
+
+        try {
+          const url = container.dataset.saveUrl;
+          if (!url) {
+            throw new Error(`No save URL for container ${i + 1}`);
+          }
+
+          const payload = window.rowPayload(container);
+          console.log(`💾 Saving ${i + 1}/${containers.length}: ${url}`);
+
+          const response = await fetch(url, {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+              'X-Requested-With': 'XMLHttpRequest'
+            },
+            body: JSON.stringify(payload)
+          });
+
+          if (!response.ok) {
+            throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+          }
+
+          const result = await response.json();
+          if (!result.ok) {
+            throw new Error(`Server error: ${JSON.stringify(result)}`);
+          }
+
+          successCount++;
+          console.log(`✅ Saved ${i + 1}/${containers.length}`);
+
+        } catch (error) {
+          errorCount++;
+          errors.push(`Product ${i + 1}: ${error.message}`);
+          console.error(`❌ Error saving product ${i + 1}:`, error);
+        }
+      }
+
+      // Show results
+      console.log(`📈 Save All completed: ${successCount} success, ${errorCount} errors`);
+
+      if (errorCount === 0) {
+        btn.className = 'btn btn-success';
+        btn.textContent = '✅ All Saved!';
+        alert(allSavedText);
+      } else {
+        btn.className = 'btn btn-danger';
+        btn.textContent = `❌ ${errorCount} Failed`;
+        const errorMsg = `Saved ${successCount} products successfully.\n${errorCount} products failed:\n\n${errors.slice(0, 5).join('\n')}`;
+        alert(errorMsg);
+      }
+
+    } catch (error) {
+      console.error('💥 Save All operation failed:', error);
+      btn.className = 'btn btn-danger';
+      btn.textContent = '❌ Failed';
+      alert(`Save All failed: ${error.message}`);
+    }
+
+    // Reset button after delay
+    setTimeout(() => {
+      btn.disabled = false;
+      btn.textContent = originalText;
+      btn.className = originalClass;
+    }, 3000);
+  };
+
+  console.log('✅ Save All button initialized successfully');
+  return true;
+};
+
+// Initialize Save All button - Multiple attempts for reliability
+function tryInitSaveAll() {
+  console.log('🔄 Attempting to initialize Save All button...');
+  if (window.initSaveAllButton && window.initSaveAllButton()) {
+    console.log('✅ Save All button initialized successfully');
+    return true;
+  }
+  return false;
+}
+
+// Try immediately if DOM is ready
+if (document.readyState !== 'loading') {
+  setTimeout(tryInitSaveAll, 100);
+}
+
+// Try when DOM is loaded
+document.addEventListener('DOMContentLoaded', function() {
+  console.log('📄 DOM loaded');
+  setTimeout(tryInitSaveAll, 100);
+});
+
+// Try when window is loaded (fallback)
+window.addEventListener('load', function() {
+  console.log('🌐 Window loaded');
+  setTimeout(tryInitSaveAll, 100);
 });
 
 // Toggle view functionality
