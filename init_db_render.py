@@ -1449,6 +1449,22 @@ def init_database():
                     # Don't fail the entire initialization for this
                     print("⚠️ Continuing with initialization despite specifications assignment issues...")
 
+                # Populate product detail defaults (idempotent, run AFTER specs)
+                try:
+                    print("🧩 Seeding product detail defaults (packaging, applications, quality, commercial)...")
+                    from migrations.add_default_product_details import update_product_details_defaults
+                    success = update_product_details_defaults(db, force_update=False)
+                    if success:
+                        db.session.commit()
+                        print("✅ Product detail defaults seeding completed")
+                    else:
+                        print("⚠️ Product detail defaults seeding failed")
+                except Exception as e:
+                    print(f"⚠️ Could not seed product detail defaults: {e}")
+                    import traceback
+                    traceback.print_exc()
+                    print("⚠️ Continuing with initialization despite product detail defaults issues...")
+
                 # Link/copy owner-provided product images (idempotent, run AFTER seeding)
                 ensure_link_owner_product_images(db)
                 db.session.commit()
